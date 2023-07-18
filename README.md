@@ -1,1 +1,1 @@
-Parking Service
+# Git convention => gitmessage.txt 참고
