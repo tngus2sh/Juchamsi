@@ -1,10 +1,10 @@
-package com.inet.parking;
+package com.inet.juchamsi;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ParkingApplicationTests {
+class JuchamsiApplicationTests {
 
 	@Test
 	void contextLoads() {
