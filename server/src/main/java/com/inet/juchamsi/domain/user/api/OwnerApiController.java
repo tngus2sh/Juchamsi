@@ -1,9 +1,9 @@
 package com.inet.juchamsi.domain.user.api;
 
-import com.inet.juchamsi.domain.user.api.request.LoginOwnerRequest;
-import com.inet.juchamsi.domain.user.api.request.SignupOwnerRequest;
-import com.inet.juchamsi.domain.user.dto.OwnerDto;
-import com.inet.juchamsi.domain.user.dto.OwnerDtoList;
+import com.inet.juchamsi.domain.user.dto.request.LoginOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.request.SignupOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
+import com.inet.juchamsi.domain.user.dto.response.OwnerListResponse;
 import com.inet.juchamsi.global.api.ApiResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -22,14 +22,14 @@ public class OwnerApiController {
     // 회원 전체 조회
     @ApiOperation(value = "회원 전체 조회", notes = "집주인 권한의 모든 사용자들 목록을 조회한다")
     @GetMapping
-    public ApiResult<OwnerDtoList> showUser() {
+    public ApiResult<OwnerListResponse> showUser() {
         return null;
     }
 
     // 회원 상세 조회
     @ApiOperation(value = "회원 상세 조회", notes = "ownerId에 해당하는 사용자의 상세 정보를 조회한다.")
     @GetMapping("/{id}")
-    public ApiResult<OwnerDto> showDetailUser(
+    public ApiResult<OwnerResponse> showDetailUser(
             @ApiParam(value = "owner-id")
             @PathVariable(value = "id") String ownerId
     ) {
