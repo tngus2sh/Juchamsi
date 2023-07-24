@@ -6,6 +6,8 @@ import KioskMainPage from './pages/kiosk/main'
 import MobileMainPage from './pages/mobile/main'
 import KiosksavePage from './pages/kiosk/savepage'
 import KioskfindPage from './pages/kiosk/findpage'
+import KiosksavingPage from './pages/kiosk/savingpage'
+import KiosksaveresultPage from './pages/kiosk/saveresult'
 
 import './App.css';
 
@@ -27,6 +29,8 @@ function App() {
               )}
               <Route path="/kiosksavepage" element={<KiosksavePage />} />
               <Route path="/kioskfindpage" element={<KioskfindPage />} />
+              <Route path="/kiosksavingpage" element={<KiosksavingPage />} />
+              <Route path="/kiosksaveresultpage" element={<KiosksaveresultPage />} />
           </Routes>
           </BrowserRouter>
     </div>
