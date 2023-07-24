@@ -1,16 +1,16 @@
 package com.inet.juchamsi.domain.user.api;
 
+import com.inet.juchamsi.domain.user.api.request.LoginOwnerRequest;
+import com.inet.juchamsi.domain.user.api.request.SignupOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.OwnerDto;
+import com.inet.juchamsi.domain.user.dto.OwnerDtoList;
 import com.inet.juchamsi.global.api.ApiResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
-
-import java.nio.file.Path;
-import java.util.List;
 
 @RestController
 @RequestMapping("/owner")
