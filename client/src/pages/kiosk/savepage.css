@@ -1,0 +1,31 @@
+.logo {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    left: 30%;
+    top: 5px;
+}
+
+.keypad {
+    position: absolute;
+    left: 0%;
+    top: 60%;
+}
+
+.idfiled {
+    position:absolute;
+    left:15%;
+    top:24%;
+}
+
+.pwfiled {
+    position:absolute;
+    left:15%;
+    top:40%;
+}
+
+.keypad {
+    position: absolute;
+    top:50%;
+    left:15%;
+}
