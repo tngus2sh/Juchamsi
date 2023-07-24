@@ -2,6 +2,7 @@ package com.inet.juchamsi.domain.user.api;
 
 import com.inet.juchamsi.domain.user.api.request.LoginAdminRequest;
 import com.inet.juchamsi.domain.user.api.request.SignupAdminRequest;
+import com.inet.juchamsi.domain.user.dto.AdminDto;
 import com.inet.juchamsi.global.api.ApiResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -18,14 +19,14 @@ import org.springframework.web.bind.annotation.*;
 public class AdminApiController {
 
     // 회원 상세 조회
-//    @ApiOperation(value = "회원 상세 조회", notes = "관리자 회원의 회원 정보 상세 조회를 합니다.")
-//    @GetMapping("/{id}")
-//    public ApiResult<AdminDto> showDetailUser(
-//            @ApiParam(value = "id", required = true)
-//            @PathVariable(value = "id") String adminId
-//            ) {
-//        return null;
-//    }
+    @ApiOperation(value = "회원 상세 조회", notes = "관리자 회원의 회원 정보 상세 조회를 합니다.")
+    @GetMapping("/{id}")
+    public ApiResult<AdminDto> showDetailUser(
+            @ApiParam(value = "id", required = true)
+            @PathVariable(value = "id") String adminId
+            ) {
+        return null;
+    }
 
     // 회원가입
     @ApiOperation(value = "회원가입", notes = "신규 관리자를 생성합니다.")
