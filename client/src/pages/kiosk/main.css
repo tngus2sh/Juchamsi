@@ -1,0 +1,40 @@
+.logo {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    left: 40%;
+    top: 10px;
+    }
+
+.centerpage {
+    position: absolute;
+    top: 200px;
+}
+
+.box1 {
+    position: absolute;
+    border-radius: 10%;;
+    top: 400px;
+    left: 20%;
+    border: 1px grey;
+    width:200px;
+    height:200px;
+    background-color: #33907C;
+}
+
+.box2 {
+    position: absolute;
+    border-radius: 10%;;
+    top: 400px;
+    left: 50%;
+    border: 1px grey;
+    width:200px;
+    height:200px;
+    background-color: #33907C;
+}
+
+.text1 {
+    position: absolute;
+    top: 90px;
+    left:40%;
+}
