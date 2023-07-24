@@ -8,7 +8,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
+import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -29,7 +29,7 @@ const login = () => {
       <Container sx={{ display: 'flex', justifyContent: 'center', marginTop: '130px' }}
       style={{ paddingLeft:'150px', paddingRight:'150px'  }}>
           <Paper elevation={3} style={{ borderRadius: 20 }}>
-          <Grid container style={{ height: '450px'  }}>
+          <Grid container style={{ height: '450px', width: '840px' }}>
           <Grid item xs={5} style={{ backgroundColor: '#B7C4CF', borderTopLeftRadius: 20, borderBottomLeftRadius: 20 }}>
               <div style={{marginTop:'50px'}}><img src={`${process.env.PUBLIC_URL}/images/logo.png`} style={{width:'250px', height:'250px'}} alt="Logo" /></div>
           </Grid>
@@ -70,7 +70,7 @@ const login = () => {
               id="password"
               autoComplete="current-password"
               size='small' 
-                     
+              
             />
             <FormControlLabel
                       control={<Checkbox value="remember" color="mainColor" />}
@@ -93,7 +93,7 @@ const login = () => {
                 회원이 아니신가요?
                   </Grid>
                 <Grid item style={{ marginLeft: '10px'}}>    
-                <Link href="#" variant="body2">
+                <Link to="/signup" variant="body2">
                 <Typography style={{ fontSize: '12px' }}>회원가입</Typography>
                 </Link>
                   </Grid>
