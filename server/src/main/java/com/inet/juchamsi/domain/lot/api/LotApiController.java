@@ -1,7 +1,7 @@
 package com.inet.juchamsi.domain.lot.api;
 
-import com.inet.juchamsi.domain.lot.api.request.CreateLotRequest;
-import com.inet.juchamsi.domain.lot.api.response.LotResponse;
+import com.inet.juchamsi.domain.lot.dto.request.CreateLotRequest;
+import com.inet.juchamsi.domain.lot.dto.response.LotResponse;
 import com.inet.juchamsi.domain.lot.application.LotService;
 import com.inet.juchamsi.global.api.ApiResult;
 import io.swagger.annotations.Api;
