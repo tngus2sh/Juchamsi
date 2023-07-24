@@ -1,8 +1,8 @@
 package com.inet.juchamsi.domain.user.api;
 
-import com.inet.juchamsi.domain.user.api.request.LoginAdminRequest;
-import com.inet.juchamsi.domain.user.api.request.SignupAdminRequest;
-import com.inet.juchamsi.domain.user.dto.AdminDto;
+import com.inet.juchamsi.domain.user.dto.request.LoginAdminRequest;
+import com.inet.juchamsi.domain.user.dto.request.SignupAdminRequest;
+import com.inet.juchamsi.domain.user.dto.response.AdminDto;
 import com.inet.juchamsi.global.api.ApiResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

@@ -1,4 +1,4 @@
-package com.inet.juchamsi.domain.user.dto;
+package com.inet.juchamsi.domain.user.dto.response;
 
 import lombok.Data;
 

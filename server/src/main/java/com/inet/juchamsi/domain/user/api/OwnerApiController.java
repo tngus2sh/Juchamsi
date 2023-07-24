@@ -1,9 +1,9 @@
 package com.inet.juchamsi.domain.user.api;
 
-import com.inet.juchamsi.domain.user.api.request.LoginOwnerRequest;
-import com.inet.juchamsi.domain.user.api.request.SignupOwnerRequest;
-import com.inet.juchamsi.domain.user.dto.OwnerDto;
-import com.inet.juchamsi.domain.user.dto.OwnerDtoList;
+import com.inet.juchamsi.domain.user.dto.request.LoginOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.request.SignupOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.response.OwnerDto;
+import com.inet.juchamsi.domain.user.dto.response.OwnerDtoList;
 import com.inet.juchamsi.global.api.ApiResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
