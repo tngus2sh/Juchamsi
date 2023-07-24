@@ -1,7 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Reset as GlobalReset } from 'styled-reset';
 
-import LoginPage from './pages/login';
+import LoginPage from './pages/web/login';
+import SignUpPage from './pages/web/signup';
 import KioskMainPage from './pages/kiosk/main'
 import MobileMainPage from './pages/mobile/main'
 import KiosksavePage from './pages/kiosk/savepage'
@@ -33,6 +34,7 @@ function App() {
               <Route path="/kiosksavingpage" element={<KiosksavingPage />} />
               <Route path="/kiosksaveresultpage" element={<KiosksaveresultPage />} />
               <Route path="/kioskotherkeypage" element={<KioskOtherkeyPage />} />
+              <Route path="/signup" element={<SignUpPage />}/>
           </Routes>
           </BrowserRouter>
     </div>
