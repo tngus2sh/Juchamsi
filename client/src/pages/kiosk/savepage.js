@@ -3,8 +3,10 @@ import TextField from '@mui/material/TextField';
 import * as React from 'react';
 import './savepage.css';
 import Button from '@mui/material/Button';
+import { useNavigate } from 'react-router-dom';
 
 function Savepage() {
+  const navigate = useNavigate();
   const [idValue, setIdValue] = React.useState('');
   const [pwValue, setPwValue] = React.useState('');
   const [activeField, setActiveField] = React.useState('id');
@@ -30,6 +32,9 @@ function Savepage() {
       }
     } else if (activeField === 'pw') {
       setPwValue((prevValue) => (prevValue.length < 6 ? prevValue + number : prevValue));
+      if (pwValue.length + 1 === 7) {
+        alert('확인 버튼을 눌러주세요.');
+      }
     }
   };
 
@@ -47,6 +52,7 @@ function Savepage() {
     // You can now use inputid and inputpw variables as needed
     console.log('ID:', inputid);
     console.log('Password:', inputpw);
+    navigate('/kiosksavingpage');
   };
 
   return (
@@ -61,7 +67,7 @@ function Savepage() {
       <TextField
         className="idfiled"
         required
-        inputProps={{ maxLength: 4, inputMode: 'numeric', pattern: '[0-9]*' }}
+        inputProps={{ maxLength: 4}}
         type="text"
         variant="standard"
         id="outlined-required1"
@@ -69,13 +75,13 @@ function Savepage() {
         value={idValue}
         onChange={(e) => handleIdChange(e.target.value)}
         onFocus={() => setActiveField('id')}
-        sx={{ position: 'absolute', left: '15%', top: '25%', width: '70%' }}
+        sx={{ position: 'absolute', left: '15%', top: '25%', width: '70%','& input': {textAlign: 'center',},}}
       />
       {/* 간편비밀번호or인증번호 입력창 */}
       <TextField
         className="pwfiled"
         required
-        inputProps={{ maxLength: 6, inputMode: 'numeric', pattern: '[0-9]*' }}
+        inputProps={{ maxLength: 6}}
         type="text"
         variant="standard"
         id="outlined-required2"
@@ -83,7 +89,7 @@ function Savepage() {
         value={pwValue}
         onChange={(e) => handlePwChange(e.target.value)}
         onFocus={() => setActiveField('pw')}
-        sx={{ position: 'absolute', left: '15%', top: '35%', width: '70%' }}
+        sx={{ position: 'absolute', left: '15%', top: '35%', width: '70%' , '& input': {textAlign: 'center',},}}
       />
       {/* 숫자 키패드 */}
       <div className="keypad">
