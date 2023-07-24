@@ -1,9 +1,13 @@
-.footermain {
+.footericon {
     position: absolute;
     left: 2.15%;
-    top: 91.7%;
+    top: 85%;
     bottom: 0.88%;
-    opacity: 0.4;
-    font-size: large;
 }
 
+.footernumber {
+    position: absolute;
+    left: 80%;
+    top: 95%;
+    bottom: 0.88%;
+}
