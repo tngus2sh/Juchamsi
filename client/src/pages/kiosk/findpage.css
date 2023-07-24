@@ -1,7 +1,11 @@
-.logo {
+.pwfiled {
+    position:absolute;
+    left:15%;
+    top:40%;
+}
+
+.keypad {
     position: absolute;
-    width: 150px;
-    height: 150px;
-    left: 40%;
-    top: 10px;
-    }
+    top:50%;
+    left:15%;
+}

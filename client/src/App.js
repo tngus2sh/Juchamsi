@@ -8,6 +8,7 @@ import KiosksavePage from './pages/kiosk/savepage'
 import KioskfindPage from './pages/kiosk/findpage'
 import KiosksavingPage from './pages/kiosk/savingpage'
 import KiosksaveresultPage from './pages/kiosk/saveresult'
+import KioskOtherkeyPage from './pages/kiosk/otherkeypage'
 
 import './App.css';
 
@@ -31,6 +32,7 @@ function App() {
               <Route path="/kioskfindpage" element={<KioskfindPage />} />
               <Route path="/kiosksavingpage" element={<KiosksavingPage />} />
               <Route path="/kiosksaveresultpage" element={<KiosksaveresultPage />} />
+              <Route path="/kioskotherkeypage" element={<KioskOtherkeyPage />} />
           </Routes>
           </BrowserRouter>
     </div>
