@@ -1,8 +1,8 @@
 package com.inet.juchamsi.domain.villa.api;
 
-import com.inet.juchamsi.domain.villa.api.request.CreateVillaRequest;
-import com.inet.juchamsi.domain.villa.api.request.ModifyVillaRequest;
-import com.inet.juchamsi.domain.villa.api.response.VillaResponse;
+import com.inet.juchamsi.domain.villa.dto.request.CreateVillaRequest;
+import com.inet.juchamsi.domain.villa.dto.request.ModifyVillaRequest;
+import com.inet.juchamsi.domain.villa.dto.response.VillaResponse;
 import com.inet.juchamsi.domain.villa.application.VillaService;
 import com.inet.juchamsi.global.api.ApiResult;
 import io.swagger.annotations.Api;
