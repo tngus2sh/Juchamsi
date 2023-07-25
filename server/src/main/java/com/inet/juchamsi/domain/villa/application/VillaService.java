@@ -8,4 +8,5 @@ import org.springframework.transaction.annotation.Transactional;
 public interface VillaService {
     Long createVilla(CreateVillaRequest request);
     Long modifyVilla(ModifyVillaRequest request);
+    void removeVilla(Long villaId);
 }

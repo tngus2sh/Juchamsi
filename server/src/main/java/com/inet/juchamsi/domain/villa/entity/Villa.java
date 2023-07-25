@@ -33,6 +33,7 @@ public class Villa extends TimeBaseEntity {
     @Column(name = "total_count", nullable = false)
     private int totalCount;
 
+    @Setter
     @Enumerated(STRING)
     @Column(nullable = false, length = 6)
     private Active active;
