@@ -4,6 +4,7 @@ import com.inet.juchamsi.domain.villa.application.VillaService;
 import com.inet.juchamsi.domain.villa.dao.VillaRepository;
 import com.inet.juchamsi.domain.villa.dto.request.CreateVillaRequest;
 import com.inet.juchamsi.domain.villa.dto.request.ModifyVillaRequest;
+import com.inet.juchamsi.domain.villa.dto.response.VillaResponse;
 import com.inet.juchamsi.domain.villa.entity.Villa;
 import com.inet.juchamsi.global.error.AlreadyExistException;
 import org.junit.jupiter.api.DisplayName;
@@ -68,6 +69,21 @@ public class VillaServiceTest {
         // then
         assertThatThrownBy(() -> villaService.createVilla(request))
                 .isInstanceOf(AlreadyExistException.class);
+    }
+
+
+    @Test
+    @DisplayName("빌라 상세 조회")
+    void showDetailVilla() {
+        // given
+        Villa targetVilla = insertVilla();
+        String targetVillaIdNumber = targetVilla.getIdNumber();
+
+        // then
+        VillaResponse response = villaService.showDetailVilla(targetVillaIdNumber);
+
+        // then
+        assertThat(response.getId()).isEqualTo(targetVilla.getId());
     }
 
 
