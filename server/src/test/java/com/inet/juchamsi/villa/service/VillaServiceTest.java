@@ -77,13 +77,13 @@ public class VillaServiceTest {
     void showDetailVilla() {
         // given
         Villa targetVilla = insertVilla();
-        String targetVillaIdNumber = targetVilla.getIdNumber();
+        Long targetVillaId = targetVilla.getId();
 
         // then
-        VillaResponse response = villaService.showDetailVilla(targetVillaIdNumber);
+        VillaResponse response = villaService.showDetailVilla(targetVillaId);
 
         // then
-        assertThat(response.getId()).isEqualTo(targetVilla.getId());
+        assertThat(response.getIdNumber()).isEqualTo(targetVilla.getIdNumber());
     }
 
 
