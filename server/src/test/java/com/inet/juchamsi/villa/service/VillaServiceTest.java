@@ -3,6 +3,7 @@ package com.inet.juchamsi.villa.service;
 import com.inet.juchamsi.domain.villa.application.VillaService;
 import com.inet.juchamsi.domain.villa.dao.VillaRepository;
 import com.inet.juchamsi.domain.villa.dto.request.CreateVillaRequest;
+import com.inet.juchamsi.domain.villa.dto.request.ModifyVillaRequest;
 import com.inet.juchamsi.domain.villa.entity.Villa;
 import com.inet.juchamsi.global.error.AlreadyExistException;
 import org.junit.jupiter.api.DisplayName;
@@ -66,6 +67,26 @@ public class VillaServiceTest {
         // then
         assertThatThrownBy(() -> villaService.createVilla(request))
                 .isInstanceOf(AlreadyExistException.class);
+    }
+
+
+    @Test
+    @DisplayName("빌라 수정")
+    void modifyVilla() {
+        // given
+        Villa targetVilla = insertVilla();
+        String newName = "삼성 새 빌라";
+
+        // when
+        ModifyVillaRequest request = ModifyVillaRequest.builder()
+                .id(targetVilla.getId())
+                .name(newName)
+                .build();
+        Long villaId = villaService.modifyVilla(request);
+
+        // then
+        Optional<Villa> findVilla = villaRepository.findById(villaId);
+        assertThat(findVilla.get().getName()).isEqualTo(newName);
     }
 
 
