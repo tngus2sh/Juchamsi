@@ -99,10 +99,10 @@ public class VillaServiceTest {
                 .id(targetVilla.getId())
                 .name(newName)
                 .build();
-        Long villaId = villaService.modifyVilla(request);
+        villaService.modifyVilla(request);
 
         // then
-        Optional<Villa> findVilla = villaRepository.findById(villaId);
+        Optional<Villa> findVilla = villaRepository.findById(targetVilla.getId());
         assertThat(findVilla.get().getName()).isEqualTo(newName);
     }
 
