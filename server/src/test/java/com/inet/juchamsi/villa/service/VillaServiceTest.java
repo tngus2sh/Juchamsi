@@ -14,9 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import static com.inet.juchamsi.global.common.Active.ACTIVE;
+import static com.inet.juchamsi.global.common.Active.DISABLED;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static com.inet.juchamsi.global.common.Active.ACTIVE;
 
 
 @SpringBootTest
@@ -87,6 +88,22 @@ public class VillaServiceTest {
         // then
         Optional<Villa> findVilla = villaRepository.findById(villaId);
         assertThat(findVilla.get().getName()).isEqualTo(newName);
+    }
+
+
+    @Test
+    @DisplayName("빌라 삭제")
+    void removeVilla() {
+        // given
+        Villa targetVilla = insertVilla();
+        Long targetVillaId = targetVilla.getId();
+
+        // when
+        villaService.removeVilla(targetVillaId);
+
+        // then
+        Optional<Villa> findVilla = villaRepository.findById(targetVillaId);
+        assertThat(findVilla.get().getActive()).isEqualTo(DISABLED);
     }
 
 

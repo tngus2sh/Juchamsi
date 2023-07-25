@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 import static com.inet.juchamsi.global.common.Active.ACTIVE;
+import static com.inet.juchamsi.global.common.Active.DISABLED;
 
 @Service
 @RequiredArgsConstructor
@@ -46,12 +47,25 @@ public class VillaServiceImpl implements VillaService {
         Optional<Villa> targetVilla = villaRepository.findById(request.getId());
 
         if(!targetVilla.isPresent()) {
-            throw new NotFoundException(Villa.class, targetVilla.get().getId());
+            throw new NotFoundException(Villa.class, request.getId());
         }
 
         Villa villa = targetVilla.get();
         villa.setName(request.getName());
 
         return villa.getId();
+    }
+
+    @Override
+    @Transactional
+    public void removeVilla(Long villaId) {
+        Optional<Villa> targetVilla = villaRepository.findById(villaId);
+
+        if(!targetVilla.isPresent()) {
+            throw new NotFoundException(Villa.class, villaId);
+        }
+
+        Villa villa = targetVilla.get();
+        villa.setActive(DISABLED);
     }
 }
