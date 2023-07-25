@@ -7,7 +7,8 @@
 
 .footernumber {
     position: absolute;
-    left: 80%;
-    top: 93%;
-    bottom: 3%;
+    left: 79%;
+    top: 96%;
+    font-family: "KorailFont";
+    font-size: 18px;
 }

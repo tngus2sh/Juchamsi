@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import './saveresult.css'
 
-function Savingresult() {
+function Saveresult() {
     let lockernum = 1 
     const navigate = useNavigate();
     const handleOpenSavePage = () => {
@@ -32,4 +32,4 @@ function Savingresult() {
 }
 
 
-export default Savingresult;
+export default Saveresult;

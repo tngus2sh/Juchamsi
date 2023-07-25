@@ -22,7 +22,8 @@ function Savingpage() {
             ></img>
             <Timer/>
             <div className='savingpagetext1'>
-                <p>{lockernum}번 사물함에 키를 보관하시고 확인 버튼을 눌러 주시기 바랍니다.</p>
+                <p>{lockernum}번 사물함에 키를 보관하시고</p>
+                <p>확인 버튼을 눌러 주시기 바랍니다.</p>
             </div>
             <Box component="span" className="savingpagebox1" onClick={handleOpenSavePage}>
                 <p className="savingpagetext2">확인</p>

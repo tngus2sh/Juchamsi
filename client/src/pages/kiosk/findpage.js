@@ -28,9 +28,13 @@ function Savepage() {
 
   const handleOkClick = () => {
     inputpw = pwValue;
-    // axios요청을 보내서 서버에서 응답결과를 받아 타인키 찾기 인지 본인 키 찾기 인지 확인후 if문으로 페이지를 지정해주면 될듯
+    // axios요청으로 백과 연결해서 본인 키 찾기 페이지인지 타인 키 찾기 페이지인지 설정 필요
     console.log('Password:', inputpw);
-    navigate('/kioskfindmekeypage');
+    if (inputpw === '111111') {
+      navigate('/kioskfindmekeypage');
+    } else if (inputpw === '222222') {
+      navigate('/kioskotherkeypage');
+    }
   };
 
   return (

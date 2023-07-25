@@ -1,17 +1,19 @@
-.saveresulttext1 {
+.mekeypagetext1 {
     font-size: larger;
     text-align: start;
     position: absolute;
     width: 400px;
     height: 150px;
-    left: 36%;
-    top: 230px;
+    left: 32%;
+    top: 320px;
+    font-family: "KorailFont";
+    font-size: 20px;
 }
 
-.saveresultbox1 {
+.mekeypagebox1 {
     position: absolute;
     border-radius: 10%;;
-    top: 330px;
+    top: 400px;
     left: 40%;
     border: 1px grey;
     width:150px;
@@ -19,8 +21,10 @@
     background-color: #33907C;
 }
 
-.saveresulttext2 {
+.mekeypagetext2 {
     position: absolute;
     top: 30px;
     left:38%;
+    font-family: "KorailFont";
+    font-size: 20px;
 }
