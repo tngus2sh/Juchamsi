@@ -44,11 +44,11 @@ public class VillaServiceImpl implements VillaService {
 
 
     @Override
-    public VillaResponse showDetailVilla(String villaIdNumber) {
-        Optional<Villa> targetVilla = villaRepository.findByIdNumber(villaIdNumber);
+    public VillaResponse showDetailVilla(Long villaId) {
+        Optional<Villa> targetVilla = villaRepository.findById(villaId);
 
         if(!targetVilla.isPresent()) {
-            throw new NotFoundException(Villa.class, villaIdNumber);
+            throw new NotFoundException(Villa.class, villaId);
         }
 
         Villa villa = targetVilla.get();

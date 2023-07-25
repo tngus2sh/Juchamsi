@@ -10,5 +10,5 @@ public interface VillaService {
     Long createVilla(CreateVillaRequest request);
     Long modifyVilla(ModifyVillaRequest request);
     void removeVilla(Long villaId);
-    VillaResponse showDetailVilla(String villaIdNumber);
+    VillaResponse showDetailVilla(Long villaId);
 }

@@ -11,6 +11,4 @@ public interface VillaRepository extends JpaRepository<Villa, Long> {
 
     @Query("select v.id from Villa v where v.idNumber=:idNumber")
     Optional<Long> existIdNumber(@Param("idNumber") String idNumber);
-
-    Optional<Villa> findByIdNumber(String idNumber);
 }
