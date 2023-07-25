@@ -1,8 +1,10 @@
 package com.inet.juchamsi.user.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inet.juchamsi.domain.user.api.AdminApiController;
 import com.inet.juchamsi.domain.user.application.AdminService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
+import com.inet.juchamsi.domain.user.dto.request.SignupAdminRequest;
 import com.inet.juchamsi.domain.user.entity.Active;
 import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.domain.user.entity.Grade;
@@ -22,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @Transactional
@@ -30,7 +33,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AdminApiTest {
 
     @Autowired
-    protected MockMvc mockMvc;
+    private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Autowired
     AdminApiController adminApiController;
@@ -70,5 +76,26 @@ public class AdminApiTest {
                 .andExpect(jsonPath("$.response.name").exists())
                 .andExpect(jsonPath("$.response.name").value("김주참"));
 
+    }
+
+    @Test
+    @DisplayName("회원 가입 api#아이디중복")
+    void createUser() throws Exception {
+        // given
+        String object = objectMapper.writeValueAsString(SignupAdminRequest.builder()
+                .loginId("adminid")
+                .build());
+
+        // when
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/admin")
+                .content(object)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        // then
+        actions.andDo(print())
+                .andExpect(status().is5xxServerError())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.code").value(-1002));
     }
 }
