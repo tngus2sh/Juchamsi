@@ -10,6 +10,7 @@ import KioskfindPage from './pages/kiosk/findpage'
 import KiosksavingPage from './pages/kiosk/savingpage'
 import KiosksaveresultPage from './pages/kiosk/saveresult'
 import KioskOtherkeyPage from './pages/kiosk/otherkeypage'
+import KioskMeKeyPage from './pages/kiosk/mekeypage'
 
 import './App.css';
 
@@ -34,6 +35,7 @@ function App() {
               <Route path="/kiosksavingpage" element={<KiosksavingPage />} />
               <Route path="/kiosksaveresultpage" element={<KiosksaveresultPage />} />
               <Route path="/kioskotherkeypage" element={<KioskOtherkeyPage />} />
+              <Route path="/kioskfindmekeypage" element={<KioskMeKeyPage />} />
               <Route path="/signup" element={<SignUpPage />}/>
           </Routes>
           </BrowserRouter>
