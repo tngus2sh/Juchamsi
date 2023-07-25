@@ -3,10 +3,13 @@ package com.inet.juchamsi.domain.villa.application.impl;
 import com.inet.juchamsi.domain.villa.application.VillaService;
 import com.inet.juchamsi.domain.villa.dao.VillaRepository;
 import com.inet.juchamsi.domain.villa.dto.request.CreateVillaRequest;
+import com.inet.juchamsi.domain.villa.dto.request.ModifyVillaRequest;
 import com.inet.juchamsi.domain.villa.entity.Villa;
 import com.inet.juchamsi.global.error.AlreadyExistException;
+import com.inet.juchamsi.global.error.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -35,5 +38,20 @@ public class VillaServiceImpl implements VillaService {
         Villa saveVilla = villaRepository.save(villa);
 
         return saveVilla.getId();
+    }
+
+    @Override
+    @Transactional
+    public Long modifyVilla(ModifyVillaRequest request) {
+        Optional<Villa> targetVilla = villaRepository.findById(request.getId());
+
+        if(!targetVilla.isPresent()) {
+            throw new NotFoundException(Villa.class, targetVilla.get().getId());
+        }
+
+        Villa villa = targetVilla.get();
+        villa.setName(request.getName());
+
+        return villa.getId();
     }
 }

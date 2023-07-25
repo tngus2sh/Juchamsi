@@ -4,6 +4,7 @@ import com.inet.juchamsi.global.common.Active;
 import com.inet.juchamsi.global.common.TimeBaseEntity;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -19,17 +20,18 @@ public class Villa extends TimeBaseEntity {
     @Column()
     private Long id;
 
+    @Setter
     @Column(nullable = false, length = 100)
-    String name;
+    private String name;
 
     @Column(nullable = false)
-    String address;
+    private String address;
 
     @Column(name = "id_number", nullable = false, length = 15)
-    String idNumber;
+    private String idNumber;
 
     @Column(name = "total_count", nullable = false)
-    int totalCount;
+    private int totalCount;
 
     @Enumerated(STRING)
     @Column(nullable = false, length = 6)
