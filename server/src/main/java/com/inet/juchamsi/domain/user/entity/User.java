@@ -15,13 +15,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static javax.persistence.EnumType.STRING;
+import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Getter
 public class User extends TimeBaseEntity implements UserDetails {
     
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = IDENTITY)
+    @Column()
     private Long id;
 //    @JoinColumn(name = "id", nullable = false)
 //    @ManyToOne(fetch = FetchType.LAZY)
@@ -30,16 +32,16 @@ public class User extends TimeBaseEntity implements UserDetails {
     private String phoneNumber;
     @Column(nullable = false, length = 15)
     private String loginId;
-    @Column(nullable = false, length = 6)
+    @Column(nullable = false, length = 16)
     private String password;
     @Column(nullable = false, updatable = false, length = 20)
     private String name;
     @Enumerated(STRING)
     @Column(nullable = false, updatable = false, length = 20)
     private Grade grade;
-    @Column(unique = true, nullable = false, length = 15)
+    @Column(unique = true, length = 15)
     private String carNumber;
-    @Column(nullable = false)
+    @Column
     private int villaNumber;
     @Enumerated(STRING)
     @Column(length = 20)
@@ -54,9 +56,10 @@ public class User extends TimeBaseEntity implements UserDetails {
     public User() {}
 
     @Builder
-    public User(Long id, String phoneNumber, String password, String name, Grade grade, String carNumber, int villaNumber, Approve approve, Active active, List<String> roles) {
+    public User(Long id, String phoneNumber, String loginId, String password, String name, Grade grade, String carNumber, int villaNumber, Approve approve, Active active, List<String> roles) {
         this.id = id;
         this.phoneNumber = phoneNumber;
+        this.loginId = loginId;
         this.password = password;
         this.name = name;
         this.grade = grade;
@@ -70,9 +73,10 @@ public class User extends TimeBaseEntity implements UserDetails {
     /*
         연관관계 편의 메서드
      */
-    public static User createUser(String phoneNumber, String password, String name, Grade grade, String carNumber, int villaNumber, Approve approve, Active active, String role) {
+    public static User createUser(String phoneNumber, String loginId, String password, String name, Grade grade, String carNumber, int villaNumber, Approve approve, Active active, String role) {
         return User.builder()
                 .phoneNumber(phoneNumber)
+                .loginId(loginId)
                 .password(password)
                 .name(name)
                 .grade(grade)
