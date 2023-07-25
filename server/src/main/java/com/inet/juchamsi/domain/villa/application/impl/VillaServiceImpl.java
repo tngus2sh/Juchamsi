@@ -94,5 +94,4 @@ public class VillaServiceImpl implements VillaService {
         villa.setActive(DISABLED);
     }
 
-
 }
