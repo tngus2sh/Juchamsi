@@ -4,6 +4,7 @@ import com.inet.juchamsi.domain.villa.application.VillaService;
 import com.inet.juchamsi.domain.villa.dao.VillaRepository;
 import com.inet.juchamsi.domain.villa.dto.request.CreateVillaRequest;
 import com.inet.juchamsi.domain.villa.dto.request.ModifyVillaRequest;
+import com.inet.juchamsi.domain.villa.dto.response.VillaResponse;
 import com.inet.juchamsi.domain.villa.entity.Villa;
 import com.inet.juchamsi.global.error.AlreadyExistException;
 import com.inet.juchamsi.global.error.NotFoundException;
@@ -41,6 +42,30 @@ public class VillaServiceImpl implements VillaService {
         return saveVilla.getId();
     }
 
+
+    @Override
+    public VillaResponse showDetailVilla(String villaIdNumber) {
+        Optional<Villa> targetVilla = villaRepository.findByIdNumber(villaIdNumber);
+
+        if(!targetVilla.isPresent()) {
+            throw new NotFoundException(Villa.class, villaIdNumber);
+        }
+
+        Villa villa = targetVilla.get();
+        VillaResponse response = VillaResponse.builder()
+                .id(villa.getId())
+                .name(villa.getName())
+                .address(villa.getAddress())
+                .idNumber(villa.getIdNumber())
+                .totalCount(villa.getTotalCount())
+                .createDate(villa.getCreatedDate())
+                .lastModifiedDate(villa.getLastModifiedDate())
+                .build();
+
+        return response;
+    }
+
+
     @Override
     @Transactional
     public Long modifyVilla(ModifyVillaRequest request) {
@@ -68,4 +93,6 @@ public class VillaServiceImpl implements VillaService {
         Villa villa = targetVilla.get();
         villa.setActive(DISABLED);
     }
+
+
 }
