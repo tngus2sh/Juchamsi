@@ -48,6 +48,7 @@ public class VillaApiController {
     @ApiOperation(value = "빌라 삭제", notes = "등록된 빌라를 삭제합니다")
     @DeleteMapping("/{villa_id}")
     public ApiResult<Void> removeViila(@ApiParam(value = "villa-id") @PathVariable("villa_id") Long villaId) {
-        return null;
+        villaService.removeVilla(villaId);
+        return OK(null);
     }
 }
