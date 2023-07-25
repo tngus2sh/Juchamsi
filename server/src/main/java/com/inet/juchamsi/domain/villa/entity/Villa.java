@@ -35,7 +35,7 @@ public class Villa extends TimeBaseEntity {
 
     @Setter
     @Enumerated(STRING)
-    @Column(nullable = false, length = 6)
+    @Column(nullable = false)
     private Active active;
 
 

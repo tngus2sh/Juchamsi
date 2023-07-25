@@ -13,6 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 
+import static com.inet.juchamsi.global.api.ApiResult.OK;
+
+
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -32,7 +35,8 @@ public class VillaApiController {
     @ApiOperation(value = "빌라 상세 조회", notes = "사용자는 자신의 빌라 상세 정보를 조회합니다")
     @GetMapping("/{villa_id}")
     public ApiResult<VillaResponse> showDetailVilla(@ApiParam(value = "villa-id") @PathVariable("villa_id") Long villaId) {
-        return null;
+        VillaResponse response = villaService.showDetailVilla(villaId);
+        return OK(response);
     }
 
     @ApiOperation(value = "빌라 수정", notes = "등록된 빌라 정보를 수정합니다")
