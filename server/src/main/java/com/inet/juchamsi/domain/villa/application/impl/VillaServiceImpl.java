@@ -84,7 +84,7 @@ public class VillaServiceImpl implements VillaService {
     public void removeVilla(Long villaId) {
         Optional<Villa> targetVilla = villaRepository.findById(villaId);
 
-        if(!targetVilla.isPresent()) {
+        if(!targetVilla.isPresent() || targetVilla.get().getActive().equals(DISABLED)) {
             throw new NotFoundException(Villa.class, villaId);
         }
 
