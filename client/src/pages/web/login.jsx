@@ -23,7 +23,7 @@ const theme = createTheme({
   },
 });
 
-const login = () => {
+const Login = () => {
   return (
     <ThemeProvider theme={theme}>
       <Container sx={{ display: 'flex', justifyContent: 'center', marginTop: '130px' }}
@@ -111,4 +111,4 @@ const login = () => {
     );
 };
 
-export default login;
+export default Login;
