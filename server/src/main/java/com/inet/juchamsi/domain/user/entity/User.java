@@ -28,6 +28,8 @@ public class User extends TimeBaseEntity implements UserDetails {
 //    Villa villa;
     @Column(unique = true, nullable = false, length = 13)
     private String phoneNumber;
+    @Column(nullable = false, length = 15)
+    private String loginId;
     @Column(nullable = false, length = 6)
     private String password;
     @Column(nullable = false, updatable = false, length = 20)
