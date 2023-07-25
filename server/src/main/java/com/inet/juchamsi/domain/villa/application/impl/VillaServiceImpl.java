@@ -68,17 +68,15 @@ public class VillaServiceImpl implements VillaService {
 
     @Override
     @Transactional
-    public Long modifyVilla(ModifyVillaRequest request) {
+    public void modifyVilla(ModifyVillaRequest request) {
         Optional<Villa> targetVilla = villaRepository.findById(request.getId());
 
-        if(!targetVilla.isPresent()) {
+        if(!targetVilla.isPresent() || targetVilla.get().getActive().equals(DISABLED)) {
             throw new NotFoundException(Villa.class, request.getId());
         }
 
         Villa villa = targetVilla.get();
         villa.setName(request.getName());
-
-        return villa.getId();
     }
 
     @Override

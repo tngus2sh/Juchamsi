@@ -41,7 +41,8 @@ public class VillaApiController {
     @ApiOperation(value = "빌라 수정", notes = "등록된 빌라 정보를 수정합니다")
     @PutMapping("")
     public ApiResult<Void> modifyVilla(@ApiParam(value = "villa-dto") @RequestBody ModifyVillaRequest request) {
-        return null;
+        villaService.modifyVilla(request);
+        return OK(null);
     }
 
     @ApiOperation(value = "빌라 삭제", notes = "등록된 빌라를 삭제합니다")
