@@ -6,6 +6,8 @@
     height: 150px;
     left: 32%;
     top: 320px;
+    font-family: "KorailFont";
+    font-size: 20px;
 }
 
 .savingpagebox1 {
@@ -23,4 +25,7 @@
     position: absolute;
     top: 30px;
     left:38%;
+    font-family: "KorailFont";
+    font-size: 20px;
 }
+

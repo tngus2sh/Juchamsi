@@ -28,9 +28,13 @@ function Savepage() {
 
   const handleOkClick = () => {
     inputpw = pwValue;
-    // You can now use inputid and inputpw variables as needed
+    // axios요청으로 백과 연결해서 본인 키 찾기 페이지인지 타인 키 찾기 페이지인지 설정 필요
     console.log('Password:', inputpw);
-    navigate('/kioskotherkeypage');
+    if (inputpw === '111111') {
+      navigate('/kioskfindmekeypage');
+    } else if (inputpw === '222222') {
+      navigate('/kioskotherkeypage');
+    }
   };
 
   return (

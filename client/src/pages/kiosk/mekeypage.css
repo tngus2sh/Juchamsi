@@ -1,8 +1,8 @@
-.saveresulttext1 {
+.mekeypagetext1 {
     font-size: larger;
     text-align: start;
     position: absolute;
-    width: 500px;
+    width: 400px;
     height: 150px;
     left: 32%;
     top: 320px;
@@ -10,7 +10,7 @@
     font-size: 20px;
 }
 
-.saveresultbox1 {
+.mekeypagebox1 {
     position: absolute;
     border-radius: 10%;;
     top: 400px;
@@ -21,7 +21,7 @@
     background-color: #33907C;
 }
 
-.saveresulttext2 {
+.mekeypagetext2 {
     position: absolute;
     top: 30px;
     left:38%;
