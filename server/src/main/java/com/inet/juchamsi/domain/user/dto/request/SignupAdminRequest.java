@@ -1,6 +1,7 @@
 package com.inet.juchamsi.domain.user.dto.request;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.SQLUpdate;
 import org.springframework.security.core.parameters.P;
@@ -30,7 +31,7 @@ public class SignupAdminRequest {
     @Size(min = 8, max = 16)
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$")
     @ApiModelProperty(example = "juchamsi1234!")
-    private String passsword;
+    private String password;
     @NotBlank
     @Size(max = 20)
     @Pattern(regexp = "^[a-zA-Z가-힣]*$")
@@ -48,5 +49,16 @@ public class SignupAdminRequest {
     @Pattern(regexp = "^[0-9]*$")
     @ApiModelProperty(example = "101")
     private int villaNumber;
-    
+
+    @Builder
+    public SignupAdminRequest(Long villaId, String phoneNumber, String loginId, String password, String name, String grade, String carNumber, int villaNumber) {
+        this.villaId = villaId;
+        this.phoneNumber = phoneNumber;
+        this.loginId = loginId;
+        this.password = password;
+        this.name = name;
+        this.grade = grade;
+        this.carNumber = carNumber;
+        this.villaNumber = villaNumber;
+    }
 }
