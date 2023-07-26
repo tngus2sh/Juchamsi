@@ -3,27 +3,28 @@ package com.inet.juchamsi.domain.user.dto.request;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Data;
-import org.hibernate.annotations.SQLUpdate;
-import org.springframework.security.core.parameters.P;
+import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Data
-public class SignupAdminRequest {
+@NoArgsConstructor
+public class CreateOwnerRequest {
     
     @NotBlank
-    @Pattern(regexp = "^[0-9]*$")
+    @Pattern(regexp = "^([0-9]+-[0-9]+)|([0-9]+)$")
     @ApiModelProperty(example = "12")
-    private Long villaId;
+    private String villaId;
     @NotBlank
     @Size(min = 13, max = 13)
     @Pattern(regexp = "^01(?:0|1|[6-9])\\d{3,4}\\d{4}$")
     @ApiModelProperty(example = "01012345678")
     private String phoneNumber;
     @NotBlank
-    @Size(max = 15)
+    @Size(min = 6, max = 15)
     @Pattern(regexp = "^[a-zA-Z0-9]*$")
     @ApiModelProperty(example = "userid")
     private String loginId;
@@ -45,16 +46,13 @@ public class SignupAdminRequest {
     @Pattern(regexp = "^\\d{1,3}[가-힣]{1}\\d{4}$")
     @ApiModelProperty(example = "1가1234")
     private String carNumber;
-    @NotBlank
+    @Range(min = 1)
     @Pattern(regexp = "^[0-9]*$")
     @ApiModelProperty(example = "101")
     private int villaNumber;
 
-    public SignupAdminRequest() {
-    }
-
     @Builder
-    public SignupAdminRequest(Long villaId, String phoneNumber, String loginId, String password, String name, String grade, String carNumber, int villaNumber) {
+    public CreateOwnerRequest(String villaId, String phoneNumber, String loginId, String password, String name, String grade, String carNumber, int villaNumber) {
         this.villaId = villaId;
         this.phoneNumber = phoneNumber;
         this.loginId = loginId;
