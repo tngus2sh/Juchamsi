@@ -82,6 +82,21 @@ public class VillaApiTest {
                 .andExpect(jsonPath("$.success").value(true));
     }
 
+    @Test
+    @DisplayName("빌라 삭제")
+    void removeVilla() throws Exception {
+        // given
+        Villa targetVilla = insertVilla();
+        Long targetVillaId = targetVilla.getId();
+
+        // when
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.delete("/villa/{villa_id}", targetVillaId));
+
+        // then
+        actions.andDo(print())
+                .andExpect(jsonPath("$.success").value(true));
+    }
+
 
     private Villa insertVilla() {
         Villa villa = Villa.builder()
