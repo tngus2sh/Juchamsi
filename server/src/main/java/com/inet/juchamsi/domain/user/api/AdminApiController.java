@@ -4,6 +4,7 @@ import com.inet.juchamsi.domain.user.application.AdminService;
 import com.inet.juchamsi.domain.user.dto.request.LoginAdminOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminResponse;
+import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.global.api.ApiResult;
 import com.inet.juchamsi.global.jwt.TokenInfo;
 import io.swagger.annotations.Api;
@@ -93,9 +94,13 @@ public class AdminApiController {
     @GetMapping("/{id}/{approve}")
     public ApiResult<Void> manageApprove(
             @ApiParam(value = "admin")
-            @PathVariable(value = "id") String ownerId
+            @PathVariable(value = "id") String ownerId,
+            @ApiParam(value = "approve")
+            @PathVariable(value = "approve") String approve
             ) {
-        return null;
+        log.debug("admin={}, approve={}", ownerId, approve);
+        adminService.manageApprove(ownerId, Approve.valueOf(approve));
+        return OK(null);
     } 
     
     // 탈퇴
@@ -105,7 +110,9 @@ public class AdminApiController {
             @ApiParam(value = "admin-id")
             @PathVariable(value = "id") String adminId
             ) {
-        return null;
+        log.debug("adminId={}", adminId);
+        adminService.removeUser(adminId);
+        return OK(null);
     }
     
 }
