@@ -1,5 +1,6 @@
 package com.inet.juchamsi.domain.user.api;
 
+import com.inet.juchamsi.domain.user.application.AdminService;
 import com.inet.juchamsi.domain.user.dto.request.LoginAdminRequest;
 import com.inet.juchamsi.domain.user.dto.request.SignupAdminRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminResponse;
@@ -11,12 +12,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import static com.inet.juchamsi.global.api.ApiResult.OK;
+
 @RestController
 @RequestMapping("/admin")
 @Slf4j
 @RequiredArgsConstructor
 @Api(tags = {"관리자 계정"})
 public class AdminApiController {
+
+    private final AdminService adminService;
 
     // 회원 상세 조회
     @ApiOperation(value = "회원 상세 조회", notes = "관리자 회원의 회원 정보 상세 조회를 합니다.")
@@ -25,7 +30,9 @@ public class AdminApiController {
             @ApiParam(value = "id")
             @PathVariable(value = "id") String adminId
             ) {
-        return null;
+        log.debug("adminId={}", adminId);
+        AdminResponse adminResponse = adminService.showDetailUser(adminId);
+        return OK(adminResponse);
     }
 
     // 회원가입
@@ -34,7 +41,21 @@ public class AdminApiController {
     public ApiResult<Void> createUser(
             @ApiParam(value = "admin-dto")
             @RequestBody SignupAdminRequest request) {
-        return null;
+        log.debug("SignupAdminRequest={}", request);
+        SignupAdminRequest dto = SignupAdminRequest.builder()
+                .villaId(request.getVillaId())
+                .phoneNumber(request.getPhoneNumber())
+                .loginId(request.getLoginId())
+                .password(request.getPassword())
+                .name(request.getName())
+                .grade(request.getGrade())
+                .carNumber(request.getCarNumber())
+                .villaNumber(request.getVillaNumber())
+                .build();
+
+        Long adminId = adminService.createUser(dto);
+        log.info("createUser admin={}", adminId);
+        return OK(null);
     }
 
     // 로그인
