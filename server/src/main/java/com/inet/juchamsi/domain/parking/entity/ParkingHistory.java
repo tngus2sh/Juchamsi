@@ -1,6 +1,5 @@
 package com.inet.juchamsi.domain.parking.entity;
 
-import com.inet.juchamsi.domain.lot.entity.ParkingLot;
 import com.inet.juchamsi.global.common.TimeBaseEntity;
 import lombok.Getter;
 
