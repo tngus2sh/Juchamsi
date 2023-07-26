@@ -87,13 +87,13 @@ public class AdminServiceImpl implements AdminService {
         TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
         
         // 4. 데이터베이스에 refreshToken 저장
-        userRepository.updateRefreshToken(adminId, password);
+        userRepository.updateRefreshToken(adminId, tokenInfo.getRefreshToken());
         
         return tokenInfo;
     }
 
     @Override
     public void logout(String adminId) {
-
+        
     }
 }
