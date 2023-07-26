@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import static com.inet.juchamsi.global.api.ApiResult.OK;
+
 
 @RestController
 @Slf4j
@@ -31,19 +33,22 @@ public class VillaApiController {
 
     @ApiOperation(value = "빌라 상세 조회", notes = "사용자는 자신의 빌라 상세 정보를 조회합니다")
     @GetMapping("/{villa_id}")
-    public ApiResult<VillaResponse> showVillaDetail(@ApiParam(value = "villa-id") @PathVariable("villa_id") Long villaId) {
-        return null;
+    public ApiResult<VillaResponse> showDetailVilla(@ApiParam(value = "villa-id") @PathVariable("villa_id") Long villaId) {
+        VillaResponse response = villaService.showDetailVilla(villaId);
+        return OK(response);
     }
 
     @ApiOperation(value = "빌라 수정", notes = "등록된 빌라 정보를 수정합니다")
     @PutMapping("")
     public ApiResult<Void> modifyVilla(@ApiParam(value = "villa-dto") @RequestBody ModifyVillaRequest request) {
-        return null;
+        villaService.modifyVilla(request);
+        return OK(null);
     }
 
     @ApiOperation(value = "빌라 삭제", notes = "등록된 빌라를 삭제합니다")
     @DeleteMapping("/{villa_id}")
     public ApiResult<Void> removeViila(@ApiParam(value = "villa-id") @PathVariable("villa_id") Long villaId) {
-        return null;
+        villaService.removeVilla(villaId);
+        return OK(null);
     }
 }
