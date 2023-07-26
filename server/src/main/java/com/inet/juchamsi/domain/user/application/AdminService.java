@@ -20,4 +20,7 @@ public interface AdminService {
 
     // 로그아웃
     void logout(String adminId);
+
+    // 회원정보수정
+    Long modifyUser(CreateOwnerRequest dto);
 }
