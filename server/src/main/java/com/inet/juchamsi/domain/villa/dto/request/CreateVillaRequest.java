@@ -33,6 +33,8 @@ public class CreateVillaRequest {
     private int totalCount;
 
 
+    public CreateVillaRequest() {}
+
     @Builder
     public CreateVillaRequest(String name, String address, String idNumber, int totalCount) {
         this.name = name;
