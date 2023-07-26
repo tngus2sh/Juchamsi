@@ -2,6 +2,7 @@ package com.inet.juchamsi.domain.user.application;
 
 import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminResponse;
+import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.global.jwt.TokenInfo;
 
 import javax.transaction.Transactional;
@@ -23,4 +24,10 @@ public interface AdminService {
 
     // 회원정보수정
     Long modifyUser(CreateOwnerRequest dto);
+
+    // 집주인 회원가입 요청 관리
+    Long manageApprove(String ownerId, Approve approve);
+
+    // 탈퇴
+    Long removeUser(String adminId);
 }
