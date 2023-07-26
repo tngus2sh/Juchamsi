@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inet.juchamsi.domain.villa.api.VillaApiController;
 import com.inet.juchamsi.domain.villa.application.VillaService;
 import com.inet.juchamsi.domain.villa.dao.VillaRepository;
+import com.inet.juchamsi.domain.villa.dto.request.ModifyVillaRequest;
 import com.inet.juchamsi.domain.villa.entity.Villa;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -56,6 +58,28 @@ public class VillaApiTest {
 
         // then
         actions.andDo(print());
+    }
+
+    @Test
+    @DisplayName("빌라 수정")
+    void modifyVilla() throws Exception {
+        // given
+        Villa targetVilla = insertVilla();
+        String newName = "삼성 새 빌라";
+        String object = objectMapper.writeValueAsString(ModifyVillaRequest.builder()
+                .id(targetVilla.getId())
+                .name(newName)
+                .build());
+
+        // when
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.put("/villa")
+                .content(object)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        // then
+        actions.andDo(print())
+                .andExpect(jsonPath("$.success").value(true));
     }
 
 

@@ -23,6 +23,9 @@ public class ModifyVillaRequest {
     private String name;
 
 
+
+    public ModifyVillaRequest() {}
+
     @Builder
     public ModifyVillaRequest(Long id, String name) {
         this.id = id;
