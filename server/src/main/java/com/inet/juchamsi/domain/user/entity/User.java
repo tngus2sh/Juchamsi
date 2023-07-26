@@ -1,5 +1,6 @@
 package com.inet.juchamsi.domain.user.entity;
 
+import com.inet.juchamsi.domain.villa.entity.Villa;
 import com.inet.juchamsi.global.common.TimeBaseEntity;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,27 +26,37 @@ public class User extends TimeBaseEntity implements UserDetails {
     @GeneratedValue(strategy = IDENTITY)
     @Column()
     private Long id;
-//    @JoinColumn(name = "id", nullable = false)
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    Villa villa;
-    @Column(unique = true, nullable = false, length = 13)
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "villa_id", nullable = false)
+    Villa villa;
+
+    @Column(name = "phone_number", unique = true, nullable = false, length = 13)
     private String phoneNumber;
-    @Column(nullable = false, length = 15)
+
+    @Column(name = "login_id", nullable = false, length = 15)
     private String loginId;
+
     @Column(nullable = false, length = 16)
     private String password;
+
     @Column(nullable = false, updatable = false, length = 20)
     private String name;
+
     @Enumerated(STRING)
     @Column(nullable = false, updatable = false, length = 20)
     private Grade grade;
-    @Column(unique = true, length = 15)
+
+    @Column(name = "car_number", unique = true, length = 15)
     private String carNumber;
-    @Column
+
+    @Column(name = "villa_number")
     private int villaNumber;
+
     @Enumerated(STRING)
     @Column(length = 20)
     private Approve approve;
+
     @Enumerated(STRING)
     @Column(length = 20)
     private Active active;
@@ -56,8 +67,9 @@ public class User extends TimeBaseEntity implements UserDetails {
     public User() {}
 
     @Builder
-    public User(Long id, String phoneNumber, String loginId, String password, String name, Grade grade, String carNumber, int villaNumber, Approve approve, Active active, List<String> roles) {
+    public User(Long id, Villa villa, String phoneNumber, String loginId, String password, String name, Grade grade, String carNumber, int villaNumber, Approve approve, Active active, List<String> roles) {
         this.id = id;
+        this.villa = villa;
         this.phoneNumber = phoneNumber;
         this.loginId = loginId;
         this.password = password;
@@ -73,6 +85,22 @@ public class User extends TimeBaseEntity implements UserDetails {
     /*
         연관관계 편의 메서드
      */
+    public static User createUser(Villa villa, String phoneNumber, String loginId, String password, String name, Grade grade, String carNumber, int villaNumber, Approve approve, Active active, String role) {
+        return User.builder()
+                .villa(villa)
+                .phoneNumber(phoneNumber)
+                .loginId(loginId)
+                .password(password)
+                .name(name)
+                .grade(grade)
+                .carNumber(carNumber)
+                .villaNumber(villaNumber)
+                .approve(approve)
+                .active(active)
+                .roles(Collections.singletonList(role))
+                .build();
+    }
+
     public static User createUser(String phoneNumber, String loginId, String password, String name, Grade grade, String carNumber, int villaNumber, Approve approve, Active active, String role) {
         return User.builder()
                 .phoneNumber(phoneNumber)
