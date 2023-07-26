@@ -22,7 +22,7 @@ public class ChatRoom extends TimeBaseEntity {
     private Long id;
 
     @Column(nullable = false, length = 100)
-    String status;
+    private String status;
 
     @Builder
     public ChatRoom(Long id, String status) {

@@ -22,7 +22,7 @@ public class Message extends TimeBaseEntity {
     private ChatPeople chatPeople;
 
     @Column(nullable = false)
-    String content;
+    private String content;
 
     public Message(Long id, ChatPeople chatPeople, String content) {
         this.id = id;
