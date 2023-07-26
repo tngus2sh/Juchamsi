@@ -30,7 +30,7 @@ public class User extends TimeBaseEntity implements UserDetails {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "villa_id", nullable = false)
-    Villa villa;
+    private Villa villa;
 
     @Column(name = "phone_number", unique = true, nullable = false, length = 13)
     private String phoneNumber;

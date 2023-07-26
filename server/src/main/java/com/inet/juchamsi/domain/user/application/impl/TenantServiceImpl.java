@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static com.inet.juchamsi.domain.user.entity.Active.ACTIVE;
 import static com.inet.juchamsi.domain.user.entity.Approve.WAIT;
 import static com.inet.juchamsi.domain.user.entity.Grade.USER;
+import static com.inet.juchamsi.global.common.Active.ACTIVE;
 
 @Service
 @RequiredArgsConstructor
