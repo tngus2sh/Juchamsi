@@ -10,6 +10,7 @@ import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.domain.user.entity.Grade;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.domain.villa.entity.Villa;
+import com.inet.juchamsi.global.error.AlreadyExistException;
 import com.inet.juchamsi.global.error.NotFoundException;
 import com.inet.juchamsi.global.jwt.JwtTokenProvider;
 import com.inet.juchamsi.global.jwt.TokenInfo;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,12 +58,12 @@ public class AdminServiceImpl implements AdminService {
     public Long createUser(CreateOwnerRequest dto) {
         Optional<Long> loginId = userRepository.existLoginId(dto.getLoginId());
         if (loginId.isPresent()) {
-            throw new DuplicateException();
+            throw new AlreadyExistException(User.class, loginId.get());
         }
 
         Optional<Long> phoneNumber = userRepository.existPhoneNumber(dto.getPhoneNumber());
         if (phoneNumber.isPresent()) {
-            throw new DuplicateException();
+            throw new AlreadyExistException(User.class, phoneNumber.get());
         }
 
         Villa villa = Villa.builder().idNumber(dto.getVillaId()).build();
@@ -71,6 +73,7 @@ public class AdminServiceImpl implements AdminService {
         return savedUser.getId();
     }
 
+    // 로그인
     @Override
     @Transactional
     public TokenInfo login(String adminId, String password) {
@@ -89,5 +92,32 @@ public class AdminServiceImpl implements AdminService {
         userRepository.updateRefreshToken(adminId, password);
         
         return tokenInfo;
+    }
+
+    // 로그아웃
+    @Override
+    public void logout(String adminId) {
+        // 데이터베이스에서 refreshToken 초기화
+        userRepository.updateRefreshToken(adminId, "");
+    }
+
+    // 회원정보 수정
+    @Override
+    public Long modifyUser(CreateOwnerRequest dto) {
+        Optional<Long> loginId = userRepository.existLoginId(dto.getLoginId());
+        if (!loginId.isPresent()) {
+            throw new NotFoundException(User.class, loginId.get());
+        }
+
+        Optional<Long> phoneNumber = userRepository.existPhoneNumber(dto.getPhoneNumber());
+        if (phoneNumber.isPresent()) {
+            throw new AlreadyExistException(User.class, phoneNumber.get());
+        }
+
+        Villa villa = Villa.builder().idNumber(dto.getVillaId()).build();
+
+        User user = User.createUser(villa, dto.getPhoneNumber(), dto.getLoginId(), dto.getPassword(), dto.getName(), Grade.ADMIN, dto.getCarNumber(), dto.getVillaNumber(), Approve.WAIT, Active.ACTIVE, "ADMIN");
+        User savedUser = userRepository.save(user);
+        return null;
     }
 }
