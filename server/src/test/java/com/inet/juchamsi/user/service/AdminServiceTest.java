@@ -3,7 +3,7 @@ package com.inet.juchamsi.user.service;
 import com.inet.juchamsi.domain.user.application.AdminService;
 import com.inet.juchamsi.domain.user.application.DuplicateException;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
-import com.inet.juchamsi.domain.user.dto.request.SignupAdminRequest;
+import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminResponse;
 import com.inet.juchamsi.domain.user.entity.Active;
 import com.inet.juchamsi.domain.user.entity.Approve;
@@ -51,7 +51,7 @@ public class AdminServiceTest {
         User targetUser = insertUser();
 
         // when
-        SignupAdminRequest dto = SignupAdminRequest.builder()
+        CreateOwnerRequest dto = CreateOwnerRequest.builder()
                 .loginId("adminid")
                 .build();
 
