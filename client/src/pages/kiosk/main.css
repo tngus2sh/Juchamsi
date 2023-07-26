@@ -1,0 +1,44 @@
+.logo {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    left: 40%;
+    top: 10px;
+    }
+
+.centerpage {
+    position: absolute;
+    top: 220px;
+    font-family: "KorailFont";
+    font-size: 35px;
+}
+
+.box1 {
+    position: absolute;
+    border-radius: 10%;;
+    top: 360px;
+    left: 20%;
+    border: 1px grey;
+    width:200px;
+    height:200px;
+    background-color: #33907C;
+}
+
+.box2 {
+    position: absolute;
+    border-radius: 10%;;
+    top: 360px;
+    left: 50%;
+    border: 1px grey;
+    width:200px;
+    height:200px;
+    background-color: #33907C;
+}
+
+.text1 {
+    position: absolute;
+    font-family: "KorailFont";
+    font-size: 30px;
+    top: 80px;
+    left:36%;
+}

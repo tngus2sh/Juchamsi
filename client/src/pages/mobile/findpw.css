@@ -1,0 +1,24 @@
+.pwtoinputid {
+    position: absolute;
+    top:160px;
+    left:45px;
+    width:70%
+}
+
+.pwtoid {
+    position: absolute;
+    top:215px;
+    left:-40px;
+}
+
+.pwtoinputphonenumber {
+    position: absolute;
+    top:200px;
+    width:70%
+}
+
+.findpwloginbtn {
+    position: absolute;
+    top:370px;
+    left:120px;
+}

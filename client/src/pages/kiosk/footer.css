@@ -1,0 +1,14 @@
+.footericon {
+    position: absolute;
+    left: 2.15%;
+    top: 83%;
+    bottom: 3%;
+}
+
+.footernumber {
+    position: absolute;
+    left: 79%;
+    top: 96%;
+    font-family: "KorailFont";
+    font-size: 18px;
+}
