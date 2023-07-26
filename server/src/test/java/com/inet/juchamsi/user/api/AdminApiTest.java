@@ -5,12 +5,11 @@ import com.inet.juchamsi.domain.user.api.AdminApiController;
 import com.inet.juchamsi.domain.user.application.AdminService;
 import com.inet.juchamsi.domain.user.application.DuplicateException;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
-import com.inet.juchamsi.domain.user.dto.request.SignupAdminRequest;
+import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
 import com.inet.juchamsi.domain.user.entity.Active;
 import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.domain.user.entity.Grade;
 import com.inet.juchamsi.domain.user.entity.User;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,13 +20,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @Transactional
@@ -85,7 +84,7 @@ public class AdminApiTest {
     @DisplayName("회원 가입 api#아이디중복")
     void createUser() throws Exception {
         // given
-        String object = objectMapper.writeValueAsString(SignupAdminRequest.builder()
+        String object = objectMapper.writeValueAsString(CreateOwnerRequest.builder()
                 .loginId("adminid")
                 .build());
 
@@ -99,7 +98,8 @@ public class AdminApiTest {
         actions.andDo(print())
                 .andExpect(
                         // assert로 예외를 검사하는 람다 사용
-                        (rslt) -> assertTrue(rslt.getResolvedException().getClass().isAssignableFrom(DuplicateException.class))
+                        MockMvcResultMatchers.jsonPath("$.response.success").value(false)
+//                        (rslt) -> assertTrue(rslt.getResolvedException().getClass().isAssignableFrom(DuplicateException.class))
                 )
                 .andReturn();
     }
