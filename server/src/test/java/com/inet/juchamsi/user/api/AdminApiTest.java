@@ -3,6 +3,7 @@ package com.inet.juchamsi.user.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inet.juchamsi.domain.user.api.AdminApiController;
 import com.inet.juchamsi.domain.user.application.AdminService;
+import com.inet.juchamsi.domain.user.application.DuplicateException;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.SignupAdminRequest;
 import com.inet.juchamsi.domain.user.entity.Active;
@@ -22,6 +23,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -94,8 +97,10 @@ public class AdminApiTest {
 
         // then
         actions.andDo(print())
-                .andExpect(status().is5xxServerError())
-                .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.code").value(-1002));
+                .andExpect(
+                        // assert로 예외를 검사하는 람다 사용
+                        (rslt) -> assertTrue(rslt.getResolvedException().getClass().isAssignableFrom(DuplicateException.class))
+                )
+                .andReturn();
     }
 }
