@@ -1,20 +1,20 @@
 package com.inet.juchamsi.user.service;
 
 import com.inet.juchamsi.domain.user.application.AdminService;
-import com.inet.juchamsi.domain.user.application.DuplicateException;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
-import com.inet.juchamsi.domain.user.dto.request.SignupAdminRequest;
+import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminResponse;
-import com.inet.juchamsi.domain.user.entity.Active;
-import com.inet.juchamsi.domain.user.entity.Approve;
-import com.inet.juchamsi.domain.user.entity.Grade;
 import com.inet.juchamsi.domain.user.entity.User;
+import com.inet.juchamsi.global.error.AlreadyExistException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.inet.juchamsi.domain.user.entity.Approve.APPROVE;
+import static com.inet.juchamsi.domain.user.entity.Grade.ADMIN;
+import static com.inet.juchamsi.global.common.Active.ACTIVE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
@@ -51,13 +51,13 @@ public class AdminServiceTest {
         User targetUser = insertUser();
 
         // when
-        SignupAdminRequest dto = SignupAdminRequest.builder()
+        CreateOwnerRequest dto = CreateOwnerRequest.builder()
                 .loginId("adminid")
                 .build();
 
         // then
         assertThatThrownBy(() -> adminService.createUser(dto))
-                .isInstanceOf(DuplicateException.class);
+                .isInstanceOf(AlreadyExistException.class);
     }
 
     private User insertUser() {
@@ -66,9 +66,9 @@ public class AdminServiceTest {
                 .password("userPw123!")
                 .phoneNumber("01012341234")
                 .name("김주참")
-                .grade(Grade.ADMIN)
-                .approve(Approve.APPROVE)
-                .active(Active.ACTIVE)
+                .grade(ADMIN)
+                .approve(APPROVE)
+                .active(ACTIVE)
                 .build();
         return userRepository.save(user);
     }

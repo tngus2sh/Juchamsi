@@ -8,7 +8,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Data
-public class LoginAdminRequest {
+public class LoginAdminOwnerRequest {
 
     @NotBlank
     @Size(max = 15)

@@ -1,0 +1,86 @@
+.findidresulttext1 {
+    position: absolute;
+    top:200px;
+    left:30px;
+    font-size: 12px;
+}
+
+.findidresultbox1 {
+    box-sizing: border-box;
+    position: absolute;
+    width: 244px;
+    height: 68px;
+    left: 40px;
+    top: 250px;
+    background: #FFFFFF;
+    border: 1px solid #D0D0D0;
+    border-radius: 15px;
+
+}
+
+.findidresulttext2 {
+    position: absolute;
+    top:25px;
+    left:80px;
+}
+
+.findidresulttext3 {
+    position: absolute;
+    top:230px;
+    left:30px;
+    width:80%;
+    font-size: 12px;
+    text-align: start;
+}
+
+.findidresultpw {
+    position: absolute;
+    top:320px;
+    left:75px;
+}
+
+.findresultbox2 {
+        position: absolute;
+        width: 200px;
+        height: 45px;
+        left: 20%;
+        top: 370px;
+        
+        background: #33907C;
+        opacity: 0.8;
+        border-radius: 32px;
+}
+
+.findresultbox3 {
+    position: absolute;
+    width: 120px;
+    height: 45px;
+    left: 10%;
+    top: 300px;
+    
+    background: #33907C;
+    opacity: 0.8;
+    border-radius: 32px;
+}
+
+.findresultbox4 {
+    position: absolute;
+    width: 120px;
+    height: 45px;
+    left: 50%;
+    top: 300px;
+    
+    background: #33907C;
+    opacity: 0.8;
+    border-radius: 32px;
+}
+
+.findidresulttext4 {
+    position: absolute;
+    top:17px;
+    left:13px;
+    width:80%;
+    font-size: 12px;
+    color: aliceblue;
+
+}

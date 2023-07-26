@@ -1,10 +1,11 @@
 package com.inet.juchamsi.domain.user.api;
 
 import com.inet.juchamsi.domain.user.application.AdminService;
-import com.inet.juchamsi.domain.user.dto.request.LoginAdminRequest;
-import com.inet.juchamsi.domain.user.dto.request.SignupAdminRequest;
+import com.inet.juchamsi.domain.user.dto.request.LoginAdminOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminResponse;
 import com.inet.juchamsi.global.api.ApiResult;
+import com.inet.juchamsi.global.jwt.TokenInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -40,9 +41,9 @@ public class AdminApiController {
     @PostMapping
     public ApiResult<Void> createUser(
             @ApiParam(value = "admin-dto")
-            @RequestBody SignupAdminRequest request) {
+            @RequestBody CreateOwnerRequest request) {
         log.debug("SignupAdminRequest={}", request);
-        SignupAdminRequest dto = SignupAdminRequest.builder()
+        CreateOwnerRequest dto = CreateOwnerRequest.builder()
                 .villaId(request.getVillaId())
                 .phoneNumber(request.getPhoneNumber())
                 .loginId(request.getLoginId())
@@ -61,11 +62,14 @@ public class AdminApiController {
     // 로그인
     @ApiOperation(value = "로그인", notes = "userId와 userPassword를 사용해서 로그인을 합니다.")
     @PostMapping("/login")
-    public ApiResult<Void> loginUser(
+    public ApiResult<TokenInfo> loginUser(
             @ApiParam(value = "admin-dto")
-            @RequestBody LoginAdminRequest request
+            @RequestBody LoginAdminOwnerRequest request
     ) {
-        return null;
+        String userId = request.getLoginId();
+        String password = request.getPassword();
+        TokenInfo tokenInfo = adminService.login(userId, password);
+        return OK(tokenInfo);
     }
 
     // 로그아웃
@@ -83,7 +87,7 @@ public class AdminApiController {
     @PutMapping
     public ApiResult<Void> modifyUser(
             @ApiParam(value = "admin-dto")
-            @RequestBody SignupAdminRequest request
+            @RequestBody CreateOwnerRequest request
     ) {
         return null;
     }

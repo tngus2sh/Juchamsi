@@ -1,6 +1,7 @@
 package com.inet.juchamsi.domain.user.entity;
 
 import com.inet.juchamsi.domain.villa.entity.Villa;
+import com.inet.juchamsi.global.common.Active;
 import com.inet.juchamsi.global.common.TimeBaseEntity;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +22,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @Getter
 public class User extends TimeBaseEntity implements UserDetails {
-    
+
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column()
@@ -61,6 +62,9 @@ public class User extends TimeBaseEntity implements UserDetails {
     @Column(length = 20)
     private Active active;
     
+    @Column(name = "refresh_token")
+    private String refreshToken;
+
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
 
@@ -81,7 +85,7 @@ public class User extends TimeBaseEntity implements UserDetails {
         this.active = active;
         this.roles = roles;
     }
-    
+
     /*
         연관관계 편의 메서드
      */
@@ -101,23 +105,8 @@ public class User extends TimeBaseEntity implements UserDetails {
                 .build();
     }
 
-    public static User createUser(String phoneNumber, String loginId, String password, String name, Grade grade, String carNumber, int villaNumber, Approve approve, Active active, String role) {
-        return User.builder()
-                .phoneNumber(phoneNumber)
-                .loginId(loginId)
-                .password(password)
-                .name(name)
-                .grade(grade)
-                .carNumber(carNumber)
-                .villaNumber(villaNumber)
-                .approve(approve)
-                .active(active)
-                .roles(Collections.singletonList(role))
-                .build();
-    }
-    
     // 해당 유저의 권한을 리턴
-    @Override   
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // SimpleGrantedAuthority::new -> 생성자를 가리키는 메서드 참조, SimpleGrantedAuthority(사용자의 권한을 나타내는데 활용)
         // .map() -> 스트림의 각 요소를 SimpleGrantedAuthority객체로 변환하는 데에 사용되는 메서드 참조
