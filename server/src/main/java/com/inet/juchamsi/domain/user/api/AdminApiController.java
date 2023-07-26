@@ -41,7 +41,21 @@ public class AdminApiController {
     public ApiResult<Void> createUser(
             @ApiParam(value = "admin-dto")
             @RequestBody SignupAdminRequest request) {
-        return null;
+        log.debug("SignupAdminRequest={}", request);
+        SignupAdminRequest dto = SignupAdminRequest.builder()
+                .villaId(request.getVillaId())
+                .phoneNumber(request.getPhoneNumber())
+                .loginId(request.getLoginId())
+                .password(request.getPassword())
+                .name(request.getName())
+                .grade(request.getGrade())
+                .carNumber(request.getCarNumber())
+                .villaNumber(request.getVillaNumber())
+                .build();
+
+        Long adminId = adminService.createUser(dto);
+        log.info("createUser admin={}", adminId);
+        return OK(null);
     }
 
     // 로그인

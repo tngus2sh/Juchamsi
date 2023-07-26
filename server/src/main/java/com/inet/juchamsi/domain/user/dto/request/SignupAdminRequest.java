@@ -50,6 +50,9 @@ public class SignupAdminRequest {
     @ApiModelProperty(example = "101")
     private int villaNumber;
 
+    public SignupAdminRequest() {
+    }
+
     @Builder
     public SignupAdminRequest(Long villaId, String phoneNumber, String loginId, String password, String name, String grade, String carNumber, int villaNumber) {
         this.villaId = villaId;

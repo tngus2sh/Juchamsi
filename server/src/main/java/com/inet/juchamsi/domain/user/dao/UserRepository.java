@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
+    @Query("select u.id from User u where u.loginId=:loginId")
+    Optional<Long> existLoginId(@Param("loginId") String loginId);
 
     @Query("select u.id from User u where u.phoneNumber=:phoneNumber")
     Optional<Long> existPhoneNumber(@Param("phoneNumber") String phoneNumber);

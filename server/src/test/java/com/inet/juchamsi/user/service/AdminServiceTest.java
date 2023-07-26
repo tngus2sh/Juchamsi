@@ -1,6 +1,7 @@
 package com.inet.juchamsi.user.service;
 
 import com.inet.juchamsi.domain.user.application.AdminService;
+import com.inet.juchamsi.domain.user.application.DuplicateException;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.SignupAdminRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminResponse;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 @SpringBootTest
 @Transactional
@@ -40,6 +42,22 @@ public class AdminServiceTest {
         System.out.println("response = " + response);
         assertThat(response.getPhoneNumber()).isEqualTo(targetUser.getPhoneNumber());
 
+    }
+
+    @Test
+    @DisplayName("회원 가입#아이디 중복")
+    void createUser() {
+        // given
+        User targetUser = insertUser();
+
+        // when
+        SignupAdminRequest dto = SignupAdminRequest.builder()
+                .loginId("adminid")
+                .build();
+
+        // then
+        assertThatThrownBy(() -> adminService.createUser(dto))
+                .isInstanceOf(DuplicateException.class);
     }
 
     private User insertUser() {
