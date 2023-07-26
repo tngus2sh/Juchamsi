@@ -1,15 +1,19 @@
 package com.inet.juchamsi.domain.user.api;
 
-import com.inet.juchamsi.domain.user.dto.request.LoginAdminRequest;
-import com.inet.juchamsi.domain.user.dto.request.SignupAdminRequest;
+import com.inet.juchamsi.domain.user.application.AdminService;
+import com.inet.juchamsi.domain.user.dto.request.LoginAdminOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminResponse;
 import com.inet.juchamsi.global.api.ApiResult;
+import com.inet.juchamsi.global.jwt.TokenInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import static com.inet.juchamsi.global.api.ApiResult.OK;
 
 @RestController
 @RequestMapping("/admin")
@@ -18,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = {"관리자 계정"})
 public class AdminApiController {
 
+    private final AdminService adminService;
+
     // 회원 상세 조회
     @ApiOperation(value = "회원 상세 조회", notes = "관리자 회원의 회원 정보 상세 조회를 합니다.")
     @GetMapping("/{id}")
@@ -25,7 +31,9 @@ public class AdminApiController {
             @ApiParam(value = "id")
             @PathVariable(value = "id") String adminId
             ) {
-        return null;
+        log.debug("adminId={}", adminId);
+        AdminResponse adminResponse = adminService.showDetailUser(adminId);
+        return OK(adminResponse);
     }
 
     // 회원가입
@@ -33,18 +41,35 @@ public class AdminApiController {
     @PostMapping
     public ApiResult<Void> createUser(
             @ApiParam(value = "admin-dto")
-            @RequestBody SignupAdminRequest request) {
-        return null;
+            @RequestBody CreateOwnerRequest request) {
+        log.debug("SignupAdminRequest={}", request);
+        CreateOwnerRequest dto = CreateOwnerRequest.builder()
+                .villaId(request.getVillaId())
+                .phoneNumber(request.getPhoneNumber())
+                .loginId(request.getLoginId())
+                .password(request.getPassword())
+                .name(request.getName())
+                .grade(request.getGrade())
+                .carNumber(request.getCarNumber())
+                .villaNumber(request.getVillaNumber())
+                .build();
+
+        Long adminId = adminService.createUser(dto);
+        log.info("createUser admin={}", adminId);
+        return OK(null);
     }
 
     // 로그인
     @ApiOperation(value = "로그인", notes = "userId와 userPassword를 사용해서 로그인을 합니다.")
     @PostMapping("/login")
-    public ApiResult<Void> loginUser(
+    public ApiResult<TokenInfo> loginUser(
             @ApiParam(value = "admin-dto")
-            @RequestBody LoginAdminRequest request
+            @RequestBody LoginAdminOwnerRequest request
     ) {
-        return null;
+        String userId = request.getLoginId();
+        String password = request.getPassword();
+        TokenInfo tokenInfo = adminService.login(userId, password);
+        return OK(tokenInfo);
     }
 
     // 로그아웃
@@ -62,7 +87,7 @@ public class AdminApiController {
     @PutMapping
     public ApiResult<Void> modifyUser(
             @ApiParam(value = "admin-dto")
-            @RequestBody SignupAdminRequest request
+            @RequestBody CreateOwnerRequest request
     ) {
         return null;
     }

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import './saveresult.css'
 
-function Savingresult() {
+function Saveresult() {
     let lockernum = 1 
     const navigate = useNavigate();
     const handleOpenSavePage = () => {
@@ -20,7 +20,8 @@ function Savingresult() {
             alt={'title'}
             ></img>
             <div className='saveresulttext1'>
-                <p>{lockernum}번 사물함에 키를 보관하시고 확인 버튼을 눌러 주시기 바랍니다.</p>
+                <p>{lockernum}번 사물함에 키 보관을 완료했습니다</p>
+                <p>이용해주셔서 감사합니다.</p>
             </div>
             <Box component="span" className="saveresultbox1" onClick={handleOpenSavePage}>
                 <p className="saveresulttext2">확인</p>
@@ -31,4 +32,4 @@ function Savingresult() {
 }
 
 
-export default Savingresult;
+export default Saveresult;

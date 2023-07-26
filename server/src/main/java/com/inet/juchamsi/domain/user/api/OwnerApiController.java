@@ -1,7 +1,7 @@
 package com.inet.juchamsi.domain.user.api;
 
-import com.inet.juchamsi.domain.user.dto.request.LoginOwnerRequest;
-import com.inet.juchamsi.domain.user.dto.request.SignupOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.request.LoginAdminOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
 import com.inet.juchamsi.domain.user.dto.response.OwnerListResponse;
 import com.inet.juchamsi.global.api.ApiResult;
@@ -41,7 +41,7 @@ public class OwnerApiController {
     @PostMapping
     public ApiResult<Void> createUser(
             @ApiParam(value = "owner-dto")
-            @RequestBody SignupOwnerRequest request
+            @RequestBody CreateOwnerRequest request
     ) {
         return null;
     }
@@ -51,7 +51,7 @@ public class OwnerApiController {
     @PostMapping("/login")
     public ApiResult<Void> loginUser(
             @ApiParam(value = "owner-dto")
-            @RequestBody LoginOwnerRequest request
+            @RequestBody LoginAdminOwnerRequest request
     ) {
         return null;
     }
@@ -71,7 +71,7 @@ public class OwnerApiController {
     @PutMapping
     public ApiResult<Void> modifyUser(
             @ApiParam(value = "owner-dto")
-            @RequestBody SignupOwnerRequest request
+            @RequestBody CreateOwnerRequest request
     ) {
         return null;
     }
