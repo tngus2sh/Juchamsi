@@ -1,15 +1,12 @@
 package com.inet.juchamsi.domain.user.application.impl;
 
 import com.inet.juchamsi.domain.user.application.AdminService;
-import com.inet.juchamsi.domain.user.application.DuplicateException;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminResponse;
-import com.inet.juchamsi.domain.user.entity.Active;
-import com.inet.juchamsi.domain.user.entity.Approve;
-import com.inet.juchamsi.domain.user.entity.Grade;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.domain.villa.entity.Villa;
+import com.inet.juchamsi.global.error.AlreadyExistException;
 import com.inet.juchamsi.global.error.NotFoundException;
 import com.inet.juchamsi.global.jwt.JwtTokenProvider;
 import com.inet.juchamsi.global.jwt.TokenInfo;
@@ -21,6 +18,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+
+import static com.inet.juchamsi.domain.user.entity.Approve.WAIT;
+import static com.inet.juchamsi.domain.user.entity.Grade.ADMIN;
+import static com.inet.juchamsi.global.common.Active.ACTIVE;
 
 @Service
 @Transactional(readOnly = true) // 트랜잭션을 읽기 전용 모드로
@@ -56,17 +57,17 @@ public class AdminServiceImpl implements AdminService {
     public Long createUser(CreateOwnerRequest dto) {
         Optional<Long> loginId = userRepository.existLoginId(dto.getLoginId());
         if (loginId.isPresent()) {
-            throw new DuplicateException();
+            throw new AlreadyExistException(User.class, loginId.get());
         }
 
         Optional<Long> phoneNumber = userRepository.existPhoneNumber(dto.getPhoneNumber());
         if (phoneNumber.isPresent()) {
-            throw new DuplicateException();
+            throw new AlreadyExistException(User.class, phoneNumber.get());
         }
 
         Villa villa = Villa.builder().idNumber(dto.getVillaId()).build();
 
-        User user = User.createUser(villa, dto.getPhoneNumber(), dto.getLoginId(), dto.getPassword(), dto.getName(), Grade.ADMIN, dto.getCarNumber(), dto.getVillaNumber(), Approve.WAIT, Active.ACTIVE, "ADMIN");
+        User user = User.createUser(villa, dto.getPhoneNumber(), dto.getLoginId(), dto.getPassword(), dto.getName(), ADMIN, dto.getCarNumber(), dto.getVillaNumber(), WAIT, ACTIVE, "ADMIN");
         User savedUser = userRepository.save(user);
         return savedUser.getId();
     }
@@ -89,5 +90,10 @@ public class AdminServiceImpl implements AdminService {
         userRepository.updateRefreshToken(adminId, password);
         
         return tokenInfo;
+    }
+
+    @Override
+    public void logout(String adminId) {
+
     }
 }

@@ -3,12 +3,8 @@ package com.inet.juchamsi.user.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inet.juchamsi.domain.user.api.AdminApiController;
 import com.inet.juchamsi.domain.user.application.AdminService;
-import com.inet.juchamsi.domain.user.application.DuplicateException;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
-import com.inet.juchamsi.domain.user.entity.Active;
-import com.inet.juchamsi.domain.user.entity.Approve;
-import com.inet.juchamsi.domain.user.entity.Grade;
 import com.inet.juchamsi.domain.user.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,6 +19,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.inet.juchamsi.domain.user.entity.Approve.APPROVE;
+import static com.inet.juchamsi.domain.user.entity.Grade.ADMIN;
+import static com.inet.juchamsi.global.common.Active.ACTIVE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -56,9 +55,9 @@ public class AdminApiTest {
                 .password("userPw123!")
                 .phoneNumber("01012341234")
                 .name("김주참")
-                .grade(Grade.ADMIN)
-                .approve(Approve.APPROVE)
-                .active(Active.ACTIVE)
+                .grade(ADMIN)
+                .approve(APPROVE)
+                .active(ACTIVE)
                 .build());
     }
 
