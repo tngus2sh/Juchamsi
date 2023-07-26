@@ -43,18 +43,7 @@ public class AdminApiController {
             @ApiParam(value = "admin-dto")
             @RequestBody CreateOwnerRequest request) {
         log.debug("SignupAdminRequest={}", request);
-        CreateOwnerRequest dto = CreateOwnerRequest.builder()
-                .villaId(request.getVillaId())
-                .phoneNumber(request.getPhoneNumber())
-                .loginId(request.getLoginId())
-                .password(request.getPassword())
-                .name(request.getName())
-                .grade(request.getGrade())
-                .carNumber(request.getCarNumber())
-                .villaNumber(request.getVillaNumber())
-                .build();
-
-        Long adminId = adminService.createUser(dto);
+        Long adminId = adminService.createUser(request);
         log.info("createUser admin={}", adminId);
         return OK(null);
     }
@@ -66,9 +55,11 @@ public class AdminApiController {
             @ApiParam(value = "admin-dto")
             @RequestBody LoginAdminOwnerRequest request
     ) {
+        log.debug("LoginAdminOwnerRequest={}", request);
         String userId = request.getLoginId();
         String password = request.getPassword();
         TokenInfo tokenInfo = adminService.login(userId, password);
+        log.info("tokenInfo={}", tokenInfo);
         return OK(tokenInfo);
     }
 
@@ -79,7 +70,9 @@ public class AdminApiController {
             @ApiParam(value = "admin-id")
             @PathVariable(value = "id") String adminId
     ) {
-        return null;
+        log.debug("adminId={}", adminId);
+        adminService.logout(adminId);
+        return OK(null);
     }
 
     // 회원정보 수정
@@ -89,7 +82,10 @@ public class AdminApiController {
             @ApiParam(value = "admin-dto")
             @RequestBody CreateOwnerRequest request
     ) {
-        return null;
+        log.debug("CreateOwnerRequest={}", request);
+        Long adminId = adminService.modifyUser(request);
+        log.info("modifyUser admin={}", adminId);
+        return OK(null);
     }
 
     // 집주인 회원가입 요청 관리
