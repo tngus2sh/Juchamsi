@@ -23,7 +23,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select u from User u where u.loginId=:loginId")
     Optional<User> findByLoginId(@Param("loginId") String loginId);
 
-    Optional<User> findByUserId(String name);
+    Optional<User> findByName(String name);
 
     @Modifying
     @Query("update User u set u.refreshToken=:refreshToken where u.loginId=:loginId")
