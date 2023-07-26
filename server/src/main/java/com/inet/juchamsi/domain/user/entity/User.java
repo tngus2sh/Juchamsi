@@ -1,6 +1,7 @@
 package com.inet.juchamsi.domain.user.entity;
 
 import com.inet.juchamsi.domain.villa.entity.Villa;
+import com.inet.juchamsi.global.common.Active;
 import com.inet.juchamsi.global.common.TimeBaseEntity;
 import lombok.Builder;
 import lombok.Getter;
