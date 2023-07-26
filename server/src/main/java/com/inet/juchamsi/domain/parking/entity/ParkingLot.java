@@ -1,5 +1,6 @@
-package com.inet.juchamsi.domain.lot.entity;
+package com.inet.juchamsi.domain.parking.entity;
 
+import com.inet.juchamsi.domain.villa.entity.Villa;
 import com.inet.juchamsi.global.common.TimeBaseEntity;
 import lombok.Getter;
 
@@ -15,9 +16,9 @@ public class ParkingLot extends TimeBaseEntity {
     @Column
     private Long id;
 
-//    @ManyToOne
-//    @JoinColumn(name = "villa_id", nullable = false)
-//    private Villa villa;
+    @ManyToOne
+    @JoinColumn(name = "villa_id", nullable = false)
+    private Villa villa;
 
     @Column(name="seat_number")
     private int seatNumber;
@@ -31,14 +32,14 @@ public class ParkingLot extends TimeBaseEntity {
     @Column(name = "back_number")
     private int backNumber;
 
-//    public ParkingLot(Long id, Villa villa, int seatNumber, String active, int frontNumber, int backNumber) {
-//        this.id = id;
-//        this.villa = villa;
-//        this.seatNumber = seatNumber;
-//        this.active = active;
-//        this.frontNumber = frontNumber;
-//        this.backNumber = backNumber;
-//    }
+    public ParkingLot(Long id, Villa villa, int seatNumber, String active, int frontNumber, int backNumber) {
+        this.id = id;
+        this.villa = villa;
+        this.seatNumber = seatNumber;
+        this.active = active;
+        this.frontNumber = frontNumber;
+        this.backNumber = backNumber;
+    }
 
     public ParkingLot() {}
 }

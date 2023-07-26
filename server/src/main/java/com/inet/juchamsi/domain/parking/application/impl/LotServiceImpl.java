@@ -1,6 +1,6 @@
-package com.inet.juchamsi.domain.lot.application.impl;
+package com.inet.juchamsi.domain.parking.application.impl;
 
-import com.inet.juchamsi.domain.lot.application.LotService;
+import com.inet.juchamsi.domain.parking.application.LotService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
