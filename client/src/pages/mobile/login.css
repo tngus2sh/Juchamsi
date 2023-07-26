@@ -1,0 +1,81 @@
+.logo {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    left: 40%;
+    top: 580px;
+    }
+
+.id {
+    position: absolute;
+    top:150px;
+}
+
+
+.pw {
+    position: absolute;
+    top:160px;
+}
+
+.autologin {
+    position: absolute;
+    top:280px;
+    left:16%;
+}
+
+.loginbox2 {
+    position: absolute;
+    width: 200px;
+    height: 45px;
+    left: 20%;
+    top: 350px;
+    
+    background: #33907C;
+    opacity: 0.8;
+    border-radius: 32px;
+}
+
+
+.loginbox1 {
+    position: absolute;
+    width: 200px;
+    height: 45px;
+    left: 20%;
+    top: 350px;
+    
+    background: #111111;
+    opacity: 0.25;
+    border-radius: 32px;
+}
+
+.text1 {
+    position: absolute;
+    top:10px;
+    left:30%;
+    color: aliceblue;
+    font-size: 25px;
+}
+
+.findidbtn {
+    position: absolute;
+    top:280px;
+    left:30px;
+}
+
+.findpwbtn {
+    position: absolute;
+    top:280px;
+    left:40px;
+}
+
+.findsignupbtn {
+    position: absolute;
+    top:400px;
+    left:-30px;
+}
+
+.findsignup {
+    position: absolute;
+    top:537px;
+    left:50px;
+}
