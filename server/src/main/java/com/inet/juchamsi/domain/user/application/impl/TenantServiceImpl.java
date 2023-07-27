@@ -28,7 +28,12 @@ public class TenantServiceImpl implements TenantService {
     public Long createUser(CreateTenantRequest request) {
         Optional<Long> existedLoginId = userRepository.existLoginId(request.getLoginId());
         if (existedLoginId.isPresent()) {
-            throw new AlreadyExistException(User.class, existedLoginId);
+            throw new AlreadyExistException(User.class, existedLoginId.get());
+        }
+
+        Optional<Long> existedPhoneNumber = userRepository.existPhoneNumber(request.getPhoneNumber());
+        if(existedPhoneNumber.isPresent()) {
+            throw new AlreadyExistException(User.class, existedPhoneNumber.get());
         }
 
         Optional<Long> connectedVillaId = villaRepository.existIdNumber(request.getVillaIdNumber());

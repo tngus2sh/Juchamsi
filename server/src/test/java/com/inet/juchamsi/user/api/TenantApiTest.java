@@ -79,10 +79,9 @@ public class TenantApiTest {
                 .andExpect(jsonPath("$.success").value(true));
     }
 
-
     @Test
     @DisplayName("세입자 회원가입 ## 아이디 중복")
-    void duplicatedUser() throws Exception {
+    void duplicatedUserLoginId() throws Exception {
         // given
         Villa targetVilla = insertVilla();
         User targetUser = insertUser(targetVilla);
@@ -106,7 +105,36 @@ public class TenantApiTest {
 
         // then
         actions.andDo(print())
-                .andExpect(jsonPath("$.success").value(true));
+                .andExpect(jsonPath("$.success").value(false));
+    }
+
+    @Test
+    @DisplayName("세입자 회원가입 ## 핸드폰 번호 중복")
+    void duplicatedUserPhoneNumber() throws Exception {
+        // given
+        Villa targetVilla = insertVilla();
+        User targetUser = insertUser(targetVilla);
+        String phoneNumber = targetUser.getPhoneNumber();
+
+        String object = objectMapper.writeValueAsString(CreateTenantRequest.builder()
+                .villaIdNumber("123456")
+                .phoneNumber(phoneNumber)
+                .loginId("user11")
+                .password("juchamsi1234!")
+                .name("주참시")
+                .carNumber("1가1234")
+                .villaNumber(101)
+                .build());
+
+        // when
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/tenant")
+                .content(object)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        // then
+        actions.andDo(print())
+                .andExpect(jsonPath("$.success").value(false));
     }
 
 

@@ -38,8 +38,8 @@ public class User extends TimeBaseEntity implements UserDetails {
     @Column(name = "login_id", nullable = false, length = 15)
     private String loginId;
 
-    @Column(nullable = false, length = 16)
-    private String password;
+    @Column(name = "login_password", nullable = false, length = 16)
+    private String loginPassword;
 
     @Column(nullable = false, updatable = false, length = 20)
     private String name;
@@ -71,30 +71,32 @@ public class User extends TimeBaseEntity implements UserDetails {
     public User() {}
 
     @Builder
-    public User(Long id, Villa villa, String phoneNumber, String loginId, String password, String name, Grade grade, String carNumber, int villaNumber, Approve approve, Active active, List<String> roles) {
+    public User(Long id, Villa villa, String phoneNumber, String loginId, String loginPassword, String name, Grade grade, String carNumber, int villaNumber, Approve approve, Active active, String refreshToken, List<String> roles) {
         this.id = id;
         this.villa = villa;
         this.phoneNumber = phoneNumber;
         this.loginId = loginId;
-        this.password = password;
+        this.loginPassword = loginPassword;
         this.name = name;
         this.grade = grade;
         this.carNumber = carNumber;
         this.villaNumber = villaNumber;
         this.approve = approve;
         this.active = active;
+        this.refreshToken = refreshToken;
         this.roles = roles;
     }
+
 
     /*
         연관관계 편의 메서드
      */
-    public static User createUser(Villa villa, String phoneNumber, String loginId, String password, String name, Grade grade, String carNumber, int villaNumber, Approve approve, Active active, String role) {
+    public static User createUser(Villa villa, String phoneNumber, String loginId, String loginPassword, String name, Grade grade, String carNumber, int villaNumber, Approve approve, Active active, String role) {
         return User.builder()
                 .villa(villa)
                 .phoneNumber(phoneNumber)
                 .loginId(loginId)
-                .password(password)
+                .loginPassword(loginPassword)
                 .name(name)
                 .grade(grade)
                 .carNumber(carNumber)
