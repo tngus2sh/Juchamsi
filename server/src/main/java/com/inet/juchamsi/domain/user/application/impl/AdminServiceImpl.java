@@ -1,7 +1,6 @@
 package com.inet.juchamsi.domain.user.application.impl;
 
 import com.inet.juchamsi.domain.user.application.AdminService;
-import com.inet.juchamsi.domain.user.application.DuplicateException;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminResponse;
@@ -18,14 +17,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
-@Transactional(readOnly = true) // 트랜잭션을 읽기 전용 모드로
+@Transactional
 @RequiredArgsConstructor
 public class AdminServiceImpl implements AdminService {
     
@@ -36,7 +34,7 @@ public class AdminServiceImpl implements AdminService {
     // 회원 상세 조회
     @Override
     public AdminResponse showDetailUser(String loginId) {
-        // adminLoginId로 회원 상세 정보 가져오기
+        // loginId로 회원 상세 정보 가져오기
         Optional<User> targetUser = userRepository.findByLoginId(loginId);
 
         if (!targetUser.isPresent()) {
@@ -47,8 +45,6 @@ public class AdminServiceImpl implements AdminService {
         return AdminResponse.builder()
                 .phoneNumber(user.getPhoneNumber())
                 .name(user.getName())
-                .carNumber(user.getCarNumber())
-                .villaNumber(user.getVillaNumber())
                 .build();
 
     }
@@ -110,7 +106,7 @@ public class AdminServiceImpl implements AdminService {
         }
 
         Optional<Long> phoneNumber = userRepository.existPhoneNumber(dto.getPhoneNumber());
-        if (phoneNumber.isPresent()) {
+        if (phoneNumber.isPresent() && !phoneNumber.get().equals(loginId.get())) {
             throw new AlreadyExistException(User.class, phoneNumber.get());
         }
 
@@ -118,7 +114,7 @@ public class AdminServiceImpl implements AdminService {
 
         User user = User.createUser(villa, dto.getPhoneNumber(), dto.getLoginId(), dto.getPassword(), dto.getName(), Grade.ADMIN, dto.getCarNumber(), dto.getVillaNumber(), Approve.WAIT, Active.ACTIVE, "ADMIN");
         User savedUser = userRepository.save(user);
-        return null;
+        return savedUser.getId();
     }
 
     @Override
@@ -129,8 +125,7 @@ public class AdminServiceImpl implements AdminService {
         }
 
         // 승인 상태 수정
-        Long updateUserId = userRepository.updateApprove(ownerId, approve.name()).get();
-        return updateUserId;
+        return userRepository.updateApprove(ownerId, approve.name()).get();
     }
 
     @Override
@@ -141,7 +136,6 @@ public class AdminServiceImpl implements AdminService {
         }
 
         // 회원 상태 active 에서 disabled로 바꾸기
-        Long updateUserId = userRepository.updateActive(adminId, Active.DISABLED.name()).get();
-        return updateUserId;
+        return userRepository.updateActive(adminId, Active.DISABLED.name()).get();
     }
 }
