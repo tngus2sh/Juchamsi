@@ -3,6 +3,7 @@ package com.inet.juchamsi.domain.user.api;
 import com.inet.juchamsi.domain.user.application.TenantService;
 import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginTenantRequest;
+import com.inet.juchamsi.domain.user.dto.request.ModifyTenantRequest;
 import com.inet.juchamsi.global.api.ApiResult;
 import com.inet.juchamsi.global.error.AlreadyExistException;
 import com.inet.juchamsi.global.error.NotFoundException;
@@ -15,10 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static com.inet.juchamsi.global.api.ApiResult.ERROR;
 import static com.inet.juchamsi.global.api.ApiResult.OK;
@@ -64,5 +62,11 @@ public class TenantApiController {
         catch(BadCredentialsException e) {
             return ERROR("아이디 또는 비밀번호를 잘못 입력했습니다", HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    @ApiOperation(value = "세입자 회원 정보 수정", notes = "세입자가 회원 정보를 수정합니다")
+    @PutMapping("")
+    public ApiResult<Void> modifyUser(@ApiParam(value = "tenant-dto") @RequestBody ModifyTenantRequest request) {
+        return null;
     }
 }
