@@ -23,10 +23,17 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select u from User u where u.loginId=:loginId")
     Optional<User> findByLoginId(@Param("loginId") String loginId);
 
-    Optional<User> findByUserId(String name);
+    Optional<User> findByName(String name);
 
     @Modifying
     @Query("update User u set u.refreshToken=:refreshToken where u.loginId=:loginId")
-    void updateRefreshToken(@Param("loginId") String loginId, @Param("refreshToken") String refreshToken);
-    
+    Optional<Long> updateRefreshToken(@Param("loginId") String loginId, @Param("refreshToken") String refreshToken);
+
+    @Modifying
+    @Query("update User u set u.approve=:approve where u.loginId=:loginId")
+    Optional<Long> updateApprove(@Param("loginId") String loginId, @Param("approve") String approve);
+
+    @Modifying
+    @Query("update User u set u.active=:active where u.loginId=:loginId")
+    Optional<Long> updateActive(@Param("loginId") String loginId, @Param("active") String active);
 }

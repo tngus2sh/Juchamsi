@@ -4,8 +4,11 @@ import com.inet.juchamsi.domain.user.application.AdminService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminResponse;
+import com.inet.juchamsi.domain.user.entity.Approve;
+import com.inet.juchamsi.domain.user.entity.Grade;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.domain.villa.entity.Villa;
+import com.inet.juchamsi.global.common.Active;
 import com.inet.juchamsi.global.error.AlreadyExistException;
 import com.inet.juchamsi.global.error.NotFoundException;
 import com.inet.juchamsi.global.jwt.JwtTokenProvider;
@@ -14,14 +17,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-
-import static com.inet.juchamsi.domain.user.entity.Approve.WAIT;
-import static com.inet.juchamsi.domain.user.entity.Grade.ADMIN;
-import static com.inet.juchamsi.global.common.Active.ACTIVE;
 
 @Service
 @Transactional(readOnly = true) // 트랜잭션을 읽기 전용 모드로
@@ -67,11 +67,12 @@ public class AdminServiceImpl implements AdminService {
 
         Villa villa = Villa.builder().idNumber(dto.getVillaId()).build();
 
-        User user = User.createUser(villa, dto.getPhoneNumber(), dto.getLoginId(), dto.getPassword(), dto.getName(), ADMIN, dto.getCarNumber(), dto.getVillaNumber(), WAIT, ACTIVE, "ADMIN");
+        User user = User.createUser(villa, dto.getPhoneNumber(), dto.getLoginId(), dto.getPassword(), dto.getName(), Grade.ADMIN, dto.getCarNumber(), dto.getVillaNumber(), Approve.WAIT, Active.ACTIVE, "ADMIN");
         User savedUser = userRepository.save(user);
         return savedUser.getId();
     }
 
+    // 로그인
     @Override
     @Transactional
     public TokenInfo login(String adminId, String password) {
@@ -92,8 +93,54 @@ public class AdminServiceImpl implements AdminService {
         return tokenInfo;
     }
 
+    // 로그아웃
     @Override
     public void logout(String adminId) {
+        // 데이터베이스에서 refreshToken 초기화
+        userRepository.updateRefreshToken(adminId, "");
+    }
 
+    // 회원정보 수정
+    @Override
+    public Long modifyUser(CreateOwnerRequest dto) {
+        Optional<Long> loginId = userRepository.existLoginId(dto.getLoginId());
+        if (!loginId.isPresent()) {
+            throw new NotFoundException(User.class, loginId.get());
+        }
+
+        Optional<Long> phoneNumber = userRepository.existPhoneNumber(dto.getPhoneNumber());
+        if (phoneNumber.isPresent()) {
+            throw new AlreadyExistException(User.class, phoneNumber.get());
+        }
+
+        Villa villa = Villa.builder().idNumber(dto.getVillaId()).build();
+
+        User user = User.createUser(villa, dto.getPhoneNumber(), dto.getLoginId(), dto.getPassword(), dto.getName(), Grade.ADMIN, dto.getCarNumber(), dto.getVillaNumber(), Approve.WAIT, Active.ACTIVE, "ADMIN");
+        User savedUser = userRepository.save(user);
+        return null;
+    }
+
+    @Override
+    public Long manageApprove(String ownerId, Approve approve) {
+        Optional<Long> ownerLoginId = userRepository.existLoginId(ownerId);
+        if (!ownerLoginId.isPresent()) {
+            throw new NotFoundException(User.class, ownerLoginId.get());
+        }
+
+        // 승인 상태 수정
+        Long updateUserId = userRepository.updateApprove(ownerId, approve.name()).get();
+        return updateUserId;
+    }
+
+    @Override
+    public Long removeUser(String adminId) {
+        Optional<Long> loginId = userRepository.existLoginId(adminId);
+        if (!loginId.isPresent()) {
+            throw new NotFoundException(User.class, loginId.get());
+        }
+
+        // 회원 상태 active 에서 disabled로 바꾸기
+        Long updateUserId = userRepository.updateActive(adminId, Active.DISABLED.name()).get();
+        return updateUserId;
     }
 }
