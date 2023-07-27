@@ -5,6 +5,7 @@ import com.inet.juchamsi.global.common.Active;
 import com.inet.juchamsi.global.common.TimeBaseEntity;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,6 +22,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Getter
+@ToString
 public class User extends TimeBaseEntity implements UserDetails {
 
     @Id
@@ -38,7 +40,7 @@ public class User extends TimeBaseEntity implements UserDetails {
     @Column(name = "login_id", nullable = false, length = 15)
     private String loginId;
 
-    @Column(name = "login_password", nullable = false, length = 16)
+    @Column(name = "login_password", nullable = false)
     private String loginPassword;
 
     @Column(nullable = false, updatable = false, length = 20)
@@ -122,31 +124,27 @@ public class User extends TimeBaseEntity implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return this.loginPassword;
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return this.loginId;
     }
 
     @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
+    public boolean isAccountNonExpired() { return true; }
 
     @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
+    public boolean isAccountNonLocked() { return true; }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }

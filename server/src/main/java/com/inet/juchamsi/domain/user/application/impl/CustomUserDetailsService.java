@@ -30,7 +30,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private UserDetails createUserDetails(User user) {
         return User.builder()
                 .name(user.getName())
-                .password(passwordEncoder.encode(user.getPassword()))
+                .loginPassword(passwordEncoder.encode(user.getLoginPassword()))
                 .roles(List.of(user.getRoles().toArray(new String[0])))
                 .build();
     }
