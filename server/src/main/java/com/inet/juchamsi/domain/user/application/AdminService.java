@@ -24,11 +24,11 @@ public interface AdminService {
     void logout(String adminId);
 
     // 회원정보수정
-    Long modifyUser(CreateOwnerRequest dto);
+    void modifyUser(CreateOwnerRequest dto);
 
     // 집주인 회원가입 요청 관리
-    Long manageApprove(String ownerId, Approve approve);
+    void manageApprove(String ownerId, Approve approve);
 
     // 탈퇴
-    Long removeUser(String adminId);
+    void removeUser(String adminId);
 }
