@@ -26,11 +26,11 @@ public interface OwnerService {
     void logout(String ownerId);
 
     // 회원정보수정
-    Long modifyUser(CreateOwnerRequest dto);
+    void modifyUser(CreateOwnerRequest dto);
 
     // 세입자 회원가입 요청 관리
-    Long manageApprove(String tenantId, Approve approve);
+    void manageApprove(String tenantId, Approve approve);
 
     // 탈퇴
-    Long removeUser(String ownerId);
+    void removeUser(String ownerId);
 }

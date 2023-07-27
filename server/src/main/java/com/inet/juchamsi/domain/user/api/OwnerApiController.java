@@ -25,7 +25,7 @@ import static com.inet.juchamsi.global.api.ApiResult.OK;
 @RequiredArgsConstructor
 @Api(tags = {"집주인 계정"})
 public class OwnerApiController {
-    
+
     private final OwnerService ownerService;
 
     // 회원 전체 조회
@@ -71,7 +71,7 @@ public class OwnerApiController {
     ) {
         log.debug("LoginAdminOwnerRequest={}", request);
         String userId = request.getLoginId();
-        String password = request.getPassword();
+        String password = request.getLoginPassword();
         AdminOwnerLoginResponse response = ownerService.login(userId, password);
         log.info("tokenInfo={}", response);
         return OK(response);
@@ -88,7 +88,7 @@ public class OwnerApiController {
         ownerService.logout(ownerId);
         return OK(null);
     }
-    
+
     // 회원 정보 수정
     @ApiOperation(value = "회원정보 수정", notes = "집주인의 정보를 수정합니다.")
     @PutMapping
@@ -97,8 +97,7 @@ public class OwnerApiController {
             @RequestBody CreateOwnerRequest request
     ) {
         log.debug("CreateOwnerRequest={}", request);
-        Long ownerId = ownerService.modifyUser(request);
-        log.info("modifyUser owner={}", ownerId);
+        ownerService.modifyUser(request);
         return OK(null);
     }
 
