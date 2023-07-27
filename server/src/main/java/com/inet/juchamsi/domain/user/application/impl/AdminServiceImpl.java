@@ -1,7 +1,6 @@
 package com.inet.juchamsi.domain.user.application.impl;
 
 import com.inet.juchamsi.domain.user.application.AdminService;
-import com.inet.juchamsi.domain.user.application.DuplicateException;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminResponse;
