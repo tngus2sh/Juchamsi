@@ -1,7 +1,6 @@
 package com.inet.juchamsi.user.service;
 
 import com.inet.juchamsi.domain.user.application.AdminService;
-import com.inet.juchamsi.domain.user.application.DuplicateException;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminResponse;
@@ -9,6 +8,7 @@ import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.domain.user.entity.Grade;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.global.common.Active;
+import com.inet.juchamsi.global.error.AlreadyExistException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +57,7 @@ public class AdminServiceTest {
 
         // then
         assertThatThrownBy(() -> adminService.createUser(dto))
-                .isInstanceOf(DuplicateException.class);
+                .isInstanceOf(AlreadyExistException.class);
     }
 
     private User insertUser() {
