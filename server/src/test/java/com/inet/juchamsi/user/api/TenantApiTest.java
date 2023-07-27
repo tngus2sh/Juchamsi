@@ -150,7 +150,6 @@ public class TenantApiTest {
                 .loginPassword("juchamsi1234!")
                 .build());
         Optional<User> findUser = userRepository.findById(targetUser.getId());
-        System.out.println("db 저장된 유저: " + findUser);
 
         // when
         ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/tenant/login")
@@ -160,6 +159,52 @@ public class TenantApiTest {
 
         // then
         actions.andDo(print());
+    }
+
+    @Test
+    @DisplayName("세입자 로그인 ## 회원 없음")
+    void loginUserFailInvalidId() throws Exception {
+        // given
+        Villa targetVilla = insertVilla();
+        User targetUser = insertUser(targetVilla);
+        String object = objectMapper.writeValueAsString(LoginTenantRequest.builder()
+                .loginId("userid11")
+                .loginPassword("juchamsi1234!")
+                .build());
+        Optional<User> findUser = userRepository.findById(targetUser.getId());
+
+        // when
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/tenant/login")
+                .content(object)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        // then
+        actions.andDo(print())
+                .andExpect(jsonPath("$.success").value(false));
+    }
+
+    @Test
+    @DisplayName("세입자 로그인 ## 비밀번호 틀림")
+    void loginUserFailWrongPassword() throws Exception {
+        // given
+        Villa targetVilla = insertVilla();
+        User targetUser = insertUser(targetVilla);
+        String object = objectMapper.writeValueAsString(LoginTenantRequest.builder()
+                .loginId("userid")
+                .loginPassword("juchamsi1234")
+                .build());
+        Optional<User> findUser = userRepository.findById(targetUser.getId());
+
+        // when
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/tenant/login")
+                .content(object)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        // then
+        actions.andDo(print())
+                .andExpect(jsonPath("$.success").value(false));
     }
 
 
