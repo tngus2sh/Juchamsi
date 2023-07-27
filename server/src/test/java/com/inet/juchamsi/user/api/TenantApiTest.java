@@ -154,7 +154,6 @@ public class TenantApiTest {
                 .loginId("userid")
                 .loginPassword("juchamsi1234!")
                 .build());
-        Optional<User> findUser = userRepository.findById(targetUser.getId());
 
         // when
         ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/tenant/login")
