@@ -2,9 +2,11 @@ package com.inet.juchamsi.domain.user.api;
 
 import com.inet.juchamsi.domain.user.application.TenantService;
 import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
+import com.inet.juchamsi.domain.user.dto.request.LoginTenantRequest;
 import com.inet.juchamsi.global.api.ApiResult;
 import com.inet.juchamsi.global.error.AlreadyExistException;
 import com.inet.juchamsi.global.error.NotFoundException;
+import com.inet.juchamsi.global.jwt.TokenInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -48,5 +50,9 @@ public class TenantApiController {
         return OK(null);
     }
 
-
+    @ApiOperation(value = "세입자 로그인 (일반)", notes = "세입자가 로그인 합니다")
+    @PostMapping("/login")
+    public ApiResult<TokenInfo> loginUser(@ApiParam(value = "tenant-dto") @RequestBody LoginTenantRequest request) {
+        return null;
+    }
 }

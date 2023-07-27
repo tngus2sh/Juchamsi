@@ -43,7 +43,7 @@ public class AdminApiController {
     public ApiResult<Void> createUser(
             @ApiParam(value = "admin-dto")
             @RequestBody CreateOwnerRequest request) {
-        log.debug("SignupAdminRequest={}", request);
+        log.debug("CreateAdminRequest={}", request);
         Long adminId = adminService.createUser(request);
         log.info("createUser admin={}", adminId);
         return OK(null);
