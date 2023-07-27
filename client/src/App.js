@@ -3,6 +3,7 @@ import { Reset as GlobalReset } from 'styled-reset';
 
 import LoginPage from './pages/web/login';
 import SignUpPage from './pages/web/signup';
+import WebMainPage from './pages/web/mainpage'
 import KioskMainPage from './pages/kiosk/main'
 import MobileMainPage from './pages/mobile/main'
 import KiosksavePage from './pages/kiosk/savepage'
@@ -47,6 +48,7 @@ function App() {
               <Route path="/Mobile/Findid/Result" element={<MobileFindResultpage />}/>
               <Route path="/Mobile/Findpw" element={<MobileFindPwPage />}/>
               <Route path="/Mobile/Signup" element={<MobileSignupPage />}/>
+               <Route path="/mainPage" element={ <WebMainPage/>} />
           </Routes>
           </BrowserRouter>
     </div>
