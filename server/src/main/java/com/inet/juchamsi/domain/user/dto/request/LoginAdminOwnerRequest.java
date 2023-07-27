@@ -19,6 +19,6 @@ public class LoginAdminOwnerRequest {
     @Size(min = 8, max = 16)
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$")
     @ApiModelProperty(example = "juchamsi1234!")
-    private String password;
+    private String loginPassword;
     
 }
