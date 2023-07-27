@@ -31,8 +31,6 @@ import java.util.Collections;
 import java.util.Optional;
 
 import static com.inet.juchamsi.global.common.Active.ACTIVE;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -82,7 +80,7 @@ public class AdminApiTest {
                 .grade(Grade.ADMIN)
                 .approve(Approve.APPROVE)
                 .active(Active.ACTIVE)
-                .roles(Collections.singletonList("ADMIN"))
+                .roles(Collections.singletonList("ROLE_ADMIN"))
                 .build());
 
 
