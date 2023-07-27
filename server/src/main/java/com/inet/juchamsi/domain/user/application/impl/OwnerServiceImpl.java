@@ -3,6 +3,7 @@ package com.inet.juchamsi.domain.user.application.impl;
 import com.inet.juchamsi.domain.user.application.OwnerService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.response.AdminOwnerLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
 import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.domain.user.entity.Grade;
@@ -87,12 +88,17 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
-    public TokenInfo login(String ownerId, String password) {
+    public AdminOwnerLoginResponse login(String ownerId, String password) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(ownerId, password);
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
         userRepository.updateRefreshToken(ownerId, password);
-        return tokenInfo;
+
+        User user = userRepository.findByLoginId(ownerId).get();
+        return AdminOwnerLoginResponse.builder()
+                .tokenInfo(tokenInfo)
+                .grade(user.getGrade().name())
+                .build();
     }
 
     @Override

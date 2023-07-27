@@ -3,6 +3,7 @@ package com.inet.juchamsi.domain.user.application.impl;
 import com.inet.juchamsi.domain.user.application.AdminService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.response.AdminOwnerLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.AdminResponse;
 import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.domain.user.entity.Grade;
@@ -72,7 +73,7 @@ public class AdminServiceImpl implements AdminService {
     // 로그인
     @Override
     @Transactional
-    public TokenInfo login(String adminId, String password) {
+    public AdminOwnerLoginResponse login(String adminId, String password) {
         // 1. login ID/PW를 기반으로 Authentication 객체 생성
         // 이때 authentication은 인증 여부를 확인하는 authenticated 값이 false
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(adminId, password);
@@ -86,8 +87,12 @@ public class AdminServiceImpl implements AdminService {
         
         // 4. 데이터베이스에 refreshToken 저장
         userRepository.updateRefreshToken(adminId, password);
-        
-        return tokenInfo;
+
+        User user = userRepository.findByLoginId(adminId).get();
+        return AdminOwnerLoginResponse.builder()
+                .tokenInfo(tokenInfo)
+                .grade(user.getGrade().name())
+                .build();
     }
 
     // 로그아웃
