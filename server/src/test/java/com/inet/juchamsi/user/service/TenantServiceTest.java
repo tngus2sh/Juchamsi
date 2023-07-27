@@ -12,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
@@ -58,26 +59,42 @@ public class TenantServiceTest {
 
         // then
         Optional<User> findUser = userRepository.findById(userId);
-        System.out.println(findUser);
         assertThat(findUser).isPresent();
     }
 
     @Test
-    @DisplayName("세입자 로그인")
+    @DisplayName("세입자 로그인 ## 로그인 성공")
     void loginUser() {
         // given
         Villa targetVilla = insertVilla();
         User targetUser = insertUser(targetVilla);
+
+        // when
         LoginTenantRequest request = LoginTenantRequest.builder()
                 .loginId("userid")
                 .loginPassword("juchamsi1234!")
                 .build();
 
+        // then
+        assertNotNull(tenantService.loginUser(request));
+    }
+
+    @Test
+    @DisplayName("세입자 로그인 ## 로그인 실패")
+    void loginUserFail() {
+        // given
+        Villa targetVilla = insertVilla();
+        User targetUser = insertUser(targetVilla);
+
         // when
-        TokenInfo tokenInfo = tenantService.loginUser(request);
+        LoginTenantRequest request = LoginTenantRequest.builder()
+                .loginId("userid")
+                .loginPassword("juchamsi1234")
+                .build();
 
         // then
-        assertNotNull(tokenInfo);
+        assertThatThrownBy(() -> tenantService.loginUser(request))
+                .isInstanceOf(BadCredentialsException.class);
     }
 
 

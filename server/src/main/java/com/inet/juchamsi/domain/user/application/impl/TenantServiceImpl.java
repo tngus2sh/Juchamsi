@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +34,7 @@ public class TenantServiceImpl implements TenantService {
     private final VillaRepository villaRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Long createUser(CreateTenantRequest request) {
@@ -52,7 +54,8 @@ public class TenantServiceImpl implements TenantService {
         }
 
         Optional<Villa> findVilla = villaRepository.findById(connectedVillaId.get());
-        User user = User.createUser(findVilla.get(), request.getPhoneNumber(), request.getLoginId(), request.getLoginPassword(), request.getName(), USER, request.getCarNumber(), request.getVillaNumber(), WAIT, ACTIVE, "USER");
+        User user = User.createUser(findVilla.get(), request.getPhoneNumber(), request.getLoginId(), passwordEncoder.encode(request.getLoginPassword()), request.getName(), USER, request.getCarNumber(), request.getVillaNumber(), WAIT, ACTIVE, "USER");
+        System.out.println("encode 후 유저 출력: " + user);
         User saveUser = userRepository.save(user);
 
         return saveUser.getId();
