@@ -59,7 +59,7 @@ public class AdminApiController {
     ) {
         log.debug("LoginAdminOwnerRequest={}", request);
         String userId = request.getLoginId();
-        String password = request.getPassword();
+        String password = request.getLoginPassword();
         AdminOwnerLoginResponse response = adminService.login(userId, password);
         log.info("response={}", response);
         return OK(response);
@@ -85,8 +85,7 @@ public class AdminApiController {
             @RequestBody CreateOwnerRequest request
     ) {
         log.debug("CreateOwnerRequest={}", request);
-        Long adminId = adminService.modifyUser(request);
-        log.info("modifyUser admin={}", adminId);
+        adminService.modifyUser(request);
         return OK(null);
     }
 
@@ -102,8 +101,8 @@ public class AdminApiController {
         log.debug("admin={}, approve={}", ownerId, approve);
         adminService.manageApprove(ownerId, Approve.valueOf(approve));
         return OK(null);
-    } 
-    
+    }
+
     // 탈퇴
     @ApiOperation(value = "관리자 탈퇴", notes = "관리자가 회원 탈퇴를 합니다")
     @DeleteMapping("/{id}")
@@ -115,5 +114,5 @@ public class AdminApiController {
         adminService.removeUser(adminId);
         return OK(null);
     }
-    
+
 }
