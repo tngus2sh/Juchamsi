@@ -1,6 +1,7 @@
 package com.inet.juchamsi.domain.user.entity;
 
 import com.inet.juchamsi.domain.villa.entity.Villa;
+import com.inet.juchamsi.global.common.Active;
 import com.inet.juchamsi.global.common.TimeBaseEntity;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,12 +30,12 @@ public class User extends TimeBaseEntity implements UserDetails {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "villa_id", nullable = false)
-    Villa villa;
+    private Villa villa;
 
-    @Column(unique = true, nullable = false, length = 13)
+    @Column(name = "phone_number", unique = true, nullable = false, length = 13)
     private String phoneNumber;
 
-    @Column(nullable = false, length = 15)
+    @Column(name = "login_id", nullable = false, length = 15)
     private String loginId;
 
     @Column(nullable = false, length = 16)
@@ -47,10 +48,10 @@ public class User extends TimeBaseEntity implements UserDetails {
     @Column(nullable = false, updatable = false, length = 20)
     private Grade grade;
 
-    @Column(unique = true, length = 15)
+    @Column(name = "car_number", unique = true, length = 15)
     private String carNumber;
 
-    @Column
+    @Column(name = "villa_number")
     private int villaNumber;
 
     @Enumerated(STRING)
@@ -61,7 +62,7 @@ public class User extends TimeBaseEntity implements UserDetails {
     @Column(length = 20)
     private Active active;
     
-    @Column
+    @Column(name = "refresh_token")
     private String refreshToken;
 
     @ElementCollection(fetch = FetchType.EAGER)

@@ -1,4 +1,4 @@
-package com.inet.juchamsi.domain.lot.application;
+package com.inet.juchamsi.domain.parking.application;
 
 import org.springframework.transaction.annotation.Transactional;
 
