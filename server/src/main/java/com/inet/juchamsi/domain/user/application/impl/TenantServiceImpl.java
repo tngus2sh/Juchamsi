@@ -55,7 +55,6 @@ public class TenantServiceImpl implements TenantService {
 
         Optional<Villa> findVilla = villaRepository.findById(connectedVillaId.get());
         User user = User.createUser(findVilla.get(), request.getPhoneNumber(), request.getLoginId(), passwordEncoder.encode(request.getLoginPassword()), request.getName(), USER, request.getCarNumber(), request.getVillaNumber(), WAIT, ACTIVE, "USER");
-        System.out.println("encode 후 유저 출력: " + user);
         User saveUser = userRepository.save(user);
 
         return saveUser.getId();

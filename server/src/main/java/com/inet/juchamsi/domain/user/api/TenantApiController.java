@@ -13,6 +13,8 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,8 +55,14 @@ public class TenantApiController {
     @ApiOperation(value = "세입자 로그인 (일반)", notes = "세입자가 로그인 합니다")
     @PostMapping("/login")
     public ApiResult<TokenInfo> loginUser(@ApiParam(value = "tenant-dto") @RequestBody LoginTenantRequest request) {
-        TokenInfo tokenInfo = tenantService.loginUser(request);
+        log.debug("LoginTenantRequest={}", request);
 
-        return OK(tokenInfo);
+        try {
+            TokenInfo tokenInfo = tenantService.loginUser(request);
+            return OK(tokenInfo);
+        }
+        catch(BadCredentialsException e) {
+            return ERROR("아이디 또는 비밀번호를 잘못 입력했습니다", HttpStatus.UNAUTHORIZED);
+        }
     }
 }
