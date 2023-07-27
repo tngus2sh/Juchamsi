@@ -5,6 +5,7 @@ import com.inet.juchamsi.domain.user.api.TenantApiController;
 import com.inet.juchamsi.domain.user.application.TenantService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
+import com.inet.juchamsi.domain.user.dto.request.LoginTenantRequest;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.domain.villa.dao.VillaRepository;
 import com.inet.juchamsi.domain.villa.entity.Villa;
@@ -20,6 +21,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static com.inet.juchamsi.domain.user.entity.Approve.WAIT;
 import static com.inet.juchamsi.domain.user.entity.Grade.USER;
@@ -62,7 +64,7 @@ public class TenantApiTest {
                 .villaIdNumber(villaIdNumber)
                 .phoneNumber("01012345678")
                 .loginId("userid")
-                .password("juchamsi1234!")
+                .loginPassword("juchamsi1234!")
                 .name("주참시")
                 .carNumber("1가1234")
                 .villaNumber(101)
@@ -91,7 +93,7 @@ public class TenantApiTest {
                 .villaIdNumber("123456")
                 .phoneNumber("01012345678")
                 .loginId(loginId)
-                .password("juchamsi1234!")
+                .loginPassword("juchamsi1234!")
                 .name("주참시")
                 .carNumber("1가1234")
                 .villaNumber(101)
@@ -120,7 +122,7 @@ public class TenantApiTest {
                 .villaIdNumber("123456")
                 .phoneNumber(phoneNumber)
                 .loginId("user11")
-                .password("juchamsi1234!")
+                .loginPassword("juchamsi1234!")
                 .name("주참시")
                 .carNumber("1가1234")
                 .villaNumber(101)
@@ -137,13 +139,36 @@ public class TenantApiTest {
                 .andExpect(jsonPath("$.success").value(false));
     }
 
+    @Test
+    @DisplayName("세입자 로그인")
+    void loginUser() throws Exception {
+        // given
+        Villa targetVilla = insertVilla();
+        User targetUser = insertUser(targetVilla);
+        String object = objectMapper.writeValueAsString(LoginTenantRequest.builder()
+                .loginId("userid")
+                .loginPassword("juchamsi1234!")
+                .build());
+        Optional<User> findUser = userRepository.findById(targetUser.getId());
+        System.out.println("db 저장된 유저: " + findUser);
+
+        // when
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/tenant/login")
+                .content(object)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        // then
+        actions.andDo(print());
+    }
+
 
     private User insertUser(Villa villa) {
         User user = User.builder()
                 .villa(villa)
                 .phoneNumber("01012345678")
                 .loginId("userid")
-                .password("juchamsi1234!")
+                .loginPassword("juchamsi1234!")
                 .name("주참시")
                 .grade(USER)
                 .carNumber("1가1234")

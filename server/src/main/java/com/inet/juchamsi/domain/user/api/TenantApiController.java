@@ -53,6 +53,8 @@ public class TenantApiController {
     @ApiOperation(value = "세입자 로그인 (일반)", notes = "세입자가 로그인 합니다")
     @PostMapping("/login")
     public ApiResult<TokenInfo> loginUser(@ApiParam(value = "tenant-dto") @RequestBody LoginTenantRequest request) {
-        return null;
+        TokenInfo tokenInfo = tenantService.loginUser(request);
+
+        return OK(tokenInfo);
     }
 }
