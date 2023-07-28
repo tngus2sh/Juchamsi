@@ -2,8 +2,8 @@ package com.inet.juchamsi.user.service;
 
 import com.inet.juchamsi.domain.user.application.OwnerService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
-import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
-import com.inet.juchamsi.domain.user.dto.response.AdminResponse;
+import com.inet.juchamsi.domain.user.dto.request.CreateAdminOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
 import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.domain.user.entity.Grade;
@@ -70,7 +70,7 @@ public class OwnerServiceTest {
         User targetUser = insertUser(targetVilla);
 
         // when
-        CreateOwnerRequest dto = CreateOwnerRequest.builder()
+        CreateAdminOwnerRequest dto = CreateAdminOwnerRequest.builder()
                 .loginId("ownerid")
                 .build();
 
@@ -88,11 +88,14 @@ public class OwnerServiceTest {
         User targetUser = insertUser(targetVilla);
 
         // when
-        String loginId = "ownerid";
-        String password = "userPw123!";
+        LoginRequest request = LoginRequest.builder()
+                .loginId("ownerid")
+                .loginPassword("userPw123!")
+                .build();
+
 
         // then
-        assertNotNull(ownerService.login(loginId, password));
+        assertNotNull(ownerService.loginUser(request));
     }
 
     @Test
@@ -103,11 +106,14 @@ public class OwnerServiceTest {
         User targetUser = insertUser(targetVilla);
 
         // when
-        String loginId = "ownerid";
-        String password = "userPw";
+        LoginRequest request = LoginRequest.builder()
+                .loginId("ownerid")
+                .loginPassword("userPw")
+                .build();
+
 
         // then
-        Assertions.assertThatThrownBy(() -> ownerService.login(loginId, password))
+        Assertions.assertThatThrownBy(() -> ownerService.loginUser(request))
                 .isInstanceOf(BadCredentialsException.class);
     }
 
