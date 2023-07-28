@@ -1,22 +1,26 @@
 package com.inet.juchamsi.domain.user.api;
 
 import com.inet.juchamsi.domain.user.application.OwnerService;
-import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
-import com.inet.juchamsi.domain.user.dto.request.LoginAdminOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.request.CreateAdminOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminOwnerLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
 import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.global.api.ApiResult;
-import com.inet.juchamsi.global.jwt.TokenInfo;
+import com.inet.juchamsi.global.error.AlreadyExistException;
+import com.inet.juchamsi.global.error.NotFoundException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.inet.juchamsi.global.api.ApiResult.ERROR;
 import static com.inet.juchamsi.global.api.ApiResult.OK;
 
 @RestController
@@ -45,20 +49,31 @@ public class OwnerApiController {
             @PathVariable(value = "id") String ownerId
     ) {
         log.debug("ownerId={}", ownerId);
-        OwnerResponse ownerResponse = ownerService.showDetailUser(ownerId);
-        return OK(ownerResponse);
+        try {
+            OwnerResponse ownerResponse = ownerService.showDetailUser(ownerId);
+            return OK(ownerResponse);
+        } catch (NotFoundException e) {
+            return ERROR("해당 회원은 존재하지 않습니다.", HttpStatus.NO_CONTENT);
+        }
     }
 
     // 회원가입
-    @ApiOperation(value = "회원 가입", notes = "신규 집주인 회원을 생성합니다.")
+    @ApiOperation(value = "집주인 회원 가입", notes = "신규 집주인 회원을 생성합니다.")
     @PostMapping
     public ApiResult<Void> createUser(
             @ApiParam(value = "owner-dto")
-            @RequestBody CreateOwnerRequest request
+            @RequestBody CreateAdminOwnerRequest request
     ) {
         log.debug("CreateOwnerRequest={}", request);
-        Long ownerId = ownerService.createUser(request);
-        log.info("createUser owner={}", ownerId);
+        try {
+            Long ownerId = ownerService.createUser(request);
+        }
+        catch(AlreadyExistException e) {
+            return ERROR("동일한 회원 정보가 존재합니다.", HttpStatus.CONFLICT);
+        }
+        catch(NotFoundException e) {
+            return ERROR("해당하는 빌라가 존재하지 않습니다.", HttpStatus.NO_CONTENT);
+        }
         return OK(null);
     }
 
@@ -67,14 +82,15 @@ public class OwnerApiController {
     @PostMapping("/login")
     public ApiResult<AdminOwnerLoginResponse> loginUser(
             @ApiParam(value = "owner-dto")
-            @RequestBody LoginAdminOwnerRequest request
+            @RequestBody LoginRequest request
     ) {
-        log.debug("LoginAdminOwnerRequest={}", request);
-        String userId = request.getLoginId();
-        String password = request.getLoginPassword();
-        AdminOwnerLoginResponse response = ownerService.login(userId, password);
-        log.info("tokenInfo={}", response);
-        return OK(response);
+        log.debug("LoginRequest={}", request);
+        try {
+            AdminOwnerLoginResponse response = ownerService.loginUser(request);
+            return OK(response);
+        } catch (BadCredentialsException e) {
+            return ERROR("아이디 또는 비밀번호를 잘못 입력했습니다", HttpStatus.UNAUTHORIZED);
+        }
     }
 
     // 로그아웃
@@ -85,7 +101,7 @@ public class OwnerApiController {
             @PathVariable(value = "id") String ownerId
     ) {
         log.debug("ownerId={}", ownerId);
-        ownerService.logout(ownerId);
+        ownerService.logoutUser(ownerId);
         return OK(null);
     }
 
@@ -94,7 +110,7 @@ public class OwnerApiController {
     @PutMapping
     public ApiResult<Void> modifyUser(
             @ApiParam(value = "owner-dto")
-            @RequestBody CreateOwnerRequest request
+            @RequestBody CreateAdminOwnerRequest request
     ) {
         log.debug("CreateOwnerRequest={}", request);
         ownerService.modifyUser(request);
