@@ -30,22 +30,6 @@ public class AdminApiController {
 
     private final AdminService adminService;
 
-    // 회원 상세 조회
-    @ApiOperation(value = "회원 상세 조회", notes = "관리자 회원의 회원 정보 상세 조회를 합니다.")
-    @GetMapping("/{id}")
-    public ApiResult<AdminResponse> showDetailUser(
-            @ApiParam(value = "id")
-            @PathVariable(value = "id") String adminId
-            ) {
-        log.debug("adminId={}", adminId);
-        try {
-            AdminResponse adminResponse = adminService.showDetailUser(adminId);
-            return OK(adminResponse);
-        } catch (NotFoundException e) {
-            return ERROR("해당 회원은 존재하지 않습니다.", HttpStatus.NO_CONTENT);
-        }
-    }
-
     // 회원가입
     @ApiOperation(value = "회원가입", notes = "신규 관리자를 생성합니다.")
     @PostMapping
@@ -63,6 +47,22 @@ public class AdminApiController {
             return ERROR("해당하는 빌라가 존재하지 않습니다.", HttpStatus.NO_CONTENT);
         }
         return OK(null);
+    }
+
+    // 회원 상세 조회
+    @ApiOperation(value = "회원 상세 조회", notes = "관리자 회원의 회원 정보 상세 조회를 합니다.")
+    @GetMapping("/{id}")
+    public ApiResult<AdminResponse> showDetailUser(
+            @ApiParam(value = "id")
+            @PathVariable(value = "id") String adminId
+    ) {
+        log.debug("adminId={}", adminId);
+        try {
+            AdminResponse adminResponse = adminService.showDetailUser(adminId);
+            return OK(adminResponse);
+        } catch (NotFoundException e) {
+            return ERROR("해당 회원은 존재하지 않습니다.", HttpStatus.NO_CONTENT);
+        }
     }
 
     // 로그인
@@ -89,7 +89,11 @@ public class AdminApiController {
             @PathVariable(value = "id") String adminId
     ) {
         log.debug("adminId={}", adminId);
-        adminService.logoutUser(adminId);
+        try {
+            adminService.logoutUser(adminId);
+        } catch (NotFoundException e) {
+            ERROR("해당 회원을 찾을 수가 없습니다.", HttpStatus.NO_CONTENT);
+        }
         return OK(null);
     }
 
@@ -101,7 +105,13 @@ public class AdminApiController {
             @RequestBody CreateAdminOwnerRequest request
     ) {
         log.debug("CreateOwnerRequest={}", request);
-        adminService.modifyUser(request);
+        try {
+            adminService.modifyUser(request);
+        } catch (NotFoundException e) {
+            ERROR("해당 회원을 찾을 수가 없습니다", HttpStatus.NO_CONTENT);
+        } catch (AlreadyExistException e) {
+            ERROR("이미 존재하는 핸드폰 번호입니다.", HttpStatus.CONFLICT);
+        }
         return OK(null);
     }
 
@@ -115,7 +125,11 @@ public class AdminApiController {
             @PathVariable(value = "approve") String approve
             ) {
         log.debug("admin={}, approve={}", ownerId, approve);
-        adminService.manageApprove(ownerId, Approve.valueOf(approve));
+        try {
+            adminService.manageApprove(ownerId, Approve.valueOf(approve));
+        } catch (NotFoundException e) {
+            ERROR("해당 회원을 찾을 수가 없습니다.", HttpStatus.NO_CONTENT);
+        }
         return OK(null);
     }
 
@@ -127,7 +141,11 @@ public class AdminApiController {
             @PathVariable(value = "id") String adminId
             ) {
         log.debug("adminId={}", adminId);
-        adminService.removeUser(adminId);
+        try {
+            adminService.removeUser(adminId);
+        } catch (NotFoundException e) {
+            ERROR("해당 회원을 찾을 수가 없습니다.", HttpStatus.NO_CONTENT);
+        }
         return OK(null);
     }
 
