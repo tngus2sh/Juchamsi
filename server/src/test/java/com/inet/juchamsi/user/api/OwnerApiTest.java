@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inet.juchamsi.domain.user.api.OwnerApiController;
 import com.inet.juchamsi.domain.user.application.OwnerService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
-import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.request.CreateAdminOwnerRequest;
 import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.domain.user.entity.Grade;
 import com.inet.juchamsi.domain.user.entity.User;
@@ -101,30 +101,10 @@ public class OwnerApiTest {
     }
 
     @Test
-    @DisplayName("회원 가입#아이디중복")
-    void createUser() throws Exception {
-        // given
-        String object = objectMapper.writeValueAsString(CreateOwnerRequest.builder()
-                .loginId("ownerid")
-                .build());
-
-        // when
-        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/owner")
-                .content(object)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON));
-
-        // then
-        actions.andDo(print())
-                .andExpect(jsonPath("$.sumccess").value(true))
-                .andReturn();
-    }
-
-    @Test
     @DisplayName("집주인 회원가입 ## 아이디 중복")
     void duplicatedUserLoginId() throws Exception {
         // given
-        String object = objectMapper.writeValueAsString(CreateOwnerRequest.builder()
+        String object = objectMapper.writeValueAsString(CreateAdminOwnerRequest.builder()
                 .loginId("ownerid")
                 .build());
 
@@ -143,7 +123,7 @@ public class OwnerApiTest {
     @DisplayName("집주인 회원가입 ## 핸드폰 번호 중복")
     void duplicatedUserPhoneNumber() throws Exception {
         // given
-        String object = objectMapper.writeValueAsString(CreateOwnerRequest.builder()
+        String object = objectMapper.writeValueAsString(CreateAdminOwnerRequest.builder()
                 .loginId("ownerid")
                 .build());
 
@@ -163,7 +143,7 @@ public class OwnerApiTest {
     @Transactional
     void loginUser() throws Exception {
         // given
-        String object = objectMapper.writeValueAsString(CreateOwnerRequest.builder()
+        String object = objectMapper.writeValueAsString(CreateAdminOwnerRequest.builder()
                 .loginId("ownerid")
                 .loginPassword("userPw123!")
                 .build());
@@ -183,7 +163,7 @@ public class OwnerApiTest {
     @DisplayName("집주인 로그인 ## 회원 없음")
     void loginUserFailInvalidId() throws Exception {
         // given
-        String object = objectMapper.writeValueAsString(CreateOwnerRequest.builder()
+        String object = objectMapper.writeValueAsString(CreateAdminOwnerRequest.builder()
                 .loginId("ownerid12")
                 .loginPassword("userPw123!")
                 .build());
@@ -203,7 +183,7 @@ public class OwnerApiTest {
     @DisplayName("집주인 로그인 ## 비밀번호 틀림")
     void loginUserFailWrongPassword() throws Exception {
         // given
-        String object = objectMapper.writeValueAsString(CreateOwnerRequest.builder()
+        String object = objectMapper.writeValueAsString(CreateAdminOwnerRequest.builder()
                 .loginId("ownerid")
                 .loginPassword("userPw")
                 .build());
