@@ -31,9 +31,9 @@ function Savepage() {
     // axios요청으로 백과 연결해서 본인 키 찾기 페이지인지 타인 키 찾기 페이지인지 설정 필요
     console.log('Password:', inputpw);
     if (inputpw === '111111') {
-      navigate('/kioskfindmekeypage');
+      navigate('/Kiosk/findmekeypage');
     } else if (inputpw === '222222') {
-      navigate('/kioskotherkeypage');
+      navigate('/Kiosk/otherkeypage');
     }
   };
 

@@ -10,7 +10,7 @@ function Savingpage() {
     const navigate = useNavigate();
     const handleOpenSavePage = () => {
         // 결과 페이지로 이동
-        navigate('/kiosksaveresultpage');
+        navigate('/Kiosk/saveresultpage');
       };
     return (
         <div>
