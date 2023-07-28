@@ -1,6 +1,8 @@
 package com.inet.juchamsi.global.config;
 
-import lombok.NoArgsConstructor;
+import com.inet.juchamsi.global.jwt.JwtAuthenticationFilter;
+import com.inet.juchamsi.global.jwt.JwtTokenProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,10 +15,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-//    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -27,12 +29,12 @@ public class SecurityConfig {
                 .and()
                     .authorizeRequests() // 요청 url에 따라 접근 권한 설정
                     .antMatchers("/**").permitAll() // /아래 모든 리소스의 접근을 인증절차 없이 허용한다
-                    .antMatchers().hasRole("USER") // 모든 url은 인증 후 user레벨의 권한을 가진 사용자만 접근을 허용
-                    .antMatchers().hasRole("OWNER")
-                    .antMatchers().hasRole("ADMIN")
-                    .anyRequest().authenticated(); // 인증된 유저만 접근 허용
-//                .and()
-//                    .addFilter(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class); // UsernamePasswordAuthenticationFilter: 아이디, 패스워드 기반의 인증을 담당하는 필터
+                    .antMatchers("/user").hasRole("USER") // 모든 url은 인증 후 user레벨의 권한을 가진 사용자만 접근을 허용
+                    .antMatchers("/owner").hasRole("OWNER")
+                    .antMatchers("/admin").hasRole("ADMIN")
+                    .anyRequest().authenticated() // 인증된 유저만 접근 허용
+                .and()
+                    .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class); // UsernamePasswordAuthenticationFilter: 아이디, 패스워드 기반의 인증을 담당하는 필터
 
         return http.build();
     }

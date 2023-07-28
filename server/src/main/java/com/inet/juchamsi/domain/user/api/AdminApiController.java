@@ -1,10 +1,13 @@
 package com.inet.juchamsi.domain.user.api;
 
 import com.inet.juchamsi.domain.user.application.AdminService;
-import com.inet.juchamsi.domain.user.dto.request.LoginAdminRequest;
-import com.inet.juchamsi.domain.user.dto.request.SignupAdminRequest;
+import com.inet.juchamsi.domain.user.dto.request.LoginAdminOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.response.AdminOwnerLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.AdminResponse;
+import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.global.api.ApiResult;
+import com.inet.juchamsi.global.jwt.TokenInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -40,20 +43,9 @@ public class AdminApiController {
     @PostMapping
     public ApiResult<Void> createUser(
             @ApiParam(value = "admin-dto")
-            @RequestBody SignupAdminRequest request) {
-        log.debug("SignupAdminRequest={}", request);
-        SignupAdminRequest dto = SignupAdminRequest.builder()
-                .villaId(request.getVillaId())
-                .phoneNumber(request.getPhoneNumber())
-                .loginId(request.getLoginId())
-                .password(request.getPassword())
-                .name(request.getName())
-                .grade(request.getGrade())
-                .carNumber(request.getCarNumber())
-                .villaNumber(request.getVillaNumber())
-                .build();
-
-        Long adminId = adminService.createUser(dto);
+            @RequestBody CreateOwnerRequest request) {
+        log.debug("CreateAdminRequest={}", request);
+        Long adminId = adminService.createUser(request);
         log.info("createUser admin={}", adminId);
         return OK(null);
     }
@@ -61,11 +53,16 @@ public class AdminApiController {
     // 로그인
     @ApiOperation(value = "로그인", notes = "userId와 userPassword를 사용해서 로그인을 합니다.")
     @PostMapping("/login")
-    public ApiResult<Void> loginUser(
+    public ApiResult<AdminOwnerLoginResponse> loginUser(
             @ApiParam(value = "admin-dto")
-            @RequestBody LoginAdminRequest request
+            @RequestBody LoginAdminOwnerRequest request
     ) {
-        return null;
+        log.debug("LoginAdminOwnerRequest={}", request);
+        String userId = request.getLoginId();
+        String password = request.getLoginPassword();
+        AdminOwnerLoginResponse response = adminService.login(userId, password);
+        log.info("response={}", response);
+        return OK(response);
     }
 
     // 로그아웃
@@ -75,7 +72,9 @@ public class AdminApiController {
             @ApiParam(value = "admin-id")
             @PathVariable(value = "id") String adminId
     ) {
-        return null;
+        log.debug("adminId={}", adminId);
+        adminService.logout(adminId);
+        return OK(null);
     }
 
     // 회원정보 수정
@@ -83,9 +82,11 @@ public class AdminApiController {
     @PutMapping
     public ApiResult<Void> modifyUser(
             @ApiParam(value = "admin-dto")
-            @RequestBody SignupAdminRequest request
+            @RequestBody CreateOwnerRequest request
     ) {
-        return null;
+        log.debug("CreateOwnerRequest={}", request);
+        adminService.modifyUser(request);
+        return OK(null);
     }
 
     // 집주인 회원가입 요청 관리
@@ -93,11 +94,15 @@ public class AdminApiController {
     @GetMapping("/{id}/{approve}")
     public ApiResult<Void> manageApprove(
             @ApiParam(value = "admin")
-            @PathVariable(value = "id") String ownerId
+            @PathVariable(value = "id") String ownerId,
+            @ApiParam(value = "approve")
+            @PathVariable(value = "approve") String approve
             ) {
-        return null;
-    } 
-    
+        log.debug("admin={}, approve={}", ownerId, approve);
+        adminService.manageApprove(ownerId, Approve.valueOf(approve));
+        return OK(null);
+    }
+
     // 탈퇴
     @ApiOperation(value = "관리자 탈퇴", notes = "관리자가 회원 탈퇴를 합니다")
     @DeleteMapping("/{id}")
@@ -105,7 +110,9 @@ public class AdminApiController {
             @ApiParam(value = "admin-id")
             @PathVariable(value = "id") String adminId
             ) {
-        return null;
+        log.debug("adminId={}", adminId);
+        adminService.removeUser(adminId);
+        return OK(null);
     }
-    
+
 }

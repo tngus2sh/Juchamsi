@@ -1,16 +1,23 @@
 package com.inet.juchamsi.domain.user.api;
 
-import com.inet.juchamsi.domain.user.dto.request.LoginOwnerRequest;
-import com.inet.juchamsi.domain.user.dto.request.SignupOwnerRequest;
+import com.inet.juchamsi.domain.user.application.OwnerService;
+import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.request.LoginAdminOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.response.AdminOwnerLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
-import com.inet.juchamsi.domain.user.dto.response.OwnerListResponse;
+import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.global.api.ApiResult;
+import com.inet.juchamsi.global.jwt.TokenInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+import static com.inet.juchamsi.global.api.ApiResult.OK;
 
 @RestController
 @RequestMapping("/owner")
@@ -19,11 +26,15 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = {"집주인 계정"})
 public class OwnerApiController {
 
+    private final OwnerService ownerService;
+
     // 회원 전체 조회
     @ApiOperation(value = "회원 전체 조회", notes = "집주인 권한의 모든 사용자들 목록을 조회한다")
     @GetMapping
-    public ApiResult<OwnerListResponse> showUser() {
-        return null;
+    public ApiResult<List<OwnerResponse>> showUser() {
+        List<OwnerResponse> ownerResponseList = ownerService.showUser();
+        log.info("ownerResponseList={}", ownerResponseList);
+        return OK(ownerResponseList);
     }
 
     // 회원 상세 조회
@@ -33,7 +44,9 @@ public class OwnerApiController {
             @ApiParam(value = "owner-id")
             @PathVariable(value = "id") String ownerId
     ) {
-        return null;
+        log.debug("ownerId={}", ownerId);
+        OwnerResponse ownerResponse = ownerService.showDetailUser(ownerId);
+        return OK(ownerResponse);
     }
 
     // 회원가입
@@ -41,19 +54,27 @@ public class OwnerApiController {
     @PostMapping
     public ApiResult<Void> createUser(
             @ApiParam(value = "owner-dto")
-            @RequestBody SignupOwnerRequest request
+            @RequestBody CreateOwnerRequest request
     ) {
-        return null;
+        log.debug("CreateOwnerRequest={}", request);
+        Long ownerId = ownerService.createUser(request);
+        log.info("createUser owner={}", ownerId);
+        return OK(null);
     }
 
     // 로그인
     @ApiOperation(value = "로그인", notes = "userId와 userPassword를 사용해 로그인한다.")
     @PostMapping("/login")
-    public ApiResult<Void> loginUser(
+    public ApiResult<AdminOwnerLoginResponse> loginUser(
             @ApiParam(value = "owner-dto")
-            @RequestBody LoginOwnerRequest request
+            @RequestBody LoginAdminOwnerRequest request
     ) {
-        return null;
+        log.debug("LoginAdminOwnerRequest={}", request);
+        String userId = request.getLoginId();
+        String password = request.getLoginPassword();
+        AdminOwnerLoginResponse response = ownerService.login(userId, password);
+        log.info("tokenInfo={}", response);
+        return OK(response);
     }
 
     // 로그아웃
@@ -63,7 +84,9 @@ public class OwnerApiController {
             @ApiParam(value = "owner-id")
             @PathVariable(value = "id") String ownerId
     ) {
-        return null;
+        log.debug("ownerId={}", ownerId);
+        ownerService.logout(ownerId);
+        return OK(null);
     }
 
     // 회원 정보 수정
@@ -71,9 +94,11 @@ public class OwnerApiController {
     @PutMapping
     public ApiResult<Void> modifyUser(
             @ApiParam(value = "owner-dto")
-            @RequestBody SignupOwnerRequest request
+            @RequestBody CreateOwnerRequest request
     ) {
-        return null;
+        log.debug("CreateOwnerRequest={}", request);
+        ownerService.modifyUser(request);
+        return OK(null);
     }
 
     // 세입자 회원가입 요청 처리
@@ -85,7 +110,9 @@ public class OwnerApiController {
             @ApiParam(value = "approve-or-not")
             @PathVariable(value = "approve") String approve
     ) {
-        return null;
+        log.debug("admin={}, approve={}", tenantId, approve);
+        ownerService.manageApprove(tenantId, Approve.valueOf(approve));
+        return OK(null);
     }
 
     // 회원 탈퇴
@@ -95,6 +122,8 @@ public class OwnerApiController {
             @ApiParam(value = "owner-id")
             @PathVariable(value = "id") String ownerId
     ) {
-        return null;
+        log.debug("ownerId={}", ownerId);
+        ownerService.removeUser(ownerId);
+        return OK(null);
     }
 }

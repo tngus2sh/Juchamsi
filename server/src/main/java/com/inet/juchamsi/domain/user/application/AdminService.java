@@ -1,8 +1,10 @@
 package com.inet.juchamsi.domain.user.application;
 
-import com.inet.juchamsi.domain.user.dto.request.LoginAdminRequest;
-import com.inet.juchamsi.domain.user.dto.request.SignupAdminRequest;
+import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.response.AdminOwnerLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.AdminResponse;
+import com.inet.juchamsi.domain.user.entity.Approve;
+import com.inet.juchamsi.global.jwt.TokenInfo;
 
 import javax.transaction.Transactional;
 
@@ -13,5 +15,20 @@ public interface AdminService {
     AdminResponse showDetailUser(String loginId);
 
     // 회원 가입
-    Long createUser(SignupAdminRequest dto);
+    Long createUser(CreateOwnerRequest dto);
+
+    // 로그인
+    AdminOwnerLoginResponse login(String adminId, String password);
+
+    // 로그아웃
+    void logout(String adminId);
+
+    // 회원정보수정
+    void modifyUser(CreateOwnerRequest dto);
+
+    // 집주인 회원가입 요청 관리
+    void manageApprove(String ownerId, Approve approve);
+
+    // 탈퇴
+    void removeUser(String adminId);
 }

@@ -2,9 +2,11 @@ package com.inet.juchamsi.domain.user.dao;
 
 import com.inet.juchamsi.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,5 +22,18 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u from User u where u.loginId=:loginId")
     Optional<User> findByLoginId(@Param("loginId") String loginId);
-    
+
+    Optional<User> findByName(String name);
+
+    @Modifying
+    @Query("update User u set u.refreshToken=:refreshToken where u.loginId=:loginId")
+    Optional<Void> updateRefreshToken(@Param("loginId") String loginId, @Param("refreshToken") String refreshToken);
+
+    @Modifying
+    @Query("update User u set u.approve=:approve where u.loginId=:loginId")
+    Optional<Void> updateApprove(@Param("loginId") String loginId, @Param("approve") String approve);
+
+    @Modifying
+    @Query("update User u set u.active=:active where u.loginId=:loginId")
+    Optional<Void> updateActive(@Param("loginId") String loginId, @Param("active") String active);
 }

@@ -1,8 +1,11 @@
 package com.inet.juchamsi.domain.user.entity;
 
+import com.inet.juchamsi.domain.villa.entity.Villa;
+import com.inet.juchamsi.global.common.Active;
 import com.inet.juchamsi.global.common.TimeBaseEntity;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,65 +22,83 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Getter
+@ToString
 public class User extends TimeBaseEntity implements UserDetails {
-    
+
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column()
     private Long id;
-//    @JoinColumn(name = "id", nullable = false)
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    Villa villa;
-    @Column(unique = true, nullable = false, length = 13)
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "villa_id", nullable = false)
+    private Villa villa;
+
+    @Column(name = "phone_number", unique = true, nullable = false, length = 13)
     private String phoneNumber;
-    @Column(nullable = false, length = 15)
+
+    @Column(name = "login_id", nullable = false, length = 15)
     private String loginId;
-    @Column(nullable = false, length = 16)
-    private String password;
+
+    @Column(name = "login_password", nullable = false)
+    private String loginPassword;
+
     @Column(nullable = false, updatable = false, length = 20)
     private String name;
+
     @Enumerated(STRING)
     @Column(nullable = false, updatable = false, length = 20)
     private Grade grade;
-    @Column(unique = true, length = 15)
+
+    @Column(name = "car_number", unique = true, length = 15)
     private String carNumber;
-    @Column
+
+    @Column(name = "villa_number")
     private int villaNumber;
+
     @Enumerated(STRING)
     @Column(length = 20)
     private Approve approve;
+
     @Enumerated(STRING)
     @Column(length = 20)
     private Active active;
     
+    @Column(name = "refresh_token")
+    private String refreshToken;
+
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
 
     public User() {}
 
     @Builder
-    public User(Long id, String phoneNumber, String loginId, String password, String name, Grade grade, String carNumber, int villaNumber, Approve approve, Active active, List<String> roles) {
+    public User(Long id, Villa villa, String phoneNumber, String loginId, String loginPassword, String name, Grade grade, String carNumber, int villaNumber, Approve approve, Active active, String refreshToken, List<String> roles) {
         this.id = id;
+        this.villa = villa;
         this.phoneNumber = phoneNumber;
         this.loginId = loginId;
-        this.password = password;
+        this.loginPassword = loginPassword;
         this.name = name;
         this.grade = grade;
         this.carNumber = carNumber;
         this.villaNumber = villaNumber;
         this.approve = approve;
         this.active = active;
+        this.refreshToken = refreshToken;
         this.roles = roles;
     }
-    
+
+
     /*
         연관관계 편의 메서드
      */
-    public static User createUser(String phoneNumber, String loginId, String password, String name, Grade grade, String carNumber, int villaNumber, Approve approve, Active active, String role) {
+    public static User createUser(Villa villa, String phoneNumber, String loginId, String loginPassword, String name, Grade grade, String carNumber, int villaNumber, Approve approve, Active active, String role) {
         return User.builder()
+                .villa(villa)
                 .phoneNumber(phoneNumber)
                 .loginId(loginId)
-                .password(password)
+                .loginPassword(loginPassword)
                 .name(name)
                 .grade(grade)
                 .carNumber(carNumber)
@@ -87,9 +108,9 @@ public class User extends TimeBaseEntity implements UserDetails {
                 .roles(Collections.singletonList(role))
                 .build();
     }
-    
+
     // 해당 유저의 권한을 리턴
-    @Override   
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // SimpleGrantedAuthority::new -> 생성자를 가리키는 메서드 참조, SimpleGrantedAuthority(사용자의 권한을 나타내는데 활용)
         // .map() -> 스트림의 각 요소를 SimpleGrantedAuthority객체로 변환하는 데에 사용되는 메서드 참조
@@ -103,31 +124,27 @@ public class User extends TimeBaseEntity implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return this.loginPassword;
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return this.loginId;
     }
 
     @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
+    public boolean isAccountNonExpired() { return true; }
 
     @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
+    public boolean isAccountNonLocked() { return true; }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }

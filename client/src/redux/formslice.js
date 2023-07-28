@@ -8,6 +8,7 @@ const initialState = {
     step2Data: {
       id: '',
       password: '',
+      password2: ''
   },
     step3Data: {
       zipCode: '',
