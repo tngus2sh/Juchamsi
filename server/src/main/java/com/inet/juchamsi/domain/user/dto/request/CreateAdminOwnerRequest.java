@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 
 @Data
 @NoArgsConstructor
-public class CreateOwnerRequest {
+public class CreateAdminOwnerRequest {
     
     @NotBlank
     @Pattern(regexp = "^([0-9]+-[0-9]+)|([0-9]+)$")
@@ -52,7 +52,7 @@ public class CreateOwnerRequest {
     private int villaNumber;
 
     @Builder
-    public CreateOwnerRequest(String villaId, String phoneNumber, String loginId, String loginPassword, String name, String grade, String carNumber, int villaNumber) {
+    public CreateAdminOwnerRequest(String villaId, String phoneNumber, String loginId, String loginPassword, String name, String grade, String carNumber, int villaNumber) {
         this.villaId = villaId;
         this.phoneNumber = phoneNumber;
         this.loginId = loginId;
