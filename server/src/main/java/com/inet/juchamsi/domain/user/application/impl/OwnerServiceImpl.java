@@ -2,7 +2,8 @@ package com.inet.juchamsi.domain.user.application.impl;
 
 import com.inet.juchamsi.domain.user.application.OwnerService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
-import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.request.CreateAdminOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminOwnerLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
 import com.inet.juchamsi.domain.user.entity.Approve;
@@ -21,7 +22,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -69,7 +69,7 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
-    public Long createUser(CreateOwnerRequest dto) {
+    public Long createUser(CreateAdminOwnerRequest dto) {
         Optional<Long> loginId = userRepository.existLoginId(dto.getLoginId());
         if (loginId.isPresent()) {
             throw new AlreadyExistException(User.class, loginId.get());
@@ -88,7 +88,9 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
-    public AdminOwnerLoginResponse login(String ownerId, String password) {
+    public AdminOwnerLoginResponse loginUser(LoginRequest request) {
+        String ownerId = request.getLoginId();
+        String password = request.getLoginPassword();
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(ownerId, password);
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
@@ -102,13 +104,18 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
-    public void logout(String ownerId) {
+    public void logoutUser(String ownerId) {
+        Optional<User> user = userRepository.findByLoginId(ownerId);
+        if (!user.isPresent()) {
+            throw new NotFoundException(User.class, user.get());
+        }
+
         // 데이터베이스에서 refreshToken 초기화
         userRepository.updateRefreshToken(ownerId, "");
     }
 
     @Override
-    public  void modifyUser(CreateOwnerRequest dto) {
+    public  void modifyUser(CreateAdminOwnerRequest dto) {
         Optional<Long> loginId = userRepository.existLoginId(dto.getLoginId());
         if (!loginId.isPresent()) {
             throw new NotFoundException(User.class, loginId.get());

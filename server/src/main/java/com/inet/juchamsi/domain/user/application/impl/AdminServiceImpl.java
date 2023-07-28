@@ -2,7 +2,8 @@ package com.inet.juchamsi.domain.user.application.impl;
 
 import com.inet.juchamsi.domain.user.application.AdminService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
-import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.request.CreateAdminOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminOwnerLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.AdminResponse;
 import com.inet.juchamsi.domain.user.entity.Approve;
@@ -54,7 +55,7 @@ public class AdminServiceImpl implements AdminService {
 
     // 회원 가입
     @Override
-    public Long createUser(CreateOwnerRequest dto) {
+    public Long createUser(CreateAdminOwnerRequest dto) {
         Optional<Long> loginId = userRepository.existLoginId(dto.getLoginId());
         if (loginId.isPresent()) {
             throw new AlreadyExistException(User.class, loginId.get());
@@ -75,7 +76,9 @@ public class AdminServiceImpl implements AdminService {
     // 로그인
     @Override
     @Transactional
-    public AdminOwnerLoginResponse login(String adminId, String password) {
+    public AdminOwnerLoginResponse loginUser(LoginRequest request) {
+        String adminId = request.getLoginId();
+        String password  = request.getLoginPassword();
         // 1. login ID/PW를 기반으로 Authentication 객체 생성
         // 이때 authentication은 인증 여부를 확인하는 authenticated 값이 false
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(adminId, password);
@@ -99,14 +102,19 @@ public class AdminServiceImpl implements AdminService {
 
     // 로그아웃
     @Override
-    public void logout(String adminId) {
+    public void logoutUser(String adminId) {
+        Optional<User> user = userRepository.findByLoginId(adminId);
+        if (!user.isPresent()) {
+            throw new NotFoundException(User.class, user.get());
+        }
+
         // 데이터베이스에서 refreshToken 초기화
         userRepository.updateRefreshToken(adminId, "");
     }
 
     // 회원정보 수정
     @Override
-    public void modifyUser(CreateOwnerRequest dto) {
+    public void modifyUser(CreateAdminOwnerRequest dto) {
         Optional<Long> loginId = userRepository.existLoginId(dto.getLoginId());
         if (!loginId.isPresent()) {
             throw new NotFoundException(User.class, loginId.get());

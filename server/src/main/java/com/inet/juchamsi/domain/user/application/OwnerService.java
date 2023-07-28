@@ -1,10 +1,10 @@
 package com.inet.juchamsi.domain.user.application;
 
-import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.request.CreateAdminOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminOwnerLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
 import com.inet.juchamsi.domain.user.entity.Approve;
-import com.inet.juchamsi.global.jwt.TokenInfo;
 
 import java.util.List;
 
@@ -17,16 +17,16 @@ public interface OwnerService {
     OwnerResponse showDetailUser(String loginId);
 
     // 회원 가입
-    Long createUser(CreateOwnerRequest dto);
+    Long createUser(CreateAdminOwnerRequest dto);
 
     // 로그인
-    AdminOwnerLoginResponse login(String ownerId, String password);
+    AdminOwnerLoginResponse loginUser(LoginRequest request);
 
     // 로그아웃
-    void logout(String ownerId);
+    void logoutUser(String ownerId);
 
     // 회원정보수정
-    void modifyUser(CreateOwnerRequest dto);
+    void modifyUser(CreateAdminOwnerRequest dto);
 
     // 세입자 회원가입 요청 관리
     void manageApprove(String tenantId, Approve approve);
