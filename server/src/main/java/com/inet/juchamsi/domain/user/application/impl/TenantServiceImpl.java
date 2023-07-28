@@ -3,7 +3,7 @@ package com.inet.juchamsi.domain.user.application.impl;
 import com.inet.juchamsi.domain.user.application.TenantService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
-import com.inet.juchamsi.domain.user.dto.request.LoginTenantRequest;
+import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.domain.villa.dao.VillaRepository;
 import com.inet.juchamsi.domain.villa.entity.Villa;
@@ -61,7 +61,7 @@ public class TenantServiceImpl implements TenantService {
     }
 
     @Override
-    public TokenInfo loginUser(LoginTenantRequest request) {
+    public TokenInfo loginUser(LoginRequest request) {
         String loginId = request.getLoginId();
         String password = request.getLoginPassword();
 

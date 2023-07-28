@@ -3,11 +3,10 @@ package com.inet.juchamsi.user.service;
 import com.inet.juchamsi.domain.user.application.TenantService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
-import com.inet.juchamsi.domain.user.dto.request.LoginTenantRequest;
+import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.domain.villa.dao.VillaRepository;
 import com.inet.juchamsi.domain.villa.entity.Villa;
-import com.inet.juchamsi.global.jwt.TokenInfo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +69,7 @@ public class TenantServiceTest {
         User targetUser = insertUser(targetVilla);
 
         // when
-        LoginTenantRequest request = LoginTenantRequest.builder()
+        LoginRequest request = LoginRequest.builder()
                 .loginId("userid")
                 .loginPassword("juchamsi1234!")
                 .build();
@@ -87,7 +86,7 @@ public class TenantServiceTest {
         User targetUser = insertUser(targetVilla);
 
         // when
-        LoginTenantRequest request = LoginTenantRequest.builder()
+        LoginRequest request = LoginRequest.builder()
                 .loginId("userid")
                 .loginPassword("juchamsi1234")
                 .build();

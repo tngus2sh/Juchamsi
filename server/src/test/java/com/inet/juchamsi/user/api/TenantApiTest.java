@@ -5,7 +5,7 @@ import com.inet.juchamsi.domain.user.api.TenantApiController;
 import com.inet.juchamsi.domain.user.application.TenantService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
-import com.inet.juchamsi.domain.user.dto.request.LoginTenantRequest;
+import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.domain.villa.dao.VillaRepository;
 import com.inet.juchamsi.domain.villa.entity.Villa;
@@ -150,7 +150,7 @@ public class TenantApiTest {
         // given
         Villa targetVilla = insertVilla();
         User targetUser = insertUser(targetVilla);
-        String object = objectMapper.writeValueAsString(LoginTenantRequest.builder()
+        String object = objectMapper.writeValueAsString(LoginRequest.builder()
                 .loginId("userid")
                 .loginPassword("juchamsi1234!")
                 .build());
@@ -172,7 +172,7 @@ public class TenantApiTest {
         // given
         Villa targetVilla = insertVilla();
         User targetUser = insertUser(targetVilla);
-        String object = objectMapper.writeValueAsString(LoginTenantRequest.builder()
+        String object = objectMapper.writeValueAsString(LoginRequest.builder()
                 .loginId("userid11")
                 .loginPassword("juchamsi1234!")
                 .build());
@@ -195,7 +195,7 @@ public class TenantApiTest {
         // given
         Villa targetVilla = insertVilla();
         User targetUser = insertUser(targetVilla);
-        String object = objectMapper.writeValueAsString(LoginTenantRequest.builder()
+        String object = objectMapper.writeValueAsString(LoginRequest.builder()
                 .loginId("userid")
                 .loginPassword("juchamsi1234")
                 .build());
