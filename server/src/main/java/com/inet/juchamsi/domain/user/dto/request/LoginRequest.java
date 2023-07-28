@@ -9,7 +9,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Data
-public class LoginTenantRequest {
+public class LoginRequest {
 
     @NotBlank
     @Size(max = 15)
@@ -24,10 +24,10 @@ public class LoginTenantRequest {
     private String loginPassword;
 
 
-    public LoginTenantRequest() {}
+    public LoginRequest() {}
 
     @Builder
-    public LoginTenantRequest(String loginId, String loginPassword) {
+    public LoginRequest(String loginId, String loginPassword) {
         this.loginId = loginId;
         this.loginPassword = loginPassword;
     }
