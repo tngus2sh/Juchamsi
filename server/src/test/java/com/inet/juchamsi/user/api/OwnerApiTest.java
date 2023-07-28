@@ -1,8 +1,8 @@
 package com.inet.juchamsi.user.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.inet.juchamsi.domain.user.api.AdminApiController;
-import com.inet.juchamsi.domain.user.application.AdminService;
+import com.inet.juchamsi.domain.user.api.OwnerApiController;
+import com.inet.juchamsi.domain.user.application.OwnerService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateAdminOwnerRequest;
 import com.inet.juchamsi.domain.user.entity.Approve;
@@ -33,8 +33,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Transactional
 @AutoConfigureMockMvc
-@DisplayName("AdminApiController 테스트")
-public class AdminApiTest {
+@DisplayName("OwnerApiController 테스트")
+public class OwnerApiTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -43,10 +43,10 @@ public class AdminApiTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    AdminApiController adminApiController;
+    OwnerApiController ownerApiController;
 
     @Autowired
-    AdminService adminService;
+    OwnerService ownerService;
 
     @Autowired
     UserRepository userRepository;
@@ -60,36 +60,36 @@ public class AdminApiTest {
     @BeforeEach
     public void setUp() {
         Villa villa = Villa.builder()
-            .name("삼성 빌라")
-            .address("광주 광산구 하남산단6번로 107")
-            .idNumber("62218271")
-            .totalCount(6)
-            .active(ACTIVE)
-            .build();
+                .name("삼성 빌라")
+                .address("광주 광산구 하남산단6번로 107")
+                .idNumber("62218271")
+                .totalCount(6)
+                .active(ACTIVE)
+                .build();
         villaRepository.save(villa);
         userRepository.save(User.builder()
                 .villa(villa)
-                .loginId("adminid")
+                .loginId("ownerid")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
                 .phoneNumber("01012341234")
                 .name("김주참")
                 .grade(Grade.ADMIN)
                 .approve(Approve.APPROVE)
                 .active(Active.ACTIVE)
-                .roles(Collections.singletonList("ROLE_ADMIN"))
+                .roles(Collections.singletonList("ADMIN"))
                 .build());
-
 
     }
 
+
     @Test
-    @DisplayName("회원 상세 조회 api")
+    @DisplayName("집주인 회원가입")
     void showDetailUser() throws Exception {
         // given
-        String loginId = "adminid";
+        String loginId = "ownerid";
 
         // when
-        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.get("/admin/{id}", loginId));
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.get("/owner/{id}", loginId));
 
         // then
         actions.andDo(print())
@@ -101,15 +101,15 @@ public class AdminApiTest {
     }
 
     @Test
-    @DisplayName("관리자 회원가입 ## 아이디 중복")
+    @DisplayName("집주인 회원가입 ## 아이디 중복")
     void duplicatedUserLoginId() throws Exception {
         // given
         String object = objectMapper.writeValueAsString(CreateAdminOwnerRequest.builder()
-                .loginId("adminid")
+                .loginId("ownerid")
                 .build());
 
         // when
-        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/admin")
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/owner")
                 .content(object)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON));
@@ -120,15 +120,15 @@ public class AdminApiTest {
     }
 
     @Test
-    @DisplayName("관리자 회원가입 ## 핸드폰 번호 중복")
+    @DisplayName("집주인 회원가입 ## 핸드폰 번호 중복")
     void duplicatedUserPhoneNumber() throws Exception {
         // given
         String object = objectMapper.writeValueAsString(CreateAdminOwnerRequest.builder()
-                .loginId("adminid")
+                .loginId("ownerid")
                 .build());
 
         // when
-        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/admin")
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/owner")
                 .content(object)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON));
@@ -139,17 +139,17 @@ public class AdminApiTest {
     }
 
     @Test
-    @DisplayName("관리자 로그인")
+    @DisplayName("집주인 로그인")
     @Transactional
     void loginUser() throws Exception {
         // given
         String object = objectMapper.writeValueAsString(CreateAdminOwnerRequest.builder()
-                .loginId("adminid")
+                .loginId("ownerid")
                 .loginPassword("userPw123!")
                 .build());
 
         // when
-        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/admin/login")
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/owner/login")
                 .content(object)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON));
@@ -160,16 +160,16 @@ public class AdminApiTest {
     }
 
     @Test
-    @DisplayName("관리자 로그인 ## 회원 없음")
+    @DisplayName("집주인 로그인 ## 회원 없음")
     void loginUserFailInvalidId() throws Exception {
         // given
         String object = objectMapper.writeValueAsString(CreateAdminOwnerRequest.builder()
-                .loginId("adminid22")
+                .loginId("ownerid12")
                 .loginPassword("userPw123!")
                 .build());
 
         // when
-        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/admin/login")
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/owner/login")
                 .content(object)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON));
@@ -180,16 +180,16 @@ public class AdminApiTest {
     }
 
     @Test
-    @DisplayName("관리자 로그인 ## 비밀번호 틀림")
+    @DisplayName("집주인 로그인 ## 비밀번호 틀림")
     void loginUserFailWrongPassword() throws Exception {
         // given
         String object = objectMapper.writeValueAsString(CreateAdminOwnerRequest.builder()
-                .loginId("adminid")
+                .loginId("ownerid")
                 .loginPassword("userPw")
                 .build());
 
         // when
-        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/admin/login")
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/owner/login")
                 .content(object)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON));
@@ -198,4 +198,6 @@ public class AdminApiTest {
         actions.andDo(print())
                 .andExpect(jsonPath("$.success").value(false));
     }
+
+
 }

@@ -1,10 +1,10 @@
 package com.inet.juchamsi.user.service;
 
-import com.inet.juchamsi.domain.user.application.AdminService;
+import com.inet.juchamsi.domain.user.application.OwnerService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateAdminOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
-import com.inet.juchamsi.domain.user.dto.response.AdminResponse;
+import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
 import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.domain.user.entity.Grade;
 import com.inet.juchamsi.domain.user.entity.User;
@@ -30,10 +30,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @Transactional
-public class AdminServiceTest {
+public class OwnerServiceTest {
 
     @Autowired
-    AdminService adminService;
+    OwnerService ownerService;
 
     @Autowired
     UserRepository userRepository;
@@ -44,16 +44,17 @@ public class AdminServiceTest {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+
     @Test
     @DisplayName("회원 상세 조회")
     void showDetailUser() {
         // given
         Villa targetVilla = insertVilla();
         User targetUser = insertUser(targetVilla);
-        String loginId = "adminid";
+        String loginId = "ownerid";
 
         // when
-        AdminResponse response = adminService.showDetailUser(loginId);
+        OwnerResponse response = ownerService.showDetailUser(loginId);
 
         // then
         System.out.println("response = " + response);
@@ -70,11 +71,11 @@ public class AdminServiceTest {
 
         // when
         CreateAdminOwnerRequest dto = CreateAdminOwnerRequest.builder()
-                .loginId("adminid")
+                .loginId("ownerid")
                 .build();
 
         // then
-        assertThatThrownBy(() -> adminService.createUser(dto))
+        assertThatThrownBy(() -> ownerService.createUser(dto))
                 .isInstanceOf(AlreadyExistException.class);
     }
 
@@ -88,12 +89,13 @@ public class AdminServiceTest {
 
         // when
         LoginRequest request = LoginRequest.builder()
-                .loginId("adminid")
+                .loginId("ownerid")
                 .loginPassword("userPw123!")
                 .build();
 
+
         // then
-        assertNotNull(adminService.loginUser(request));
+        assertNotNull(ownerService.loginUser(request));
     }
 
     @Test
@@ -105,26 +107,27 @@ public class AdminServiceTest {
 
         // when
         LoginRequest request = LoginRequest.builder()
-                .loginId("adminid")
+                .loginId("ownerid")
                 .loginPassword("userPw")
                 .build();
 
+
         // then
-        Assertions.assertThatThrownBy(() -> adminService.loginUser(request))
+        Assertions.assertThatThrownBy(() -> ownerService.loginUser(request))
                 .isInstanceOf(BadCredentialsException.class);
     }
 
     private User insertUser(Villa villa) {
         User user = User.builder()
                 .villa(villa)
-                .loginId("adminid")
+                .loginId("ownerid")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
                 .phoneNumber("01012341234")
                 .name("김주참")
-                .grade(Grade.ADMIN)
+                .grade(Grade.OWNER)
                 .approve(Approve.APPROVE)
                 .active(Active.ACTIVE)
-                .roles(Collections.singletonList("ADMIN"))
+                .roles(Collections.singletonList("OWNER"))
                 .build();
         return userRepository.save(user);
     }

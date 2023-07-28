@@ -1,21 +1,26 @@
 package com.inet.juchamsi.domain.user.api;
 
 import com.inet.juchamsi.domain.user.application.OwnerService;
-import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
-import com.inet.juchamsi.domain.user.dto.request.LoginAdminOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.request.CreateAdminOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
+import com.inet.juchamsi.domain.user.dto.response.AdminOwnerLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
 import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.global.api.ApiResult;
-import com.inet.juchamsi.global.jwt.TokenInfo;
+import com.inet.juchamsi.global.error.AlreadyExistException;
+import com.inet.juchamsi.global.error.NotFoundException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.inet.juchamsi.global.api.ApiResult.ERROR;
 import static com.inet.juchamsi.global.api.ApiResult.OK;
 
 @RestController
@@ -24,8 +29,28 @@ import static com.inet.juchamsi.global.api.ApiResult.OK;
 @RequiredArgsConstructor
 @Api(tags = {"집주인 계정"})
 public class OwnerApiController {
-    
+
     private final OwnerService ownerService;
+
+    // 회원가입
+    @ApiOperation(value = "집주인 회원 가입", notes = "신규 집주인 회원을 생성합니다.")
+    @PostMapping
+    public ApiResult<Void> createUser(
+            @ApiParam(value = "owner-dto")
+            @RequestBody CreateAdminOwnerRequest request
+    ) {
+        log.debug("CreateOwnerRequest={}", request);
+        try {
+            Long ownerId = ownerService.createUser(request);
+        }
+        catch(AlreadyExistException e) {
+            return ERROR("동일한 회원 정보가 존재합니다.", HttpStatus.CONFLICT);
+        }
+        catch(NotFoundException e) {
+            return ERROR("해당하는 빌라가 존재하지 않습니다.", HttpStatus.NO_CONTENT);
+        }
+        return OK(null);
+    }
 
     // 회원 전체 조회
     @ApiOperation(value = "회원 전체 조회", notes = "집주인 권한의 모든 사용자들 목록을 조회한다")
@@ -44,36 +69,28 @@ public class OwnerApiController {
             @PathVariable(value = "id") String ownerId
     ) {
         log.debug("ownerId={}", ownerId);
-        OwnerResponse ownerResponse = ownerService.showDetailUser(ownerId);
-        return OK(ownerResponse);
-    }
-
-    // 회원가입
-    @ApiOperation(value = "회원 가입", notes = "신규 집주인 회원을 생성합니다.")
-    @PostMapping
-    public ApiResult<Void> createUser(
-            @ApiParam(value = "owner-dto")
-            @RequestBody CreateOwnerRequest request
-    ) {
-        log.debug("CreateOwnerRequest={}", request);
-        Long ownerId = ownerService.createUser(request);
-        log.info("createUser owner={}", ownerId);
-        return OK(null);
+        try {
+            OwnerResponse ownerResponse = ownerService.showDetailUser(ownerId);
+            return OK(ownerResponse);
+        } catch (NotFoundException e) {
+            return ERROR("해당 회원은 존재하지 않습니다.", HttpStatus.NO_CONTENT);
+        }
     }
 
     // 로그인
     @ApiOperation(value = "로그인", notes = "userId와 userPassword를 사용해 로그인한다.")
     @PostMapping("/login")
-    public ApiResult<TokenInfo> loginUser(
+    public ApiResult<AdminOwnerLoginResponse> loginUser(
             @ApiParam(value = "owner-dto")
-            @RequestBody LoginAdminOwnerRequest request
+            @RequestBody LoginRequest request
     ) {
-        log.debug("LoginAdminOwnerRequest={}", request);
-        String userId = request.getLoginId();
-        String password = request.getPassword();
-        TokenInfo tokenInfo = ownerService.login(userId, password);
-        log.info("tokenInfo={}", tokenInfo);
-        return OK(tokenInfo);
+        log.debug("LoginRequest={}", request);
+        try {
+            AdminOwnerLoginResponse response = ownerService.loginUser(request);
+            return OK(response);
+        } catch (BadCredentialsException e) {
+            return ERROR("아이디 또는 비밀번호를 잘못 입력했습니다", HttpStatus.UNAUTHORIZED);
+        }
     }
 
     // 로그아웃
@@ -84,20 +101,29 @@ public class OwnerApiController {
             @PathVariable(value = "id") String ownerId
     ) {
         log.debug("ownerId={}", ownerId);
-        ownerService.logout(ownerId);
+        try {
+            ownerService.logoutUser(ownerId);
+        } catch (NotFoundException e) {
+            ERROR("해당 회원을 찾을 수가 없습니다.", HttpStatus.NO_CONTENT);
+        }
         return OK(null);
     }
-    
+
     // 회원 정보 수정
     @ApiOperation(value = "회원정보 수정", notes = "집주인의 정보를 수정합니다.")
     @PutMapping
     public ApiResult<Void> modifyUser(
             @ApiParam(value = "owner-dto")
-            @RequestBody CreateOwnerRequest request
+            @RequestBody CreateAdminOwnerRequest request
     ) {
         log.debug("CreateOwnerRequest={}", request);
-        Long ownerId = ownerService.modifyUser(request);
-        log.info("modifyUser owner={}", ownerId);
+        try {
+            ownerService.modifyUser(request);
+        } catch (NotFoundException e) {
+            ERROR("해당 회원을 찾을 수가 없습니다", HttpStatus.NO_CONTENT);
+        } catch (AlreadyExistException e) {
+            ERROR("이미 존재하는 핸드폰 번호입니다.", HttpStatus.CONFLICT);
+        }
         return OK(null);
     }
 
@@ -111,7 +137,11 @@ public class OwnerApiController {
             @PathVariable(value = "approve") String approve
     ) {
         log.debug("admin={}, approve={}", tenantId, approve);
-        ownerService.manageApprove(tenantId, Approve.valueOf(approve));
+        try {
+            ownerService.manageApprove(tenantId, Approve.valueOf(approve));
+        } catch (NotFoundException e) {
+            ERROR("해당 회원을 찾을 수가 없습니다.", HttpStatus.NO_CONTENT);
+        }
         return OK(null);
     }
 
@@ -123,7 +153,11 @@ public class OwnerApiController {
             @PathVariable(value = "id") String ownerId
     ) {
         log.debug("ownerId={}", ownerId);
-        ownerService.removeUser(ownerId);
+        try {
+            ownerService.removeUser(ownerId);
+        } catch (NotFoundException e) {
+            ERROR("해당 회원을 찾을 수가 없습니다.", HttpStatus.NO_CONTENT);
+        }
         return OK(null);
     }
 }

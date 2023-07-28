@@ -1,4 +1,4 @@
-.logo {
+.kiosklogo {
     position: absolute;
     width: 150px;
     height: 150px;
@@ -13,7 +13,7 @@
     font-size: 35px;
 }
 
-.box1 {
+.kioskmainbox1 {
     position: absolute;
     border-radius: 10%;;
     top: 360px;
@@ -24,7 +24,7 @@
     background-color: #33907C;
 }
 
-.box2 {
+.kioskmainbox2 {
     position: absolute;
     border-radius: 10%;;
     top: 360px;
@@ -35,7 +35,7 @@
     background-color: #33907C;
 }
 
-.text1 {
+.kioskmaintext {
     position: absolute;
     font-family: "KorailFont";
     font-size: 30px;

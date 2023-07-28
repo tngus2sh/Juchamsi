@@ -1,0 +1,262 @@
+.signuptologin {
+    position: absolute;
+    top:348px;
+    left:0px;
+}
+
+.signuptext {
+    position: absolute;
+    top:780px;
+    left:30px;
+}
+
+.signuptext1 {
+    position: absolute;
+    top:10px;
+    left:25%;
+    color: aliceblue;
+    font-size: 25px;
+}
+
+.signupid {
+    position: absolute;
+    top:30px;
+}
+
+.signuppw1 {
+    position: absolute;
+    top:55px;
+}
+
+.signuppw2 {
+    position: absolute;
+    top:80px;
+}
+
+.idcheckbox1 {
+    position: absolute;
+    width: 80px;
+    height: 20px;
+    left: 60%;
+    top: 90px;
+    
+    background: #111111;
+    opacity: 0.25;
+    border-radius: 32px;
+}
+
+.idcheckbox2 {
+    position: absolute;
+    width: 80px;
+    height: 20px;
+    left: 60%;
+    top: 90px;
+    
+    background: #33907C;
+    opacity: 0.8;
+    border-radius: 32px;
+}
+
+.idchecktext {
+    position: absolute;
+    top:5px;
+    left:10%;
+    color: aliceblue;
+    font-size: 15px;
+}
+
+.signupname {
+    position: absolute;
+    top:100px;
+}
+
+.signupphonenumber {
+    position: absolute;
+    top:110px;
+}
+
+.carnumber {
+    position: absolute;
+    top:150px;
+}
+
+.villranumber {
+    position: absolute;
+    top:180px;
+}
+
+.housenumber {
+    position: absolute;
+    top:190px;
+    left:0%;
+}
+
+.signupbox1 {
+    position: absolute;
+    width: 200px;
+    height: 45px;
+    left: 20%;
+    top: 720px;
+    
+    background: #111111;
+    opacity: 0.25;
+    border-radius: 32px;
+}
+
+.signupbox2 {
+    position: absolute;
+    width: 200px;
+    height: 45px;
+    left: 20%;
+    top: 720px;
+    
+    background: #33907C;
+    opacity: 0.8;
+    border-radius: 32px;
+}
+
+.signuplogo {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    left: 40%;
+    top: 800px;
+    }
+
+.password-mismatch-text {
+    position: absolute;
+    top:278px;
+    font-size: 13px;
+    left:50px;
+    color: crimson;
+    font-weight:bolder
+}
+
+.password-check-text {
+    position: absolute;
+    top:175px;
+    font-size: 13px;
+    left:50px;
+    color: crimson;
+    font-weight:bolder;
+    text-align: start;
+}
+
+.carnumbertext {
+    position: absolute;
+    top:520px;
+    left:50px;
+    font-size: 13px;
+}
+
+.phonenumbercheck1 {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 55%;
+    top: 430px;
+    
+    background: #111111;
+    opacity: 0.25;
+    border-radius: 32px;
+}
+
+.phonenumbercheck2 {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 55%;
+    top: 430px;
+    
+    background: #33907C;
+    opacity: 0.8;
+    border-radius: 32px;
+}
+.phonenumbercheck3 {
+    position: absolute;
+    width: 80px;
+    height: 20px;
+    left:60%;
+    top: 430px;
+    
+    background: #111111;
+    opacity: 0.25;
+    border-radius: 32px;
+}
+
+.phonechecktext {
+    position: absolute;
+    top:4px;
+    left:10%;
+    color: aliceblue;
+    font-size: 15px;
+}
+
+.Checkidresult1 {
+    position: absolute;
+    width: 80px;
+    height: 30px;
+    left: 36%;
+    top: 152px;
+    
+    background: #33907C;
+    opacity: 1;
+    border-radius: 32px;
+}
+
+.Checkidresult2 {
+    position: absolute;
+    width: 100px;
+    height: 40px;
+    left: 35%;
+    top: 155px;
+    
+    background: #33907C;
+    opacity: 1;
+    border-radius: 32px;
+}
+
+.Checkidresult3 {
+    position: absolute;
+    width: 100px;
+    height: 40px;
+    left: 35%;
+    top: 260px;
+    
+    background: #33907C;
+    opacity: 1;
+    border-radius: 32px;
+}
+
+
+.Checkidresult1text {
+    position: absolute;
+    top:5px;
+    left:23%;
+    color: aliceblue;
+    font-size: 25px;
+}
+
+.Checkidresult2text {
+    position: absolute;
+    top:5px;
+    left:26%;
+    color: aliceblue;
+    font-size: 18px;
+}
+
+.checkboxstyle {
+    position: absolute;
+    top:670px;
+    left:15%
+}
+
+.Privacybtnstyle {
+    position: absolute;
+    top:195px;
+    left:6%;
+}
+
+.Privacymodalstyle {
+    background-color: #33907C;
+}

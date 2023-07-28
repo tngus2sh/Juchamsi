@@ -5,7 +5,7 @@ import com.inet.juchamsi.domain.user.api.TenantApiController;
 import com.inet.juchamsi.domain.user.application.TenantService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
-import com.inet.juchamsi.domain.user.dto.request.LoginTenantRequest;
+import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.domain.villa.dao.VillaRepository;
 import com.inet.juchamsi.domain.villa.entity.Villa;
@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -52,6 +53,9 @@ public class TenantApiTest {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
 
     @Test
@@ -141,16 +145,15 @@ public class TenantApiTest {
 
     @Test
     @DisplayName("세입자 로그인")
+    @Transactional
     void loginUser() throws Exception {
         // given
         Villa targetVilla = insertVilla();
         User targetUser = insertUser(targetVilla);
-        String object = objectMapper.writeValueAsString(LoginTenantRequest.builder()
+        String object = objectMapper.writeValueAsString(LoginRequest.builder()
                 .loginId("userid")
                 .loginPassword("juchamsi1234!")
                 .build());
-        Optional<User> findUser = userRepository.findById(targetUser.getId());
-        System.out.println("db 저장된 유저: " + findUser);
 
         // when
         ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/tenant/login")
@@ -159,7 +162,54 @@ public class TenantApiTest {
                 .contentType(MediaType.APPLICATION_JSON));
 
         // then
-        actions.andDo(print());
+        actions.andDo(print())
+                .andExpect(jsonPath("$.success").value(true));
+    }
+
+    @Test
+    @DisplayName("세입자 로그인 ## 회원 없음")
+    void loginUserFailInvalidId() throws Exception {
+        // given
+        Villa targetVilla = insertVilla();
+        User targetUser = insertUser(targetVilla);
+        String object = objectMapper.writeValueAsString(LoginRequest.builder()
+                .loginId("userid11")
+                .loginPassword("juchamsi1234!")
+                .build());
+        Optional<User> findUser = userRepository.findById(targetUser.getId());
+
+        // when
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/tenant/login")
+                .content(object)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        // then
+        actions.andDo(print())
+                .andExpect(jsonPath("$.success").value(false));
+    }
+
+    @Test
+    @DisplayName("세입자 로그인 ## 비밀번호 틀림")
+    void loginUserFailWrongPassword() throws Exception {
+        // given
+        Villa targetVilla = insertVilla();
+        User targetUser = insertUser(targetVilla);
+        String object = objectMapper.writeValueAsString(LoginRequest.builder()
+                .loginId("userid")
+                .loginPassword("juchamsi1234")
+                .build());
+        Optional<User> findUser = userRepository.findById(targetUser.getId());
+
+        // when
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/tenant/login")
+                .content(object)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        // then
+        actions.andDo(print())
+                .andExpect(jsonPath("$.success").value(false));
     }
 
 
@@ -168,7 +218,7 @@ public class TenantApiTest {
                 .villa(villa)
                 .phoneNumber("01012345678")
                 .loginId("userid")
-                .loginPassword("juchamsi1234!")
+                .loginPassword(passwordEncoder.encode("juchamsi1234!"))
                 .name("주참시")
                 .grade(USER)
                 .carNumber("1가1234")

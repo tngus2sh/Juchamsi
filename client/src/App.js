@@ -17,6 +17,7 @@ import MobileFindIdPage from './pages/mobile/findid'
 import MobileFindResultpage from './pages/mobile/finidresult'
 import MobileFindPwPage from './pages/mobile/findpw'
 import MobileSignupPage from './pages/mobile/signup'
+import MobileParkinglogPage from './pages/mobile/parkinglot'
 
 import './App.css';
 
@@ -36,19 +37,23 @@ function App() {
               ) : (
                 <Route path="/" element={<LoginPage />} />
               )}
-              <Route path="/kiosksavepage" element={<KiosksavePage />} />
-              <Route path="/kioskfindpage" element={<KioskfindPage />} />
-              <Route path="/kiosksavingpage" element={<KiosksavingPage />} />
-              <Route path="/kiosksaveresultpage" element={<KiosksaveresultPage />} />
-              <Route path="/kioskotherkeypage" element={<KioskOtherkeyPage />} />
-              <Route path="/kioskfindmekeypage" element={<KioskMeKeyPage />} />
+              <Route path="/Kiosk/savepage" element={<KiosksavePage />} />
+              <Route path="/Kiosk/findpage" element={<KioskfindPage />} />
+              <Route path="/Kiosk/savingpage" element={<KiosksavingPage />} />
+              <Route path="/Kiosk/saveresultpage" element={<KiosksaveresultPage />} />
+              <Route path="/Kiosk/otherkeypage" element={<KioskOtherkeyPage />} />
+              <Route path="/kiosk/findmekeypage" element={<KioskMeKeyPage />} />
               <Route path="/signup" element={<SignUpPage />}/>
               <Route path="/Mobile/Login" element={<MobileLoginPage />}/>
               <Route path="/Mobile/Findid" element={<MobileFindIdPage />}/>
               <Route path="/Mobile/Findid/Result" element={<MobileFindResultpage />}/>
               <Route path="/Mobile/Findpw" element={<MobileFindPwPage />}/>
               <Route path="/Mobile/Signup" element={<MobileSignupPage />}/>
+<<<<<<< HEAD
+              <Route path="/Mobile/Parkinglot" element={<MobileParkinglogPage />}/>
+=======
                <Route path="/mainPage" element={ <WebMainPage/>} />
+>>>>>>> 82d03000684a18a7e021aa7183ff5c966e597d72
           </Routes>
           </BrowserRouter>
     </div>

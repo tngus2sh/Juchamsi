@@ -3,15 +3,15 @@ package com.inet.juchamsi.user.service;
 import com.inet.juchamsi.domain.user.application.TenantService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
-import com.inet.juchamsi.domain.user.dto.request.LoginTenantRequest;
+import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.domain.villa.dao.VillaRepository;
 import com.inet.juchamsi.domain.villa.entity.Villa;
-import com.inet.juchamsi.global.jwt.TokenInfo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
@@ -58,26 +58,42 @@ public class TenantServiceTest {
 
         // then
         Optional<User> findUser = userRepository.findById(userId);
-        System.out.println(findUser);
         assertThat(findUser).isPresent();
     }
 
     @Test
-    @DisplayName("세입자 로그인")
+    @DisplayName("세입자 로그인 ## 로그인 성공")
     void loginUser() {
         // given
         Villa targetVilla = insertVilla();
         User targetUser = insertUser(targetVilla);
-        LoginTenantRequest request = LoginTenantRequest.builder()
+
+        // when
+        LoginRequest request = LoginRequest.builder()
                 .loginId("userid")
                 .loginPassword("juchamsi1234!")
                 .build();
 
+        // then
+        assertNotNull(tenantService.loginUser(request));
+    }
+
+    @Test
+    @DisplayName("세입자 로그인 ## 로그인 실패")
+    void loginUserFail() {
+        // given
+        Villa targetVilla = insertVilla();
+        User targetUser = insertUser(targetVilla);
+
         // when
-        TokenInfo tokenInfo = tenantService.loginUser(request);
+        LoginRequest request = LoginRequest.builder()
+                .loginId("userid")
+                .loginPassword("juchamsi1234")
+                .build();
 
         // then
-        assertNotNull(tokenInfo);
+        assertThatThrownBy(() -> tenantService.loginUser(request))
+                .isInstanceOf(BadCredentialsException.class);
     }
 
 
