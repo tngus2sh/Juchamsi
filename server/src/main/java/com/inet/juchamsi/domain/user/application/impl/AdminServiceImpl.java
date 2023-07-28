@@ -35,24 +35,6 @@ public class AdminServiceImpl implements AdminService {
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
 
-    // 회원 상세 조회
-    @Override
-    public AdminResponse showDetailUser(String loginId) {
-        // loginId로 회원 상세 정보 가져오기
-        Optional<User> targetUser = userRepository.findByLoginId(loginId);
-
-        if (!targetUser.isPresent()) {
-            throw new NotFoundException(User.class, loginId);
-        }
-
-        User user = targetUser.get();
-        return AdminResponse.builder()
-                .phoneNumber(user.getPhoneNumber())
-                .name(user.getName())
-                .build();
-
-    }
-
     // 회원 가입
     @Override
     public Long createUser(CreateAdminOwnerRequest dto) {
@@ -71,6 +53,24 @@ public class AdminServiceImpl implements AdminService {
         User user = User.createUser(villa, dto.getPhoneNumber(), dto.getLoginId(), passwordEncoder.encode(dto.getLoginPassword()), dto.getName(), Grade.ADMIN, dto.getCarNumber(), dto.getVillaNumber(), Approve.WAIT, Active.ACTIVE, "ADMIN");
         User savedUser = userRepository.save(user);
         return savedUser.getId();
+    }
+
+    // 회원 상세 조회
+    @Override
+    public AdminResponse showDetailUser(String loginId) {
+        // loginId로 회원 상세 정보 가져오기
+        Optional<User> targetUser = userRepository.findByLoginId(loginId);
+
+        if (!targetUser.isPresent()) {
+            throw new NotFoundException(User.class, loginId);
+        }
+
+        User user = targetUser.get();
+        return AdminResponse.builder()
+                .phoneNumber(user.getPhoneNumber())
+                .name(user.getName())
+                .build();
+
     }
 
     // 로그인
