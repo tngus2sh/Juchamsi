@@ -4,9 +4,13 @@ import com.inet.juchamsi.domain.user.application.TenantService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
+import com.inet.juchamsi.domain.user.dto.response.TenantResponse;
+import com.inet.juchamsi.domain.user.entity.Approve;
+import com.inet.juchamsi.domain.user.entity.Grade;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.domain.villa.dao.VillaRepository;
 import com.inet.juchamsi.domain.villa.entity.Villa;
+import com.inet.juchamsi.global.common.Active;
 import com.inet.juchamsi.global.error.AlreadyExistException;
 import com.inet.juchamsi.global.error.NotFoundException;
 import com.inet.juchamsi.global.jwt.JwtTokenProvider;
@@ -19,6 +23,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static com.inet.juchamsi.domain.user.entity.Approve.WAIT;
@@ -61,6 +67,44 @@ public class TenantServiceImpl implements TenantService {
     }
 
     @Override
+    public List<TenantResponse> showUser() {
+        List<TenantResponse> tenantResponseList = new ArrayList<>();
+        List<User> all = userRepository.findAll();
+        for (User user : all) {
+            tenantResponseList.add(
+                    TenantResponse.builder()
+                            .id(user.getId())
+                            .villaIdNumber(user.getVilla().getIdNumber())
+                            .phoneNumber(user.getPhoneNumber())
+                            .name(user.getName())
+                            .carNumber(user.getCarNumber())
+                            .villaNumber(user.getVillaNumber())
+                            .build()
+            );
+        }
+        return null;
+    }
+
+    @Override
+    public TenantResponse showDetailUser(String tenantId) {
+        Optional<User> targetUser = userRepository.findByLoginId(tenantId);
+        if (!targetUser.isPresent()) {
+            throw new NotFoundException(User.class, tenantId);
+        }
+
+        User user = targetUser.get();
+        Villa villa = targetUser.get().getVilla();
+        return TenantResponse.builder()
+                .id(user.getId())
+                .villaIdNumber(villa.getIdNumber())
+                .phoneNumber(user.getPhoneNumber())
+                .name(user.getName())
+                .carNumber(user.getCarNumber())
+                .villaNumber(user.getVillaNumber())
+                .build();
+    }
+
+    @Override
     public TokenInfo loginUser(LoginRequest request) {
         String loginId = request.getLoginId();
         String password = request.getLoginPassword();
@@ -74,5 +118,49 @@ public class TenantServiceImpl implements TenantService {
         userRepository.updateRefreshToken(loginId, password);
 
         return tokenInfo;
+    }
+
+    @Override
+    public void logoutUser(String tenantId) {
+        Optional<User> user = userRepository.findByLoginId(tenantId);
+        if (!user.isPresent()) {
+            throw new NotFoundException(User.class, tenantId);
+        }
+
+        userRepository.updateRefreshToken(tenantId, "");
+
+    }
+
+    @Override
+    public void modifyUser(CreateTenantRequest request) {
+        Optional<Long> loginId = userRepository.existLoginId(request.getLoginId());
+        if (!loginId.isPresent()) {
+            throw new NotFoundException(User.class, loginId.get());
+        }
+
+        Optional<Long> phoneNumber = userRepository.existPhoneNumber(request.getPhoneNumber());
+        if (phoneNumber.isPresent() && !phoneNumber.get().equals(loginId.get())) {
+            throw new AlreadyExistException(User.class, phoneNumber.get());
+        }
+
+        Optional<Long> connectedVillaId = villaRepository.existIdNumber(request.getVillaIdNumber());
+        if (!connectedVillaId.isPresent()) {
+            throw new NotFoundException(Villa.class, connectedVillaId.get());
+        }
+
+        Optional<Villa> findVilla = villaRepository.findById(connectedVillaId.get());
+        User user = User.createUser(findVilla.get(), request.getPhoneNumber(), request.getLoginId(), passwordEncoder.encode(request.getLoginPassword()), request.getName(), USER, request.getCarNumber(), request.getVillaNumber(), WAIT, ACTIVE, "USER");
+        User saveUser = userRepository.save(user);
+    }
+
+    @Override
+    public void removeUser(String tenantId) {
+        Optional<Long> loginId = userRepository.existLoginId(tenantId);
+        if (!loginId.isPresent()) {
+            throw new NotFoundException(User.class, loginId.get());
+        }
+
+        // 회원상태 active에서 disabled로 바꾸기
+        userRepository.updateActive(tenantId, Active.DISABLED.name()).get();
     }
 }
