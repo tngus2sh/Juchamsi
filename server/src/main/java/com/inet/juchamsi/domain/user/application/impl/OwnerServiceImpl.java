@@ -52,11 +52,11 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
-    public OwnerResponse showDetailUser(String loginId) {
+    public OwnerResponse showDetailUser(String ownerId) {
         // loginId로 회원 상세 정보 가져오기
-        Optional<User> targetUser = userRepository.findByLoginId(loginId);
+        Optional<User> targetUser = userRepository.findByLoginId(ownerId);
         if (!targetUser.isPresent()) {
-            throw new NotFoundException(User.class, loginId);
+            throw new NotFoundException(User.class, ownerId);
         }
         User user = targetUser.get();
         Villa villa = targetUser.get().getVilla();
@@ -107,7 +107,7 @@ public class OwnerServiceImpl implements OwnerService {
     public void logoutUser(String ownerId) {
         Optional<User> user = userRepository.findByLoginId(ownerId);
         if (!user.isPresent()) {
-            throw new NotFoundException(User.class, user.get());
+            throw new NotFoundException(User.class, ownerId);
         }
 
         // 데이터베이스에서 refreshToken 초기화

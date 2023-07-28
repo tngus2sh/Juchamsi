@@ -12,7 +12,7 @@ import javax.transaction.Transactional;
 public interface AdminService {
 
     // 회원 상세 조회
-    AdminResponse showDetailUser(String loginId);
+    AdminResponse showDetailUser(String adminId);
 
     // 회원 가입
     Long createUser(CreateAdminOwnerRequest dto);

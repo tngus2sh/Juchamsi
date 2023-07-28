@@ -14,7 +14,7 @@ public interface OwnerService {
     List<OwnerResponse> showUser();
     
     // 회원 상세 조회
-    OwnerResponse showDetailUser(String loginId);
+    OwnerResponse showDetailUser(String ownerId);
 
     // 회원 가입
     Long createUser(CreateAdminOwnerRequest dto);

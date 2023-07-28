@@ -57,12 +57,12 @@ public class AdminServiceImpl implements AdminService {
 
     // 회원 상세 조회
     @Override
-    public AdminResponse showDetailUser(String loginId) {
+    public AdminResponse showDetailUser(String adminId) {
         // loginId로 회원 상세 정보 가져오기
-        Optional<User> targetUser = userRepository.findByLoginId(loginId);
+        Optional<User> targetUser = userRepository.findByLoginId(adminId);
 
         if (!targetUser.isPresent()) {
-            throw new NotFoundException(User.class, loginId);
+            throw new NotFoundException(User.class, adminId);
         }
 
         User user = targetUser.get();
