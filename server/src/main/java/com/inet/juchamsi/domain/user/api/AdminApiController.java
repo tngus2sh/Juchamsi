@@ -3,6 +3,7 @@ package com.inet.juchamsi.domain.user.api;
 import com.inet.juchamsi.domain.user.application.AdminService;
 import com.inet.juchamsi.domain.user.dto.request.LoginAdminOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.response.AdminOwnerLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.AdminResponse;
 import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.global.api.ApiResult;
@@ -52,16 +53,16 @@ public class AdminApiController {
     // 로그인
     @ApiOperation(value = "로그인", notes = "userId와 userPassword를 사용해서 로그인을 합니다.")
     @PostMapping("/login")
-    public ApiResult<TokenInfo> loginUser(
+    public ApiResult<AdminOwnerLoginResponse> loginUser(
             @ApiParam(value = "admin-dto")
             @RequestBody LoginAdminOwnerRequest request
     ) {
         log.debug("LoginAdminOwnerRequest={}", request);
         String userId = request.getLoginId();
-        String password = request.getPassword();
-        TokenInfo tokenInfo = adminService.login(userId, password);
-        log.info("tokenInfo={}", tokenInfo);
-        return OK(tokenInfo);
+        String password = request.getLoginPassword();
+        AdminOwnerLoginResponse response = adminService.login(userId, password);
+        log.info("response={}", response);
+        return OK(response);
     }
 
     // 로그아웃
@@ -84,8 +85,7 @@ public class AdminApiController {
             @RequestBody CreateOwnerRequest request
     ) {
         log.debug("CreateOwnerRequest={}", request);
-        Long adminId = adminService.modifyUser(request);
-        log.info("modifyUser admin={}", adminId);
+        adminService.modifyUser(request);
         return OK(null);
     }
 
@@ -101,8 +101,8 @@ public class AdminApiController {
         log.debug("admin={}, approve={}", ownerId, approve);
         adminService.manageApprove(ownerId, Approve.valueOf(approve));
         return OK(null);
-    } 
-    
+    }
+
     // 탈퇴
     @ApiOperation(value = "관리자 탈퇴", notes = "관리자가 회원 탈퇴를 합니다")
     @DeleteMapping("/{id}")
@@ -114,5 +114,5 @@ public class AdminApiController {
         adminService.removeUser(adminId);
         return OK(null);
     }
-    
+
 }

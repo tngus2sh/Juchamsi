@@ -1,6 +1,7 @@
 package com.inet.juchamsi.domain.user.application;
 
 import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.response.AdminOwnerLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
 import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.global.jwt.TokenInfo;
@@ -19,17 +20,17 @@ public interface OwnerService {
     Long createUser(CreateOwnerRequest dto);
 
     // 로그인
-    TokenInfo login(String ownerId, String password);
+    AdminOwnerLoginResponse login(String ownerId, String password);
 
     // 로그아웃
     void logout(String ownerId);
 
     // 회원정보수정
-    Long modifyUser(CreateOwnerRequest dto);
+    void modifyUser(CreateOwnerRequest dto);
 
     // 세입자 회원가입 요청 관리
-    Long manageApprove(String tenantId, Approve approve);
+    void manageApprove(String tenantId, Approve approve);
 
     // 탈퇴
-    Long removeUser(String ownerId);
+    void removeUser(String ownerId);
 }

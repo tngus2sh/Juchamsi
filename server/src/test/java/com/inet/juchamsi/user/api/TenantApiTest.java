@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -52,6 +53,9 @@ public class TenantApiTest {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
 
     @Test
@@ -141,6 +145,7 @@ public class TenantApiTest {
 
     @Test
     @DisplayName("세입자 로그인")
+    @Transactional
     void loginUser() throws Exception {
         // given
         Villa targetVilla = insertVilla();
@@ -158,7 +163,8 @@ public class TenantApiTest {
                 .contentType(MediaType.APPLICATION_JSON));
 
         // then
-        actions.andDo(print());
+        actions.andDo(print())
+                .andExpect(jsonPath("$.success").value(true));
     }
 
     @Test
@@ -213,7 +219,7 @@ public class TenantApiTest {
                 .villa(villa)
                 .phoneNumber("01012345678")
                 .loginId("userid")
-                .loginPassword("juchamsi1234!")
+                .loginPassword(passwordEncoder.encode("juchamsi1234!"))
                 .name("주참시")
                 .grade(USER)
                 .carNumber("1가1234")
