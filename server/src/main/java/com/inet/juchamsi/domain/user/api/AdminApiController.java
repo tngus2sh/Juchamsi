@@ -1,7 +1,8 @@
 package com.inet.juchamsi.domain.user.api;
 
 import com.inet.juchamsi.domain.user.application.AdminService;
-import com.inet.juchamsi.domain.user.dto.request.CreateAdminOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.request.CreateAdminRequest;
+import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminOwnerLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.AdminResponse;
@@ -35,7 +36,7 @@ public class AdminApiController {
     @PostMapping
     public ApiResult<Void> createUser(
             @ApiParam(value = "admin-dto")
-            @RequestBody CreateAdminOwnerRequest request) {
+            @RequestBody CreateAdminRequest request) {
         log.debug("CreateAdminRequest={}", request);
         try {
             Long adminId = adminService.createUser(request);
@@ -92,7 +93,7 @@ public class AdminApiController {
         try {
             adminService.logoutUser(adminId);
         } catch (NotFoundException e) {
-            ERROR("해당 회원을 찾을 수가 없습니다.", HttpStatus.NO_CONTENT);
+            return ERROR("해당 회원을 찾을 수가 없습니다.", HttpStatus.NO_CONTENT);
         }
         return OK(null);
     }
@@ -102,15 +103,15 @@ public class AdminApiController {
     @PutMapping
     public ApiResult<Void> modifyUser(
             @ApiParam(value = "admin-dto")
-            @RequestBody CreateAdminOwnerRequest request
+            @RequestBody CreateAdminRequest request
     ) {
-        log.debug("CreateOwnerRequest={}", request);
+        log.debug("CreateAdminRequest={}", request);
         try {
             adminService.modifyUser(request);
         } catch (NotFoundException e) {
-            ERROR("해당 회원을 찾을 수가 없습니다", HttpStatus.NO_CONTENT);
+            return ERROR("해당 회원을 찾을 수가 없습니다", HttpStatus.NO_CONTENT);
         } catch (AlreadyExistException e) {
-            ERROR("이미 존재하는 핸드폰 번호입니다.", HttpStatus.CONFLICT);
+            return ERROR("이미 존재하는 핸드폰 번호입니다.", HttpStatus.CONFLICT);
         }
         return OK(null);
     }
@@ -128,7 +129,7 @@ public class AdminApiController {
         try {
             adminService.manageApprove(ownerId, Approve.valueOf(approve));
         } catch (NotFoundException e) {
-            ERROR("해당 회원을 찾을 수가 없습니다.", HttpStatus.NO_CONTENT);
+            return ERROR("해당 회원을 찾을 수가 없습니다.", HttpStatus.NO_CONTENT);
         }
         return OK(null);
     }
@@ -144,7 +145,7 @@ public class AdminApiController {
         try {
             adminService.removeUser(adminId);
         } catch (NotFoundException e) {
-            ERROR("해당 회원을 찾을 수가 없습니다.", HttpStatus.NO_CONTENT);
+            return ERROR("해당 회원을 찾을 수가 없습니다.", HttpStatus.NO_CONTENT);
         }
         return OK(null);
     }
