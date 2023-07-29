@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static com.inet.juchamsi.domain.parking.entity.ParkingFlag.EMPTY;
 import static com.inet.juchamsi.global.common.Active.ACTIVE;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
 @Transactional
@@ -42,8 +43,8 @@ public class ParkingApiTest {
     @DisplayName("주차장 실시간 현황")
     void showParkingLot() throws Exception {
         // given
-        Villa targetVilla = insertVilla();
-        Villa testVilla = insertTestVilla();
+        Villa targetVilla = insertVilla("62218271", 6);
+        Villa testVilla = insertVilla("123456", 6);
         insertParkingLot(targetVilla, testVilla, 3);
 
         Long villaId = targetVilla.getId();
@@ -55,24 +56,31 @@ public class ParkingApiTest {
         actions.andDo(print());
     }
 
+    @Test
+    @DisplayName("주차장 삭제")
+    void removeParkingLot() throws Exception {
+        // given
+        Villa targetVilla = insertVilla("62218271", 6);
+        Villa testVilla = insertVilla("123456", 6);
+        insertParkingLot(targetVilla, testVilla, 3);
 
-    private Villa insertVilla() {
-        Villa villa = Villa.builder()
-                .name("삼성 빌라")
-                .address("광주 광산구 하남산단6번로 107")
-                .idNumber("62218271")
-                .totalCount(6)
-                .active(ACTIVE)
-                .build();
-        return villaRepository.save(villa);
+        Long villaId = targetVilla.getId();
+
+        // when
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.delete("/parking/lot/{villa_id}", villaId));
+
+        // then
+        actions.andDo(print())
+                .andExpect(jsonPath("$.success").value(true));
     }
 
-    private Villa insertTestVilla() {
+
+    private Villa insertVilla(String idNumber, int totalCount) {
         Villa villa = Villa.builder()
                 .name("삼성 빌라")
                 .address("광주 광산구 하남산단6번로 107")
-                .idNumber("123456")
-                .totalCount(6)
+                .idNumber(idNumber)
+                .totalCount(totalCount)
                 .active(ACTIVE)
                 .build();
         return villaRepository.save(villa);
