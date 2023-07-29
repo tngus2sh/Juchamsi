@@ -6,6 +6,7 @@ import com.inet.juchamsi.domain.user.application.OwnerService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateAdminRequest;
 import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
 import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.domain.user.entity.Grade;
 import com.inet.juchamsi.domain.user.entity.User;
@@ -30,6 +31,7 @@ import java.util.Collections;
 import static com.inet.juchamsi.global.common.Active.ACTIVE;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @Transactional
@@ -81,25 +83,6 @@ public class OwnerApiTest {
                 .villaNumber(201)
                 .roles(Collections.singletonList("OWNER"))
                 .build());
-
-    }
-
-
-    @Test
-    @DisplayName("집주인 회원가입")
-    void showDetailUser() throws Exception {
-        // given
-        String loginId = "ownerId";
-
-        // when
-        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.get("/owner/{id}", loginId));
-
-        // then
-        actions.andDo(print())
-                .andExpect(jsonPath("$.response.phoneNumber").exists())
-                .andExpect(jsonPath("$.response.phoneNumber").value("01012341234"))
-                .andExpect(jsonPath("$.response.name").exists())
-                .andExpect(jsonPath("$.response.name").value("김주참"));
 
     }
 
@@ -203,7 +186,7 @@ public class OwnerApiTest {
     }
 
     @Test
-    @DisplayName("관리자 로그아웃")
+    @DisplayName("집주인 로그아웃")
     void  logoutUser() throws Exception {
         // given
         String ownerId = "ownerId";
@@ -216,6 +199,39 @@ public class OwnerApiTest {
         // then
         actions.andDo(print())
                 .andExpect(jsonPath("$.success").value(true));
+    }
+
+    @Test
+    @DisplayName("회원 전체 조회")
+    void showUser() throws Exception {
+        // given
+        compareUser();
+
+        // when
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.get("/owner"));
+
+        // then
+        actions.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+    }
+
+    @Test
+    @DisplayName("회원 상세 조회")
+    void showDetailUser() throws Exception {
+        // given
+        String loginId = "ownerId";
+
+        // when
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.get("/owner/{id}", loginId));
+
+        // then
+        actions.andDo(print())
+                .andExpect(jsonPath("$.response.phoneNumber").exists())
+                .andExpect(jsonPath("$.response.phoneNumber").value("01012341234"))
+                .andExpect(jsonPath("$.response.name").exists())
+                .andExpect(jsonPath("$.response.name").value("김주참"));
+
     }
 
     @Test
