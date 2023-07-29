@@ -1,6 +1,7 @@
 package com.inet.juchamsi.domain.user.dao;
 
 import com.inet.juchamsi.domain.user.entity.Approve;
+import com.inet.juchamsi.domain.user.entity.Grade;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.global.common.Active;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,6 +23,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u.id from User u where u.carNumber=:carNumber")
     Optional<Long> existCarNumber(@Param("carNumber") String carNumber);
+
+    @Query("select u from User u where u.active=:active and u.grade=:grade")
+    Optional<List<User>> findAllByGradeAndActive(@Param("grade") Grade grade, @Param("active") Active active);
 
     @Query("select u from User u where u.loginId=:loginId")
     Optional<User> findByLoginId(@Param("loginId") String loginId);
