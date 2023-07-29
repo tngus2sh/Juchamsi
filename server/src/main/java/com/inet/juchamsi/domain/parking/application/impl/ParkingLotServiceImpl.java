@@ -2,6 +2,7 @@ package com.inet.juchamsi.domain.parking.application.impl;
 
 import com.inet.juchamsi.domain.parking.application.ParkingLotService;
 import com.inet.juchamsi.domain.parking.dao.ParkingLotRepository;
+import com.inet.juchamsi.domain.parking.dto.response.ParkingLotResponse;
 import com.inet.juchamsi.domain.parking.entity.ParkingLot;
 import com.inet.juchamsi.domain.villa.dao.VillaRepository;
 import com.inet.juchamsi.domain.villa.entity.Villa;
@@ -11,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static com.inet.juchamsi.domain.parking.entity.ParkingFlag.EMPTY;
@@ -46,5 +49,35 @@ public class ParkingLotServiceImpl implements ParkingLotService {
             parkingLot = ParkingLot.createBackParkingLot(villa, (i + parkingLotCol), EMPTY, i, ACTIVE);
             parkingLotRepository.save(parkingLot);
         }
+    }
+
+    @Override
+    public List<ParkingLotResponse> showParkingLot(Long villaId) {
+        List<ParkingLot> parkingLotList = parkingLotRepository.findByVilla_Id(villaId);
+
+        if(parkingLotList == null || parkingLotList.size() == 0) {
+            throw new NotFoundException(ParkingLot.class, villaId);
+        }
+
+        List<ParkingLotResponse> response = new ArrayList<>();
+
+        ParkingLot parkingLot;
+        ParkingLotResponse parkingLotResponse;
+        for(int i = 0; i < parkingLotList.size(); i++) {
+            parkingLot = parkingLotList.get(i);
+            parkingLotResponse = ParkingLotResponse.builder()
+                    .id(parkingLot.getId())
+                    .villaId(villaId)
+                    .seatNumber(parkingLot.getSeatNumber())
+                    .parkingFlag(parkingLot.getParkingFlag().toString())
+                    .frontNumber(parkingLot.getFrontNumber())
+                    .backNumber(parkingLot.getBackNumber())
+                    .createDate(parkingLot.getCreatedDate())
+                    .lastModifiedDate(parkingLot.getLastModifiedDate())
+                    .build();
+            response.add(parkingLotResponse);
+        }
+
+        return response;
     }
 }

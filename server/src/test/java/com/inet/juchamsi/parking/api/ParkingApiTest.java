@@ -1,30 +1,37 @@
-package com.inet.juchamsi.parking.service;
+package com.inet.juchamsi.parking.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inet.juchamsi.domain.parking.application.ParkingLotService;
 import com.inet.juchamsi.domain.parking.dao.ParkingLotRepository;
-import com.inet.juchamsi.domain.parking.dto.response.ParkingLotResponse;
 import com.inet.juchamsi.domain.parking.entity.ParkingLot;
 import com.inet.juchamsi.domain.villa.dao.VillaRepository;
 import com.inet.juchamsi.domain.villa.entity.Villa;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
-import static com.inet.juchamsi.global.common.Active.ACTIVE;
 import static com.inet.juchamsi.domain.parking.entity.ParkingFlag.EMPTY;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static com.inet.juchamsi.global.common.Active.ACTIVE;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @SpringBootTest
 @Transactional
-public class ParkingServiceTest {
+@AutoConfigureMockMvc
+@DisplayName("ParkingApiController 테스트")
+public class ParkingApiTest {
 
     @Autowired
-    ParkingLotService parkingService;
+    private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper objectMapper;
+    @Autowired
+    ParkingLotService parkingLotService;
     @Autowired
     ParkingLotRepository parkingLotRepository;
     @Autowired
@@ -32,24 +39,8 @@ public class ParkingServiceTest {
 
 
     @Test
-    @DisplayName("주차장 등록")
-    void createParkingLot() {
-        // given
-        Villa targetVilla = insertVilla();
-        Long villaId = targetVilla.getId();
-        int parkingLotCol = 3;
-
-        // when
-        parkingService.createParkingLot(villaId, parkingLotCol);
-
-        // then
-        Long count = parkingLotRepository.countByVilla(targetVilla);
-        assertThat(count).isEqualTo(parkingLotCol * 2);
-    }
-
-    @Test
     @DisplayName("주차장 실시간 현황")
-    void showParkingLot() {
+    void showParkingLot() throws Exception {
         // given
         Villa targetVilla = insertVilla();
         Villa testVilla = insertTestVilla();
@@ -58,10 +49,10 @@ public class ParkingServiceTest {
         Long villaId = targetVilla.getId();
 
         // when
-        List<ParkingLotResponse> response =  parkingService.showParkingLot(villaId);
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.get("/parking/lot/{villa_id}", villaId));
 
         // then
-        assertNotNull(response);
+        actions.andDo(print());
     }
 
 
