@@ -53,7 +53,14 @@ public class ParkingApiController {
     @ApiOperation(value = "주차장 삭제", notes = "사용자는 주차장을 삭제합니다")
     @DeleteMapping("/lot/{villa_id}")
     public ApiResult<Void> removeParkingLot(@ApiParam(value = "villa-id") @PathVariable("villa_id") Long villaId) {
-        return null;
+        try {
+            parkingLotService.removeParkingLot(villaId);
+        }
+        catch(NotFoundException e) {
+            return ERROR("해당하는 주차장 정보가 없습니다.", HttpStatus.NO_CONTENT);
+        }
+
+        return OK(null);
     }
 
     @ApiOperation(value = "주차정보 등록", notes = "주차장 사용자의 주차 시 정보가 등록됩니다.")
