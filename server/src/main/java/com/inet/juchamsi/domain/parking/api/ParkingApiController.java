@@ -6,14 +6,19 @@ import com.inet.juchamsi.domain.parking.dto.request.CreateLotRequest;
 import com.inet.juchamsi.domain.parking.dto.request.CreateParkingHistoryRequest;
 import com.inet.juchamsi.domain.parking.dto.response.ParkingLotResponse;
 import com.inet.juchamsi.global.api.ApiResult;
+import com.inet.juchamsi.global.error.NotFoundException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.inet.juchamsi.global.api.ApiResult.ERROR;
+import static com.inet.juchamsi.global.api.ApiResult.OK;
 
 @RestController
 @Slf4j
@@ -21,7 +26,7 @@ import java.util.List;
 @Api(tags = {"주차장"})
 @RequestMapping("/parking")
 public class ParkingApiController {
-    private final ParkingLotService lotService;
+    private final ParkingLotService parkingLotService;
     private final ParkingService parkingService;
 
     @ApiOperation(value = "주차장 등록", notes = "집 주인은 회원가입 시 주차장 크기를 입력해 등록합니다")
@@ -33,7 +38,15 @@ public class ParkingApiController {
     @ApiOperation(value = "주차장 실시간 현황", notes = "사용자는 실시간 주차장 주차 현황을 확인합니다")
     @GetMapping("/lot/{villa_id}")
     public ApiResult<List<ParkingLotResponse>> showParkingLot(@ApiParam(value = "villa-id") @PathVariable("villa_id") Long villaId) {
-        return null;
+        log.debug("ShowParkingLot={}", villaId);
+
+        try {
+            List<ParkingLotResponse> response = parkingLotService.showParkingLot(villaId);
+            return OK(response);
+        }
+        catch(NotFoundException e) {
+            return ERROR("해당하는 주차장 정보가 없습니다.", HttpStatus.NO_CONTENT);
+        }
     }
 
     @ApiOperation(value = "주차정보 등록", notes = "주차장 사용자의 주차 시 정보가 등록됩니다.")
