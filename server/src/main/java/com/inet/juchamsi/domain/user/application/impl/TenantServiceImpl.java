@@ -156,11 +156,11 @@ public class TenantServiceImpl implements TenantService {
     @Override
     public void removeUser(String tenantId) {
         Optional<Long> loginId = userRepository.existLoginId(tenantId);
-        if (!loginId.isPresent()) {
-            throw new NotFoundException(User.class, loginId.get());
+        if (loginId.isEmpty()) {
+            throw new NotFoundException(User.class, tenantId);
         }
 
         // 회원상태 active에서 disabled로 바꾸기
-        userRepository.updateActive(tenantId, Active.DISABLED.name()).get();
+        userRepository.updateActive(tenantId, Active.DISABLED);
     }
 }
