@@ -57,7 +57,7 @@ public class OwnerServiceImpl implements OwnerService {
     public OwnerResponse showDetailUser(String ownerId) {
         // loginId로 회원 상세 정보 가져오기
         Optional<User> targetUser = userRepository.findByLoginId(ownerId);
-        if (!targetUser.isPresent()) {
+        if (targetUser.isEmpty()) {
             throw new NotFoundException(User.class, ownerId);
         }
         User user = targetUser.get();
@@ -108,7 +108,7 @@ public class OwnerServiceImpl implements OwnerService {
     @Override
     public void logoutUser(String ownerId) {
         Optional<User> user = userRepository.findByLoginId(ownerId);
-        if (!user.isPresent()) {
+        if (user.isEmpty()) {
             throw new NotFoundException(User.class, ownerId);
         }
 
@@ -118,34 +118,30 @@ public class OwnerServiceImpl implements OwnerService {
 
     @Override
     public  void modifyUser(CreateOwnerRequest dto) {
-        Optional<Long> loginId = userRepository.existLoginId(dto.getLoginId());
-        if (!loginId.isPresent()) {
-            throw new NotFoundException(User.class, loginId.get());
+        Optional<User> oUser = userRepository.findByLoginIdAndActive(dto.getLoginId(), Active.ACTIVE);
+        System.out.println("oUser = " + oUser);
+        if (oUser.isEmpty()) {
+            throw new NotFoundException(User.class, dto.getLoginId());
         }
 
-        Optional<Long> phoneNumber = userRepository.existPhoneNumber(dto.getPhoneNumber());
-        if (phoneNumber.isPresent() && !phoneNumber.get().equals(loginId.get())) {
-            throw new AlreadyExistException(User.class, phoneNumber.get());
+        Optional<Long> phoneNumberId = userRepository.existPhoneNumber(dto.getPhoneNumber());
+        if (phoneNumberId.isPresent() && !phoneNumberId.get().equals(oUser.get().getId())) {
+            throw new AlreadyExistException(User.class, phoneNumberId.get());
         }
 
         // 빌라가 있는지 확인
-        Optional<Long> connectedVillaId = villaRepository.existIdNumberandActive(dto.getVillaIdNumber(), Active.ACTIVE.name());
-        if (!connectedVillaId.isPresent()) {
-            throw new NotFoundException(Villa.class, connectedVillaId.get());
+        Optional<Long> connectedVillaId = villaRepository.existIdNumberandActive(dto.getVillaIdNumber(), Active.ACTIVE);
+        if (connectedVillaId.isEmpty()) {
+            throw new NotFoundException(Villa.class, dto.getLoginId());
         }
-        Villa villa = Villa.builder()
-                .idNumber(dto.getVillaIdNumber())
-                .active(Active.ACTIVE)
-                .build();
 
-        User user = User.createUser(villa, dto.getPhoneNumber(), dto.getLoginId(), dto.getLoginPassword(), dto.getName(), Grade.OWNER, dto.getCarNumber(), dto.getVillaNumber(), Approve.WAIT, Active.ACTIVE, "OWNER");
-        userRepository.save(user);
+        userRepository.updateOwner(dto.getLoginId(), dto.getPhoneNumber(), dto.getCarNumber());
     }
 
     @Override
     public void manageApprove(String tenantId, Approve approve) {
         Optional<Long> tenantLoginId = userRepository.existLoginId(tenantId);
-        if (!tenantLoginId.isPresent()) {
+        if (tenantLoginId.isEmpty()) {
             throw new NotFoundException(User.class, tenantId);
         }
 
@@ -156,7 +152,7 @@ public class OwnerServiceImpl implements OwnerService {
     @Override
     public void removeUser(String ownerId) {
         Optional<Long> loginId = userRepository.existLoginId(ownerId);
-        if (!loginId.isPresent()) {
+        if (loginId.isEmpty()) {
             throw new NotFoundException(User.class, ownerId);
         }
 
