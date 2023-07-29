@@ -2,7 +2,8 @@ package com.inet.juchamsi.domain.user.application.impl;
 
 import com.inet.juchamsi.domain.user.application.AdminService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
-import com.inet.juchamsi.domain.user.dto.request.CreateAdminOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.request.CreateAdminRequest;
+import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminOwnerLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.AdminResponse;
@@ -37,7 +38,7 @@ public class AdminServiceImpl implements AdminService {
 
     // 회원 가입
     @Override
-    public Long createUser(CreateAdminOwnerRequest dto) {
+    public Long createUser(CreateAdminRequest dto) {
         Optional<Long> loginId = userRepository.existLoginId(dto.getLoginId());
         if (loginId.isPresent()) {
             throw new AlreadyExistException(User.class, loginId.get());
@@ -48,9 +49,7 @@ public class AdminServiceImpl implements AdminService {
             throw new AlreadyExistException(User.class, phoneNumber.get());
         }
 
-        Villa villa = Villa.builder().idNumber(dto.getVillaId()).build();
-
-        User user = User.createUser(villa, dto.getPhoneNumber(), dto.getLoginId(), passwordEncoder.encode(dto.getLoginPassword()), dto.getName(), Grade.ADMIN, dto.getCarNumber(), dto.getVillaNumber(), Approve.WAIT, Active.ACTIVE, "ADMIN");
+        User user = User.createUserAdmin(dto.getPhoneNumber(), dto.getLoginId(), passwordEncoder.encode(dto.getLoginPassword()), dto.getName(), Grade.ADMIN, Approve.WAIT, Active.ACTIVE, "ADMIN");
         User savedUser = userRepository.save(user);
         return savedUser.getId();
     }
@@ -61,7 +60,7 @@ public class AdminServiceImpl implements AdminService {
         // loginId로 회원 상세 정보 가져오기
         Optional<User> targetUser = userRepository.findByLoginId(adminId);
 
-        if (!targetUser.isPresent()) {
+        if (targetUser.isEmpty()) {
             throw new NotFoundException(User.class, adminId);
         }
 
@@ -104,8 +103,8 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public void logoutUser(String adminId) {
         Optional<User> user = userRepository.findByLoginId(adminId);
-        if (!user.isPresent()) {
-            throw new NotFoundException(User.class, user.get());
+        if (user.isEmpty()) {
+            throw new NotFoundException(User.class, adminId);
         }
 
         // 데이터베이스에서 refreshToken 초기화
@@ -114,42 +113,40 @@ public class AdminServiceImpl implements AdminService {
 
     // 회원정보 수정
     @Override
-    public void modifyUser(CreateAdminOwnerRequest dto) {
-        Optional<Long> loginId = userRepository.existLoginId(dto.getLoginId());
-        if (!loginId.isPresent()) {
-            throw new NotFoundException(User.class, loginId.get());
+    public void modifyUser(CreateAdminRequest dto) {
+        Optional<User> oUser = userRepository.findByLoginIdAndActive(dto.getLoginId(), Active.ACTIVE);
+        System.out.println("oUser = " + oUser);
+        if (oUser.isEmpty()) {
+            throw new NotFoundException(User.class, dto.getLoginId());
         }
 
-        Optional<Long> phoneNumber = userRepository.existPhoneNumber(dto.getPhoneNumber());
-        if (phoneNumber.isPresent() && !phoneNumber.get().equals(loginId.get())) {
-            throw new AlreadyExistException(User.class, phoneNumber.get());
+        Optional<Long> phoneNumberId = userRepository.existPhoneNumber(dto.getPhoneNumber());
+        if (phoneNumberId.isPresent() && !phoneNumberId.get().equals(oUser.get().getId())) {
+            throw new AlreadyExistException(User.class, phoneNumberId.get());
         }
 
-        Villa villa = Villa.builder().idNumber(dto.getVillaId()).build();
-
-        User user = User.createUser(villa, dto.getPhoneNumber(), dto.getLoginId(), passwordEncoder.encode(dto.getLoginPassword()), dto.getName(), Grade.ADMIN, dto.getCarNumber(), dto.getVillaNumber(), Approve.WAIT, Active.ACTIVE, "ADMIN");
-        userRepository.save(user);
+        userRepository.updateAdmin(dto.getLoginId(), dto.getPhoneNumber());
     }
 
     @Override
     public void manageApprove(String ownerId, Approve approve) {
         Optional<Long> ownerLoginId = userRepository.existLoginId(ownerId);
-        if (!ownerLoginId.isPresent()) {
-            throw new NotFoundException(User.class, ownerLoginId.get());
+        if (ownerLoginId.isEmpty()) {
+            throw new NotFoundException(User.class, ownerId);
         }
 
         // 승인 상태 수정
-        userRepository.updateApprove(ownerId, approve.name()).get();
+        userRepository.updateApprove(ownerId, approve);
     }
 
     @Override
     public void removeUser(String adminId) {
         Optional<Long> loginId = userRepository.existLoginId(adminId);
-        if (!loginId.isPresent()) {
-            throw new NotFoundException(User.class, loginId.get());
+        if (loginId.isEmpty()) {
+            throw new NotFoundException(User.class, adminId);
         }
 
         // 회원 상태 active 에서 disabled로 바꾸기
-        userRepository.updateActive(adminId, Active.DISABLED.name()).get();
+        userRepository.updateActive(adminId, Active.DISABLED);
     }
 }
