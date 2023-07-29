@@ -114,4 +114,44 @@ public class SmsApiTest {
         actions.andDo(print())
                 .andExpect(jsonPath("$.success").value(false));
     }
+
+    @Test
+    @DisplayName("임시 비밀번호 발급")
+    void sendSmsToFindPassword() throws Exception {
+        // given
+        String object = objectMapper.writeValueAsString(CheckUserRequest.builder()
+                .name("김주참")
+                .phoneNumber("본인 번호 입력")
+                .build());
+
+        // when
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/sms")
+                .content(object)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        // then
+        actions.andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("임시 비밀번호 발급 ## 존재하지 않는 회원")
+    void sendSmsToFindPasswordNoPresent() throws Exception {
+        // given
+        String object = objectMapper.writeValueAsString(CheckUserRequest.builder()
+                .name("박주참")
+                .phoneNumber("01012341234")
+                .build());
+
+        // when
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/sms")
+                .content(object)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        // then
+        actions.andDo(print())
+                .andExpect(jsonPath("$.success").value(false));
+    }
 }
