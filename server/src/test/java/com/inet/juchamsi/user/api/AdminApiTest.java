@@ -346,7 +346,7 @@ public class AdminApiTest {
         villaRepository.save(villa);
         userRepository.save(User.builder()
                 .villa(villa)
-                .loginId("ownerid")
+                .loginId("ownerId")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
                 .phoneNumber("01099998888")
                 .name("박주인")
