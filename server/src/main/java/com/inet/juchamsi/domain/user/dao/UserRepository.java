@@ -33,7 +33,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select u from User u where u.loginId=:loginId and u.active=:active")
     Optional<User> findByLoginIdAndActive(@Param("loginId") String loginId, @Param("active") Active active);
 
-    Optional<User> findByName(String name);
+    @Query("select u from User u where u.name=:name and u.phoneNumber=:phoneNumber")
+    Optional<User> findByNameAndPhone(@Param("name") String name, @Param("phoneNumber") String phoneNumber);
 
     @Modifying(clearAutomatically = true) // 해야되는 이유 : https://frogand.tistory.com/174
     @Query("update User u set u.phoneNumber=:phoneNumber, u.carNumber=:carNumber, u.villaNumber=:villaNumber where u.loginId=:loginId")
