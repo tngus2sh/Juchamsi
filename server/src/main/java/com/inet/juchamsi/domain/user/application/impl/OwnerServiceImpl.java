@@ -2,13 +2,14 @@ package com.inet.juchamsi.domain.user.application.impl;
 
 import com.inet.juchamsi.domain.user.application.OwnerService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
-import com.inet.juchamsi.domain.user.dto.request.CreateAdminOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminOwnerLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
 import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.domain.user.entity.Grade;
 import com.inet.juchamsi.domain.user.entity.User;
+import com.inet.juchamsi.domain.villa.dao.VillaRepository;
 import com.inet.juchamsi.domain.villa.entity.Villa;
 import com.inet.juchamsi.global.common.Active;
 import com.inet.juchamsi.global.error.AlreadyExistException;
@@ -32,6 +33,7 @@ import java.util.Optional;
 public class OwnerServiceImpl implements OwnerService {
 
     private final UserRepository userRepository;
+    private final VillaRepository villaRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -69,7 +71,7 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
-    public Long createUser(CreateAdminOwnerRequest dto) {
+    public Long createUser(CreateOwnerRequest dto) {
         Optional<Long> loginId = userRepository.existLoginId(dto.getLoginId());
         if (loginId.isPresent()) {
             throw new AlreadyExistException(User.class, loginId.get());
@@ -80,7 +82,7 @@ public class OwnerServiceImpl implements OwnerService {
             throw new AlreadyExistException(User.class, loginId.get());
         }
 
-        Villa villa = Villa.builder().idNumber(dto.getVillaId()).build();
+        Villa villa = Villa.builder().idNumber(dto.getVillaIdNumber()).build();
 
         User user = User.createUser(villa, dto.getPhoneNumber(), dto.getLoginId(), dto.getLoginPassword(), dto.getName(), Grade.OWNER, dto.getCarNumber(), dto.getVillaNumber(), Approve.WAIT, Active.ACTIVE, "OWNER");
         User savedUser = userRepository.save(user);
@@ -115,7 +117,7 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
-    public  void modifyUser(CreateAdminOwnerRequest dto) {
+    public  void modifyUser(CreateOwnerRequest dto) {
         Optional<Long> loginId = userRepository.existLoginId(dto.getLoginId());
         if (!loginId.isPresent()) {
             throw new NotFoundException(User.class, loginId.get());
@@ -126,7 +128,15 @@ public class OwnerServiceImpl implements OwnerService {
             throw new AlreadyExistException(User.class, phoneNumber.get());
         }
 
-        Villa villa = Villa.builder().idNumber(dto.getVillaId()).build();
+        // 빌라가 있는지 확인
+        Optional<Long> connectedVillaId = villaRepository.existIdNumberandActive(dto.getVillaIdNumber(), Active.ACTIVE.name());
+        if (!connectedVillaId.isPresent()) {
+            throw new NotFoundException(Villa.class, connectedVillaId.get());
+        }
+        Villa villa = Villa.builder()
+                .idNumber(dto.getVillaIdNumber())
+                .active(Active.ACTIVE)
+                .build();
 
         User user = User.createUser(villa, dto.getPhoneNumber(), dto.getLoginId(), dto.getLoginPassword(), dto.getName(), Grade.OWNER, dto.getCarNumber(), dto.getVillaNumber(), Approve.WAIT, Active.ACTIVE, "OWNER");
         userRepository.save(user);
@@ -136,21 +146,21 @@ public class OwnerServiceImpl implements OwnerService {
     public void manageApprove(String tenantId, Approve approve) {
         Optional<Long> tenantLoginId = userRepository.existLoginId(tenantId);
         if (!tenantLoginId.isPresent()) {
-            throw new NotFoundException(User.class, tenantLoginId.get());
+            throw new NotFoundException(User.class, tenantId);
         }
 
         // 승인 상태 수정
-        userRepository.updateApprove(tenantId, approve.name()).get();
+        userRepository.updateApprove(tenantId, approve);
     }
 
     @Override
     public void removeUser(String ownerId) {
         Optional<Long> loginId = userRepository.existLoginId(ownerId);
         if (!loginId.isPresent()) {
-            throw new NotFoundException(User.class, loginId.get());
+            throw new NotFoundException(User.class, ownerId);
         }
 
         // 회원상태 active에서 disabled로 바꾸기
-        userRepository.updateActive(ownerId, Active.DISABLED.name()).get();
+        userRepository.updateActive(ownerId, Active.DISABLED);
     }
 }

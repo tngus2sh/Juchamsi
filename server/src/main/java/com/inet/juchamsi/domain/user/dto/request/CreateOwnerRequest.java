@@ -12,12 +12,12 @@ import javax.validation.constraints.Size;
 
 @Data
 @NoArgsConstructor
-public class CreateAdminOwnerRequest {
+public class CreateOwnerRequest {
     
     @NotBlank
     @Pattern(regexp = "^([0-9]+-[0-9]+)|([0-9]+)$")
     @ApiModelProperty(example = "12")
-    private String villaId;
+    private String villaIdNumber;
     @NotBlank
     @Size(min = 13, max = 13)
     @Pattern(regexp = "^01(?:0|1|[6-9])\\d{3,4}\\d{4}$")
@@ -52,8 +52,8 @@ public class CreateAdminOwnerRequest {
     private int villaNumber;
 
     @Builder
-    public CreateAdminOwnerRequest(String villaId, String phoneNumber, String loginId, String loginPassword, String name, String grade, String carNumber, int villaNumber) {
-        this.villaId = villaId;
+    public CreateOwnerRequest(String villaIdNumber, String phoneNumber, String loginId, String loginPassword, String name, String grade, String carNumber, int villaNumber) {
+        this.villaIdNumber = villaIdNumber;
         this.phoneNumber = phoneNumber;
         this.loginId = loginId;
         this.loginPassword = loginPassword;

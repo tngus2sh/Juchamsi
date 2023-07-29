@@ -2,7 +2,7 @@ package com.inet.juchamsi.user.service;
 
 import com.inet.juchamsi.domain.user.application.OwnerService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
-import com.inet.juchamsi.domain.user.dto.request.CreateAdminOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
 import com.inet.juchamsi.domain.user.entity.Approve;
@@ -70,7 +70,7 @@ public class OwnerServiceTest {
         User targetUser = insertUser(targetVilla);
 
         // when
-        CreateAdminOwnerRequest dto = CreateAdminOwnerRequest.builder()
+        CreateOwnerRequest dto = CreateOwnerRequest.builder()
                 .loginId("ownerid")
                 .build();
 

@@ -1,7 +1,7 @@
 package com.inet.juchamsi.domain.user.api;
 
 import com.inet.juchamsi.domain.user.application.OwnerService;
-import com.inet.juchamsi.domain.user.dto.request.CreateAdminOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminOwnerLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
@@ -37,7 +37,7 @@ public class OwnerApiController {
     @PostMapping
     public ApiResult<Void> createUser(
             @ApiParam(value = "owner-dto")
-            @RequestBody CreateAdminOwnerRequest request
+            @RequestBody CreateOwnerRequest request
     ) {
         log.debug("CreateOwnerRequest={}", request);
         try {
@@ -114,7 +114,7 @@ public class OwnerApiController {
     @PutMapping
     public ApiResult<Void> modifyUser(
             @ApiParam(value = "owner-dto")
-            @RequestBody CreateAdminOwnerRequest request
+            @RequestBody CreateOwnerRequest request
     ) {
         log.debug("CreateOwnerRequest={}", request);
         try {
