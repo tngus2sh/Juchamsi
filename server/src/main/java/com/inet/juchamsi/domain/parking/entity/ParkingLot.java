@@ -1,11 +1,14 @@
 package com.inet.juchamsi.domain.parking.entity;
 
 import com.inet.juchamsi.domain.villa.entity.Villa;
+import com.inet.juchamsi.global.common.Active;
 import com.inet.juchamsi.global.common.TimeBaseEntity;
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+
+import static javax.persistence.EnumType.STRING;
 
 @Entity
 @Getter
@@ -20,11 +23,12 @@ public class ParkingLot extends TimeBaseEntity {
     @JoinColumn(name = "villa_id", nullable = false)
     private Villa villa;
 
-    @Column(name="seat_number")
+    @Column(name="seat_number", nullable = false)
     private int seatNumber;
 
-    @Column(name = "active")
-    private String active;
+    @Enumerated(STRING)
+    @Column(name = "parking_flag", nullable = false)
+    private ParkingFlag parkingFlag;
 
     @Column(name = "front_number")
     private int frontNumber;
@@ -32,14 +36,45 @@ public class ParkingLot extends TimeBaseEntity {
     @Column(name = "back_number")
     private int backNumber;
 
-    public ParkingLot(Long id, Villa villa, int seatNumber, String active, int frontNumber, int backNumber) {
+    @Enumerated(STRING)
+    @Column(nullable = false)
+    private Active active;
+
+
+    public ParkingLot() {}
+
+    @Builder
+    public ParkingLot(Long id, Villa villa, int seatNumber, ParkingFlag parkingFlag, int frontNumber, int backNumber, Active active) {
         this.id = id;
         this.villa = villa;
         this.seatNumber = seatNumber;
-        this.active = active;
+        this.parkingFlag = parkingFlag;
         this.frontNumber = frontNumber;
         this.backNumber = backNumber;
+        this.active = active;
     }
 
-    public ParkingLot() {}
+
+    /*
+        연관관계 편의 메서드
+     */
+    public static ParkingLot createFrontParkingLot(Villa villa, int seatNumber, ParkingFlag parkingFlag, int backNumber, Active active) {
+        return ParkingLot.builder()
+                .villa(villa)
+                .seatNumber(seatNumber)
+                .parkingFlag(parkingFlag)
+                .backNumber(backNumber)
+                .active(active)
+                .build();
+    }
+
+    public static ParkingLot createBackParkingLot(Villa villa, int seatNumber, ParkingFlag parkingFlag, int frontNumber, Active active) {
+        return ParkingLot.builder()
+                .villa(villa)
+                .seatNumber(seatNumber)
+                .parkingFlag(parkingFlag)
+                .frontNumber(frontNumber)
+                .active(active)
+                .build();
+    }
 }

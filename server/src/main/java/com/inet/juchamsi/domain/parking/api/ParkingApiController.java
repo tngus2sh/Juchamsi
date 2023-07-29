@@ -1,6 +1,6 @@
 package com.inet.juchamsi.domain.parking.api;
 
-import com.inet.juchamsi.domain.parking.application.LotService;
+import com.inet.juchamsi.domain.parking.application.ParkingLotService;
 import com.inet.juchamsi.domain.parking.application.ParkingService;
 import com.inet.juchamsi.domain.parking.dto.request.CreateLotRequest;
 import com.inet.juchamsi.domain.parking.dto.request.CreateParkingHistoryRequest;
@@ -21,18 +21,18 @@ import java.util.List;
 @Api(tags = {"주차장"})
 @RequestMapping("/parking")
 public class ParkingApiController {
-    private final LotService lotService;
+    private final ParkingLotService lotService;
     private final ParkingService parkingService;
 
     @ApiOperation(value = "주차장 등록", notes = "집 주인은 회원가입 시 주차장 크기를 입력해 등록합니다")
     @PostMapping("/lot")
-    public ApiResult<Void> createLot(@ApiParam(value = "lot-dto") @RequestBody CreateLotRequest createLotRequest) {
+    public ApiResult<Void> createParkingLot(@ApiParam(value = "lot-dto") @RequestBody CreateLotRequest createLotRequest) {
         return null;
     }
 
     @ApiOperation(value = "주차장 실시간 현황", notes = "사용자는 실시간 주차장 주차 현황을 확인합니다")
     @GetMapping("/lot/{villa_id}")
-    public ApiResult<List<LotResponse>> showLot(@ApiParam(value = "villa-id") @PathVariable("villa_id") Long villaId) {
+    public ApiResult<List<LotResponse>> showParkingLot(@ApiParam(value = "villa-id") @PathVariable("villa_id") Long villaId) {
         return null;
     }
 
