@@ -55,7 +55,7 @@ public class TenantServiceImpl implements TenantService {
         }
 
         Optional<Long> connectedVillaId = villaRepository.existIdNumber(request.getVillaIdNumber());
-        if (!connectedVillaId.isPresent()) {
+        if (connectedVillaId.isEmpty()) {
             throw new NotFoundException(Villa.class, connectedVillaId.get());
         }
 
@@ -69,7 +69,7 @@ public class TenantServiceImpl implements TenantService {
     @Override
     public List<TenantResponse> showUser() {
         List<TenantResponse> tenantResponseList = new ArrayList<>();
-        List<User> all = userRepository.findAll();
+        List<User> all = userRepository.findAllByGradeAndActive(USER, ACTIVE).get();
         for (User user : all) {
             tenantResponseList.add(
                     TenantResponse.builder()
@@ -82,13 +82,13 @@ public class TenantServiceImpl implements TenantService {
                             .build()
             );
         }
-        return null;
+        return tenantResponseList;
     }
 
     @Override
     public TenantResponse showDetailUser(String tenantId) {
         Optional<User> targetUser = userRepository.findByLoginId(tenantId);
-        if (!targetUser.isPresent()) {
+        if (targetUser.isEmpty()) {
             throw new NotFoundException(User.class, tenantId);
         }
 
@@ -123,7 +123,7 @@ public class TenantServiceImpl implements TenantService {
     @Override
     public void logoutUser(String tenantId) {
         Optional<User> user = userRepository.findByLoginId(tenantId);
-        if (!user.isPresent()) {
+        if (user.isEmpty()) {
             throw new NotFoundException(User.class, tenantId);
         }
 
@@ -133,34 +133,33 @@ public class TenantServiceImpl implements TenantService {
 
     @Override
     public void modifyUser(CreateTenantRequest request) {
-        Optional<Long> loginId = userRepository.existLoginId(request.getLoginId());
-        if (!loginId.isPresent()) {
-            throw new NotFoundException(User.class, loginId.get());
+        Optional<User> oUser = userRepository.findByLoginIdAndActive(request.getLoginId(), Active.ACTIVE);
+        System.out.println("oUser = " + oUser);
+        if (oUser.isEmpty()) {
+            throw new NotFoundException(User.class, request.getLoginId());
         }
 
-        Optional<Long> phoneNumber = userRepository.existPhoneNumber(request.getPhoneNumber());
-        if (phoneNumber.isPresent() && !phoneNumber.get().equals(loginId.get())) {
-            throw new AlreadyExistException(User.class, phoneNumber.get());
+        Optional<Long> phoneNumberId = userRepository.existPhoneNumber(request.getPhoneNumber());
+        if (phoneNumberId.isPresent() && !phoneNumberId.get().equals(oUser.get().getId())) {
+            throw new AlreadyExistException(User.class, phoneNumberId.get());
         }
 
         Optional<Long> connectedVillaId = villaRepository.existIdNumber(request.getVillaIdNumber());
-        if (!connectedVillaId.isPresent()) {
-            throw new NotFoundException(Villa.class, connectedVillaId.get());
+        if (connectedVillaId.isEmpty()) {
+            throw new NotFoundException(Villa.class, request.getVillaNumber());
         }
 
-        Optional<Villa> findVilla = villaRepository.findById(connectedVillaId.get());
-        User user = User.createUser(findVilla.get(), request.getPhoneNumber(), request.getLoginId(), passwordEncoder.encode(request.getLoginPassword()), request.getName(), USER, request.getCarNumber(), request.getVillaNumber(), WAIT, ACTIVE, "USER");
-        User saveUser = userRepository.save(user);
+        userRepository.updateTenant(request.getLoginId(), request.getPhoneNumber(), request.getCarNumber(), request.getVillaNumber());
     }
 
     @Override
     public void removeUser(String tenantId) {
         Optional<Long> loginId = userRepository.existLoginId(tenantId);
-        if (!loginId.isPresent()) {
-            throw new NotFoundException(User.class, loginId.get());
+        if (loginId.isEmpty()) {
+            throw new NotFoundException(User.class, tenantId);
         }
 
         // 회원상태 active에서 disabled로 바꾸기
-        userRepository.updateActive(tenantId, Active.DISABLED.name()).get();
+        userRepository.updateActive(tenantId, Active.DISABLED);
     }
 }

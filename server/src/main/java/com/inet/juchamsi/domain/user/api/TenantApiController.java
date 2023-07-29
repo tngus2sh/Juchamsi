@@ -81,21 +81,6 @@ public class TenantApiController {
         return OK(null);
     }
 
-    @ApiOperation(value = "세입자 회원 정보 수정", notes = "세입자가 회원 정보를 수정합니다")
-    @PutMapping("")
-    public ApiResult<Void> modifyUser(@ApiParam(value = "tenant-dto") @RequestBody CreateTenantRequest request) {
-        log.debug("CreateOwnerRequest={}", request);
-        try {
-            tenantService.modifyUser(request);
-        } catch (NotFoundException e) {
-            ERROR("해당 회원을 찾을 수가 없습니다", HttpStatus.NO_CONTENT);
-        } catch (AlreadyExistException e) {
-            ERROR("이미 존재하는 핸드폰 번호입니다.", HttpStatus.CONFLICT);
-        }
-        return OK(null);
-    }
-
-
     // 회원 전체 조회
     @ApiOperation(value = "회원 전체 조회", notes = "세입자 권한의 모든 사용자들 목록을 조회한다")
     @GetMapping
@@ -119,6 +104,20 @@ public class TenantApiController {
         } catch (NotFoundException e) {
             return ERROR("해당 회원은 존재하지 않습니다.", HttpStatus.NO_CONTENT);
         }
+    }
+
+    @ApiOperation(value = "세입자 회원 정보 수정", notes = "세입자가 회원 정보를 수정합니다")
+    @PutMapping("")
+    public ApiResult<Void> modifyUser(@ApiParam(value = "tenant-dto") @RequestBody CreateTenantRequest request) {
+        log.debug("CreateOwnerRequest={}", request);
+        try {
+            tenantService.modifyUser(request);
+        } catch (NotFoundException e) {
+            return ERROR("해당 회원을 찾을 수가 없습니다", HttpStatus.NO_CONTENT);
+        } catch (AlreadyExistException e) {
+            return ERROR("이미 존재하는 핸드폰 번호입니다.", HttpStatus.CONFLICT);
+        }
+        return OK(null);
     }
 
     // 회원 탈퇴
