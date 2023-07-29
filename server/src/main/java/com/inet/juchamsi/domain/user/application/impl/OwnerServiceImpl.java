@@ -40,7 +40,7 @@ public class OwnerServiceImpl implements OwnerService {
     @Override
     public List<OwnerResponse> showUser() {
         List<OwnerResponse> ownerResponseList = new ArrayList<>();
-        List<User> all = userRepository.findAll();
+        List<User> all = userRepository.findAllByGradeAndActive(Grade.OWNER, Active.ACTIVE).get();
         for (User user: all) {
             ownerResponseList.add(
                     OwnerResponse.builder()
