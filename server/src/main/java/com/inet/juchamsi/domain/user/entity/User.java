@@ -31,7 +31,7 @@ public class User extends TimeBaseEntity implements UserDetails {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "villa_id", nullable = false)
+    @JoinColumn(name = "villa_id")
     private Villa villa;
 
     @Column(name = "phone_number", unique = true, nullable = false, length = 13)
@@ -103,6 +103,22 @@ public class User extends TimeBaseEntity implements UserDetails {
                 .grade(grade)
                 .carNumber(carNumber)
                 .villaNumber(villaNumber)
+                .approve(approve)
+                .active(active)
+                .roles(Collections.singletonList(role))
+                .build();
+    }
+
+    /*
+        admin 연관관계 편의 메서드
+     */
+    public static User createUserAdmin(String phoneNumber, String loginId, String loginPassword, String name, Grade grade, Approve approve, Active active, String role) {
+        return User.builder()
+                .phoneNumber(phoneNumber)
+                .loginId(loginId)
+                .loginPassword(loginPassword)
+                .name(name)
+                .grade(grade)
                 .approve(approve)
                 .active(active)
                 .roles(Collections.singletonList(role))
