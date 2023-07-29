@@ -103,10 +103,10 @@ public class OwnerApiController {
         log.debug("ownerId={}", ownerId);
         try {
             ownerService.logoutUser(ownerId);
+            return OK(null);
         } catch (NotFoundException e) {
-            ERROR("해당 회원을 찾을 수가 없습니다.", HttpStatus.NO_CONTENT);
+            return ERROR("해당 회원을 찾을 수가 없습니다.", HttpStatus.NO_CONTENT);
         }
-        return OK(null);
     }
 
     // 회원 정보 수정
@@ -119,12 +119,12 @@ public class OwnerApiController {
         log.debug("CreateOwnerRequest={}", request);
         try {
             ownerService.modifyUser(request);
+            return OK(null);
         } catch (NotFoundException e) {
-            ERROR("해당 회원을 찾을 수가 없습니다", HttpStatus.NO_CONTENT);
+            return ERROR("해당 회원을 찾을 수가 없습니다", HttpStatus.NO_CONTENT);
         } catch (AlreadyExistException e) {
-            ERROR("이미 존재하는 핸드폰 번호입니다.", HttpStatus.CONFLICT);
+            return ERROR("이미 존재하는 핸드폰 번호입니다.", HttpStatus.CONFLICT);
         }
-        return OK(null);
     }
 
     // 세입자 회원가입 요청 처리
@@ -139,10 +139,10 @@ public class OwnerApiController {
         log.debug("admin={}, approve={}", tenantId, approve);
         try {
             ownerService.manageApprove(tenantId, Approve.valueOf(approve));
+            return OK(null);
         } catch (NotFoundException e) {
-            ERROR("해당 회원을 찾을 수가 없습니다.", HttpStatus.NO_CONTENT);
+            return ERROR("해당 회원을 찾을 수가 없습니다.", HttpStatus.NO_CONTENT);
         }
-        return OK(null);
     }
 
     // 회원 탈퇴
@@ -155,9 +155,9 @@ public class OwnerApiController {
         log.debug("ownerId={}", ownerId);
         try {
             ownerService.removeUser(ownerId);
+            return OK(null);
         } catch (NotFoundException e) {
-            ERROR("해당 회원을 찾을 수가 없습니다.", HttpStatus.NO_CONTENT);
+            return ERROR("해당 회원을 찾을 수가 없습니다.", HttpStatus.NO_CONTENT);
         }
-        return OK(null);
     }
 }
