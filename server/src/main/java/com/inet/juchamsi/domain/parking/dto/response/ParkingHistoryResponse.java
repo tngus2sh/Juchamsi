@@ -1,4 +1,4 @@
 package com.inet.juchamsi.domain.parking.dto.response;
 
-public class LotResponse {
+public class ParkingHistoryResponse {
 }
