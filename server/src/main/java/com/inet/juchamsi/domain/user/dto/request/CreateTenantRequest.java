@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 public class CreateTenantRequest {
 
     @NotBlank
-    @Pattern(regexp = "^[0-9]*$")
+    @Pattern(regexp = "^([0-9]+-[0-9]+)|([0-9]+)$")
     @ApiModelProperty(example = "62218271")
     private String villaIdNumber;
 
