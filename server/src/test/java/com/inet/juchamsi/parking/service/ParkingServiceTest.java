@@ -36,7 +36,7 @@ public class ParkingServiceTest {
     @DisplayName("주차장 등록")
     void createParkingLot() {
         // given
-        Villa targetVilla = insertVilla();
+        Villa targetVilla = insertVilla("62218271", 6);
         Long villaId = targetVilla.getId();
         int parkingLotCol = 3;
 
@@ -52,8 +52,8 @@ public class ParkingServiceTest {
     @DisplayName("주차장 실시간 현황")
     void showParkingLot() {
         // given
-        Villa targetVilla = insertVilla();
-        Villa testVilla = insertTestVilla();
+        Villa targetVilla = insertVilla("62218271", 6);
+        Villa testVilla = insertVilla("123456", 6);
         insertParkingLot(targetVilla, testVilla, 3);
 
         Long villaId = targetVilla.getId();
@@ -69,8 +69,8 @@ public class ParkingServiceTest {
     @DisplayName("주차장 삭제")
     void removeParkingLot() {
         // given
-        Villa targetVilla = insertVilla();
-        Villa testVilla = insertTestVilla();
+        Villa targetVilla = insertVilla("62218271", 6);
+        Villa testVilla = insertVilla("123456", 6);
         insertParkingLot(targetVilla, testVilla, 3);
 
         Long villaId = targetVilla.getId();
@@ -93,23 +93,12 @@ public class ParkingServiceTest {
     }
 
 
-    private Villa insertVilla() {
+    private Villa insertVilla(String idNumber, int totalCount) {
         Villa villa = Villa.builder()
                 .name("삼성 빌라")
                 .address("광주 광산구 하남산단6번로 107")
-                .idNumber("62218271")
-                .totalCount(6)
-                .active(ACTIVE)
-                .build();
-        return villaRepository.save(villa);
-    }
-
-    private Villa insertTestVilla() {
-        Villa villa = Villa.builder()
-                .name("삼성 빌라")
-                .address("광주 광산구 하남산단6번로 107")
-                .idNumber("123456")
-                .totalCount(6)
+                .idNumber(idNumber)
+                .totalCount(totalCount)
                 .active(ACTIVE)
                 .build();
         return villaRepository.save(villa);
