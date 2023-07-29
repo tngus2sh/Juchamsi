@@ -1,20 +1,25 @@
 package com.inet.juchamsi.domain.user.api;
 
 import com.inet.juchamsi.domain.user.application.AdminService;
-import com.inet.juchamsi.domain.user.dto.request.LoginAdminOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.request.CreateAdminRequest;
 import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminOwnerLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.AdminResponse;
 import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.global.api.ApiResult;
-import com.inet.juchamsi.global.jwt.TokenInfo;
+import com.inet.juchamsi.global.error.AlreadyExistException;
+import com.inet.juchamsi.global.error.NotFoundException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
+import static com.inet.juchamsi.global.api.ApiResult.ERROR;
 import static com.inet.juchamsi.global.api.ApiResult.OK;
 
 @RestController
@@ -26,28 +31,39 @@ public class AdminApiController {
 
     private final AdminService adminService;
 
+    // 회원가입
+    @ApiOperation(value = "회원가입", notes = "신규 관리자를 생성합니다.")
+    @PostMapping
+    public ApiResult<Void> createUser(
+            @ApiParam(value = "admin-dto")
+            @RequestBody CreateAdminRequest request) {
+        log.debug("CreateAdminRequest={}", request);
+        try {
+            Long adminId = adminService.createUser(request);
+        }
+        catch(AlreadyExistException e) {
+            return ERROR("동일한 회원 정보가 존재합니다.", HttpStatus.CONFLICT);
+        }
+        catch(NotFoundException e) {
+            return ERROR("해당하는 빌라가 존재하지 않습니다.", HttpStatus.NO_CONTENT);
+        }
+        return OK(null);
+    }
+
     // 회원 상세 조회
     @ApiOperation(value = "회원 상세 조회", notes = "관리자 회원의 회원 정보 상세 조회를 합니다.")
     @GetMapping("/{id}")
     public ApiResult<AdminResponse> showDetailUser(
             @ApiParam(value = "id")
             @PathVariable(value = "id") String adminId
-            ) {
+    ) {
         log.debug("adminId={}", adminId);
-        AdminResponse adminResponse = adminService.showDetailUser(adminId);
-        return OK(adminResponse);
-    }
-
-    // 회원가입
-    @ApiOperation(value = "회원가입", notes = "신규 관리자를 생성합니다.")
-    @PostMapping
-    public ApiResult<Void> createUser(
-            @ApiParam(value = "admin-dto")
-            @RequestBody CreateOwnerRequest request) {
-        log.debug("CreateAdminRequest={}", request);
-        Long adminId = adminService.createUser(request);
-        log.info("createUser admin={}", adminId);
-        return OK(null);
+        try {
+            AdminResponse adminResponse = adminService.showDetailUser(adminId);
+            return OK(adminResponse);
+        } catch (NotFoundException e) {
+            return ERROR("해당 회원은 존재하지 않습니다.", HttpStatus.NO_CONTENT);
+        }
     }
 
     // 로그인
@@ -55,14 +71,15 @@ public class AdminApiController {
     @PostMapping("/login")
     public ApiResult<AdminOwnerLoginResponse> loginUser(
             @ApiParam(value = "admin-dto")
-            @RequestBody LoginAdminOwnerRequest request
+            @RequestBody LoginRequest request
     ) {
-        log.debug("LoginAdminOwnerRequest={}", request);
-        String userId = request.getLoginId();
-        String password = request.getLoginPassword();
-        AdminOwnerLoginResponse response = adminService.login(userId, password);
-        log.info("response={}", response);
-        return OK(response);
+        log.debug("LoginRequest={}", request);
+        try {
+            AdminOwnerLoginResponse response = adminService.loginUser(request);
+            return OK(response);
+        } catch (BadCredentialsException e) {
+            return ERROR("아이디 또는 비밀번호를 잘못 입력했습니다", HttpStatus.UNAUTHORIZED);
+        }
     }
 
     // 로그아웃
@@ -73,7 +90,11 @@ public class AdminApiController {
             @PathVariable(value = "id") String adminId
     ) {
         log.debug("adminId={}", adminId);
-        adminService.logout(adminId);
+        try {
+            adminService.logoutUser(adminId);
+        } catch (NotFoundException e) {
+            return ERROR("해당 회원을 찾을 수가 없습니다.", HttpStatus.NO_CONTENT);
+        }
         return OK(null);
     }
 
@@ -82,10 +103,16 @@ public class AdminApiController {
     @PutMapping
     public ApiResult<Void> modifyUser(
             @ApiParam(value = "admin-dto")
-            @RequestBody CreateOwnerRequest request
+            @RequestBody CreateAdminRequest request
     ) {
-        log.debug("CreateOwnerRequest={}", request);
-        adminService.modifyUser(request);
+        log.debug("CreateAdminRequest={}", request);
+        try {
+            adminService.modifyUser(request);
+        } catch (NotFoundException e) {
+            return ERROR("해당 회원을 찾을 수가 없습니다", HttpStatus.NO_CONTENT);
+        } catch (AlreadyExistException e) {
+            return ERROR("이미 존재하는 핸드폰 번호입니다.", HttpStatus.CONFLICT);
+        }
         return OK(null);
     }
 
@@ -99,7 +126,11 @@ public class AdminApiController {
             @PathVariable(value = "approve") String approve
             ) {
         log.debug("admin={}, approve={}", ownerId, approve);
-        adminService.manageApprove(ownerId, Approve.valueOf(approve));
+        try {
+            adminService.manageApprove(ownerId, Approve.valueOf(approve));
+        } catch (NotFoundException e) {
+            return ERROR("해당 회원을 찾을 수가 없습니다.", HttpStatus.NO_CONTENT);
+        }
         return OK(null);
     }
 
@@ -111,7 +142,11 @@ public class AdminApiController {
             @PathVariable(value = "id") String adminId
             ) {
         log.debug("adminId={}", adminId);
-        adminService.removeUser(adminId);
+        try {
+            adminService.removeUser(adminId);
+        } catch (NotFoundException e) {
+            return ERROR("해당 회원을 찾을 수가 없습니다.", HttpStatus.NO_CONTENT);
+        }
         return OK(null);
     }
 

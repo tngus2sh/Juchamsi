@@ -2,20 +2,30 @@ package com.inet.juchamsi.user.service;
 
 import com.inet.juchamsi.domain.user.application.TenantService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
+import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
-import com.inet.juchamsi.domain.user.dto.request.LoginTenantRequest;
+import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
+import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
+import com.inet.juchamsi.domain.user.dto.response.TenantResponse;
+import com.inet.juchamsi.domain.user.entity.Approve;
+import com.inet.juchamsi.domain.user.entity.Grade;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.domain.villa.dao.VillaRepository;
 import com.inet.juchamsi.domain.villa.entity.Villa;
-import com.inet.juchamsi.global.jwt.TokenInfo;
+import com.inet.juchamsi.global.common.Active;
+import com.inet.juchamsi.global.error.AlreadyExistException;
+import com.inet.juchamsi.global.error.NotFoundException;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static com.inet.juchamsi.domain.user.entity.Approve.WAIT;
@@ -36,6 +46,8 @@ public class TenantServiceTest {
     UserRepository userRepository;
     @Autowired
     VillaRepository villaRepository;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
 
     @Test
@@ -47,10 +59,10 @@ public class TenantServiceTest {
         CreateTenantRequest request = CreateTenantRequest.builder()
                 .villaIdNumber(villaIdNumber)
                 .phoneNumber("01012345678")
-                .loginId("userid")
-                .loginPassword("juchamsi1234!")
-                .name("주참시")
-                .carNumber("1가1234")
+                .loginId("userId")
+                .loginPassword("userPw123!")
+                .name("김주참")
+                .carNumber("12가 1234")
                 .villaNumber(101)
                 .build();
 
@@ -70,9 +82,9 @@ public class TenantServiceTest {
         User targetUser = insertUser(targetVilla);
 
         // when
-        LoginTenantRequest request = LoginTenantRequest.builder()
-                .loginId("userid")
-                .loginPassword("juchamsi1234!")
+        LoginRequest request = LoginRequest.builder()
+                .loginId("userId")
+                .loginPassword("userPw123!")
                 .build();
 
         // then
@@ -87,9 +99,9 @@ public class TenantServiceTest {
         User targetUser = insertUser(targetVilla);
 
         // when
-        LoginTenantRequest request = LoginTenantRequest.builder()
-                .loginId("userid")
-                .loginPassword("juchamsi1234")
+        LoginRequest request = LoginRequest.builder()
+                .loginId("userId")
+                .loginPassword("use23!")
                 .build();
 
         // then
@@ -97,16 +109,160 @@ public class TenantServiceTest {
                 .isInstanceOf(BadCredentialsException.class);
     }
 
+    @Test
+    @DisplayName("회원 전체 조회")
+    void showUser() {
+        // given
+        Villa targetVilla = insertVilla();
+        User targetUser = insertUser(targetVilla);
+        compareUser(targetVilla);
+
+        // when
+        List<TenantResponse> responseList = tenantService.showUser();
+
+        // then
+        System.out.println("responseList = " + responseList);
+        assertNotNull(responseList);
+    }
+
+    @Test
+    @DisplayName("회원 상세 조회")
+    void showDetailUser() {
+        // given
+        Villa targetVilla = insertVilla();
+        User targetUser = insertUser(targetVilla);
+        String loginId = "userId";
+
+        // when
+        TenantResponse response = tenantService.showDetailUser(loginId);
+
+        // then
+        System.out.println("response = " + response);
+        assertThat(response.getPhoneNumber()).isEqualTo(targetUser.getPhoneNumber());
+    }
+
+    @Test
+    @DisplayName("세입자 회원정보 수정 ## 핸드폰 번호 수정")
+    void modifyUser() {
+        // given
+        Villa targetVilla = insertVilla();
+        User targetUser = insertUser(targetVilla);
+
+        // when
+        CreateTenantRequest request = CreateTenantRequest.builder()
+                .villaIdNumber("62218271")
+                .loginId("userId")
+                .loginPassword(passwordEncoder.encode("userPw123!"))
+                .phoneNumber("01098765432")
+                .name("김주참")
+                .carNumber("12가 1234")
+                .villaNumber(201)
+                .build();
+        tenantService.modifyUser(request);
+
+        // then
+        System.out.println("userRepository = " + userRepository.findByLoginId("userId").get());
+        assertThat(userRepository.findByLoginId("userId").get().getPhoneNumber()).isEqualTo("01098765432");
+    }
+
+    @Test
+    @DisplayName("세입자 회원정보 수정 ## 없는 사용자일 때")
+    void modifyUserNoPresent() {
+        // given
+        Villa targetVilla = insertVilla();
+        User targetUser = insertUser(targetVilla);
+
+        // when
+        CreateTenantRequest request = CreateTenantRequest.builder()
+                .villaIdNumber("62218271")
+                .loginId("leeUser")
+                .loginPassword(passwordEncoder.encode("userPw123!"))
+                .phoneNumber("01098765432")
+                .name("이주참")
+                .carNumber("12가 1234")
+                .villaNumber(201)
+                .build();
+
+        // then
+        System.out.println("userRepository = " + userRepository.findByLoginId("userId").get());
+        AssertionsForClassTypes.assertThatThrownBy(() -> tenantService.modifyUser(request))
+                .isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("세입자 회원정보 수정 ## 핸드폰 번호가 중복일 때")
+    void modifyUserDuplicatedPhoneNumber() {
+        // given
+        Villa targetVilla = insertVilla();
+        User targetUser = insertUser(targetVilla);
+        User secondUser = compareUser(targetVilla);
+
+        // when
+        CreateTenantRequest request = CreateTenantRequest.builder()
+                .villaIdNumber("62218271")
+                .loginId("userId")
+                .loginPassword(passwordEncoder.encode("userPw123!"))
+                .phoneNumber("01098765432")
+                .name("김주참")
+                .carNumber("12가 1234")
+                .villaNumber(201)
+                .build();
+
+        // then
+        System.out.println("userRepository = " + userRepository.findByLoginId("userId").get());
+        AssertionsForClassTypes.assertThatThrownBy(() -> tenantService.modifyUser(request))
+                .isInstanceOf(AlreadyExistException.class);
+    }
+
+    @Test
+    @DisplayName("세입자 회원정보 수정 ## 없는 빌라일 때")
+    void modifyUserNoPresentVilla() {
+        // given
+        Villa targetVilla = insertVilla();
+        User targetUser = insertUser(targetVilla);
+
+        // when
+        CreateTenantRequest request = CreateTenantRequest.builder()
+                .villaIdNumber("6220-271")
+                .loginId("userId")
+                .loginPassword(passwordEncoder.encode("userPw123!"))
+                .phoneNumber("01012345678")
+                .name("김주참")
+                .carNumber("12가 1234")
+                .villaNumber(201)
+                .build();
+
+        // then
+        System.out.println("userRepository = " + userRepository.findByLoginId("userId").get());
+        AssertionsForClassTypes.assertThatThrownBy(() -> tenantService.modifyUser(request))
+                .isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("세입자 탈퇴")
+    void removeUser() {
+        // given
+        Villa targetVilla = insertVilla();
+        User targetUser = insertUser(targetVilla);
+
+        // when
+        String userId = "userId";
+        tenantService.removeUser(userId);
+
+        // then
+        assertThat(userRepository.findByLoginId(userId).get().getActive()).isEqualTo(Active.DISABLED);
+    }
+
 
     private User insertUser(Villa villa) {
         User user = User.builder()
                 .villa(villa)
                 .phoneNumber("01012345678")
-                .loginId("userid")
-                .loginPassword("juchamsi1234!")
-                .name("주참시")
+                .loginId("userId")
+                .loginPassword(passwordEncoder.encode("userPw123!"))
+                .name("김주참")
                 .grade(USER)
-                .carNumber("1가1234")
+                .carNumber("12가 1234")
                 .approve(WAIT)
                 .active(ACTIVE)
                 .roles(Collections.singletonList("USER"))
@@ -124,5 +280,22 @@ public class TenantServiceTest {
                 .active(ACTIVE)
                 .build();
         return villaRepository.save(villa);
+    }
+
+    private User compareUser(Villa villa) {
+        User user = User.builder()
+                .villa(villa)
+                .loginId("leeUser")
+                .loginPassword(passwordEncoder.encode("userPw123!"))
+                .phoneNumber("01098765432")
+                .name("이주참")
+                .grade(Grade.USER)
+                .approve(Approve.APPROVE)
+                .active(Active.ACTIVE)
+                .carNumber("98나 1234")
+                .villaNumber(101)
+                .roles(Collections.singletonList("USER"))
+                .build();
+        return userRepository.save(user);
     }
 }
