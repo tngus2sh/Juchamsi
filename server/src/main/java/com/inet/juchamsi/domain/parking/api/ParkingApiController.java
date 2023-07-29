@@ -4,7 +4,7 @@ import com.inet.juchamsi.domain.parking.application.ParkingLotService;
 import com.inet.juchamsi.domain.parking.application.ParkingService;
 import com.inet.juchamsi.domain.parking.dto.request.CreateLotRequest;
 import com.inet.juchamsi.domain.parking.dto.request.CreateParkingHistoryRequest;
-import com.inet.juchamsi.domain.parking.dto.response.LotResponse;
+import com.inet.juchamsi.domain.parking.dto.response.ParkingLotResponse;
 import com.inet.juchamsi.global.api.ApiResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,7 +32,7 @@ public class ParkingApiController {
 
     @ApiOperation(value = "주차장 실시간 현황", notes = "사용자는 실시간 주차장 주차 현황을 확인합니다")
     @GetMapping("/lot/{villa_id}")
-    public ApiResult<List<LotResponse>> showParkingLot(@ApiParam(value = "villa-id") @PathVariable("villa_id") Long villaId) {
+    public ApiResult<List<ParkingLotResponse>> showParkingLot(@ApiParam(value = "villa-id") @PathVariable("villa_id") Long villaId) {
         return null;
     }
 
