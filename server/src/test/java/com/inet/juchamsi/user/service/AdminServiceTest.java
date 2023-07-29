@@ -244,7 +244,7 @@ public class AdminServiceTest {
         villaRepository.save(villa);
         return userRepository.save(User.builder()
                 .villa(villa)
-                .loginId("ownerid")
+                .loginId("ownerId")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
                 .phoneNumber("01099998888")
                 .name("박주인")
