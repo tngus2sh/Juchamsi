@@ -4,6 +4,7 @@ import com.inet.juchamsi.domain.user.application.OwnerService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateAdminRequest;
 import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
+import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
 import com.inet.juchamsi.domain.user.entity.Approve;
@@ -15,6 +16,7 @@ import com.inet.juchamsi.global.common.Active;
 import com.inet.juchamsi.global.error.AlreadyExistException;
 import com.inet.juchamsi.global.error.NotFoundException;
 import org.assertj.core.api.Assertions;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.List;
 
 import static com.inet.juchamsi.global.common.Active.ACTIVE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -47,6 +50,22 @@ public class OwnerServiceTest {
     PasswordEncoder passwordEncoder;
 
 
+    @Test
+    @DisplayName("회원 전체 조회")
+    void showUser() {
+        // given
+        Villa targetVilla = insertVilla();
+        User targetUser = insertUser(targetVilla);
+        compareUser(targetVilla);
+        
+        // when
+        List<OwnerResponse> responseList = ownerService.showUser();
+        
+        // then
+        System.out.println("responseList = " + responseList);
+        assertNotNull(responseList);
+    }
+    
     @Test
     @DisplayName("회원 상세 조회")
     void showDetailUser() {
@@ -197,12 +216,37 @@ public class OwnerServiceTest {
     }
 
     @Test
+    @DisplayName("집주인 회원정보 수정 ## 없는 빌라일 때")
+    void modifyUserNoPresentVilla() {
+        // given
+        Villa targetVilla = insertVilla();
+        User targetUser = insertUser(targetVilla);
+
+        // when
+        CreateOwnerRequest request = CreateOwnerRequest.builder()
+                .villaIdNumber("6220-271")
+                .loginId("ownerId")
+                .loginPassword(passwordEncoder.encode("userPw123!"))
+                .phoneNumber("01012345678")
+                .name("김주참")
+                .carNumber("12가 1234")
+                .villaNumber(201)
+                .build();
+
+        // then
+        System.out.println("userRepository = " + userRepository.findByLoginId("ownerId").get());
+        AssertionsForClassTypes.assertThatThrownBy(() -> ownerService.modifyUser(request))
+                .isInstanceOf(NotFoundException.class);
+    }
+
+
+    @Test
     @DisplayName("세입자 승인상태 수정")
     void manageApprove() {
         // given
         Villa targetVilla = insertVilla();
         User targetUser = insertUser(targetVilla);
-        ownerUser();
+        tenantUser();
 
         // when
         String tenantId = "tenantId";
@@ -214,7 +258,7 @@ public class OwnerServiceTest {
     }
 
     @Test
-    @DisplayName("관리자 탈퇴")
+    @DisplayName("집주인 탈퇴")
     void removeUser() {
         // given
         Villa targetVilla = insertVilla();
@@ -274,7 +318,7 @@ public class OwnerServiceTest {
         return userRepository.save(user);
     }
 
-    private User ownerUser() {
+    private User tenantUser() {
         Villa villa = Villa.builder()
                 .name("삼성 빌라")
                 .address("광주 광산구 하남산단6번로 107")
@@ -288,7 +332,7 @@ public class OwnerServiceTest {
                 .loginId("tenantId")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
                 .phoneNumber("01099998888")
-                .name("박주인")
+                .name("최입자")
                 .grade(Grade.USER)
                 .approve(Approve.WAIT)
                 .active(Active.ACTIVE)
