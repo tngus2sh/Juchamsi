@@ -73,7 +73,7 @@ public class AdminApiTest {
     }
 
     @Test
-    @DisplayName("회원 상세 조회 api")
+    @DisplayName("회원 상세 조회")
     void showDetailUser() throws Exception {
         // given
         String loginId = "adminid";
