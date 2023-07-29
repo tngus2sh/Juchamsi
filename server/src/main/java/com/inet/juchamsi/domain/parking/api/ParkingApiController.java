@@ -4,6 +4,7 @@ import com.inet.juchamsi.domain.parking.application.ParkingLotService;
 import com.inet.juchamsi.domain.parking.application.ParkingService;
 import com.inet.juchamsi.domain.parking.dto.request.CreateLotRequest;
 import com.inet.juchamsi.domain.parking.dto.request.CreateParkingHistoryRequest;
+import com.inet.juchamsi.domain.parking.dto.response.ParkingHistoryResponse;
 import com.inet.juchamsi.domain.parking.dto.response.ParkingLotResponse;
 import com.inet.juchamsi.global.api.ApiResult;
 import com.inet.juchamsi.global.error.NotFoundException;
@@ -48,6 +49,13 @@ public class ParkingApiController {
             return ERROR("해당하는 주차장 정보가 없습니다.", HttpStatus.NO_CONTENT);
         }
     }
+
+    @ApiOperation(value = "주차장 실시간 현황 상세 조회", notes = "사용자는 각 주차 칸마다 실시간 현황을 확인합니다")
+    @GetMapping("/history/{villa_id}/{lot_id}")
+    public ApiResult<ParkingHistoryResponse> showDetailParkingLot(@ApiParam(value = "villa-id") @PathVariable("villa_id") Long villaId, @ApiParam(value = "lot-id") @PathVariable("lot_id") Long lotId) {
+        return null;
+    }
+
 
     @ApiOperation(value = "주차정보 등록", notes = "주차장 사용자의 주차 시 정보가 등록됩니다.")
     @PostMapping("")
