@@ -50,16 +50,28 @@ public class ParkingApiController {
         }
     }
 
-    @ApiOperation(value = "주차장 실시간 현황 상세 조회", notes = "사용자는 각 주차 칸마다 실시간 현황을 확인합니다")
-    @GetMapping("/history/{villa_id}/{lot_id}")
-    public ApiResult<ParkingHistoryResponse> showDetailParkingLot(@ApiParam(value = "villa-id") @PathVariable("villa_id") Long villaId, @ApiParam(value = "lot-id") @PathVariable("lot_id") Long lotId) {
-        return null;
-    }
+    @ApiOperation(value = "주차장 삭제", notes = "사용자는 주차장을 삭제합니다")
+    @DeleteMapping("/lot/{villa_id}")
+    public ApiResult<Void> removeParkingLot(@ApiParam(value = "villa-id") @PathVariable("villa_id") Long villaId) {
+        try {
+            parkingLotService.removeParkingLot(villaId);
+        }
+        catch(NotFoundException e) {
+            return ERROR("해당하는 주차장 정보가 없습니다.", HttpStatus.NO_CONTENT);
+        }
 
+        return OK(null);
+    }
 
     @ApiOperation(value = "주차정보 등록", notes = "주차장 사용자의 주차 시 정보가 등록됩니다.")
     @PostMapping("")
     public ApiResult<Void> createParkingHistory(@ApiParam(value = "parking-history-dto") @RequestBody CreateParkingHistoryRequest createParkingHistoryRequest) {
+        return null;
+    }
+
+    @ApiOperation(value = "주차장 실시간 현황 상세 조회", notes = "사용자는 각 주차 칸마다 실시간 현황을 확인합니다")
+    @GetMapping("/history/{villa_id}/{lot_id}")
+    public ApiResult<ParkingHistoryResponse> showDetailParkingLot(@ApiParam(value = "villa-id") @PathVariable("villa_id") Long villaId, @ApiParam(value = "lot-id") @PathVariable("lot_id") Long lotId) {
         return null;
     }
 

@@ -9,4 +9,5 @@ import java.util.List;
 public interface ParkingLotService {
     void createParkingLot(Long villaId, int parkingLotCol);
     List<ParkingLotResponse> showParkingLot(Long villaId);
+    void removeParkingLot(Long villaId);
 }

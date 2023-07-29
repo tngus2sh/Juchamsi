@@ -14,8 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.inet.juchamsi.global.common.Active.ACTIVE;
 import static com.inet.juchamsi.domain.parking.entity.ParkingFlag.EMPTY;
+import static com.inet.juchamsi.global.common.Active.ACTIVE;
+import static com.inet.juchamsi.global.common.Active.DISABLED;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -24,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class ParkingServiceTest {
 
     @Autowired
-    ParkingLotService parkingService;
+    ParkingLotService parkingLotService;
     @Autowired
     ParkingLotRepository parkingLotRepository;
     @Autowired
@@ -40,7 +41,7 @@ public class ParkingServiceTest {
         int parkingLotCol = 3;
 
         // when
-        parkingService.createParkingLot(villaId, parkingLotCol);
+        parkingLotService.createParkingLot(villaId, parkingLotCol);
 
         // then
         Long count = parkingLotRepository.countByVilla(targetVilla);
@@ -58,10 +59,37 @@ public class ParkingServiceTest {
         Long villaId = targetVilla.getId();
 
         // when
-        List<ParkingLotResponse> response =  parkingService.showParkingLot(villaId);
+        List<ParkingLotResponse> response =  parkingLotService.showParkingLot(villaId);
 
         // then
         assertNotNull(response);
+    }
+
+    @Test
+    @DisplayName("주차장 삭제")
+    void removeParkingLot() {
+        // given
+        Villa targetVilla = insertVilla();
+        Villa testVilla = insertTestVilla();
+        insertParkingLot(targetVilla, testVilla, 3);
+
+        Long villaId = targetVilla.getId();
+
+        // when
+        parkingLotService.removeParkingLot(villaId);
+
+        // then
+        List<ParkingLot> parkingLotList = parkingLotRepository.findByVilla_Id(villaId);
+        for(int i = 0; i < parkingLotList.size(); i++) {
+            assertThat(parkingLotList.get(i).getActive()).isEqualTo(DISABLED);
+        }
+    }
+
+    @Test
+    @DisplayName("주차장 실시간 현황 상세 조회")
+    void showDetailParkingLot() {
+        // given
+
     }
 
 
