@@ -18,6 +18,7 @@ import java.util.Optional;
 
 import static com.inet.juchamsi.domain.parking.entity.ParkingFlag.EMPTY;
 import static com.inet.juchamsi.global.common.Active.ACTIVE;
+import static com.inet.juchamsi.global.common.Active.DISABLED;
 
 @Service
 @RequiredArgsConstructor
@@ -79,5 +80,19 @@ public class ParkingLotServiceImpl implements ParkingLotService {
         }
 
         return response;
+    }
+
+    @Override
+    @Transactional
+    public void removeParkingLot(Long villaId) {
+        List<ParkingLot> parkingLotList = parkingLotRepository.findByVilla_Id(villaId);
+
+        if(parkingLotList == null || parkingLotList.size() == 0) {
+            throw new NotFoundException(ParkingLot.class, villaId);
+        }
+
+        for(int i = 0; i < parkingLotList.size(); i++) {
+            parkingLotList.get(i).setActive(DISABLED);
+        }
     }
 }

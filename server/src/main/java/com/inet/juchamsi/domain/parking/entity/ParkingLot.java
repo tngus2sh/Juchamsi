@@ -5,6 +5,7 @@ import com.inet.juchamsi.global.common.Active;
 import com.inet.juchamsi.global.common.TimeBaseEntity;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -40,6 +41,7 @@ public class ParkingLot extends TimeBaseEntity {
 
     @Enumerated(STRING)
     @Column(nullable = false)
+    @Setter
     private Active active;
 
 
