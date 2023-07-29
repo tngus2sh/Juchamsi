@@ -64,6 +64,13 @@ public class ParkingServiceTest {
         assertNotNull(response);
     }
 
+    @Test
+    @DisplayName("주차장 실시간 현황 상세 조회")
+    void showDetailParkingLot() {
+        // given
+
+    }
+
 
     private Villa insertVilla() {
         Villa villa = Villa.builder()
