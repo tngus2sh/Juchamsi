@@ -49,6 +49,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<Void> updateAdmin(@Param("loginId") String loginId, @Param("phoneNumber") String phoneNumber);
 
     @Modifying(clearAutomatically = true)
+    @Query("update User u set u.loginPassword=:loginPassword where u.name=:name and u.phoneNumber=:phoneNumber")
+    Optional<Void> updateLoginPassword(@Param("name") String name, @Param("phoneNumber") String phoneNumber, @Param("loginPassword") String loginPassword);
+
+    @Modifying(clearAutomatically = true)
     @Query("update User u set u.refreshToken=:refreshToken where u.loginId=:loginId")
     Optional<Void> updateRefreshToken(@Param("loginId") String loginId, @Param("refreshToken") String refreshToken);
 

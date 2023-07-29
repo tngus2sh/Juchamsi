@@ -28,7 +28,7 @@ public class SmsApiController {
     private final SmsService smsService;
 
     @ApiOperation(value = "회원가입시 본인인증 보내기", notes = "핸드폰으로 본인인증 번호를 보냅니다.")
-    @PostMapping
+    @PostMapping("/check")
     public ApiResult<String> sendSmsToCheckUser(
             @ApiParam(value = "check-user-dto")
             @RequestBody CheckUserRequest request) {
@@ -36,6 +36,20 @@ public class SmsApiController {
         try {
             String cerNum = smsService.sendSmsToCheckUser(request);
             return OK(cerNum);
+        } catch (NotFoundException e) {
+            return ERROR("회원이 존재하지 않습니다.", HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @ApiOperation(value = "비밀번호 찾기", notes = "핸드폰으로 임시 비밀번호를 발급합니다.")
+    @PostMapping("/password")
+    public ApiResult<Void> sendSmsToFindPassword(
+            @ApiParam(value = "check-user-dto")
+            @RequestBody CheckUserRequest request) {
+        log.debug("CheckUserRequest={}", request);
+        try {
+            smsService.sendSmsToFindPassword(request);
+            return OK(null);
         } catch (NotFoundException e) {
             return ERROR("회원이 존재하지 않습니다.", HttpStatus.NO_CONTENT);
         }

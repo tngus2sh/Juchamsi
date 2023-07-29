@@ -45,7 +45,7 @@ public class SmsServiceTest {
         villaRepository.save(villa);
         User user = User.builder()
                 .villa(villa)
-                .phoneNumber("본인 번호 입력")
+                .phoneNumber("본인번호입력")
                 .loginId("userId")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
                 .name("김주참")
@@ -85,6 +85,36 @@ public class SmsServiceTest {
         // when
         // then
         assertThatThrownBy(() -> smsService.sendSmsToCheckUser(request))
+                .isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("임시 비밀번호 발급")
+    void sendSmsToFindPassword() {
+        // given
+        CheckUserRequest request = CheckUserRequest.builder()
+                .name("김주참")
+                .phoneNumber("본인번호입력")
+                .build();
+
+        // when
+        smsService.sendSmsToFindPassword(request);
+
+        // then
+    }
+
+    @Test
+    @DisplayName("임시 비밀번호 발급 ## 존재하지 않는 회원")
+    void sendSmsToFindPasswordNoPresent() {
+        // given
+        CheckUserRequest request = CheckUserRequest.builder()
+                .name("김주참")
+                .phoneNumber("01012341234")
+                .build();
+
+        // when
+        // then
+        assertThatThrownBy(() -> smsService.sendSmsToFindPassword(request))
                 .isInstanceOf(NotFoundException.class);
     }
 }
