@@ -5,6 +5,7 @@ import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.dto.request.ModifyTenantRequest;
+import com.inet.juchamsi.domain.user.dto.response.TenantLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.TenantResponse;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.domain.villa.dao.VillaRepository;
@@ -105,7 +106,7 @@ public class TenantServiceImpl implements TenantService {
     }
 
     @Override
-    public TokenInfo loginUser(LoginRequest request) {
+    public TenantLoginResponse loginUser(LoginRequest request) {
         String loginId = request.getLoginId();
         String password = request.getLoginPassword();
 
@@ -117,7 +118,22 @@ public class TenantServiceImpl implements TenantService {
 
         userRepository.updateRefreshToken(loginId, password);
 
-        return tokenInfo;
+        User user = userRepository.findByLoginId(loginId).get();
+        Villa targetVilla = user.getVilla();
+        Villa villa = Villa.builder()
+                .id(targetVilla.getId())
+                .name(targetVilla.getName())
+                .address(targetVilla.getAddress())
+                .idNumber(targetVilla.getIdNumber())
+                .totalCount(targetVilla.getTotalCount())
+                .build();
+
+        return TenantLoginResponse.builder()
+                .tokenInfo(tokenInfo)
+                .loginId(user.getLoginId())
+                .name(user.getName())
+                .villa(villa)
+                .build();
     }
 
     @Override

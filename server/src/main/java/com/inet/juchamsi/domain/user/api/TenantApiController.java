@@ -5,6 +5,7 @@ import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.dto.request.ModifyTenantRequest;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
+import com.inet.juchamsi.domain.user.dto.response.TenantLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.TenantResponse;
 import com.inet.juchamsi.global.api.ApiResult;
 import com.inet.juchamsi.global.error.AlreadyExistException;
@@ -55,12 +56,14 @@ public class TenantApiController {
 
     @ApiOperation(value = "세입자 로그인 (일반)", notes = "세입자가 로그인 합니다")
     @PostMapping("/login")
-    public ApiResult<TokenInfo> loginUser(@ApiParam(value = "tenant-dto") @RequestBody LoginRequest request) {
+    public ApiResult<TenantLoginResponse> loginUser(@ApiParam(value = "tenant-dto") @RequestBody LoginRequest request) {
         log.debug("LoginTenantRequest={}", request);
 
         try {
-            TokenInfo tokenInfo = tenantService.loginUser(request);
-            return OK(tokenInfo);
+//            TokenInfo tokenInfo = tenantService.loginUser(request);
+//            return OK(tokenInfo);
+            TenantLoginResponse response = tenantService.loginUser(request);
+            return OK(response);
         }
         catch(BadCredentialsException e) {
             return ERROR("아이디 또는 비밀번호를 잘못 입력했습니다", HttpStatus.UNAUTHORIZED);
