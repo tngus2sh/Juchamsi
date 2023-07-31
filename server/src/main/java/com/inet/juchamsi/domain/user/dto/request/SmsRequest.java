@@ -15,5 +15,5 @@ public class SmsRequest {
     String countryCode;
     String from;
     String content;
-    List<MessageDTO> messages;
+    List<MessageRequest> messages;
 }
