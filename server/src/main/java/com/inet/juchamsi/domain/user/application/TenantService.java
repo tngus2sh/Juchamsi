@@ -2,6 +2,7 @@ package com.inet.juchamsi.domain.user.application;
 
 import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
+import com.inet.juchamsi.domain.user.dto.request.ModifyTenantRequest;
 import com.inet.juchamsi.domain.user.dto.response.TenantResponse;
 import com.inet.juchamsi.global.jwt.TokenInfo;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +27,7 @@ public interface TenantService {
     void logoutUser(String tenantId);
 
     // 회원정보 수정
-    void modifyUser(CreateTenantRequest request);
+    void modifyUser(ModifyTenantRequest request);
 
     // 탈퇴
     void removeUser(String tenantId);

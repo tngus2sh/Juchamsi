@@ -47,7 +47,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Modifying(clearAutomatically = true)
     @Query("update User u set u.approve=:approve where u.loginId=:loginId")
-    Optional<Void> updateOwnerApprove(@Param("loginId") String loginId, @Param("approve") Approve approve);
+    Optional<Void> updateApproveModify(@Param("loginId") String loginId, @Param("approve") Approve approve);
 
     @Modifying(clearAutomatically = true)
     @Query("update User u set u.phoneNumber=:phoneNumber where u.loginId=:loginId")

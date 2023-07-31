@@ -4,9 +4,8 @@ import com.inet.juchamsi.domain.user.application.TenantService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
+import com.inet.juchamsi.domain.user.dto.request.ModifyTenantRequest;
 import com.inet.juchamsi.domain.user.dto.response.TenantResponse;
-import com.inet.juchamsi.domain.user.entity.Approve;
-import com.inet.juchamsi.domain.user.entity.Grade;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.domain.villa.dao.VillaRepository;
 import com.inet.juchamsi.domain.villa.entity.Villa;
@@ -27,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.inet.juchamsi.domain.user.entity.Approve.MODIFY;
 import static com.inet.juchamsi.domain.user.entity.Approve.WAIT;
 import static com.inet.juchamsi.domain.user.entity.Grade.USER;
 import static com.inet.juchamsi.global.common.Active.ACTIVE;
@@ -132,7 +132,7 @@ public class TenantServiceImpl implements TenantService {
     }
 
     @Override
-    public void modifyUser(CreateTenantRequest request) {
+    public void modifyUser(ModifyTenantRequest request) {
         Optional<User> oUser = userRepository.findByLoginIdAndActive(request.getLoginId(), Active.ACTIVE);
         System.out.println("oUser = " + oUser);
         if (oUser.isEmpty()) {
@@ -150,6 +150,7 @@ public class TenantServiceImpl implements TenantService {
         }
 
         userRepository.updateTenant(request.getLoginId(), request.getPhoneNumber(), request.getCarNumber(), request.getVillaNumber());
+        userRepository.updateApproveModify(request.getLoginId(), MODIFY);
     }
 
     @Override

@@ -180,7 +180,7 @@ public class OwnerServiceImpl implements OwnerService {
         }
 
         userRepository.updateOwner(dto.getLoginId(), dto.getPhoneNumber());
-        userRepository.updateOwnerApprove(dto.getLoginId(), MODIFY);
+        userRepository.updateApproveModify(dto.getLoginId(), MODIFY);
     }
 
     @Override

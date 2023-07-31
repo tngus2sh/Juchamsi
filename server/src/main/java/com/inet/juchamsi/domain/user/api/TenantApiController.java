@@ -3,6 +3,7 @@ package com.inet.juchamsi.domain.user.api;
 import com.inet.juchamsi.domain.user.application.TenantService;
 import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
+import com.inet.juchamsi.domain.user.dto.request.ModifyTenantRequest;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
 import com.inet.juchamsi.domain.user.dto.response.TenantResponse;
 import com.inet.juchamsi.global.api.ApiResult;
@@ -108,8 +109,8 @@ public class TenantApiController {
 
     @ApiOperation(value = "세입자 회원 정보 수정", notes = "세입자가 회원 정보를 수정합니다")
     @PutMapping("")
-    public ApiResult<Void> modifyUser(@ApiParam(value = "tenant-dto") @RequestBody CreateTenantRequest request) {
-        log.debug("CreateOwnerRequest={}", request);
+    public ApiResult<Void> modifyUser(@ApiParam(value = "tenant-dto") @RequestBody ModifyTenantRequest request) {
+        log.debug("ModifyTenantRequest={}", request);
         try {
             tenantService.modifyUser(request);
         } catch (NotFoundException e) {
