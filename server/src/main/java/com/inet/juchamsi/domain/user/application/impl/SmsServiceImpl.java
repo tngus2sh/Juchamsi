@@ -4,9 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inet.juchamsi.domain.user.application.SmsService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
-import com.inet.juchamsi.domain.user.dto.request.MessageDTO;
+import com.inet.juchamsi.domain.user.dto.request.MessageRequest;
 import com.inet.juchamsi.domain.user.dto.request.SmsRequest;
 import com.inet.juchamsi.domain.user.dto.response.SmsResponse;
+import com.inet.juchamsi.global.error.NotFoundException;
 import com.inet.juchamsi.global.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,7 +49,8 @@ public class SmsServiceImpl implements SmsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ValidationUtil validationUtil;
-    
+
+
     public String getSignature(String time) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
         String space = " ";
         String newLine = "\n";
@@ -76,15 +78,16 @@ public class SmsServiceImpl implements SmsService {
 
         return encodeBase64String;
     }
-    
+
     @Override
-    public String sendSmsToCheckUser(MessageDTO messageDto) throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
-//        String name = messageDto.getName();
-//        String to = messageDto.getTo();
-//
-//        userRepository.findByNameAndPhone(name, to)
-//                .orElseThrow(() ->
-//                        new NotFoundException("회원이 존재하지 않습니다.", name));
+    public String sendSmsToCheckUser(MessageRequest messageRequest) throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
+        String name = messageRequest.getName();
+        String phoneNumber = messageRequest.getTo();
+
+        userRepository.findByNameAndPhone(name, phoneNumber)
+                .orElseThrow(() ->
+                        new NotFoundException("회원이 존재하지 않습니다.", name));
+
         String time = Long.toString(System.currentTimeMillis());
 
         HttpHeaders headers = new HttpHeaders();
@@ -93,8 +96,8 @@ public class SmsServiceImpl implements SmsService {
         headers.set("x-ncp-iam-access-key", accessKey);
         headers.set("x-ncp-apigw-signature-v2", getSignature(time)); // signature 서명
 
-        List<MessageDTO> messages = new ArrayList<>();
-        messages.add(messageDto);
+        List<MessageRequest> messages = new ArrayList<>();
+        messages.add(messageRequest);
 
         String verificationCode = validationUtil.createRandomNumCode();
         SmsRequest request = SmsRequest.builder()
@@ -115,20 +118,20 @@ public class SmsServiceImpl implements SmsService {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
         //restTemplate로 post 요청 보내고 오류가 없으면 202코드 반환
-        SmsResponse smsResponseDto = restTemplate.postForObject(new URI("https://sens.apigw.ntruss.com/sms/v2/services/"+ serviceId +"/messages"), httpBody, SmsResponse.class);
-//        SmsResponse responseDto = new SmsResponse(verificationCode);
+        restTemplate.postForObject(new URI("https://sens.apigw.ntruss.com/sms/v2/services/"+ serviceId +"/messages"), httpBody, SmsResponse.class);
         // redisUtil.setDataExpire(smsConfirmNum, messageDto.getTo(), 60 * 3L); // 유효시간 3분
         return verificationCode;
     }
 
     @Override
-    public SmsResponse sendSmsToFindPassword(MessageDTO messageDto) throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
-//        String name = messageDto.getName();
-//        String phoneNumber = messageDto.getTo();
+    public SmsResponse sendSmsToFindPassword(MessageRequest messageRequest) throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
+        String name = messageRequest.getName();
+        String phoneNumber = messageRequest.getTo();
 
-//        userRepository.findByNameAndPhone(name, phoneNumber)
-//                .orElseThrow(() ->
-//                        new NotFoundException("회원이 존재하지 않습니다.", name));
+        userRepository.findByNameAndPhone(name, phoneNumber)
+                .orElseThrow(() ->
+                        new NotFoundException("회원이 존재하지 않습니다.", name));
+
         String time = Long.toString(System.currentTimeMillis());
 
         HttpHeaders headers = new HttpHeaders();
@@ -137,16 +140,16 @@ public class SmsServiceImpl implements SmsService {
         headers.set("x-ncp-iam-access-key", accessKey);
         headers.set("x-ncp-apigw-signature-v2", getSignature(time)); // signature 서명
 
-        List<MessageDTO> messages = new ArrayList<>();
-        messages.add(messageDto);
+        List<MessageRequest> messages = new ArrayList<>();
+        messages.add(messageRequest);
 
-        String verificationCode = validationUtil.createRandomNumCode();
+        String verificationCode = validationUtil.createTempPassword();
         SmsRequest request = SmsRequest.builder()
                 .type("SMS")
                 .contentType("COMM")
                 .countryCode("82")
                 .from(phone)
-                .content("[주참시 인증번호] 인증번호\n[" + verificationCode + "]를 입력해주세요")
+                .content("[주참시 임시 비밀번호 발급]\n※입력 후 바로 비밀번호 변경 해주세요.※\n[" + verificationCode + "]")
                 .messages(messages)
                 .build();
 
@@ -160,39 +163,11 @@ public class SmsServiceImpl implements SmsService {
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
         //restTemplate로 post 요청 보내고 오류가 없으면 202코드 반환
         SmsResponse response = restTemplate.postForObject(new URI("https://sens.apigw.ntruss.com/sms/v2/services/"+ serviceId +"/messages"), httpBody, SmsResponse.class);
-//        SmsResponse response = SmsResponse(verificationCode);
+
+        System.out.println("response = " + response);
+
+        userRepository.updateLoginPassword(name, phoneNumber, passwordEncoder.encode(verificationCode));
         // redisUtil.setDataExpire(smsConfirmNum, messageDto.getTo(), 60 * 3L); // 유효시간 3분
         return response;
     }
-
-//    @Override
-//    public String sendSmsToCheckUser(CheckUserRequest request) {
-//        String name = request.getName();
-//        String phoneNumber = request.getPhoneNumber();
-//
-//        User foundUser = userRepository.findByNameAndPhone(name, phoneNumber)
-//                .orElseThrow(() ->
-//                new NotFoundException("회원이 존재하지 않습니다.", name));
-//
-//        String verificationCode = validationUtil.createRandomNumCode();
-//        smsUtil.sendRandomNum(phoneNumber, verificationCode);
-//        return verificationCode;
-//    }
-
-//    @Transactional
-//    @Override
-//    public void sendSmsToFindPassword(CheckUserRequest request) {
-//        String name = request.getName();
-//        String phoneNumber = request.getPhoneNumber();
-//
-//        User foundUser = userRepository.findByNameAndPhone(name, phoneNumber)
-//                .orElseThrow(() ->
-//                        new NotFoundException("회원이 존재하지 않습니다.", name));
-//
-//        String verificationCode = validationUtil.createTempPassword();
-//        smsUtil.sendTempPassword(phoneNumber, verificationCode);
-//
-//        // db에 임시 비밀번호 저장
-//        userRepository.updateLoginPassword(name, phoneNumber, passwordEncoder.encode(verificationCode));
-//    }
 }
