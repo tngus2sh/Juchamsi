@@ -50,11 +50,12 @@ dependencies {
 
 	// api, toStringBuilder
 	implementation 'org.apache.commons:commons-lang3'
+	
+	// naver-cloud-sms : 인증번호 발송
+	implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
 
-	// coolSMS - 인증번호 발송
-	implementation group: 'net.nurigo', name: 'sdk', version: '4.3.0'
-
-
+	// 채팅방 - webSocket
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
