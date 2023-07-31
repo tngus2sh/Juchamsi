@@ -1,14 +1,11 @@
 package com.inet.juchamsi.user.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.inet.juchamsi.domain.user.api.SmsApiController;
-import com.inet.juchamsi.domain.user.application.SmsService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
-import com.inet.juchamsi.domain.user.dto.request.CheckUserRequest;
+import com.inet.juchamsi.domain.user.dto.request.MessageRequest;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.domain.villa.dao.VillaRepository;
 import com.inet.juchamsi.domain.villa.entity.Villa;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,17 +38,12 @@ public class SmsApiTest {
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
-    private SmsApiController smsApiController;
-    @Autowired
-    SmsService smsService;
-    @Autowired
     UserRepository userRepository;
     @Autowired
     VillaRepository villaRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    @BeforeEach
     public void setUp() {
         Villa villa = Villa.builder()
                 .name("삼성 빌라")
@@ -63,7 +55,7 @@ public class SmsApiTest {
         villaRepository.save(villa);
         User user = User.builder()
                 .villa(villa)
-                .phoneNumber("본인 번호 입력")
+                .phoneNumber("01077451098")
                 .loginId("userId")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
                 .name("김주참")
@@ -79,13 +71,14 @@ public class SmsApiTest {
     @DisplayName("핸드폰 인증번호 발송")
     void sendSmsToCheckUser() throws Exception {
         // given
-        String object = objectMapper.writeValueAsString(CheckUserRequest.builder()
+        setUp();
+        String object = objectMapper.writeValueAsString(MessageRequest.builder()
                 .name("김주참")
-                .phoneNumber("본인 번호 입력")
+                .to("01077451098")
                 .build());
 
         // when
-        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/sms")
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/sms/check")
                         .content(object)
                         .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON));
@@ -99,13 +92,14 @@ public class SmsApiTest {
     @DisplayName("핸드폰 인증번호 발송 ## 존재하지 않는 회원")
     void sendSmsToCheckUserNoPresent() throws Exception {
         // given
-        String object = objectMapper.writeValueAsString(CheckUserRequest.builder()
+        setUp();
+        String object = objectMapper.writeValueAsString(MessageRequest.builder()
                 .name("박주참")
-                .phoneNumber("01012341234")
+                .to("01012341234")
                 .build());
 
         // when
-        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/sms")
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/sms/check")
                 .content(object)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON));
@@ -119,13 +113,14 @@ public class SmsApiTest {
     @DisplayName("임시 비밀번호 발급")
     void sendSmsToFindPassword() throws Exception {
         // given
-        String object = objectMapper.writeValueAsString(CheckUserRequest.builder()
+        setUp();
+        String object = objectMapper.writeValueAsString(MessageRequest.builder()
                 .name("김주참")
-                .phoneNumber("본인 번호 입력")
+                .to("01077451098")
                 .build());
 
         // when
-        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/sms")
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/sms/password")
                 .content(object)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON));
@@ -139,13 +134,14 @@ public class SmsApiTest {
     @DisplayName("임시 비밀번호 발급 ## 존재하지 않는 회원")
     void sendSmsToFindPasswordNoPresent() throws Exception {
         // given
-        String object = objectMapper.writeValueAsString(CheckUserRequest.builder()
+        setUp();
+        String object = objectMapper.writeValueAsString(MessageRequest.builder()
                 .name("박주참")
-                .phoneNumber("01012341234")
+                .to("01012341234")
                 .build());
 
         // when
-        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/sms")
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/sms/password")
                 .content(object)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON));
