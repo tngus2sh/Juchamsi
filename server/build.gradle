@@ -53,6 +53,10 @@ dependencies {
 
 	// coolSMS - 인증번호 발송
 	implementation group: 'net.nurigo', name: 'sdk', version: '4.3.0'
+	
+	// naver-cloud-sms : 인증번호 발송
+	implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
+
 
 
 
