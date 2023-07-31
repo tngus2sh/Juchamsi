@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import static com.inet.juchamsi.global.api.ApiResult.OK;
+
 @RestController
 @RequestMapping("/chat")
 @Slf4j
@@ -73,6 +75,12 @@ public class ChatApiController {
     }
 
     // 채팅 메세지 보내기
+    @ApiOperation(value = "채팅", notes = "채팅 시작")
+    @GetMapping("")
+    public ApiResult<Void> createChat() {
+        log.info("@ChatController, chat GET()");
+        return OK(null);
+    }
 
     // 채팅 메세지 저장
 }
