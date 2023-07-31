@@ -4,7 +4,10 @@ import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminOwnerLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
+import com.inet.juchamsi.domain.user.dto.response.TenantRequestResponse;
+import com.inet.juchamsi.domain.user.dto.response.TenantResponse;
 import com.inet.juchamsi.domain.user.entity.Approve;
+import com.inet.juchamsi.domain.villa.entity.Villa;
 
 import java.util.List;
 
@@ -27,6 +30,9 @@ public interface OwnerService {
 
     // 회원정보수정
     void modifyUser(CreateOwnerRequest dto);
+
+    // 세입자 신규 회원가입 요청 목록
+    List<TenantRequestResponse> showNewRequestTenant(Long villaId);
 
     // 세입자 회원가입 요청 관리
     void manageApprove(String tenantId, Approve approve);

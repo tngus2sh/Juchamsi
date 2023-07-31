@@ -130,8 +130,8 @@ public class OwnerApiController {
 
     // 세입자 신규 회원가입 요청 목록
     @ApiOperation(value = "세입자(tenant) 신규 회원가입 요청 목록", notes = "새롭게 회원가입 신청한 세입자 목록을 확인합니다")
-    @GetMapping("/tenant/new")
-    public ApiResult<List<TenantResponse>> showNewRequestTenant() {
+    @GetMapping("/tenant/new/{vill_id}")
+    public ApiResult<List<TenantResponse>> showNewRequestTenant(@ApiParam(value = "villa-id") @PathVariable(value = "villa_id") Long villaId) {
         return null;
     }
 
