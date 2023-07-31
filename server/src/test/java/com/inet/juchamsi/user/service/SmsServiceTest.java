@@ -45,7 +45,7 @@ public class SmsServiceTest {
         villaRepository.save(villa);
         User user = User.builder()
                 .villa(villa)
-                .phoneNumber("01099345631")
+                .phoneNumber("본인번호입력")
                 .loginId("userId")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
                 .name("김주참")
@@ -65,7 +65,7 @@ public class SmsServiceTest {
         setUp();
         MessageRequest request = MessageRequest.builder()
                 .name("김주참")
-                .to("01099345631")
+                .to("본인번호입력")
                 .build();
 
         // when
@@ -97,7 +97,7 @@ public class SmsServiceTest {
         setUp();
         MessageRequest request = MessageRequest.builder()
                 .name("김주참")
-                .to("01099345631")
+                .to("본인번호입력")
                 .build();
 
         // when

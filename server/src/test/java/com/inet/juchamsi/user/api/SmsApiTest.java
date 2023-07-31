@@ -55,7 +55,7 @@ public class SmsApiTest {
         villaRepository.save(villa);
         User user = User.builder()
                 .villa(villa)
-                .phoneNumber("01077451098")
+                .phoneNumber("본인번호입력")
                 .loginId("userId")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
                 .name("김주참")
@@ -74,7 +74,7 @@ public class SmsApiTest {
         setUp();
         String object = objectMapper.writeValueAsString(MessageRequest.builder()
                 .name("김주참")
-                .to("01077451098")
+                .to("본인번호입력")
                 .build());
 
         // when
@@ -116,7 +116,7 @@ public class SmsApiTest {
         setUp();
         String object = objectMapper.writeValueAsString(MessageRequest.builder()
                 .name("김주참")
-                .to("01077451098")
+                .to("본인번호입력")
                 .build());
 
         // when
