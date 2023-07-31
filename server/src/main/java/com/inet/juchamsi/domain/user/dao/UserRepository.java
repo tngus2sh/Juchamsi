@@ -63,4 +63,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying(clearAutomatically = true)
     @Query("update User u set u.active=:active where u.loginId=:loginId")
     Optional<Void> updateActive(@Param("loginId") String loginId, @Param("active") Active active);
+
+    Long countByLoginId(String loginId);
 }
