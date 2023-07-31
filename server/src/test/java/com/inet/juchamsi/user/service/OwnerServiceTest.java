@@ -7,6 +7,7 @@ import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
+import com.inet.juchamsi.domain.user.dto.response.TenantRequestResponse;
 import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.domain.user.entity.Grade;
 import com.inet.juchamsi.domain.user.entity.User;
@@ -39,13 +40,10 @@ public class OwnerServiceTest {
 
     @Autowired
     OwnerService ownerService;
-
     @Autowired
     UserRepository userRepository;
-
     @Autowired
     VillaRepository villaRepository;
-
     @Autowired
     PasswordEncoder passwordEncoder;
 
@@ -241,6 +239,23 @@ public class OwnerServiceTest {
 
 
     @Test
+    @DisplayName("세입자 신규 회원가입 요청 목록")
+    void showNewRequestTenant() {
+        // given
+        Villa targetVilla = insertVilla();
+        User ownerUser = insertUser(targetVilla);
+        User tenantUser = insertTenantUser(targetVilla);
+        Long villaId = targetVilla.getId();
+
+        // when
+        List<TenantRequestResponse> tenantResponseList = ownerService.showNewRequestTenant(villaId);
+
+        // then
+        assertNotNull(tenantResponseList);
+    }
+
+
+    @Test
     @DisplayName("세입자 승인상태 수정")
     void manageApprove() {
         // given
@@ -314,6 +329,21 @@ public class OwnerServiceTest {
                 .carNumber("98나 1234")
                 .villaNumber(101)
                 .roles(Collections.singletonList("OWNER"))
+                .build();
+        return userRepository.save(user);
+    }
+
+    private User insertTenantUser(Villa villa) {
+        User user = User.builder()
+                .villa(villa)
+                .loginId("tenantId")
+                .loginPassword(passwordEncoder.encode("userPw123!"))
+                .phoneNumber("01099998888")
+                .name("최입자")
+                .grade(Grade.USER)
+                .approve(Approve.WAIT)
+                .active(Active.ACTIVE)
+                .roles(Collections.singletonList("USER"))
                 .build();
         return userRepository.save(user);
     }

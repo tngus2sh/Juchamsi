@@ -3,6 +3,7 @@ package com.inet.juchamsi.domain.user.dao;
 import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.domain.user.entity.Grade;
 import com.inet.juchamsi.domain.user.entity.User;
+import com.inet.juchamsi.domain.villa.entity.Villa;
 import com.inet.juchamsi.global.common.Active;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -65,4 +66,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<Void> updateActive(@Param("loginId") String loginId, @Param("active") Active active);
 
     Long countByLoginId(String loginId);
+
+    @Query("select u from User u where u.villa=:villa and u.approve=:approve")
+    List<User> findNewRequestTenant(@Param("villa") Villa villa, @Param("approve") Approve approve);
 }

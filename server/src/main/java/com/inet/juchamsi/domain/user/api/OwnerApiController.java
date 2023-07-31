@@ -5,6 +5,7 @@ import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminOwnerLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
+import com.inet.juchamsi.domain.user.dto.response.TenantRequestResponse;
 import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.global.api.ApiResult;
 import com.inet.juchamsi.global.error.AlreadyExistException;
@@ -124,6 +125,19 @@ public class OwnerApiController {
             return ERROR("해당 회원을 찾을 수가 없습니다", HttpStatus.NO_CONTENT);
         } catch (AlreadyExistException e) {
             return ERROR("이미 존재하는 핸드폰 번호입니다.", HttpStatus.CONFLICT);
+        }
+    }
+
+    // 세입자 신규 회원가입 요청 목록
+    @ApiOperation(value = "세입자(tenant) 신규 회원가입 요청 목록", notes = "새롭게 회원가입 신청한 세입자 목록을 확인합니다")
+    @GetMapping("/tenant/new/{vill_id}")
+    public ApiResult<List<TenantRequestResponse>> showNewRequestTenant(@ApiParam(value = "villa-id") @PathVariable(value = "villa_id") Long villaId) {
+        try {
+            List<TenantRequestResponse> response = ownerService.showNewRequestTenant(villaId);
+            return OK(response);
+        }
+        catch(NotFoundException e) {
+            return ERROR("해당 빌라가 존재하지 않습니다.", HttpStatus.NO_CONTENT);
         }
     }
 
