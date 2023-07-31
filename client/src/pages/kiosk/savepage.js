@@ -52,7 +52,7 @@ function Savepage() {
     // You can now use inputid and inputpw variables as needed
     console.log('ID:', inputid);
     console.log('Password:', inputpw);
-    navigate('/kiosksavingpage');
+    navigate('/Kiosk/savingpage');
   };
 
   return (

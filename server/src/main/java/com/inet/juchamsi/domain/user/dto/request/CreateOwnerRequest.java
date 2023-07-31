@@ -17,7 +17,7 @@ public class CreateOwnerRequest {
     @NotBlank
     @Pattern(regexp = "^([0-9]+-[0-9]+)|([0-9]+)$")
     @ApiModelProperty(example = "12")
-    private String villaId;
+    private String villaIdNumber;
     @NotBlank
     @Size(min = 13, max = 13)
     @Pattern(regexp = "^01(?:0|1|[6-9])\\d{3,4}\\d{4}$")
@@ -32,7 +32,7 @@ public class CreateOwnerRequest {
     @Size(min = 8, max = 16)
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$")
     @ApiModelProperty(example = "juchamsi1234!")
-    private String password;
+    private String loginPassword;
     @NotBlank
     @Size(max = 20)
     @Pattern(regexp = "^[a-zA-Z가-힣]*$")
@@ -52,11 +52,11 @@ public class CreateOwnerRequest {
     private int villaNumber;
 
     @Builder
-    public CreateOwnerRequest(String villaId, String phoneNumber, String loginId, String password, String name, String grade, String carNumber, int villaNumber) {
-        this.villaId = villaId;
+    public CreateOwnerRequest(String villaIdNumber, String phoneNumber, String loginId, String loginPassword, String name, String grade, String carNumber, int villaNumber) {
+        this.villaIdNumber = villaIdNumber;
         this.phoneNumber = phoneNumber;
         this.loginId = loginId;
-        this.password = password;
+        this.loginPassword = loginPassword;
         this.name = name;
         this.grade = grade;
         this.carNumber = carNumber;

@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 public class CreateTenantRequest {
 
     @NotBlank
-    @Pattern(regexp = "^[0-9]*$")
+    @Pattern(regexp = "^([0-9]+-[0-9]+)|([0-9]+)$")
     @ApiModelProperty(example = "62218271")
     private String villaIdNumber;
 
@@ -32,7 +32,7 @@ public class CreateTenantRequest {
     @Size(min = 8, max = 16)
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$")
     @ApiModelProperty(example = "juchamsi1234!")
-    private String password;
+    private String loginPassword;
 
     @NotBlank
     @Size(max = 20)
@@ -55,11 +55,11 @@ public class CreateTenantRequest {
     public CreateTenantRequest() {}
 
     @Builder
-    public CreateTenantRequest(String villaIdNumber, String phoneNumber, String loginId, String password, String name, String carNumber, int villaNumber) {
+    public CreateTenantRequest(String villaIdNumber, String phoneNumber, String loginId, String loginPassword, String name, String carNumber, int villaNumber) {
         this.villaIdNumber = villaIdNumber;
         this.phoneNumber = phoneNumber;
         this.loginId = loginId;
-        this.password = password;
+        this.loginPassword = loginPassword;
         this.name = name;
         this.carNumber = carNumber;
         this.villaNumber = villaNumber;

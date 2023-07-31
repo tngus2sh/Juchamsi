@@ -79,3 +79,28 @@
     top:537px;
     left:50px;
 }
+
+
+.password2btn {
+    position: absolute;
+    width: 100px;
+    height: 40px;
+    left: 35%;
+    top: 260px;
+    
+    background: #33907C;
+    opacity: 1;
+    border-radius: 32px;
+}
+
+.password3btn {
+    position: absolute;
+    width: 100px;
+    height: 40px;
+    left: 35%;
+    top: 120px;
+    
+    background: #33907C;
+    opacity: 1;
+    border-radius: 32px;
+}

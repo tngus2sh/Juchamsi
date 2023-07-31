@@ -1,11 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
-import formReducer from './formslice';
+import loginform from './loginform';
+import formSlice from './formslice';
 import addressOpen from './addressOpen';
 import mobileauthlogin from './mobileauthlogin'
 
+
 const store = configureStore({
   reducer: {
-    form: formReducer,
+    login: loginform,
+     form: formSlice,
     addressOpen: addressOpen,
     auth:mobileauthlogin
   },

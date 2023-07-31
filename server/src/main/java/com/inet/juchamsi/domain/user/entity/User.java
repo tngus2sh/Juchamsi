@@ -5,6 +5,7 @@ import com.inet.juchamsi.global.common.Active;
 import com.inet.juchamsi.global.common.TimeBaseEntity;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,6 +22,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Getter
+@ToString
 public class User extends TimeBaseEntity implements UserDetails {
 
     @Id
@@ -29,7 +31,7 @@ public class User extends TimeBaseEntity implements UserDetails {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "villa_id", nullable = false)
+    @JoinColumn(name = "villa_id")
     private Villa villa;
 
     @Column(name = "phone_number", unique = true, nullable = false, length = 13)
@@ -38,8 +40,8 @@ public class User extends TimeBaseEntity implements UserDetails {
     @Column(name = "login_id", nullable = false, length = 15)
     private String loginId;
 
-    @Column(nullable = false, length = 16)
-    private String password;
+    @Column(name = "login_password", nullable = false)
+    private String loginPassword;
 
     @Column(nullable = false, updatable = false, length = 20)
     private String name;
@@ -71,34 +73,52 @@ public class User extends TimeBaseEntity implements UserDetails {
     public User() {}
 
     @Builder
-    public User(Long id, Villa villa, String phoneNumber, String loginId, String password, String name, Grade grade, String carNumber, int villaNumber, Approve approve, Active active, List<String> roles) {
+    public User(Long id, Villa villa, String phoneNumber, String loginId, String loginPassword, String name, Grade grade, String carNumber, int villaNumber, Approve approve, Active active, String refreshToken, List<String> roles) {
         this.id = id;
         this.villa = villa;
         this.phoneNumber = phoneNumber;
         this.loginId = loginId;
-        this.password = password;
+        this.loginPassword = loginPassword;
         this.name = name;
         this.grade = grade;
         this.carNumber = carNumber;
         this.villaNumber = villaNumber;
         this.approve = approve;
         this.active = active;
+        this.refreshToken = refreshToken;
         this.roles = roles;
     }
+
 
     /*
         연관관계 편의 메서드
      */
-    public static User createUser(Villa villa, String phoneNumber, String loginId, String password, String name, Grade grade, String carNumber, int villaNumber, Approve approve, Active active, String role) {
+    public static User createUser(Villa villa, String phoneNumber, String loginId, String loginPassword, String name, Grade grade, String carNumber, int villaNumber, Approve approve, Active active, String role) {
         return User.builder()
                 .villa(villa)
                 .phoneNumber(phoneNumber)
                 .loginId(loginId)
-                .password(password)
+                .loginPassword(loginPassword)
                 .name(name)
                 .grade(grade)
                 .carNumber(carNumber)
                 .villaNumber(villaNumber)
+                .approve(approve)
+                .active(active)
+                .roles(Collections.singletonList(role))
+                .build();
+    }
+
+    /*
+        admin 연관관계 편의 메서드
+     */
+    public static User createUserAdmin(String phoneNumber, String loginId, String loginPassword, String name, Grade grade, Approve approve, Active active, String role) {
+        return User.builder()
+                .phoneNumber(phoneNumber)
+                .loginId(loginId)
+                .loginPassword(loginPassword)
+                .name(name)
+                .grade(grade)
                 .approve(approve)
                 .active(active)
                 .roles(Collections.singletonList(role))
@@ -120,31 +140,27 @@ public class User extends TimeBaseEntity implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return this.loginPassword;
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return this.loginId;
     }
 
     @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
+    public boolean isAccountNonExpired() { return true; }
 
     @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
+    public boolean isAccountNonLocked() { return true; }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }
