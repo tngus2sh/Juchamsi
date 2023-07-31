@@ -25,15 +25,19 @@ public class VillaServiceImpl implements VillaService {
 
     @Override
     public Long createVilla(CreateVillaRequest request) {
-        Optional<Long> existedVillaId = villaRepository.existIdNumber(request.getIdNumber());
+        String[] regionAddressList = request.getRegionAddress().split(" ");
+        String regionZipCode = regionAddressList[regionAddressList.length - 1];
+        String idNumber = request.getRoadZipCode() + regionZipCode;
+
+        Optional<Long> existedVillaId = villaRepository.existIdNumber(idNumber);
         if(existedVillaId.isPresent()) {
             throw new AlreadyExistException(Villa.class, existedVillaId.get());
         }
 
         Villa villa = Villa.builder()
                 .name(request.getName())
-                .address(request.getAddress())
-                .idNumber(request.getIdNumber())
+                .address(request.getRoadAddress())
+                .idNumber(idNumber)
                 .totalCount(request.getTotalCount())
                 .active(ACTIVE)
                 .build();
