@@ -1,7 +1,10 @@
 package com.inet.juchamsi.domain.user.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inet.juchamsi.domain.user.application.SmsService;
 import com.inet.juchamsi.domain.user.dto.request.CheckUserRequest;
+import com.inet.juchamsi.domain.user.dto.request.MessageDTO;
+import com.inet.juchamsi.domain.user.dto.response.SmsResponse;
 import com.inet.juchamsi.global.api.ApiResult;
 import com.inet.juchamsi.global.error.NotFoundException;
 import io.swagger.annotations.Api;
@@ -14,6 +17,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 import static com.inet.juchamsi.global.api.ApiResult.ERROR;
 import static com.inet.juchamsi.global.api.ApiResult.OK;
@@ -31,13 +39,23 @@ public class SmsApiController {
     @PostMapping("/check")
     public ApiResult<String> sendSmsToCheckUser(
             @ApiParam(value = "check-user-dto")
-            @RequestBody CheckUserRequest request) {
+            @RequestBody MessageDTO request) {
         log.debug("CheckUserRequest={}", request);
         try {
             String cerNum = smsService.sendSmsToCheckUser(request);
             return OK(cerNum);
         } catch (NotFoundException e) {
             return ERROR("회원이 존재하지 않습니다.", HttpStatus.NO_CONTENT);
+        } catch (UnsupportedEncodingException e) {
+            return ERROR("지원되지 않는 인코딩입니다.", HttpStatus.BAD_REQUEST);
+        } catch (URISyntaxException e) {
+            return ERROR("URI 오류입니다.", HttpStatus.BAD_REQUEST);
+        } catch (NoSuchAlgorithmException e) {
+            return ERROR("존재하지않는 알고리즘입니다.", HttpStatus.BAD_REQUEST);
+        } catch (InvalidKeyException e) {
+            return ERROR("유효하지 않은 key입니다.", HttpStatus.BAD_REQUEST);
+        } catch (JsonProcessingException e) {
+            return ERROR("JSON 오류입니다.", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -45,13 +63,23 @@ public class SmsApiController {
     @PostMapping("/password")
     public ApiResult<Void> sendSmsToFindPassword(
             @ApiParam(value = "check-user-dto")
-            @RequestBody CheckUserRequest request) {
+            @RequestBody MessageDTO request) {
         log.debug("CheckUserRequest={}", request);
         try {
             smsService.sendSmsToFindPassword(request);
             return OK(null);
         } catch (NotFoundException e) {
             return ERROR("회원이 존재하지 않습니다.", HttpStatus.NO_CONTENT);
+        } catch (UnsupportedEncodingException e) {
+            return ERROR("지원되지 않는 인코딩입니다.", HttpStatus.BAD_REQUEST);
+        } catch (URISyntaxException e) {
+            return ERROR("URI 오류입니다.", HttpStatus.BAD_REQUEST);
+        } catch (NoSuchAlgorithmException e) {
+            return ERROR("존재하지않는 알고리즘입니다.", HttpStatus.BAD_REQUEST);
+        } catch (InvalidKeyException e) {
+            return ERROR("유효하지 않은 key입니다.", HttpStatus.BAD_REQUEST);
+        } catch (JsonProcessingException e) {
+            return ERROR("JSON 오류입니다.", HttpStatus.BAD_REQUEST);
         }
     }
 }

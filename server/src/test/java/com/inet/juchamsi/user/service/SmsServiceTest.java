@@ -3,6 +3,7 @@ package com.inet.juchamsi.user.service;
 import com.inet.juchamsi.domain.user.application.SmsService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CheckUserRequest;
+import com.inet.juchamsi.domain.user.dto.request.MessageDTO;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.domain.villa.dao.VillaRepository;
 import com.inet.juchamsi.domain.villa.entity.Villa;
@@ -45,7 +46,7 @@ public class SmsServiceTest {
         villaRepository.save(villa);
         User user = User.builder()
                 .villa(villa)
-                .phoneNumber("본인번호입력")
+                .phoneNumber("01099345631")
                 .loginId("userId")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
                 .name("김주참")
@@ -60,11 +61,10 @@ public class SmsServiceTest {
 
     @Test
     @DisplayName("핸드폰 본인인증")
-    void sendSmsToCheckUser() {
+    void sendSmsToCheckUser() throws Exception{
         // given
-        CheckUserRequest request = CheckUserRequest.builder()
-                .name("김주참")
-                .phoneNumber("본인 번호 입력")
+        MessageDTO request = MessageDTO.builder()
+                .to("01099345631")
                 .build();
 
         // when
@@ -77,9 +77,9 @@ public class SmsServiceTest {
     @DisplayName("핸드폰 본인인증 ## 존재하지 않는 회원")
     void sendSmsToCheckUserNoPresent() {
         // given
-        CheckUserRequest request = CheckUserRequest.builder()
-                .name("김주참")
-                .phoneNumber("01012341234")
+        MessageDTO request = MessageDTO.builder()
+//                .name("김주참")
+                .to("01012341234")
                 .build();
 
         // when
@@ -90,11 +90,11 @@ public class SmsServiceTest {
 
     @Test
     @DisplayName("임시 비밀번호 발급")
-    void sendSmsToFindPassword() {
+    void sendSmsToFindPassword() throws Exception {
         // given
-        CheckUserRequest request = CheckUserRequest.builder()
-                .name("김주참")
-                .phoneNumber("본인번호입력")
+        MessageDTO request = MessageDTO.builder()
+//                .name("김주참")
+                .to("본인 번호 입력")
                 .build();
 
         // when
@@ -107,9 +107,9 @@ public class SmsServiceTest {
     @DisplayName("임시 비밀번호 발급 ## 존재하지 않는 회원")
     void sendSmsToFindPasswordNoPresent() {
         // given
-        CheckUserRequest request = CheckUserRequest.builder()
-                .name("김주참")
-                .phoneNumber("01012341234")
+        MessageDTO request = MessageDTO.builder()
+//                .name("김주참")
+                .to("01012341234")
                 .build();
 
         // when
