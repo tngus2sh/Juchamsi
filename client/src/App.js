@@ -11,6 +11,12 @@ import KioskfindPage from './pages/kiosk/findpage'
 import KiosksavingPage from './pages/kiosk/savingpage'
 import KiosksaveresultPage from './pages/kiosk/saveresult'
 import KioskOtherkeyPage from './pages/kiosk/otherkeypage'
+import KioskMeKeyPage from './pages/kiosk/mekeypage'
+import MobileLoginPage from './pages/mobile/login'
+import MobileFindIdPage from './pages/mobile/findid'
+import MobileFindResultpage from './pages/mobile/finidresult'
+import MobileFindPwPage from './pages/mobile/findpw'
+import MobileSignupPage from './pages/mobile/signup'
 
 import './App.css';
 
@@ -35,8 +41,14 @@ function App() {
               <Route path="/kiosksavingpage" element={<KiosksavingPage />} />
               <Route path="/kiosksaveresultpage" element={<KiosksaveresultPage />} />
               <Route path="/kioskotherkeypage" element={<KioskOtherkeyPage />} />
-              <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/mainPage" element={ <WebMainPage/>} />
+              <Route path="/kioskfindmekeypage" element={<KioskMeKeyPage />} />
+              <Route path="/signup" element={<SignUpPage />}/>
+              <Route path="/Mobile/Login" element={<MobileLoginPage />}/>
+              <Route path="/Mobile/Findid" element={<MobileFindIdPage />}/>
+              <Route path="/Mobile/Findid/Result" element={<MobileFindResultpage />}/>
+              <Route path="/Mobile/Findpw" element={<MobileFindPwPage />}/>
+              <Route path="/Mobile/Signup" element={<MobileSignupPage />}/>
+               <Route path="/mainPage" element={ <WebMainPage/>} />
           </Routes>
           </BrowserRouter>
     </div>

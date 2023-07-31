@@ -2,16 +2,18 @@
     font-size: larger;
     text-align: start;
     position: absolute;
-    width: 300px;
+    width: 500px;
     height: 150px;
     left: 32%;
-    top: 230px;
+    top: 320px;
+    font-family: "KorailFont";
+    font-size: 20px;
 }
 
 .saveresultbox1 {
     position: absolute;
     border-radius: 10%;;
-    top: 330px;
+    top: 400px;
     left: 40%;
     border: 1px grey;
     width:150px;
@@ -23,4 +25,6 @@
     position: absolute;
     top: 30px;
     left:38%;
+    font-family: "KorailFont";
+    font-size: 20px;
 }
