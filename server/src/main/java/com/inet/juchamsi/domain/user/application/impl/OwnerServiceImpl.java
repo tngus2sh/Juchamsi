@@ -5,12 +5,11 @@ import com.inet.juchamsi.domain.user.application.OwnerService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
+import com.inet.juchamsi.domain.user.dto.request.ModifyOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminOwnerLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
 import com.inet.juchamsi.domain.user.dto.response.TenantRequestResponse;
-import com.inet.juchamsi.domain.user.dto.response.TenantResponse;
 import com.inet.juchamsi.domain.user.entity.Approve;
-import com.inet.juchamsi.domain.user.entity.Grade;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.domain.villa.application.VillaService;
 import com.inet.juchamsi.domain.villa.dao.VillaRepository;
@@ -140,6 +139,9 @@ public class OwnerServiceImpl implements OwnerService {
         return AdminOwnerLoginResponse.builder()
                 .tokenInfo(tokenInfo)
                 .grade(user.getGrade().name())
+                .loginId(user.getLoginId())
+                .name(user.getName())
+                .villa(user.getVilla())
                 .build();
     }
 
@@ -154,26 +156,26 @@ public class OwnerServiceImpl implements OwnerService {
         userRepository.updateRefreshToken(ownerId, "");
     }
 
+    // refactor: carNumber 제거, modify 시 enum MODIFY로 수정해야 함
     @Override
-    public void modifyUser(CreateOwnerRequest dto) {
-//        Optional<User> oUser = userRepository.findByLoginIdAndActive(dto.getLoginId(), ACTIVE);
-//        System.out.println("oUser = " + oUser);
-//        if (oUser.isEmpty()) {
-//            throw new NotFoundException(User.class, dto.getLoginId());
-//        }
-//
-//        Optional<Long> phoneNumberId = userRepository.existPhoneNumber(dto.getPhoneNumber());
-//        if (phoneNumberId.isPresent() && !phoneNumberId.get().equals(oUser.get().getId())) {
-//            throw new AlreadyExistException(User.class, phoneNumberId.get());
-//        }
-//
-//        // 빌라가 있는지 확인
-//        Optional<Long> connectedVillaId = villaRepository.existIdNumberandActive(dto.getVillaIdNumber(), ACTIVE);
-//        if (connectedVillaId.isEmpty()) {
-//            throw new NotFoundException(Villa.class, dto.getLoginId());
-//        }
-//
-//        userRepository.updateOwner(dto.getLoginId(), dto.getPhoneNumber(), dto.getCarNumber());
+    public void modifyUser(ModifyOwnerRequest dto) {
+        Optional<User> oUser = userRepository.findByLoginIdAndActive(dto.getLoginId(), ACTIVE);
+        if(oUser.isEmpty()) {
+            throw new NotFoundException(User.class, dto.getLoginId());
+        }
+
+        Optional<Long> phoneNumberId = userRepository.existPhoneNumber(dto.getPhoneNumber());
+        if (phoneNumberId.isPresent() && !phoneNumberId.get().equals(oUser.get().getId())) {
+            throw new AlreadyExistException(User.class, phoneNumberId.get());
+        }
+
+        // 빌라가 있는지 확인
+        Optional<Long> connectedVillaId = villaRepository.existIdNumberandActive(dto.getVillaIdNumber(), ACTIVE);
+        if (connectedVillaId.isEmpty()) {
+            throw new NotFoundException(Villa.class, dto.getLoginId());
+        }
+
+        userRepository.updateOwner(dto.getLoginId(), dto.getPhoneNumber(), dto.getCarNumber());
     }
 
     @Override

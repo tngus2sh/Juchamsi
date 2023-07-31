@@ -7,6 +7,7 @@ import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateAdminRequest;
 import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
+import com.inet.juchamsi.domain.user.dto.request.ModifyOwnerRequest;
 import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.domain.user.entity.Grade;
 import com.inet.juchamsi.domain.user.entity.User;
@@ -238,7 +239,7 @@ public class OwnerApiTest {
     @DisplayName("집주인  회원정보 수정")
     void modifyUser() throws Exception {
         // given
-        String object  = objectMapper.writeValueAsString(CreateOwnerRequest.builder()
+        String object  = objectMapper.writeValueAsString(ModifyOwnerRequest.builder()
                 .villaIdNumber("62218271")
                 .phoneNumber("01099998888")
                 .loginId("ownerId")
@@ -264,7 +265,7 @@ public class OwnerApiTest {
     @DisplayName("집주인 회원정보 수정 ## 해당 회원이 없을 때")
     void modifyUserNoPresent() throws Exception {
         // given
-        String object  = objectMapper.writeValueAsString(CreateOwnerRequest.builder()
+        String object  = objectMapper.writeValueAsString(ModifyOwnerRequest.builder()
                 .villaIdNumber("62218271")
                 .phoneNumber("01099998888")
                 .loginId("ownerIdssss")
@@ -292,7 +293,7 @@ public class OwnerApiTest {
     void modifyUserDuplicatedPhoneNumber() throws  Exception {
         // given
         compareUser();
-        String object  = objectMapper.writeValueAsString(CreateOwnerRequest.builder()
+        String object  = objectMapper.writeValueAsString(ModifyOwnerRequest.builder()
                 .villaIdNumber("62218271")
                 .phoneNumber("01098765432")
                 .loginId("ownerId")
@@ -319,7 +320,7 @@ public class OwnerApiTest {
     @DisplayName("집주인 회원정보 수정 ## 해당 빌라 없을 때")
     void modifyUserNoPresentVilla() throws  Exception {
         // given
-        String object  = objectMapper.writeValueAsString(CreateOwnerRequest.builder()
+        String object  = objectMapper.writeValueAsString(ModifyOwnerRequest.builder()
                 .villaIdNumber("623-8271")
                 .phoneNumber("01099998888")
                 .loginId("ownerId")
