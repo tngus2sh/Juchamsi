@@ -24,9 +24,13 @@ public class CreateVillaRequest {
     private String address;
 
     @NotBlank
-    @Pattern(regexp = "^[0-9]*$")
-    @ApiModelProperty(example = "62218271")
-    private String idNumber;
+    @Pattern(regexp = "^[0-9]+$")
+    @ApiModelProperty(example = "62218")
+    private String roadZipCode;
+
+    @NotBlank
+    @Pattern(regexp = "([0-9]+)|([0-9]+-[0-9])$")
+    private String regionZipCode;
 
     @Range(min = 1)
     @ApiModelProperty(example = "6")
@@ -36,10 +40,11 @@ public class CreateVillaRequest {
     public CreateVillaRequest() {}
 
     @Builder
-    public CreateVillaRequest(String name, String address, String idNumber, int totalCount) {
+    public CreateVillaRequest(String name, String address, String roadZipCode, String regionZipCode, int totalCount) {
         this.name = name;
         this.address = address;
-        this.idNumber = idNumber;
+        this.roadZipCode = roadZipCode;
+        this.regionZipCode = regionZipCode;
         this.totalCount = totalCount;
     }
 }
