@@ -2,10 +2,7 @@ package com.inet.juchamsi.user.service;
 
 import com.inet.juchamsi.domain.user.application.OwnerService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
-import com.inet.juchamsi.domain.user.dto.request.CreateAdminRequest;
-import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
-import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
-import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
+import com.inet.juchamsi.domain.user.dto.request.*;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
 import com.inet.juchamsi.domain.user.dto.response.TenantRequestResponse;
 import com.inet.juchamsi.domain.user.entity.Approve;
@@ -145,7 +142,7 @@ public class OwnerServiceTest {
         User targetUser = insertUser(targetVilla);
 
         // when
-        CreateOwnerRequest request = CreateOwnerRequest.builder()
+        ModifyOwnerRequest request = ModifyOwnerRequest.builder()
                 .villaIdNumber("62218271")
                 .loginId("ownerId")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
@@ -170,7 +167,7 @@ public class OwnerServiceTest {
         User targetUser = insertUser(targetVilla);
 
         // when
-        CreateOwnerRequest request = CreateOwnerRequest.builder()
+        ModifyOwnerRequest request = ModifyOwnerRequest.builder()
                 .villaIdNumber("62218271")
                 .loginId("leeAdmin")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
@@ -196,7 +193,7 @@ public class OwnerServiceTest {
         User secondUser = compareUser(targetVilla);
 
         // when
-        CreateOwnerRequest request = CreateOwnerRequest.builder()
+        ModifyOwnerRequest request = ModifyOwnerRequest.builder()
                 .villaIdNumber("62218271")
                 .loginId("ownerId")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
@@ -221,7 +218,7 @@ public class OwnerServiceTest {
         User targetUser = insertUser(targetVilla);
 
         // when
-        CreateOwnerRequest request = CreateOwnerRequest.builder()
+        ModifyOwnerRequest request = ModifyOwnerRequest.builder()
                 .villaIdNumber("6220-271")
                 .loginId("ownerId")
                 .loginPassword(passwordEncoder.encode("userPw123!"))

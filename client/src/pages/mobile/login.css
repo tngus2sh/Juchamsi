@@ -3,23 +3,23 @@
     width: 60px;
     height: 60px;
     left: 40%;
-    top: 580px;
+    top: 560px;
     }
 
 .id {
     position: absolute;
-    top:150px;
+    top:130px;
 }
 
 
 .pw {
     position: absolute;
-    top:160px;
+    top:140px;
 }
 
 .autologin {
     position: absolute;
-    top:280px;
+    top:260px;
     left:16%;
 }
 
@@ -28,7 +28,7 @@
     width: 200px;
     height: 45px;
     left: 20%;
-    top: 350px;
+    top: 330px;
     
     background: #33907C;
     opacity: 0.8;
@@ -41,7 +41,7 @@
     width: 200px;
     height: 45px;
     left: 20%;
-    top: 350px;
+    top: 330px;
     
     background: #111111;
     opacity: 0.25;
@@ -58,25 +58,25 @@
 
 .findidbtn {
     position: absolute;
-    top:280px;
+    top:260px;
     left:30px;
 }
 
 .findpwbtn {
     position: absolute;
-    top:280px;
+    top:260px;
     left:40px;
 }
 
 .findsignupbtn {
     position: absolute;
-    top:400px;
+    top:380px;
     left:-30px;
 }
 
 .findsignup {
     position: absolute;
-    top:537px;
+    top:517px;
     left:50px;
 }
 
@@ -86,7 +86,7 @@
     width: 100px;
     height: 40px;
     left: 35%;
-    top: 260px;
+    top: 240px;
     
     background: #33907C;
     opacity: 1;
@@ -98,7 +98,7 @@
     width: 100px;
     height: 40px;
     left: 35%;
-    top: 120px;
+    top: 100px;
     
     background: #33907C;
     opacity: 1;
