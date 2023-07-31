@@ -20,6 +20,10 @@ const Step1 = () => {
     dispatch(setStep1Data({ phoneNumber: e.target.value }));
   };
 
+  const sendCertification = (e) => {
+    // 전송
+  };
+
   return (
     <React.Fragment>
       <Box sx={{ height: 15 }}></Box>
