@@ -2,9 +2,7 @@ package com.inet.juchamsi.domain.user.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inet.juchamsi.domain.user.application.SmsService;
-import com.inet.juchamsi.domain.user.dto.request.CheckUserRequest;
-import com.inet.juchamsi.domain.user.dto.request.MessageDTO;
-import com.inet.juchamsi.domain.user.dto.response.SmsResponse;
+import com.inet.juchamsi.domain.user.dto.request.MessageRequest;
 import com.inet.juchamsi.global.api.ApiResult;
 import com.inet.juchamsi.global.error.NotFoundException;
 import io.swagger.annotations.Api;
@@ -39,7 +37,7 @@ public class SmsApiController {
     @PostMapping("/check")
     public ApiResult<String> sendSmsToCheckUser(
             @ApiParam(value = "check-user-dto")
-            @RequestBody MessageDTO request) {
+            @RequestBody MessageRequest request) {
         log.debug("CheckUserRequest={}", request);
         try {
             String cerNum = smsService.sendSmsToCheckUser(request);
@@ -63,7 +61,7 @@ public class SmsApiController {
     @PostMapping("/password")
     public ApiResult<Void> sendSmsToFindPassword(
             @ApiParam(value = "check-user-dto")
-            @RequestBody MessageDTO request) {
+            @RequestBody MessageRequest request) {
         log.debug("CheckUserRequest={}", request);
         try {
             smsService.sendSmsToFindPassword(request);
