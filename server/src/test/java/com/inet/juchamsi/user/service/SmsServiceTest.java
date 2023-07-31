@@ -2,18 +2,17 @@ package com.inet.juchamsi.user.service;
 
 import com.inet.juchamsi.domain.user.application.SmsService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
-import com.inet.juchamsi.domain.user.dto.request.CheckUserRequest;
-import com.inet.juchamsi.domain.user.dto.request.MessageDTO;
+import com.inet.juchamsi.domain.user.dto.request.MessageRequest;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.domain.villa.dao.VillaRepository;
 import com.inet.juchamsi.domain.villa.entity.Villa;
 import com.inet.juchamsi.global.error.NotFoundException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 
@@ -23,6 +22,7 @@ import static com.inet.juchamsi.global.common.Active.ACTIVE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 @SpringBootTest
+@Transactional
 public class SmsServiceTest {
 
     @Autowired
@@ -34,7 +34,6 @@ public class SmsServiceTest {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    @BeforeEach
     public void setUp() {
         Villa villa = Villa.builder()
                 .name("삼성 빌라")
@@ -63,7 +62,9 @@ public class SmsServiceTest {
     @DisplayName("핸드폰 본인인증")
     void sendSmsToCheckUser() throws Exception{
         // given
-        MessageDTO request = MessageDTO.builder()
+        setUp();
+        MessageRequest request = MessageRequest.builder()
+                .name("김주참")
                 .to("01099345631")
                 .build();
 
@@ -77,8 +78,9 @@ public class SmsServiceTest {
     @DisplayName("핸드폰 본인인증 ## 존재하지 않는 회원")
     void sendSmsToCheckUserNoPresent() {
         // given
-        MessageDTO request = MessageDTO.builder()
-//                .name("김주참")
+        setUp();
+        MessageRequest request = MessageRequest.builder()
+                .name("김주참")
                 .to("01012341234")
                 .build();
 
@@ -92,9 +94,10 @@ public class SmsServiceTest {
     @DisplayName("임시 비밀번호 발급")
     void sendSmsToFindPassword() throws Exception {
         // given
-        MessageDTO request = MessageDTO.builder()
-//                .name("김주참")
-                .to("본인 번호 입력")
+        setUp();
+        MessageRequest request = MessageRequest.builder()
+                .name("김주참")
+                .to("01099345631")
                 .build();
 
         // when
@@ -107,8 +110,9 @@ public class SmsServiceTest {
     @DisplayName("임시 비밀번호 발급 ## 존재하지 않는 회원")
     void sendSmsToFindPasswordNoPresent() {
         // given
-        MessageDTO request = MessageDTO.builder()
-//                .name("김주참")
+        setUp();
+        MessageRequest request = MessageRequest.builder()
+                .name("김주참")
                 .to("01012341234")
                 .build();
 
