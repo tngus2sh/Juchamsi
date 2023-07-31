@@ -6,6 +6,8 @@ import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminOwnerLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
+import com.inet.juchamsi.domain.user.dto.response.TenantRequestResponse;
+import com.inet.juchamsi.domain.user.dto.response.TenantResponse;
 import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.domain.user.entity.Grade;
 import com.inet.juchamsi.domain.user.entity.User;
@@ -26,6 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.inet.juchamsi.domain.user.entity.Approve.WAIT;
 
 @Service
 @Transactional
@@ -84,7 +88,7 @@ public class OwnerServiceImpl implements OwnerService {
 
         Villa villa = Villa.builder().idNumber(dto.getVillaIdNumber()).build();
 
-        User user = User.createUser(villa, dto.getPhoneNumber(), dto.getLoginId(), dto.getLoginPassword(), dto.getName(), Grade.OWNER, dto.getCarNumber(), dto.getVillaNumber(), Approve.WAIT, Active.ACTIVE, "OWNER");
+        User user = User.createUser(villa, dto.getPhoneNumber(), dto.getLoginId(), dto.getLoginPassword(), dto.getName(), Grade.OWNER, dto.getCarNumber(), dto.getVillaNumber(), WAIT, Active.ACTIVE, "OWNER");
         User savedUser = userRepository.save(user);
         return savedUser.getId();
     }
@@ -117,7 +121,7 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
-    public  void modifyUser(CreateOwnerRequest dto) {
+    public void modifyUser(CreateOwnerRequest dto) {
         Optional<User> oUser = userRepository.findByLoginIdAndActive(dto.getLoginId(), Active.ACTIVE);
         System.out.println("oUser = " + oUser);
         if (oUser.isEmpty()) {
@@ -136,6 +140,35 @@ public class OwnerServiceImpl implements OwnerService {
         }
 
         userRepository.updateOwner(dto.getLoginId(), dto.getPhoneNumber(), dto.getCarNumber());
+    }
+
+    @Override
+    public List<TenantRequestResponse> showNewRequestTenant(Long villaId) {
+        Optional<Villa> targetVilla = villaRepository.findById(villaId);
+        if(!targetVilla.isPresent()) {
+            throw new NotFoundException(Villa.class, villaId);
+        }
+
+        List<User> tenantList = userRepository.findNewRequestTenant(targetVilla.get(), WAIT);
+
+        List<TenantRequestResponse> response = new ArrayList<>();
+        User tenant;
+        for(int i = 0; i < tenantList.size(); i++) {
+            tenant = tenantList.get(i);
+
+            TenantRequestResponse tenantResponse = TenantRequestResponse.builder()
+                    .id(tenant.getId())
+                    .villaId(tenant.getVilla().getId())
+                    .phoneNumber(tenant.getPhoneNumber())
+                    .loginId(tenant.getLoginId())
+                    .name(tenant.getName())
+                    .carNumber(tenant.getCarNumber())
+                    .villaNumber(tenant.getVillaNumber())
+                    .build();
+            response.add(tenantResponse);
+        }
+
+        return response;
     }
 
     @Override
