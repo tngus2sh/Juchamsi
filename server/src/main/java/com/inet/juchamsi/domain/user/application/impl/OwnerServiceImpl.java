@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +48,7 @@ public class OwnerServiceImpl implements OwnerService {
     private final ParkingLotService parkingLotService;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<OwnerResponse> showUser() {
@@ -117,7 +119,7 @@ public class OwnerServiceImpl implements OwnerService {
                 .villa(villa)
                 .phoneNumber(dto.getPhoneNumber())
                 .loginId(dto.getLoginId())
-                .loginPassword(dto.getLoginPassword())
+                .loginPassword(passwordEncoder.encode(dto.getLoginPassword()))
                 .name(dto.getName())
                 .grade(OWNER)
                 .approve(WAIT)
@@ -137,12 +139,20 @@ public class OwnerServiceImpl implements OwnerService {
         userRepository.updateRefreshToken(ownerId, password);
 
         User user = userRepository.findByLoginId(ownerId).get();
+        Villa targetVilla = user.getVilla();
+        Villa villa = Villa.builder()
+                .id(targetVilla.getId())
+                .name(targetVilla.getName())
+                .address(targetVilla.getAddress())
+                .idNumber(targetVilla.getIdNumber())
+                .totalCount(targetVilla.getTotalCount())
+                .build();
         return AdminOwnerLoginResponse.builder()
                 .tokenInfo(tokenInfo)
                 .grade(user.getGrade().name())
                 .loginId(user.getLoginId())
                 .name(user.getName())
-                .villa(user.getVilla())
+                .villa(villa)
                 .build();
     }
 
