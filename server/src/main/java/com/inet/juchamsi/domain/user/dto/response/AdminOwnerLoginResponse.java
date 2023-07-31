@@ -8,11 +8,11 @@ import lombok.Data;
 
 @Data
 public class AdminOwnerLoginResponse {
-    TokenInfo tokenInfo;
-    String grade;
-    String loginId;
-    String name;
-    Villa villa;
+    private TokenInfo tokenInfo;
+    private String grade;
+    private String loginId;
+    private String name;
+    private Villa villa;
 
 
     public AdminOwnerLoginResponse() {}

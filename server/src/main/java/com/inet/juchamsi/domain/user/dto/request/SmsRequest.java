@@ -4,6 +4,7 @@ import lombok.*;
 
 import java.util.List;
 
+// refactor: 컬럼에 private 붙이기
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
