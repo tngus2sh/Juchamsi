@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.inet.juchamsi.domain.user.entity.Approve.MODIFY;
 import static com.inet.juchamsi.domain.user.entity.Approve.WAIT;
 import static com.inet.juchamsi.domain.user.entity.Grade.OWNER;
 import static com.inet.juchamsi.global.common.Active.ACTIVE;
@@ -156,7 +157,6 @@ public class OwnerServiceImpl implements OwnerService {
         userRepository.updateRefreshToken(ownerId, "");
     }
 
-    // refactor: carNumber 제거, modify 시 enum MODIFY로 수정해야 함
     @Override
     public void modifyUser(ModifyOwnerRequest dto) {
         Optional<User> oUser = userRepository.findByLoginIdAndActive(dto.getLoginId(), ACTIVE);
@@ -169,13 +169,8 @@ public class OwnerServiceImpl implements OwnerService {
             throw new AlreadyExistException(User.class, phoneNumberId.get());
         }
 
-        // 빌라가 있는지 확인
-        Optional<Long> connectedVillaId = villaRepository.existIdNumberandActive(dto.getVillaIdNumber(), ACTIVE);
-        if (connectedVillaId.isEmpty()) {
-            throw new NotFoundException(Villa.class, dto.getLoginId());
-        }
-
-        userRepository.updateOwner(dto.getLoginId(), dto.getPhoneNumber(), dto.getCarNumber());
+        userRepository.updateOwner(dto.getLoginId(), dto.getPhoneNumber());
+        userRepository.updateOwnerApprove(dto.getLoginId(), MODIFY);
     }
 
     @Override

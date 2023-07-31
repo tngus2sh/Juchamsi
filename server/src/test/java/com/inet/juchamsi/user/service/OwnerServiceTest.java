@@ -143,14 +143,9 @@ public class OwnerServiceTest {
 
         // when
         ModifyOwnerRequest request = ModifyOwnerRequest.builder()
-                .villaIdNumber("62218271")
                 .loginId("ownerId")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
                 .phoneNumber("01098765432")
-                .name("김주참")
-                .grade(Grade.OWNER.name())
-                .carNumber("12가 1234")
-                .villaNumber(201)
                 .build();
         ownerService.modifyUser(request);
 
@@ -168,14 +163,9 @@ public class OwnerServiceTest {
 
         // when
         ModifyOwnerRequest request = ModifyOwnerRequest.builder()
-                .villaIdNumber("62218271")
                 .loginId("leeAdmin")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
                 .phoneNumber("01098765432")
-                .name("이주참")
-                .grade(Grade.OWNER.name())
-                .carNumber("12가 1234")
-                .villaNumber(201)
                 .build();
 
         // then
@@ -194,14 +184,9 @@ public class OwnerServiceTest {
 
         // when
         ModifyOwnerRequest request = ModifyOwnerRequest.builder()
-                .villaIdNumber("62218271")
                 .loginId("ownerId")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
                 .phoneNumber("01098765432")
-                .name("김주참")
-                .grade(Grade.OWNER.name())
-                .carNumber("12가 1234")
-                .villaNumber(201)
                 .build();
 
         // then
@@ -219,13 +204,9 @@ public class OwnerServiceTest {
 
         // when
         ModifyOwnerRequest request = ModifyOwnerRequest.builder()
-                .villaIdNumber("6220-271")
                 .loginId("ownerId")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
                 .phoneNumber("01012345678")
-                .name("김주참")
-                .carNumber("12가 1234")
-                .villaNumber(201)
                 .build();
 
         // then
