@@ -100,7 +100,8 @@ function Login() {
       setPasswordLocal(value);
     } else if (name === 'password1') {
        // 비밀번호 입력 길이를 6글자로 제한
-       const checkpasswordvalue = value.slice(0, 6);
+       const onlynumb = value.replace(/[^0-9/ ]/g, '');
+       const checkpasswordvalue = onlynumb.slice(0, 6);
        setPasswordLocal1(checkpasswordvalue);
     }
   };
