@@ -38,9 +38,9 @@ public class VillaServiceTest {
         // given
         CreateVillaRequest request = CreateVillaRequest.builder()
                 .name("삼성 빌라")
-                .address("광주 광산구 하남산단6번로 107")
+                .roadAddress("광주 광산구 하남산단6번로 107")
+                .regionAddress("오선동 271")
                 .roadZipCode("62218")
-                .regionZipCode("271")
                 .totalCount(6)
                 .build();
 
@@ -62,10 +62,10 @@ public class VillaServiceTest {
         // when
         CreateVillaRequest request = CreateVillaRequest.builder()
                 .name("삼성 새 빌라")
-                .address("광주 광산구 하남산단6번로 107")
+                .roadAddress("광주 광산구 하남산단6번로 107")
+                .regionAddress("오선동 271")
                 .roadZipCode("62218")
-                .regionZipCode("271")
-                .totalCount(8)
+                .totalCount(6)
                 .build();
 
         // then
