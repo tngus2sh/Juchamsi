@@ -51,6 +51,11 @@ dependencies {
 	// api, toStringBuilder
 	implementation 'org.apache.commons:commons-lang3'
 
+	// coolSMS - 인증번호 발송
+	implementation group: 'net.nurigo', name: 'sdk', version: '4.3.0'
+
+
+
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.mysql:mysql-connector-j'
