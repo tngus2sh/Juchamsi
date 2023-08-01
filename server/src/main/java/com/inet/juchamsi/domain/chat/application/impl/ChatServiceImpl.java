@@ -3,6 +3,7 @@ package com.inet.juchamsi.domain.chat.application.impl;
 import com.inet.juchamsi.domain.chat.application.ChatService;
 import com.inet.juchamsi.domain.chat.dao.ChatPeopleRepository;
 import com.inet.juchamsi.domain.chat.dao.ChatRoomRepository;
+import com.inet.juchamsi.domain.chat.dto.request.ChatRoomRequest;
 import com.inet.juchamsi.domain.chat.dto.request.SystemChatRoomRequest;
 import com.inet.juchamsi.domain.chat.dto.response.ChatRoomResponse;
 import com.inet.juchamsi.domain.chat.entity.ChatPeople;
@@ -10,6 +11,7 @@ import com.inet.juchamsi.domain.chat.entity.ChatRoom;
 import com.inet.juchamsi.domain.chat.entity.Type;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.entity.User;
+import com.inet.juchamsi.global.error.AlreadyExistException;
 import com.inet.juchamsi.global.error.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -62,8 +64,32 @@ public class ChatServiceImpl implements ChatService {
     /* 유저간 채팅방 */
     // 채팅방 생성
     @Override
-    public ChatRoomResponse createRoom(String name) {
-        ChatRoom room = chatRoomRepository.save(ChatRoom.create(name, GENERAL));
+    public ChatRoomResponse createRoom(ChatRoomRequest request) {
+        String userIdOne = request.getUserIdOne();
+        String userIdTwo = request.getUserIdTwo();
+        String name = "사용자 대화";
+        // userId로 user 정보 가져오기(앞차주, 뒷차주)
+        List<User> users = userRepository.findUsersByLoginId(userIdOne, userIdTwo, ACTIVE);
+        // user 정보 없으면 -> NotFoundException 발생
+        if (users.isEmpty()) {
+            throw new NotFoundException(User.class, users);
+        }
+        // 이미 만들어진 채팅방이 있는지 확인
+        Optional<Long> chatRoomId = chatRoomRepository.existChatRoomByUserId(userIdOne, userIdTwo, ACTIVE, GENERAL);
+        // 이미 만들어진 채팅방이 있다면 -> AlreadyExistException
+        if (chatRoomId.isPresent()) {
+            throw new AlreadyExistException(ChatRoom.class, chatRoomId);
+        }
+        // 채팅방 생성
+        ChatRoom room = chatRoomRepository.save(ChatRoom.create( name, GENERAL));
+        // chatPeople -> user 정보 넣기
+        for (User user: users) {
+            chatPeopleRepository.save(ChatPeople.builder()
+                    .chatRoom(room)
+                    .user(user)
+                    .build());
+        }
+
         return ChatRoomResponse.builder() 
                 .roomId(room.getRoomId())
                 .roomName(room.getRoomName())
@@ -86,7 +112,7 @@ public class ChatServiceImpl implements ChatService {
         }
 
         // chatPeople -> user정보(userId) 넣기
-        ChatPeople people = chatPeopleRepository.save(ChatPeople.builder()
+        chatPeopleRepository.save(ChatPeople.builder()
                         .chatRoom(room)
                         .user(user.get())
                         .build());
