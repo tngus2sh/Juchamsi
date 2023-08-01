@@ -131,7 +131,7 @@ public class TenantApiController {
 
     // 빌라 내 정보 수정 요청한 세입자 전체 조회
     @ApiOperation(value = "빌라 내 정보 수정 요청한 세입자 전체 조회", notes = "회원 정보 수정 신청한 세입자 목록을 확인합니다")
-    @GetMapping("/modify/{vill_id}")
+    @GetMapping("/modify/{villa_id}")
     public ApiResult<List<TenantResponse>> showModifyRequestTenant(@ApiParam(value = "villa-id") @PathVariable(value = "villa_id") Long villaId) {
         try {
             List<TenantResponse> response = tenantService.showApproveTenant(villaId, MODIFY);
