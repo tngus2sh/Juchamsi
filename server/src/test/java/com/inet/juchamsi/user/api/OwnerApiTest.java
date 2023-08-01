@@ -240,14 +240,9 @@ public class OwnerApiTest {
     void modifyUser() throws Exception {
         // given
         String object  = objectMapper.writeValueAsString(ModifyOwnerRequest.builder()
-                .villaIdNumber("62218271")
                 .phoneNumber("01099998888")
                 .loginId("ownerId")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
-                .name("김주참")
-                .carNumber("12가 1234")
-                .villaNumber(201)
-                .grade(Grade.OWNER.name())
                 .build());
 
         // when
@@ -266,14 +261,9 @@ public class OwnerApiTest {
     void modifyUserNoPresent() throws Exception {
         // given
         String object  = objectMapper.writeValueAsString(ModifyOwnerRequest.builder()
-                .villaIdNumber("62218271")
                 .phoneNumber("01099998888")
                 .loginId("ownerIdssss")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
-                .name("박주참")
-                .carNumber("12가 1234")
-                .villaNumber(201)
-                .grade(Grade.OWNER.name())
                 .build());
 
         // when
@@ -294,14 +284,9 @@ public class OwnerApiTest {
         // given
         compareUser();
         String object  = objectMapper.writeValueAsString(ModifyOwnerRequest.builder()
-                .villaIdNumber("62218271")
                 .phoneNumber("01098765432")
                 .loginId("ownerId")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
-                .name("김주참")
-                .grade(Grade.OWNER.name())
-                .carNumber("12가 1234")
-                .villaNumber(201)
                 .build());
 
         // when
@@ -321,14 +306,9 @@ public class OwnerApiTest {
     void modifyUserNoPresentVilla() throws  Exception {
         // given
         String object  = objectMapper.writeValueAsString(ModifyOwnerRequest.builder()
-                .villaIdNumber("623-8271")
                 .phoneNumber("01099998888")
                 .loginId("ownerId")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
-                .name("김주참")
-                .grade(Grade.OWNER.name())
-                .carNumber("12가 1234")
-                .villaNumber(201)
                 .build());
 
         // when

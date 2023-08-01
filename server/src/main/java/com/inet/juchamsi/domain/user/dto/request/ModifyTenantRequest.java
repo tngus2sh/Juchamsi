@@ -3,14 +3,18 @@ package com.inet.juchamsi.domain.user.dto.request;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Data;
-import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Data
-public class ModifyOwnerRequest {
+public class ModifyTenantRequest {
+
+    @NotBlank
+    @Pattern(regexp = "^([0-9]+-[0-9]+)|([0-9]+)$")
+    @ApiModelProperty(example = "62218271")
+    private String villaIdNumber;
 
     @NotBlank
     @Size(min = 13, max = 13)
@@ -25,17 +29,25 @@ public class ModifyOwnerRequest {
     private String loginId;
 
     @NotBlank
-    @Size(min = 8, max = 16)
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$")
-    @ApiModelProperty(example = "juchamsi1234!")
-    private String loginPassword;
+    @Size(max = 15)
+    @Pattern(regexp = "^\\d{1,3}[가-힣]{1}\\d{4}$")
+    @ApiModelProperty(example = "1가1234")
+    private String carNumber;
 
-    public ModifyOwnerRequest() {}
+    @NotBlank
+    @Pattern(regexp = "^[0-9]*$")
+    @ApiModelProperty(example = "101")
+    private int villaNumber;
+
+
+    public ModifyTenantRequest() {}
 
     @Builder
-    public ModifyOwnerRequest(String phoneNumber, String loginId, String loginPassword) {
+    public ModifyTenantRequest(String villaIdNumber, String phoneNumber, String loginId, String carNumber, int villaNumber) {
+        this.villaIdNumber = villaIdNumber;
         this.phoneNumber = phoneNumber;
         this.loginId = loginId;
-        this.loginPassword = loginPassword;
+        this.carNumber = carNumber;
+        this.villaNumber = villaNumber;
     }
 }

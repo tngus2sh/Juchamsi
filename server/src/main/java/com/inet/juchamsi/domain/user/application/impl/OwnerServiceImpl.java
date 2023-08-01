@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.inet.juchamsi.domain.user.entity.Approve.MODIFY;
 import static com.inet.juchamsi.domain.user.entity.Approve.WAIT;
 import static com.inet.juchamsi.domain.user.entity.Grade.OWNER;
 import static com.inet.juchamsi.global.common.Active.ACTIVE;
@@ -46,6 +48,7 @@ public class OwnerServiceImpl implements OwnerService {
     private final ParkingLotService parkingLotService;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<OwnerResponse> showUser() {
@@ -116,7 +119,7 @@ public class OwnerServiceImpl implements OwnerService {
                 .villa(villa)
                 .phoneNumber(dto.getPhoneNumber())
                 .loginId(dto.getLoginId())
-                .loginPassword(dto.getLoginPassword())
+                .loginPassword(passwordEncoder.encode(dto.getLoginPassword()))
                 .name(dto.getName())
                 .grade(OWNER)
                 .approve(WAIT)
@@ -136,12 +139,20 @@ public class OwnerServiceImpl implements OwnerService {
         userRepository.updateRefreshToken(ownerId, password);
 
         User user = userRepository.findByLoginId(ownerId).get();
+        Villa targetVilla = user.getVilla();
+        Villa villa = Villa.builder()
+                .id(targetVilla.getId())
+                .name(targetVilla.getName())
+                .address(targetVilla.getAddress())
+                .idNumber(targetVilla.getIdNumber())
+                .totalCount(targetVilla.getTotalCount())
+                .build();
         return AdminOwnerLoginResponse.builder()
                 .tokenInfo(tokenInfo)
                 .grade(user.getGrade().name())
                 .loginId(user.getLoginId())
                 .name(user.getName())
-                .villa(user.getVilla())
+                .villa(villa)
                 .build();
     }
 
@@ -156,7 +167,6 @@ public class OwnerServiceImpl implements OwnerService {
         userRepository.updateRefreshToken(ownerId, "");
     }
 
-    // refactor: carNumber 제거, modify 시 enum MODIFY로 수정해야 함
     @Override
     public void modifyUser(ModifyOwnerRequest dto) {
         Optional<User> oUser = userRepository.findByLoginIdAndActive(dto.getLoginId(), ACTIVE);
@@ -169,13 +179,8 @@ public class OwnerServiceImpl implements OwnerService {
             throw new AlreadyExistException(User.class, phoneNumberId.get());
         }
 
-        // 빌라가 있는지 확인
-        Optional<Long> connectedVillaId = villaRepository.existIdNumberandActive(dto.getVillaIdNumber(), ACTIVE);
-        if (connectedVillaId.isEmpty()) {
-            throw new NotFoundException(Villa.class, dto.getLoginId());
-        }
-
-        userRepository.updateOwner(dto.getLoginId(), dto.getPhoneNumber(), dto.getCarNumber());
+        userRepository.updateOwner(dto.getLoginId(), dto.getPhoneNumber());
+        userRepository.updateApproveModify(dto.getLoginId(), MODIFY);
     }
 
     @Override

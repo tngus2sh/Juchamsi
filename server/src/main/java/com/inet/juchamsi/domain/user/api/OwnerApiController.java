@@ -59,7 +59,6 @@ public class OwnerApiController {
     }
 
     // 회원 전체 조회
-    // refactor: OwnerResponse가 아니라 TenantResponse여야 함
     @ApiOperation(value = "회원 전체 조회", notes = "집주인 권한의 모든 사용자들 목록을 조회한다")
     @GetMapping
     public ApiResult<List<OwnerResponse>> showUser() {
