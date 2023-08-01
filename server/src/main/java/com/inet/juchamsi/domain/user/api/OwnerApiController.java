@@ -133,37 +133,6 @@ public class OwnerApiController {
         }
     }
 
-    // 세입자 신규 회원가입 요청 목록
-    @ApiOperation(value = "세입자(tenant) 신규 회원가입 요청 목록", notes = "새롭게 회원가입 신청한 세입자 목록을 확인합니다")
-    @GetMapping("/tenant/new/{vill_id}")
-    public ApiResult<List<TenantRequestResponse>> showNewRequestTenant(@ApiParam(value = "villa-id") @PathVariable(value = "villa_id") Long villaId) {
-        try {
-            List<TenantRequestResponse> response = ownerService.showNewRequestTenant(villaId);
-            return OK(response);
-        }
-        catch(NotFoundException e) {
-            return ERROR("해당 빌라가 존재하지 않습니다.", HttpStatus.NO_CONTENT);
-        }
-    }
-
-    // 세입자 회원가입 요청 처리
-    @ApiOperation(value = "세입자(tenant) 회원가입 요청 관리", notes = "세입자의 회원가입 승인 여부를 결정합니다.")
-    @GetMapping("/{id}/{approve}")
-    public ApiResult<Void> manageApprove(
-            @ApiParam(value = "admin-id")
-            @PathVariable(value = "id") String tenantId,
-            @ApiParam(value = "approve-or-not")
-            @PathVariable(value = "approve") String approve
-    ) {
-        log.debug("admin={}, approve={}", tenantId, approve);
-        try {
-            ownerService.manageApprove(tenantId, Approve.valueOf(approve));
-            return OK(null);
-        } catch (NotFoundException e) {
-            return ERROR("해당 회원을 찾을 수가 없습니다.", HttpStatus.NO_CONTENT);
-        }
-    }
-
     // 회원 탈퇴
     @ApiOperation(value = "집주인 탈퇴", notes = "집주인이 회원 탈퇴를 합니다.")
     @DeleteMapping("/{id}")
