@@ -62,7 +62,7 @@ public class TenantServiceImpl implements TenantService {
         }
 
         Optional<Villa> findVilla = villaRepository.findById(connectedVillaId.get());
-        User user = User.createUser(findVilla.get(), request.getPhoneNumber(), request.getLoginId(), passwordEncoder.encode(request.getLoginPassword()), request.getName(), USER, request.getCarNumber(), request.getVillaNumber(), WAIT, ACTIVE, "USER");
+        User user = User.createUserTenant(findVilla.get(), request.getPhoneNumber(), request.getLoginId(), passwordEncoder.encode(request.getLoginPassword()), request.getName(), 0, USER, request.getCarNumber(), request.getVillaNumber(), WAIT, ACTIVE, "USER");
         User saveUser = userRepository.save(user);
 
         return saveUser.getId();
@@ -82,6 +82,7 @@ public class TenantServiceImpl implements TenantService {
                 .villaIdNumber(villa.getIdNumber())
                 .phoneNumber(user.getPhoneNumber())
                 .name(user.getName())
+                .totalMileage(user.getTotalMileage())
                 .carNumber(user.getCarNumber())
                 .villaNumber(user.getVillaNumber())
                 .build();
@@ -150,8 +151,13 @@ public class TenantServiceImpl implements TenantService {
 
         return TenantLoginResponse.builder()
                 .tokenInfo(tokenInfo)
+                .phoneNumber(user.getPhoneNumber())
                 .loginId(user.getLoginId())
                 .name(user.getName())
+                .totalMileage(user.getTotalMileage())
+                .carNumber(user.getCarNumber())
+                .villaNumber(user.getVillaNumber())
+                .approved(user.getApprove().name())
                 .villa(villa)
                 .build();
     }

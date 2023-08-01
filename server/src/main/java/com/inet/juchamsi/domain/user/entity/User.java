@@ -46,6 +46,9 @@ public class User extends TimeBaseEntity implements UserDetails {
     @Column(nullable = false, updatable = false, length = 20)
     private String name;
 
+    @Column(name = "total_mileage", nullable = false)
+    private int totalMileage;
+
     @Enumerated(STRING)
     @Column(nullable = false, updatable = false, length = 20)
     private Grade grade;
@@ -63,7 +66,7 @@ public class User extends TimeBaseEntity implements UserDetails {
     @Enumerated(STRING)
     @Column(length = 20)
     private Active active;
-    
+
     @Column(name = "refresh_token")
     private String refreshToken;
 
@@ -73,13 +76,14 @@ public class User extends TimeBaseEntity implements UserDetails {
     public User() {}
 
     @Builder
-    public User(Long id, Villa villa, String phoneNumber, String loginId, String loginPassword, String name, Grade grade, String carNumber, int villaNumber, Approve approve, Active active, String refreshToken, List<String> roles) {
+    public User(Long id, Villa villa, String phoneNumber, String loginId, String loginPassword, String name, int totalMileage, Grade grade, String carNumber, int villaNumber, Approve approve, Active active, String refreshToken, List<String> roles) {
         this.id = id;
         this.villa = villa;
         this.phoneNumber = phoneNumber;
         this.loginId = loginId;
         this.loginPassword = loginPassword;
         this.name = name;
+        this.totalMileage = totalMileage;
         this.grade = grade;
         this.carNumber = carNumber;
         this.villaNumber = villaNumber;
@@ -93,13 +97,14 @@ public class User extends TimeBaseEntity implements UserDetails {
     /*
         연관관계 편의 메서드
      */
-    public static User createUser(Villa villa, String phoneNumber, String loginId, String loginPassword, String name, Grade grade, String carNumber, int villaNumber, Approve approve, Active active, String role) {
+    public static User createUserTenant(Villa villa, String phoneNumber, String loginId, String loginPassword, String name, int totalMileage, Grade grade, String carNumber, int villaNumber, Approve approve, Active active, String role) {
         return User.builder()
                 .villa(villa)
                 .phoneNumber(phoneNumber)
                 .loginId(loginId)
                 .loginPassword(loginPassword)
                 .name(name)
+                .totalMileage(totalMileage)
                 .grade(grade)
                 .carNumber(carNumber)
                 .villaNumber(villaNumber)

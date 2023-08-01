@@ -12,6 +12,7 @@ public class TenantResponse {
     private String phoneNumber;
     private String loginId;
     private String name;
+    private int totalMileage;
     private String carNumber;
     private int villaNumber;
 
@@ -25,6 +26,7 @@ public class TenantResponse {
         this.phoneNumber = phoneNumber;
         this.loginId = loginId;
         this.name = name;
+        this.totalMileage = totalMileage;
         this.carNumber = carNumber;
         this.villaNumber = villaNumber;
     }
