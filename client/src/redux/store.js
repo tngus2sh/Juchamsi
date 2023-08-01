@@ -4,13 +4,19 @@ import formSlice from './formslice';
 import addressOpen from './addressOpen';
 import mobileauthlogin from './mobileauthlogin'
 <<<<<<< HEAD
+<<<<<<< HEAD
 import mobileMycarstatus from './mobileparking'
 =======
+=======
+>>>>>>> 900a47ebafb3058221e19406e7115d342661060e
 import webLoginInfo from './webLoginInfo';
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import storage from 'redux-persist/lib/storage';
 import { persistReducer, persistStore } from 'redux-persist';
 import thunk from 'redux-thunk';
+<<<<<<< HEAD
+>>>>>>> 900a47ebafb3058221e19406e7115d342661060e
+=======
 >>>>>>> 900a47ebafb3058221e19406e7115d342661060e
 
 const persistConfig = {
@@ -18,6 +24,7 @@ const persistConfig = {
   storage,
 }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 const store = configureStore({
   reducer: {
@@ -28,12 +35,17 @@ const store = configureStore({
     mycar:mobileMycarstatus,
   },
 =======
+=======
+>>>>>>> 900a47ebafb3058221e19406e7115d342661060e
 const rootReducer = combineReducers({
   form: formSlice,
   loginform: loginform,
   addressOpen: addressOpen,
   auth: mobileauthlogin,
   webInfo: persistReducer(persistConfig, webLoginInfo),
+<<<<<<< HEAD
+>>>>>>> 900a47ebafb3058221e19406e7115d342661060e
+=======
 >>>>>>> 900a47ebafb3058221e19406e7115d342661060e
 });
 

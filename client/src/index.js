@@ -10,6 +10,10 @@ import { PersistGate } from 'redux-persist/integration/react';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+  
+>>>>>>> 900a47ebafb3058221e19406e7115d342661060e
 =======
   
 >>>>>>> 900a47ebafb3058221e19406e7115d342661060e
@@ -19,6 +23,10 @@ root.render(
         </PersistGate>
     </Provider>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+  
+>>>>>>> 900a47ebafb3058221e19406e7115d342661060e
 =======
   
 >>>>>>> 900a47ebafb3058221e19406e7115d342661060e
