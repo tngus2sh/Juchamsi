@@ -3,12 +3,14 @@ package com.inet.juchamsi.domain.chat.application.impl;
 import com.inet.juchamsi.domain.chat.application.ChatService;
 import com.inet.juchamsi.domain.chat.dao.ChatPeopleRepository;
 import com.inet.juchamsi.domain.chat.dao.ChatRoomRepository;
+import com.inet.juchamsi.domain.chat.dao.MessageRepository;
 import com.inet.juchamsi.domain.chat.dto.request.ChatMessageRequest;
 import com.inet.juchamsi.domain.chat.dto.request.ChatRoomRequest;
 import com.inet.juchamsi.domain.chat.dto.request.SystemChatRoomRequest;
 import com.inet.juchamsi.domain.chat.dto.response.ChatRoomResponse;
 import com.inet.juchamsi.domain.chat.entity.ChatPeople;
 import com.inet.juchamsi.domain.chat.entity.ChatRoom;
+import com.inet.juchamsi.domain.chat.entity.Message;
 import com.inet.juchamsi.domain.chat.entity.Type;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.entity.User;
@@ -32,6 +34,7 @@ public class ChatServiceImpl implements ChatService {
     
     private final ChatRoomRepository chatRoomRepository;
     private final ChatPeopleRepository chatPeopleRepository;
+    private final MessageRepository messageRepository;
     private final UserRepository userRepository;
     
     // 채팅방 불러오기
@@ -64,8 +67,20 @@ public class ChatServiceImpl implements ChatService {
 
     // 메세지 저장
     @Override
-    public void saveMessage(ChatMessageRequest request) {
-        // 해당 유저의
+    public void createChat(String roomId, ChatMessageRequest request) {
+        String userId = request.getSenderId();
+        String message = request.getMessage();
+        // 채팅 참여 식별키를 가져와서 넣어야함
+        Optional<ChatPeople> chatPeople = chatPeopleRepository.findIdByRoomIdAndUserId(userId, roomId, ACTIVE, ALIVE);
+        if (chatPeople.isEmpty()) {
+            throw new NotFoundException(ChatRoom.class, roomId);
+        }
+
+        // 메세지 저장
+        messageRepository.save(Message.builder()
+                .chatPeople(chatPeople.get())
+                .content(message)
+                .build());
     }
 
     /* 유저간 채팅방 */
