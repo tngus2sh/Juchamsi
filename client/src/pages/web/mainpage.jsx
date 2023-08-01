@@ -1,32 +1,9 @@
-import { Button, Container, Divider, Tab } from "@mui/material";
-import React from "react";
+import { Box, Button, Container, Divider, Tab } from "@mui/material";
+import React, { useEffect } from "react";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import RoomRoundedIcon from "@mui/icons-material/RoomRounded";
-import Box from "@mui/material/Box";
-import PropTypes from "prop-types";
-import { alpha, styled } from "@mui/material/styles";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
-import TableSortLabel from "@mui/material/TableSortLabel";
-import Toolbar from "@mui/material/Toolbar";
-import Paper from "@mui/material/Paper";
-import Checkbox from "@mui/material/Checkbox";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
-import DeleteIcon from "@mui/icons-material/Delete";
-import FilterListIcon from "@mui/icons-material/FilterList";
-import { visuallyHidden } from "@mui/utils";
-import InputBase from "@mui/material/InputBase";
-import SearchIcon from "@mui/icons-material/Search";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -43,8 +20,12 @@ import DriveEtaIcon from "@mui/icons-material/DriveEta";
 import HistoryIcon from "@mui/icons-material/History";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import ResidentManagement from "../../components/main/resident";
-import Step2 from "../../components/signup/step2";
-import Step3 from "../../components/signup/step3";
+import NewTenant from "../../components/main/newTenant";
+import UpdateTenant from "../../components/main/updateTenant";
+import ParkingLotInfo from "../../components/main/parkingLotInfo";
+import ParkingLotHistory from "../../components/main/parkingLotHistory";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 const theme = createTheme({
   palette: {
@@ -54,9 +35,20 @@ const theme = createTheme({
   },
 });
 
-const mainStep = [<ResidentManagement />, <Step2 />, <Step3 />];
+const mainStep = [
+  <ResidentManagement />,
+  <NewTenant />,
+  <UpdateTenant />,
+  <ParkingLotInfo />,
+  <ParkingLotHistory />,
+];
 
 const MainPage = () => {
+  const navigate = useNavigate();
+  const ownerName = useSelector((state) => state.webInfo.name);
+  const roadAddress = useSelector((state) => state.webInfo.roadAddress);
+  const villaName = useSelector((state) => state.webInfo.villaName);
+  const identification = useSelector((state) => state.webInfo.identification);
   const [open1, setOpen1] = React.useState(true);
   const [open2, setOpen2] = React.useState(true);
   const [activeIndex, setActiveIndex] = React.useState(0);
@@ -78,6 +70,19 @@ const MainPage = () => {
 
   const handleClick1_3 = () => {
     setActiveIndex(2);
+  };
+  const handleClick2_1 = () => {
+    setActiveIndex(3);
+  };
+  const handleClick2_2 = () => {
+    setActiveIndex(4);
+  };
+
+  const handleLogout = () => {
+    // 로그아웃 처리
+    //store에 있는 데이터 삭제해야 함!
+
+    navigate("/");
   };
 
   return (
@@ -115,10 +120,13 @@ const MainPage = () => {
               <Typography
                 style={{ fontSize: "13px", color: "white", marginTop: "25px", marginLeft: "10px" }}
               >
-                김집주인님, 안녕하세요
+                {ownerName}님, 안녕하세요
               </Typography>
             </Grid>
           </Grid>
+          <Box>
+            <Button onClick={handleLogout}>로그아웃</Button>
+          </Box>
 
           <Grid container>
             <Grid item xs={3}>
@@ -131,14 +139,14 @@ const MainPage = () => {
                 빌라정보
               </Typography>
               <Typography style={{ fontSize: "13px", color: "white", marginTop: "10px" }}>
-                식별 코드 | h123o123me
+                식별 코드 | {identification}
               </Typography>
 
               <Typography style={{ fontSize: "13px", color: "white", marginTop: "3px" }}>
-                광주 광산구 하남산단6번로 107
+                {roadAddress}
               </Typography>
               <Typography style={{ fontSize: "13px", color: "white", marginTop: "3px" }}>
-                삼성 빌라
+                {villaName}
               </Typography>
             </Grid>
           </Grid>
@@ -226,7 +234,7 @@ const MainPage = () => {
                 <DriveEtaIcon sx={{ color: "white", fontSize: 30 }} />
               </ListItemIcon>
               <ListItemText
-                primary="주차 현황"
+                primary="주차 관리"
                 primaryTypographyProps={{ style: { fontSize: "15px" } }}
               />
               {open2 ? (
@@ -237,7 +245,16 @@ const MainPage = () => {
             </ListItemButton>
             <Collapse in={open2} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-                <ListItemButton sx={{ pl: 4 }}>
+                <ListItemButton sx={{ pl: 4 }} onClick={handleClick2_1}>
+                  <ListItemIcon>
+                    <DriveEtaIcon sx={{ color: "white", fontSize: 25 }} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="주차 현황"
+                    primaryTypographyProps={{ style: { fontSize: "13px" } }}
+                  />
+                </ListItemButton>
+                <ListItemButton sx={{ pl: 4 }} onClick={handleClick2_2}>
                   <ListItemIcon>
                     <HistoryIcon sx={{ color: "white", fontSize: 25 }} />
                   </ListItemIcon>

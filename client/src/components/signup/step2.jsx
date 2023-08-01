@@ -15,29 +15,37 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 const Step2 = () => {
   const [error, setError] = useState("");
   const [error2, setError2] = useState("");
-  const password = useSelector((state) => state.form.step2Data.password);
-  const password2 = useSelector((state) => state.form.step2Data.password2);
+  const [isMatch, setIsMatch] = useState(false);
+  const [isMatch2, setIsMatch2] = useState(false);
+  const loginPassword = useSelector((state) => state.form.step2Data.loginPassword);
+  const loginPassword2 = useSelector((state) => state.form.step2Data.loginPassword2);
   const [showPassword, setShowPassword] = useState(false);
 
   const dispatch = useDispatch();
 
   const handleIdChange = (e) => {
     const inputValue = e.target.value;
-    if (inputValue.length < 5 && inputValue.length > 0) {
-      setError("너무 짧습니다");
-    } else {
+    if (inputValue.length === 0) {
       setError("");
+    } else if (inputValue.length < 5) {
+      setError("너무 짧습니다");
+      setIsMatch(false);
+    } else {
+      setError("사용가능합니다.");
+      setIsMatch(true);
     }
-    dispatch(setStep2Data({ id: inputValue }));
+    dispatch(setStep2Data({ loginId: inputValue }));
   };
 
   const handleBlur = () => {
-    console.log(password);
-    console.log(password2);
-    if (password !== password2) {
+    if (loginPassword.trim() === "" || loginPassword2.trim() === "") {
+      setError2("");
+    } else if (loginPassword !== loginPassword2) {
       setError2("비밀번호가 일치하지 않습니다.");
+      setIsMatch2(false);
     } else {
       setError2("비밀번호가 일치합니다.");
+      setIsMatch2(true);
     }
   };
 
@@ -46,24 +54,24 @@ const Step2 = () => {
   };
 
   const handlePasswordChange = (e) => {
-    dispatch(setStep2Data({ password: e.target.value }));
+    dispatch(setStep2Data({ loginPassword: e.target.value }));
   };
 
   const handlePassword2Change = (e) => {
-    dispatch(setStep2Data({ password2: e.target.value }));
+    dispatch(setStep2Data({ loginPassword2: e.target.value }));
   };
   return (
     <React.Fragment>
       <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
         <Grid container>
-          <Grid item xs={8}>
-            <InputBox tag={"아이디"} name={"id"} onChange={handleIdChange} />
+          <Grid item xs={9}>
+            <InputBox tag={"아이디"} name={"loginId"} onChange={handleIdChange} />
             <Box sx={{ height: "18px" }}>
               {error && (
                 <Typography
                   style={{
                     fontSize: 10,
-                    color: "red",
+                    color: isMatch ? "green" : "red",
                     marginTop: 0,
                     marginLeft: 4,
                     textAlign: "left",
@@ -74,31 +82,17 @@ const Step2 = () => {
               )}
             </Box>
           </Grid>
-          <Grid item xs={4}>
-            <Button
-              variant="contained"
-              color="mainColor"
-              sx={{
-                height: "30px",
-                borderRadius: 10,
-                color: "white",
-                fontWeight: "bold",
-                fontSize: "12px",
-                marginTop: "23px",
-              }}
-            >
-              중복체크
-            </Button>
-          </Grid>
+          <Grid item xs={3}></Grid>
         </Grid>
       </Box>
       <Grid container>
         <Grid item xs={9}>
           <InputBox
             tag={"비밀번호"}
-            name={"password"}
+            name={"loginPassword"}
             type={showPassword ? "text" : "password"}
             onChange={handlePasswordChange}
+            onBlur={handleBlur}
           ></InputBox>
         </Grid>
         <Grid item xs={2}>
@@ -116,7 +110,7 @@ const Step2 = () => {
       </Box>
       <InputBox
         tag={"비밀번호확인"}
-        name={"password2"}
+        name={"loginPassword2"}
         type={showPassword ? "text" : "password"}
         onChange={handlePassword2Change}
         onBlur={handleBlur}
@@ -124,7 +118,13 @@ const Step2 = () => {
       <Box sx={{ height: "10px" }}>
         {error2 && (
           <Typography
-            style={{ fontSize: 10, color: "red", marginTop: 0, marginLeft: 4, textAlign: "left" }}
+            style={{
+              fontSize: 10,
+              color: isMatch2 ? "green" : "red",
+              marginTop: 0,
+              marginLeft: 4,
+              textAlign: "left",
+            }}
           >
             {error2}
           </Typography>
