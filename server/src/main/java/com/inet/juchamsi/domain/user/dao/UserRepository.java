@@ -42,8 +42,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<Void> updateTenant(@Param("loginId") String loginId, @Param("phoneNumber") String phoneNumber, @Param("carNumber") String carNumber, @Param("villaNumber") int villaNumber);
 
     @Modifying(clearAutomatically = true)
-    @Query("update User u set u.phoneNumber=:phoneNumber, u.carNumber=:carNumber where u.loginId=:loginId")
-    Optional<Void> updateOwner(@Param("loginId") String loginId, @Param("phoneNumber") String phoneNumberr, @Param("carNumber") String carNumber);
+    @Query("update User u set u.phoneNumber=:phoneNumber where u.loginId=:loginId")
+    Optional<Void> updateOwner(@Param("loginId") String loginId, @Param("phoneNumber") String phoneNumberr);
+
+    @Modifying(clearAutomatically = true)
+    @Query("update User u set u.approve=:approve where u.loginId=:loginId")
+    Optional<Void> updateApproveModify(@Param("loginId") String loginId, @Param("approve") Approve approve);
 
     @Modifying(clearAutomatically = true)
     @Query("update User u set u.phoneNumber=:phoneNumber where u.loginId=:loginId")

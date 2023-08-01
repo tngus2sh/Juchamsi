@@ -5,6 +5,7 @@ import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
+import com.inet.juchamsi.domain.user.dto.request.ModifyTenantRequest;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
 import com.inet.juchamsi.domain.user.dto.response.TenantResponse;
 import com.inet.juchamsi.domain.user.entity.Approve;
@@ -149,12 +150,10 @@ public class TenantServiceTest {
         User targetUser = insertUser(targetVilla);
 
         // when
-        CreateTenantRequest request = CreateTenantRequest.builder()
+        ModifyTenantRequest request = ModifyTenantRequest.builder()
                 .villaIdNumber("62218271")
                 .loginId("userId")
-                .loginPassword(passwordEncoder.encode("userPw123!"))
                 .phoneNumber("01098765432")
-                .name("김주참")
                 .carNumber("12가 1234")
                 .villaNumber(201)
                 .build();
@@ -173,12 +172,10 @@ public class TenantServiceTest {
         User targetUser = insertUser(targetVilla);
 
         // when
-        CreateTenantRequest request = CreateTenantRequest.builder()
+        ModifyTenantRequest request = ModifyTenantRequest.builder()
                 .villaIdNumber("62218271")
                 .loginId("leeUser")
-                .loginPassword(passwordEncoder.encode("userPw123!"))
                 .phoneNumber("01098765432")
-                .name("이주참")
                 .carNumber("12가 1234")
                 .villaNumber(201)
                 .build();
@@ -198,12 +195,10 @@ public class TenantServiceTest {
         User secondUser = compareUser(targetVilla);
 
         // when
-        CreateTenantRequest request = CreateTenantRequest.builder()
+        ModifyTenantRequest request = ModifyTenantRequest.builder()
                 .villaIdNumber("62218271")
                 .loginId("userId")
-                .loginPassword(passwordEncoder.encode("userPw123!"))
                 .phoneNumber("01098765432")
-                .name("김주참")
                 .carNumber("12가 1234")
                 .villaNumber(201)
                 .build();
@@ -222,12 +217,10 @@ public class TenantServiceTest {
         User targetUser = insertUser(targetVilla);
 
         // when
-        CreateTenantRequest request = CreateTenantRequest.builder()
+        ModifyTenantRequest request = ModifyTenantRequest.builder()
                 .villaIdNumber("6220-271")
                 .loginId("userId")
-                .loginPassword(passwordEncoder.encode("userPw123!"))
                 .phoneNumber("01012345678")
-                .name("김주참")
                 .carNumber("12가 1234")
                 .villaNumber(201)
                 .build();

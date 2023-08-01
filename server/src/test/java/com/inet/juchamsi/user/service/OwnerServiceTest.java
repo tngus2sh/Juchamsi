@@ -2,10 +2,7 @@ package com.inet.juchamsi.user.service;
 
 import com.inet.juchamsi.domain.user.application.OwnerService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
-import com.inet.juchamsi.domain.user.dto.request.CreateAdminRequest;
-import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
-import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
-import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
+import com.inet.juchamsi.domain.user.dto.request.*;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
 import com.inet.juchamsi.domain.user.dto.response.TenantRequestResponse;
 import com.inet.juchamsi.domain.user.entity.Approve;
@@ -145,15 +142,10 @@ public class OwnerServiceTest {
         User targetUser = insertUser(targetVilla);
 
         // when
-        CreateOwnerRequest request = CreateOwnerRequest.builder()
-                .villaIdNumber("62218271")
+        ModifyOwnerRequest request = ModifyOwnerRequest.builder()
                 .loginId("ownerId")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
                 .phoneNumber("01098765432")
-                .name("김주참")
-                .grade(Grade.OWNER.name())
-                .carNumber("12가 1234")
-                .villaNumber(201)
                 .build();
         ownerService.modifyUser(request);
 
@@ -170,15 +162,10 @@ public class OwnerServiceTest {
         User targetUser = insertUser(targetVilla);
 
         // when
-        CreateOwnerRequest request = CreateOwnerRequest.builder()
-                .villaIdNumber("62218271")
+        ModifyOwnerRequest request = ModifyOwnerRequest.builder()
                 .loginId("leeAdmin")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
                 .phoneNumber("01098765432")
-                .name("이주참")
-                .grade(Grade.OWNER.name())
-                .carNumber("12가 1234")
-                .villaNumber(201)
                 .build();
 
         // then
@@ -196,15 +183,10 @@ public class OwnerServiceTest {
         User secondUser = compareUser(targetVilla);
 
         // when
-        CreateOwnerRequest request = CreateOwnerRequest.builder()
-                .villaIdNumber("62218271")
+        ModifyOwnerRequest request = ModifyOwnerRequest.builder()
                 .loginId("ownerId")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
                 .phoneNumber("01098765432")
-                .name("김주참")
-                .grade(Grade.OWNER.name())
-                .carNumber("12가 1234")
-                .villaNumber(201)
                 .build();
 
         // then
@@ -221,14 +203,10 @@ public class OwnerServiceTest {
         User targetUser = insertUser(targetVilla);
 
         // when
-        CreateOwnerRequest request = CreateOwnerRequest.builder()
-                .villaIdNumber("6220-271")
+        ModifyOwnerRequest request = ModifyOwnerRequest.builder()
                 .loginId("ownerId")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
                 .phoneNumber("01012345678")
-                .name("김주참")
-                .carNumber("12가 1234")
-                .villaNumber(201)
                 .build();
 
         // then

@@ -3,10 +3,13 @@ package com.inet.juchamsi.domain.user.api;
 import com.inet.juchamsi.domain.user.application.OwnerService;
 import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
+import com.inet.juchamsi.domain.user.dto.request.ModifyOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminOwnerLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
 import com.inet.juchamsi.domain.user.dto.response.TenantRequestResponse;
 import com.inet.juchamsi.domain.user.entity.Approve;
+import com.inet.juchamsi.domain.villa.application.VillaService;
+import com.inet.juchamsi.domain.villa.dto.request.CreateVillaRequest;
 import com.inet.juchamsi.global.api.ApiResult;
 import com.inet.juchamsi.global.error.AlreadyExistException;
 import com.inet.juchamsi.global.error.NotFoundException;
@@ -17,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +36,7 @@ import static com.inet.juchamsi.global.api.ApiResult.OK;
 public class OwnerApiController {
 
     private final OwnerService ownerService;
+    private final VillaService villaService;
 
     // 회원가입
     @ApiOperation(value = "집주인 회원 가입", notes = "신규 집주인 회원을 생성합니다.")
@@ -115,7 +120,7 @@ public class OwnerApiController {
     @PutMapping
     public ApiResult<Void> modifyUser(
             @ApiParam(value = "owner-dto")
-            @RequestBody CreateOwnerRequest request
+            @RequestBody ModifyOwnerRequest request
     ) {
         log.debug("CreateOwnerRequest={}", request);
         try {
