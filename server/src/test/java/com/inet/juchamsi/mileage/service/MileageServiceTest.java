@@ -41,6 +41,21 @@ public class MileageServiceTest {
 
 
     @Test
+    @DisplayName("마일리지 등록 ## 적립")
+    void getMileage() {
+        // given
+        Villa targetVilla = insertVilla();
+        User targetUser = insertUser();
+        Mileage targetMileage = insertMileage(targetUser);
+        Long userId = targetUser.getId();
+
+//        GetMileageRequest request = GEtMileageRequest
+
+        // when
+//        mileageService.showMileage();
+    }
+
+    @Test
     @DisplayName("마일리지 조회")
     void showMileage() {
         // given
