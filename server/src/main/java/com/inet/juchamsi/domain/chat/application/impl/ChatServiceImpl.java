@@ -3,6 +3,7 @@ package com.inet.juchamsi.domain.chat.application.impl;
 import com.inet.juchamsi.domain.chat.application.ChatService;
 import com.inet.juchamsi.domain.chat.dao.ChatPeopleRepository;
 import com.inet.juchamsi.domain.chat.dao.ChatRoomRepository;
+import com.inet.juchamsi.domain.chat.dto.request.ChatMessageRequest;
 import com.inet.juchamsi.domain.chat.dto.request.ChatRoomRequest;
 import com.inet.juchamsi.domain.chat.dto.request.SystemChatRoomRequest;
 import com.inet.juchamsi.domain.chat.dto.response.ChatRoomResponse;
@@ -59,6 +60,12 @@ public class ChatServiceImpl implements ChatService {
                 .roomId(result.get().getRoomId())
                 .roomName(result.get().getRoomName())
                 .build();
+    }
+
+    // 메세지 저장
+    @Override
+    public void saveMessage(ChatMessageRequest request) {
+        // 해당 유저의
     }
 
     /* 유저간 채팅방 */
