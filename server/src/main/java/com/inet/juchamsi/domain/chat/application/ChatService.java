@@ -1,5 +1,6 @@
 package com.inet.juchamsi.domain.chat.application;
 
+import com.inet.juchamsi.domain.chat.dto.request.ChatRoomRequest;
 import com.inet.juchamsi.domain.chat.dto.request.SystemChatRoomRequest;
 import com.inet.juchamsi.domain.chat.dto.response.ChatRoomResponse;
 import com.inet.juchamsi.domain.chat.entity.Type;
@@ -13,7 +14,7 @@ public interface ChatService {
     public ChatRoomResponse showDetailChatRoom(String roomId);
 
     /* 사용자끼리 대화방 */
-    public ChatRoomResponse createRoom(String name);
+    public ChatRoomResponse createRoom(ChatRoomRequest request);
 
     /* 시스템 대화방 */
     public ChatRoomResponse createSystemRoom(SystemChatRoomRequest request);
