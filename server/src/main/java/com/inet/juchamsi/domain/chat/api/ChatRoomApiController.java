@@ -54,7 +54,6 @@ public class ChatRoomApiController {
 
     /* 유저간 채팅방 */
     // 채팅방 생성
-    // TODO: 채팅방 생성시 상대방과 현재 유저를 연결시켜야 함
     // TODO: 채팅방 이름이 상대방 이름이 되도록 해야함
     @ApiOperation(value = "유저간 채팅방 생성", notes = "request에 담겨진 userIdOne과 userIdTwo에 해당하는 회원의 채팅방을 개설한다.")
     @PostMapping("/room")
@@ -74,8 +73,6 @@ public class ChatRoomApiController {
 
     /* 시스템 채팅방 */
     // 시스템 채팅방 생성
-    // TODO: 시스템 채팅방 생성시에는 상대방 유저가 시스템이므로 상대방 설정을 어떻게 해야할지 생각할 것!
-    // TODO: 시스템 채팅방 생성시기 정하기
     @ApiOperation(value = "시스템 채팅방 생성", notes = "request에 담겨진 userId에 해당하는 회원의 채팅방을 개설한다.")
     @PostMapping("/system/room")
     public ApiResult<ChatRoomResponse> createSystemChatRoom(
