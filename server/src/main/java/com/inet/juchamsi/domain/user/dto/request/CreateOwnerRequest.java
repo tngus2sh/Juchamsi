@@ -14,52 +14,69 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class CreateOwnerRequest {
     
-    @NotBlank
-    @Pattern(regexp = "^([0-9]+-[0-9]+)|([0-9]+)$")
-    @ApiModelProperty(example = "12")
-    private String villaIdNumber;
+//    @NotBlank
+//    @Pattern(regexp = "^([0-9]+-[0-9]+)|([0-9]+)$")
+//    @ApiModelProperty(example = "12")
+//    private String villaIdNumber;
+
     @NotBlank
     @Size(min = 13, max = 13)
     @Pattern(regexp = "^01(?:0|1|[6-9])\\d{3,4}\\d{4}$")
     @ApiModelProperty(example = "01012345678")
     private String phoneNumber;
+
     @NotBlank
     @Size(min = 6, max = 15)
     @Pattern(regexp = "^[a-zA-Z0-9]*$")
     @ApiModelProperty(example = "userid")
     private String loginId;
+
     @NotBlank
     @Size(min = 8, max = 16)
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$")
     @ApiModelProperty(example = "juchamsi1234!")
     private String loginPassword;
+
     @NotBlank
     @Size(max = 20)
     @Pattern(regexp = "^[a-zA-Z가-힣]*$")
     @ApiModelProperty(example = "ju chamsi")
     private String name;
+
     @NotBlank
-    @ApiModelProperty(example = "USER")
-    private String grade;
+    @Size(max = 100)
+    @Pattern(regexp = "^[a-zA-Z0-9가-힣.,-/(/)]*$")
+    @ApiModelProperty(example = "삼성 빌라")
+    private String villaName;
+
     @NotBlank
-    @Size(max = 15)
-    @Pattern(regexp = "^\\d{1,3}[가-힣]{1}\\d{4}$")
-    @ApiModelProperty(example = "1가1234")
-    private String carNumber;
+    @Pattern(regexp = "^[a-zA-Z0-9가-힣.,-/(/)]*$")
+    @ApiModelProperty(example = "광주 광산구 하남산단6번로 107")
+    private String roadAddress;
+
+    @NotBlank
+    @ApiModelProperty(example = "오선동 271")
+    private String regionAddress;
+
+    @NotBlank
+    @Pattern(regexp = "^[0-9]+$")
+    @ApiModelProperty(example = "62218")
+    private String roadZipCode;
+
     @Range(min = 1)
-    @Pattern(regexp = "^[0-9]*$")
-    @ApiModelProperty(example = "101")
-    private int villaNumber;
+    @ApiModelProperty(example = "3")
+    private int parkingLotCol;
 
     @Builder
-    public CreateOwnerRequest(String villaIdNumber, String phoneNumber, String loginId, String loginPassword, String name, String grade, String carNumber, int villaNumber) {
-        this.villaIdNumber = villaIdNumber;
+    public CreateOwnerRequest(String phoneNumber, String loginId, String loginPassword, String name, String villaName, String roadAddress, String regionAddress, String roadZipCode, int parkingLotCol) {
         this.phoneNumber = phoneNumber;
         this.loginId = loginId;
         this.loginPassword = loginPassword;
         this.name = name;
-        this.grade = grade;
-        this.carNumber = carNumber;
-        this.villaNumber = villaNumber;
+        this.villaName = villaName;
+        this.roadAddress = roadAddress;
+        this.regionAddress = regionAddress;
+        this.roadZipCode = roadZipCode;
+        this.parkingLotCol = parkingLotCol;
     }
 }
