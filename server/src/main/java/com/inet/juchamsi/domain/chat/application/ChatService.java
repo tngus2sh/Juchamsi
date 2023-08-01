@@ -15,7 +15,7 @@ public interface ChatService {
     public ChatRoomResponse showDetailChatRoom(String roomId);
 
     // 메세지 저장
-    public void saveMessage(ChatMessageRequest request);
+    public void createChat(String roomId, ChatMessageRequest request);
 
     /* 사용자끼리 대화방 */
     // 대화방 생성
