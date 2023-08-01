@@ -76,4 +76,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u from User u where u.villa=:villa and u.approve=:approve")
     List<User> findNewRequestTenant(@Param("villa") Villa villa, @Param("approve") Approve approve);
+
+    @Modifying(clearAutomatically = true)
+    @Query("update User u set u.totalMileage=u.totalMileage + :point where u.loginId=:loginId")
+    Optional<Void> getMileage(@Param("loginId") String loginId, @Param("point") int point);
 }

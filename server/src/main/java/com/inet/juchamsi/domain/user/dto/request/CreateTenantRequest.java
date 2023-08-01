@@ -3,6 +3,7 @@ package com.inet.juchamsi.domain.user.dto.request;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Data;
+import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -46,8 +47,10 @@ public class CreateTenantRequest {
     @ApiModelProperty(example = "1가1234")
     private String carNumber;
 
-    @NotBlank
-    @Pattern(regexp = "^[0-9]*$")
+    // refactor
+//    @NotBlank
+//    @Pattern(regexp = "^[0-9]*$")
+    @Range(min = 1)
     @ApiModelProperty(example = "101")
     private int villaNumber;
 
