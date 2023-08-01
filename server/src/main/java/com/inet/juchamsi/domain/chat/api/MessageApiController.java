@@ -28,7 +28,8 @@ public class MessageApiController {
         if (ChatMessageRequest.MessageType.ENTER.equals(request.getType())) {
             request.setMessage(request.getSender() + "님이 입장하셨습니다.");
         }
-        sendingOperations.convertAndSend("/topic/chat/room/"+ request.getRoomId(),request);
+        // topic-1대다, queue-1대1
+        sendingOperations.convertAndSend("/queue/chat/room/"+ request.getRoomId(),request);
         return OK(null);
     }
 }
