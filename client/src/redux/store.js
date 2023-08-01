@@ -3,14 +3,16 @@ import loginform from './loginform';
 import formSlice from './formslice';
 import addressOpen from './addressOpen';
 import mobileauthlogin from './mobileauthlogin'
+import mobileMycarstatus from './mobileparking'
 
 
 const store = configureStore({
   reducer: {
     login: loginform,
-     form: formSlice,
+    form: formSlice,
     addressOpen: addressOpen,
-    auth:mobileauthlogin
+    auth:mobileauthlogin,
+    mycar:mobileMycarstatus,
   },
 });
 

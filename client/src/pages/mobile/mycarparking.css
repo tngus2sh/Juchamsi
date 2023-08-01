@@ -1,0 +1,61 @@
+.mycarparkingbox {
+    position: absolute;
+    top:28%;
+    left:10%;
+}
+
+.mycarparkingbox1 {
+    position: absolute;
+    top:25%;
+    left:10%;
+    border-radius: 8px 0 0 8px; /* 왼쪽 위, 왼쪽 아래를 둥글게 */
+}
+
+.mycarparkingbox2 {
+    position: absolute;
+    top:25%;
+    left:10%;
+    border-radius: 8px 0 0 8px; /* 왼쪽 위, 왼쪽 아래를 둥글게 */
+    background-color: #33907C;
+}
+
+.mycarparkingbox3 {
+    position: absolute;
+    top:25%;
+    left:50%;
+    border-radius: 0 8px 8px 0; /* 오른쪽 위, 오른쪽 아래를 둥글게 */
+}
+
+.mycarparkingbox4 {
+    position: absolute;
+    top:25%;
+    left:50%;
+    border-radius: 0 8px 8px 0; /* 오른쪽 위, 오른쪽 아래를 둥글게 */
+    background-color: #33907C;
+}
+
+.othercarouttimebox {
+    position: absolute;
+    top:40%;
+    left:50%;
+    border-radius: 8px; /* 오른쪽 위, 오른쪽 아래를 둥글게 */
+}
+
+.datetiembtn{
+    position: absolute;
+    width: 100px;
+    height: 30px;
+    top:80%;
+    left:35%;
+    background: #33907C;
+    opacity: 0.8;
+    border-radius: 32px;
+}
+
+.datetimebtntext {
+    position: absolute;
+    top:25%;
+    left:30%;
+    color: aliceblue;
+    font-size: 18px;
+}

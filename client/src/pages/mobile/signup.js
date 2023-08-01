@@ -14,6 +14,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Checkbox from '@mui/material/Checkbox';
+import axios from 'axios';
 
 function Signup() {
 
@@ -88,7 +89,7 @@ function Signup() {
     const [privacyCheck, setPrivacyCheck] =  React.useState(false)
     const handleOpenPrivacyOpen = () => setPrivacyCheck(true)
     const handleClosePrivacyClose = () => setPrivacyCheck(false)
-
+    const [phoneCheckingNumber, setPhoneCheckingNumber] = useState(null);
 
     // 개인정보 이용약관 체크 여부를 저장하는 상태
     const [isPrivacyAgreed, setIsPrivacyAgreed] = useState(false);
@@ -138,32 +139,61 @@ function Signup() {
 
     // 아이디 중복체크 버튼 클릭 이벤트 핸들러
     const handleOpenCheckID = () => {
+      let idcheckresult = null;
       if (isLoginButtonClickable === true) {
         // idcheckresult에 따라서 '사용가능or중복' 여부 판별해서 보여주는 모달창 결정
-        // true는 사용가능, false는 중복
-        const idcheckresult = true;
-        if (idcheckresult === true) {
-          handleOpenIDFalseCheck();
-          // 중복체크가 완료되었으므로 isIdChecked를 true로 설정
-          setIsIdChecked(true);
-        } else {
-          handleOpenIDTrueCheck();
-          // 중복체크 결과가 false일 경우 isIdChecked를 false로 설정
-          setIsIdChecked(false);
-        }
+        // true는 중복, false는 사용가능
+        axios({
+          method:'get',
+          url:`https://afba-121-178-98-20.ngrok-free.app/user/id/${id}`,
+          data:{
+            "id": id,
+          },
+        })
+        .then((res) => {
+          console.log(res.data.success)
+          if (res.data.success === true) {
+            handleOpenIDFalseCheck();
+            // 중복체크가 완료되었으므로 isIdChecked를 true로 설정
+            setIsIdChecked(true);
+          } else {
+            handleOpenIDTrueCheck();
+            // 중복체크 결과가 false일 경우 isIdChecked를 false로 설정
+            setIsIdChecked(false); 
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
       }
     };
 
     // 핸드폰번호 인증버튼 사용가능여부 판별
     const handleOpenCheckPhonenumber = () => {
         if (isPhonenumberButtonClickable === true) {
+          axios({
+            method:'post',
+            url:'https://afba-121-178-98-20.ngrok-free.app/sms/check',
+            data:{
+              "name": username,
+              "to": phonenumber
+            },
+          })
+          .then((res) => {
+            console.log(res.data.response)
+            setPhoneCheckingNumber(res.data.response);
             handleOpenPhonenumberCheck()
+          })
+          .catch((err) => {
+            console.log(err)
+          })
         }
     }
 
 // 핸드폰 인증 모달 확인버튼 클릭 이벤트 핸들러
 const handlePhoneModalConfirmClick = () => {
-  if (phonechecknumber === '111111') {
+  console.log(phoneCheckingNumber)
+  if (phonechecknumber === phoneCheckingNumber) {
     // 인증이 성공한 경우
     // 기존모달 종료
     handleClosePhoneCheck()
@@ -194,7 +224,25 @@ const handlePhoneModalConfirmClick = () => {
         phonenumbecheck === true &&
         isPrivacyAgreed === true
       ) {
-        navigate('/Mobile/Login');
+        axios({
+          method:'post',
+          url:'https://afba-121-178-98-20.ngrok-free.app/tenant',
+          data:{
+            "carNumber": carnumber,
+            "loginId": id,
+            "loginPassword": password1,
+            "name": username,
+            "phoneNumber": phonenumber,
+            "villaIdNumber": villranumber,
+            "villaNumber": Number(housenumber)
+          },
+        })
+        .then(() => {
+          navigate('/Mobile/Login')
+        })
+        .catch((err) => {
+          console.log(err)
+        })
       } else {
         if (password1.trim() !== password2.trim()) {
           setPasswordChecking(true);
@@ -276,10 +324,10 @@ const handlePhoneModalConfirmClick = () => {
     // 빌라 식별번호 입력값이 변경될 때 호출되는 이벤트 핸들러
     const handlevillranumberChange = (e) => {
     // 영어 대소문자, 숫자만 입력 가능하도록 정규식을 이용하여 유효성 검사
-    const onlyvillranumber = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
+    const onlyvillranumber = e.target.value.replace(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,17}$/, '');
 
     // 최대 15자까지만 입력 가능하도록 제한
-    const villranumbermaxLength = 10;
+    const villranumbermaxLength = 15;
     const villranumbertruncatedValue = onlyvillranumber.slice(0, villranumbermaxLength);
 
     setVillraNumber(villranumbertruncatedValue);
