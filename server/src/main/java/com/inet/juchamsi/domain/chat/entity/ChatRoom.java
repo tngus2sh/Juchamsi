@@ -28,25 +28,31 @@ public class ChatRoom extends TimeBaseEntity {
     @Enumerated(STRING)
     @Column(nullable = false, length = 100)
     private Status status;
-
+    
+    @Enumerated(STRING)
+    @Column(nullable = false, length = 100)
+    private Type type;
+    
     @Column(name = "room_id", nullable = false)
     private String roomId;
 
     @Column(name = "room_name", nullable = false)
     private String roomName;
-    
+
     @Builder
-    public ChatRoom(Long id, Status status, String roomId, String roomName) {
+    public ChatRoom(Long id, Status status, Type type, String roomId, String roomName) {
         this.id = id;
         this.status = status;
+        this.type = type;
         this.roomId = roomId;
         this.roomName = roomName;
     }
 
-    public static ChatRoom create(String roomName) {
+    public static ChatRoom create(String roomName, Type type) {
         String roomId = UUID.randomUUID().toString();
         return ChatRoom.builder()
                 .status(ALIVE)
+                .type(type)
                 .roomId(roomId)
                 .roomName(roomName)
                 .build();
