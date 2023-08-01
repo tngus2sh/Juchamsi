@@ -81,12 +81,6 @@ public class SmsServiceImpl implements SmsService {
 
     @Override
     public String sendSmsToCheckUser(MessageRequest messageRequest) throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
-        String name = messageRequest.getName();
-        String phoneNumber = messageRequest.getTo();
-
-        userRepository.findByNameAndPhone(name, phoneNumber)
-                .orElseThrow(() ->
-                        new NotFoundException("회원이 존재하지 않습니다.", name));
 
         String time = Long.toString(System.currentTimeMillis());
 

@@ -42,8 +42,6 @@ public class SmsApiController {
         try {
             String cerNum = smsService.sendSmsToCheckUser(request);
             return OK(cerNum);
-        } catch (NotFoundException e) {
-            return ERROR("회원이 존재하지 않습니다.", HttpStatus.NO_CONTENT);
         } catch (UnsupportedEncodingException e) {
             return ERROR("지원되지 않는 인코딩입니다.", HttpStatus.BAD_REQUEST);
         } catch (URISyntaxException e) {
