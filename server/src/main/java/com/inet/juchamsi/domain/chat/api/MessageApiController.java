@@ -31,9 +31,8 @@ public class MessageApiController {
         // topic-1대다, queue-1대1
         sendingOperations.convertAndSend("/topic/chat/room/"+ request.getRoomId(),request);
         
-        // TODO: 채팅방 유저 정보 저장
-        
         // TODO: 메세지 내용 저장
+
         
         return OK(null);
     }
