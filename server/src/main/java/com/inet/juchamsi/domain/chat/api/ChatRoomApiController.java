@@ -2,6 +2,7 @@ package com.inet.juchamsi.domain.chat.api;
 
 import com.inet.juchamsi.domain.chat.application.ChatService;
 import com.inet.juchamsi.domain.chat.dto.request.ChatRoomRequest;
+import com.inet.juchamsi.domain.chat.dto.request.SystemChatRoomRequest;
 import com.inet.juchamsi.domain.chat.dto.response.ChatRoomResponse;
 import com.inet.juchamsi.global.api.ApiResult;
 import io.swagger.annotations.Api;
@@ -36,6 +37,7 @@ public class ChatRoomApiController {
         return OK(chatService.showChatRoom(loginId));
     }
 
+    /* 유저간 채팅방 */
     // 채팅방 생성
     // TODO: 채팅방 생성시 상대방과 현재 유저를 연결시켜야 함
     // TODO: 채팅방 이름이 상대방 이름이 되도록 해야함
@@ -56,11 +58,17 @@ public class ChatRoomApiController {
         return OK(chatService.showDetailChatRoom(roomId));
     }
 
+    /* 시스템 채팅방 */
     // 시스템 채팅방 생성
     // TODO: 시스템 채팅방 생성시에는 상대방 유저가 시스템이므로 상대방 설정을 어떻게 해야할지 생각할 것!
+    // TODO: 시스템 채팅방 생성시기 정하기
+    @ApiOperation(value = "시스템 채팅방 생성", notes = "request에 담겨진 userId에 해당하는 회원의 채팅방을 개설한다.")
     @PostMapping("/system/room")
-    public ApiResult<ChatRoomResponse> createSystemChatRoom() {
+    public ApiResult<ChatRoomResponse> createSystemChatRoom(
+            @ApiParam(value = "userId")
+            @RequestBody SystemChatRoomRequest request
+    ) {
         log.debug("# post createSystemChatRoom");
-        return OK(chatService.createSystemRoom());
+        return OK(chatService.createSystemRoom(request));
     }
 }
