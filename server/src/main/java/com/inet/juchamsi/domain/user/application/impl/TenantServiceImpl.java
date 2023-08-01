@@ -6,7 +6,9 @@ import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.dto.request.ModifyTenantRequest;
 import com.inet.juchamsi.domain.user.dto.response.TenantLoginResponse;
+import com.inet.juchamsi.domain.user.dto.response.TenantRequestResponse;
 import com.inet.juchamsi.domain.user.dto.response.TenantResponse;
+import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.domain.villa.dao.VillaRepository;
 import com.inet.juchamsi.domain.villa.entity.Villa;
@@ -67,31 +69,6 @@ public class TenantServiceImpl implements TenantService {
     }
 
     @Override
-    public List<TenantResponse> showUser(Long villaId) {
-        Optional<Villa> targetVilla = villaRepository.findById(villaId);
-        if(!targetVilla.isPresent()) {
-            throw new NotFoundException(Villa.class, villaId);
-        }
-
-        List<User> userList = userRepository.findVillaTenant(targetVilla.get(), APPROVE, ACTIVE, USER);
-        List<TenantResponse> response = new ArrayList<>();
-
-        for (User user : userList) {
-            TenantResponse tenantResponse = TenantResponse.builder()
-                    .id(user.getId())
-                    .villaIdNumber(user.getVilla().getIdNumber())
-                    .phoneNumber(user.getPhoneNumber())
-                    .name(user.getName())
-                    .carNumber(user.getCarNumber())
-                    .villaNumber(user.getVillaNumber())
-                    .build();
-
-            response.add(tenantResponse);
-        }
-        return response;
-    }
-
-    @Override
     public TenantResponse showDetailUser(String tenantId) {
         Optional<User> targetUser = userRepository.findByLoginId(tenantId);
         if (targetUser.isEmpty()) {
@@ -108,6 +85,44 @@ public class TenantServiceImpl implements TenantService {
                 .carNumber(user.getCarNumber())
                 .villaNumber(user.getVillaNumber())
                 .build();
+    }
+
+    @Override
+    public List<TenantResponse> showApproveTenant(Long villaId, Approve approve) {
+        Optional<Villa> targetVilla = villaRepository.findById(villaId);
+        if(!targetVilla.isPresent()) {
+            throw new NotFoundException(Villa.class, villaId);
+        }
+
+        List<User> userList = userRepository.findVillaTenant(targetVilla.get(), approve, ACTIVE, USER);
+        List<TenantResponse> response = new ArrayList<>();
+
+        for (User user : userList) {
+            TenantResponse tenantResponse = TenantResponse.builder()
+                    .id(user.getId())
+                    .villaId(user.getVilla().getId())
+                    .villaIdNumber(user.getVilla().getIdNumber())
+                    .phoneNumber(user.getPhoneNumber())
+                    .loginId(user.getLoginId())
+                    .name(user.getName())
+                    .carNumber(user.getCarNumber())
+                    .villaNumber(user.getVillaNumber())
+                    .build();
+
+            response.add(tenantResponse);
+        }
+        return response;
+    }
+
+    @Override
+    public void manageApprove(String tenantId, Approve approve) {
+        Optional<Long> tenantLoginId = userRepository.existLoginId(tenantId);
+        if (tenantLoginId.isEmpty()) {
+            throw new NotFoundException(User.class, tenantId);
+        }
+
+        // 승인 상태 수정
+        userRepository.updateApprove(tenantId, approve);
     }
 
     @Override
