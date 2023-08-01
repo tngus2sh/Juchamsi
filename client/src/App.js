@@ -49,11 +49,8 @@ function App() {
               <Route path="/Mobile/Findid/Result" element={<MobileFindResultpage />}/>
               <Route path="/Mobile/Findpw" element={<MobileFindPwPage />}/>
               <Route path="/Mobile/Signup" element={<MobileSignupPage />}/>
-<<<<<<< HEAD
               <Route path="/Mobile/Parkinglot" element={<MobileParkinglogPage />}/>
-=======
                <Route path="/mainPage" element={ <WebMainPage/>} />
->>>>>>> 82d03000684a18a7e021aa7183ff5c966e597d72
           </Routes>
           </BrowserRouter>
     </div>

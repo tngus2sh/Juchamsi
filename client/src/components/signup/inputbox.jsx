@@ -21,6 +21,7 @@ function Inputbox(props) {
         value={props.value}
         onChange={props.onChange}
         onBlur={props.onBlur}
+        disabled={props.disabled}
         inputProps={{
           style: {
             height: props.height,

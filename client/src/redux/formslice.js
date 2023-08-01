@@ -6,15 +6,16 @@ const initialState = {
         phoneNumber: '',
     },
     step2Data: {
-      id: '',
-      password: '',
-      password2: ''
+      loginId: '',
+      loginPassword: '',
+      loginPassword2: ''
   },
     step3Data: {
-      zipCode: '',
-      address: '',
-      jibunAddress:'',
+      roadZipCode : '',
+      roadAddress : '',
+      regionAddress :'',
       villaName: '',
+      parkingLotCol: '',
   },
 };
 
@@ -34,5 +35,5 @@ const formSlice = createSlice({
   },
 });
 
-export const { setStep1Data, setStep2Data, setStep3Data } = formSlice.actions;
+export const { setStep1Data, setStep2Data, setStep3Data} = formSlice.actions;
 export default formSlice.reducer;

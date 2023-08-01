@@ -1,17 +1,31 @@
-import { configureStore } from '@reduxjs/toolkit';
+
 import loginform from './loginform';
 import formSlice from './formslice';
 import addressOpen from './addressOpen';
 import mobileauthlogin from './mobileauthlogin'
+import webLoginInfo from './webLoginInfo';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import storage from 'redux-persist/lib/storage';
+import { persistReducer, persistStore } from 'redux-persist';
+import thunk from 'redux-thunk';
 
+const persistConfig = {
+  key: 'root',
+  storage,
+}
 
-const store = configureStore({
-  reducer: {
-    login: loginform,
-     form: formSlice,
-    addressOpen: addressOpen,
-    auth:mobileauthlogin
-  },
+const rootReducer = combineReducers({
+  form: formSlice,
+  loginform: loginform,
+  addressOpen: addressOpen,
+  auth: mobileauthlogin,
+  webInfo: persistReducer(persistConfig, webLoginInfo),
 });
 
-export default store;
+export const store = configureStore({
+  reducer: rootReducer,
+  devTools: process.env.NODE_ENV !== 'production',
+  middleware: [thunk]
+})
+
+export const persistor = persistStore(store)
