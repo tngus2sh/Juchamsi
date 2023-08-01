@@ -64,7 +64,6 @@ public class SmsServiceTest {
         // given
         setUp();
         MessageRequest request = MessageRequest.builder()
-                .name("김주참")
                 .to("본인번호입력")
                 .build();
 
@@ -80,7 +79,6 @@ public class SmsServiceTest {
         // given
         setUp();
         MessageRequest request = MessageRequest.builder()
-                .name("김주참")
                 .to("01012341234")
                 .build();
 
@@ -96,7 +94,6 @@ public class SmsServiceTest {
         // given
         setUp();
         MessageRequest request = MessageRequest.builder()
-                .name("김주참")
                 .to("본인번호입력")
                 .build();
 
@@ -112,7 +109,6 @@ public class SmsServiceTest {
         // given
         setUp();
         MessageRequest request = MessageRequest.builder()
-                .name("김주참")
                 .to("01012341234")
                 .build();
 
