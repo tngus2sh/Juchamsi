@@ -3,17 +3,21 @@ package com.inet.juchamsi.domain.chat.entity;
 import com.inet.juchamsi.global.common.TimeBaseEntity;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.UUID;
 
+import static com.inet.juchamsi.domain.chat.entity.Status.ALIVE;
+import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Getter
+@ToString
+@RequiredArgsConstructor
 public class ChatRoom extends TimeBaseEntity {
 
     @Id
@@ -21,14 +25,30 @@ public class ChatRoom extends TimeBaseEntity {
     @Column()
     private Long id;
 
+    @Enumerated(STRING)
     @Column(nullable = false, length = 100)
-    private String status;
+    private Status status;
 
+    @Column(name = "room_id", nullable = false)
+    private String roomId;
+
+    @Column(name = "room_name", nullable = false)
+    private String roomName;
+    
     @Builder
-    public ChatRoom(Long id, String status) {
+    public ChatRoom(Long id, Status status, String roomId, String roomName) {
         this.id = id;
         this.status = status;
+        this.roomId = roomId;
+        this.roomName = roomName;
     }
 
-    public ChatRoom() {}
+    public static ChatRoom create(String roomName) {
+        String roomId = UUID.randomUUID().toString();
+        return ChatRoom.builder()
+                .status(ALIVE)
+                .roomId(roomId)
+                .roomName(roomName)
+                .build();
+    }
 }

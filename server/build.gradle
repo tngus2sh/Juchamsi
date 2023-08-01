@@ -54,8 +54,10 @@ dependencies {
 	// naver-cloud-sms : 인증번호 발송
 	implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
 
-	// 채팅방 - webSocket
+	// 채팅방 - webSocket, sockjs, stomp
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'org.webjars:sockjs-client:1.1.2'
+	implementation 'org.webjars:stomp-websocket:2.3.3-1'
 
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
