@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.inet.juchamsi.domain.chat.entity.Type.GENERAL;
 import static com.inet.juchamsi.global.api.ApiResult.OK;
 
 @RestController
@@ -36,9 +37,11 @@ public class ChatRoomApiController {
     }
 
     // 채팅방 생성
+    // TODO: 채팅방 생성시 상대방과 현재 유저를 연결시켜야 함
+    // TODO: 채팅방 이름이 상대방 이름이 되도록 해야함
     @PostMapping("/room")
     public ApiResult<ChatRoomResponse> createChatRoom(@RequestBody ChatRoomRequest request) {
-        log.debug("# post room={}", request);
+        log.debug("# post createChatRoom={}", request);
         return OK(chatService.createRoom(request.getRoomName()));
     }
 
@@ -51,5 +54,13 @@ public class ChatRoomApiController {
     ) {
         log.debug("# get roomInfo={}", roomId);
         return OK(chatService.showDetailChatRoom(roomId));
+    }
+
+    // 시스템 채팅방 생성
+    // TODO: 시스템 채팅방 생성시에는 상대방 유저가 시스템이므로 상대방 설정을 어떻게 해야할지 생각할 것!
+    @PostMapping("/system/room")
+    public ApiResult<ChatRoomResponse> createSystemChatRoom() {
+        log.debug("# post createSystemChatRoom");
+        return OK(chatService.createSystemRoom());
     }
 }
