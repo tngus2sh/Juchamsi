@@ -184,46 +184,6 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
-    public List<TenantRequestResponse> showNewRequestTenant(Long villaId) {
-        Optional<Villa> targetVilla = villaRepository.findById(villaId);
-        if(!targetVilla.isPresent()) {
-            throw new NotFoundException(Villa.class, villaId);
-        }
-
-        List<User> tenantList = userRepository.findNewRequestTenant(targetVilla.get(), WAIT);
-
-        List<TenantRequestResponse> response = new ArrayList<>();
-        User tenant;
-        for(int i = 0; i < tenantList.size(); i++) {
-            tenant = tenantList.get(i);
-
-            TenantRequestResponse tenantResponse = TenantRequestResponse.builder()
-                    .id(tenant.getId())
-                    .villaId(tenant.getVilla().getId())
-                    .phoneNumber(tenant.getPhoneNumber())
-                    .loginId(tenant.getLoginId())
-                    .name(tenant.getName())
-                    .carNumber(tenant.getCarNumber())
-                    .villaNumber(tenant.getVillaNumber())
-                    .build();
-            response.add(tenantResponse);
-        }
-
-        return response;
-    }
-
-    @Override
-    public void manageApprove(String tenantId, Approve approve) {
-        Optional<Long> tenantLoginId = userRepository.existLoginId(tenantId);
-        if (tenantLoginId.isEmpty()) {
-            throw new NotFoundException(User.class, tenantId);
-        }
-
-        // 승인 상태 수정
-        userRepository.updateApprove(tenantId, approve);
-    }
-
-    @Override
     public void removeUser(String ownerId) {
         Optional<Long> loginId = userRepository.existLoginId(ownerId);
         if (loginId.isEmpty()) {
