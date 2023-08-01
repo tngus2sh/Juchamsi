@@ -2,6 +2,8 @@ package com.inet.juchamsi.mileage.service;
 
 import com.inet.juchamsi.domain.mileage.application.MileageService;
 import com.inet.juchamsi.domain.mileage.dao.MileageRepository;
+import com.inet.juchamsi.domain.mileage.dto.response.MileageResponse;
+import com.inet.juchamsi.domain.mileage.entity.Mileage;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.domain.user.entity.Grade;
@@ -17,8 +19,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.List;
 
 import static com.inet.juchamsi.global.common.Active.ACTIVE;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @Transactional
@@ -42,10 +46,14 @@ public class MileageServiceTest {
         // given
         Villa targetVilla = insertVilla();
         User targetUser = insertUser();
+        Mileage targetMileage = insertMileage(targetUser);
         Long userId = targetUser.getId();
 
         // when
-//        MileageService.showMileage()
+        List<MileageResponse> respone = mileageService.showMileage(userId);
+
+        // then
+        assertNotNull(respone);
     }
 
 
@@ -72,5 +80,14 @@ public class MileageServiceTest {
                 .roles(Collections.singletonList("ADMIN"))
                 .build();
         return userRepository.save(user);
+    }
+
+    private Mileage insertMileage(User user) {
+        Mileage mileage = Mileage.builder()
+                .user(user)
+                .point(100)
+                .type("적립")
+                .build();
+        return mileageRepository.save(mileage);
     }
 }
