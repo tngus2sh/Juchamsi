@@ -233,15 +233,16 @@ public class TenantApiTest {
     }
 
     @Test
-    @DisplayName("회원 전체 조회")
+    @DisplayName("빌라 내 회원 전체 조회")
     void showUser() throws Exception {
         // given
         Villa targetVilla = insertVilla();
         User targetUser = insertUser(targetVilla);
         compareUser();
+        Long villaId = targetVilla.getId();
 
         // when
-        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.get("/tenant"));
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.get("/tenant/all/{villa_id}", villaId));
 
         // then
         actions.andDo(print())

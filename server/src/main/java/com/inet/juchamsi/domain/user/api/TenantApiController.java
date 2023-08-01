@@ -86,10 +86,10 @@ public class TenantApiController {
     }
 
     // 회원 전체 조회
-    @ApiOperation(value = "회원 전체 조회", notes = "세입자 권한의 모든 사용자들 목록을 조회한다")
-    @GetMapping
-    public ApiResult<List<TenantResponse>> showUser() {
-        List<TenantResponse> tenantResponseList = tenantService.showUser();
+    @ApiOperation(value = "빌라 내 회원 전체 조회", notes = "세입자 권한의 모든 사용자들 목록을 조회한다")
+    @GetMapping("/all/{villa_id}")
+    public ApiResult<List<TenantResponse>> showUser(@ApiParam(value = "villa-id") @PathVariable(value = "villa_id") Long villaId) {
+        List<TenantResponse> tenantResponseList = tenantService.showUser(villaId);
         log.info("tenantResponseList={}", tenantResponseList);
         return OK(tenantResponseList);
     }

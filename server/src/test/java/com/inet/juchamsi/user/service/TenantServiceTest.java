@@ -111,15 +111,16 @@ public class TenantServiceTest {
     }
 
     @Test
-    @DisplayName("회원 전체 조회")
+    @DisplayName("빌라 내 회원 전체 조회")
     void showUser() {
         // given
         Villa targetVilla = insertVilla();
         User targetUser = insertUser(targetVilla);
         compareUser(targetVilla);
+        Long villaId = targetVilla.getId();
 
         // when
-        List<TenantResponse> responseList = tenantService.showUser();
+        List<TenantResponse> responseList = tenantService.showUser(villaId);
 
         // then
         System.out.println("responseList = " + responseList);

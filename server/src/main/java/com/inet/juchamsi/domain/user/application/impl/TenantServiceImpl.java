@@ -27,8 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.inet.juchamsi.domain.user.entity.Approve.MODIFY;
-import static com.inet.juchamsi.domain.user.entity.Approve.WAIT;
+import static com.inet.juchamsi.domain.user.entity.Approve.*;
 import static com.inet.juchamsi.domain.user.entity.Grade.USER;
 import static com.inet.juchamsi.global.common.Active.ACTIVE;
 
@@ -68,22 +67,28 @@ public class TenantServiceImpl implements TenantService {
     }
 
     @Override
-    public List<TenantResponse> showUser() {
-        List<TenantResponse> tenantResponseList = new ArrayList<>();
-        List<User> all = userRepository.findAllByGradeAndActive(USER, ACTIVE).get();
-        for (User user : all) {
-            tenantResponseList.add(
-                    TenantResponse.builder()
-                            .id(user.getId())
-                            .villaIdNumber(user.getVilla().getIdNumber())
-                            .phoneNumber(user.getPhoneNumber())
-                            .name(user.getName())
-                            .carNumber(user.getCarNumber())
-                            .villaNumber(user.getVillaNumber())
-                            .build()
-            );
+    public List<TenantResponse> showUser(Long villaId) {
+        Optional<Villa> targetVilla = villaRepository.findById(villaId);
+        if(!targetVilla.isPresent()) {
+            throw new NotFoundException(Villa.class, villaId);
         }
-        return tenantResponseList;
+
+        List<User> userList = userRepository.findVillaTenant(targetVilla.get(), APPROVE, ACTIVE, USER);
+        List<TenantResponse> response = new ArrayList<>();
+
+        for (User user : userList) {
+            TenantResponse tenantResponse = TenantResponse.builder()
+                    .id(user.getId())
+                    .villaIdNumber(user.getVilla().getIdNumber())
+                    .phoneNumber(user.getPhoneNumber())
+                    .name(user.getName())
+                    .carNumber(user.getCarNumber())
+                    .villaNumber(user.getVillaNumber())
+                    .build();
+
+            response.add(tenantResponse);
+        }
+        return response;
     }
 
     @Override

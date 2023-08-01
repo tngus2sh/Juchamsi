@@ -15,8 +15,8 @@ public interface TenantService {
     // 회원가입
     Long createUser(CreateTenantRequest request);
 
-    // 회원정보 전체 조회
-    List<TenantResponse> showUser();
+    // 빌라 내 회원 전체 조회
+    List<TenantResponse> showUser(Long villaId);
 
     // 회원정보 상세 조회
     TenantResponse showDetailUser(String tenantId);
