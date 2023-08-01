@@ -4,13 +4,12 @@ import com.inet.juchamsi.domain.user.application.TenantService;
 import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.dto.request.ModifyTenantRequest;
-import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
 import com.inet.juchamsi.domain.user.dto.response.TenantLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.TenantResponse;
+import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.global.api.ApiResult;
 import com.inet.juchamsi.global.error.AlreadyExistException;
 import com.inet.juchamsi.global.error.NotFoundException;
-import com.inet.juchamsi.global.jwt.TokenInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.inet.juchamsi.domain.user.entity.Approve.*;
 import static com.inet.juchamsi.global.api.ApiResult.ERROR;
 import static com.inet.juchamsi.global.api.ApiResult.OK;
 
@@ -60,8 +60,6 @@ public class TenantApiController {
         log.debug("LoginTenantRequest={}", request);
 
         try {
-//            TokenInfo tokenInfo = tenantService.loginUser(request);
-//            return OK(tokenInfo);
             TenantLoginResponse response = tenantService.loginUser(request);
             return OK(response);
         }
@@ -85,15 +83,6 @@ public class TenantApiController {
         return OK(null);
     }
 
-    // 회원 전체 조회
-    @ApiOperation(value = "회원 전체 조회", notes = "세입자 권한의 모든 사용자들 목록을 조회한다")
-    @GetMapping
-    public ApiResult<List<TenantResponse>> showUser() {
-        List<TenantResponse> tenantResponseList = tenantService.showUser();
-        log.info("tenantResponseList={}", tenantResponseList);
-        return OK(tenantResponseList);
-    }
-
     // 회원 상세 조회
     @ApiOperation(value = "회원 상세 조회", notes = "tenantId에 해당하는 사용자의 상세 정보를 조회한다.")
     @GetMapping("/{id}")
@@ -109,6 +98,65 @@ public class TenantApiController {
             return ERROR("해당 회원은 존재하지 않습니다.", HttpStatus.NO_CONTENT);
         }
     }
+
+    // 빌라 내 승인된 세입자 전체 조회
+    @ApiOperation(value = "빌라 내 승인된 세입자 전체 조회", notes = "세입자 권한의 모든 사용자들 목록을 조회한다")
+    @GetMapping("/approve/{villa_id}")
+    public ApiResult<List<TenantResponse>> showUser(@ApiParam(value = "villa-id") @PathVariable(value = "villa_id") Long villaId) {
+        try {
+            List<TenantResponse> tenantResponseList = tenantService.showApproveTenant(villaId, APPROVE);
+            log.info("tenantResponseList={}", tenantResponseList);
+            return OK(tenantResponseList);
+        }
+        catch(NotFoundException e) {
+            return ERROR("해당 빌라가 존재하지 않습니다.", HttpStatus.NO_CONTENT);
+        }
+    }
+
+    // 빌라 내 신규 회원가입 한 세입자 전체 조회
+    @ApiOperation(value = "빌라 내 신규 회원가입 한 세입자 전체 조회", notes = "새롭게 회원가입 신청한 세입자 목록을 확인합니다")
+    @GetMapping("/new/{villa_id}")
+    public ApiResult<List<TenantResponse>> showNewRequestTenant(@ApiParam(value = "villa-id") @PathVariable(value = "villa_id") Long villaId) {
+        try {
+            List<TenantResponse> response = tenantService.showApproveTenant(villaId, WAIT);
+            return OK(response);
+        }
+        catch(NotFoundException e) {
+            return ERROR("해당 빌라가 존재하지 않습니다.", HttpStatus.NO_CONTENT);
+        }
+    }
+
+    // 빌라 내 정보 수정 요청한 세입자 전체 조회
+    @ApiOperation(value = "빌라 내 정보 수정 요청한 세입자 전체 조회", notes = "회원 정보 수정 신청한 세입자 목록을 확인합니다")
+    @GetMapping("/modify/{villa_id}")
+    public ApiResult<List<TenantResponse>> showModifyRequestTenant(@ApiParam(value = "villa-id") @PathVariable(value = "villa_id") Long villaId) {
+        try {
+            List<TenantResponse> response = tenantService.showApproveTenant(villaId, MODIFY);
+            return OK(response);
+        }
+        catch(NotFoundException e) {
+            return ERROR("해당 빌라가 존재하지 않습니다.", HttpStatus.NO_CONTENT);
+        }
+    }
+
+    // 세입자 회원가입 요청 처리
+    @ApiOperation(value = "세입자(tenant) 회원가입 요청 관리", notes = "세입자의 회원가입 승인 여부를 결정합니다.")
+    @GetMapping("/{id}/{approve}")
+    public ApiResult<Void> manageApprove(
+            @ApiParam(value = "admin-id")
+            @PathVariable(value = "id") String tenantId,
+            @ApiParam(value = "approve-or-not")
+            @PathVariable(value = "approve") String approve
+    ) {
+        log.debug("admin={}, approve={}", tenantId, approve);
+        try {
+            tenantService.manageApprove(tenantId, Approve.valueOf(approve));
+            return OK(null);
+        } catch (NotFoundException e) {
+            return ERROR("해당 회원을 찾을 수가 없습니다.", HttpStatus.NO_CONTENT);
+        }
+    }
+
 
     @ApiOperation(value = "세입자 회원 정보 수정", notes = "세입자가 회원 정보를 수정합니다")
     @PutMapping("")

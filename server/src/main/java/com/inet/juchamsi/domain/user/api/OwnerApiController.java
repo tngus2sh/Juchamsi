@@ -6,10 +6,7 @@ import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.dto.request.ModifyOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminOwnerLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
-import com.inet.juchamsi.domain.user.dto.response.TenantRequestResponse;
-import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.domain.villa.application.VillaService;
-import com.inet.juchamsi.domain.villa.dto.request.CreateVillaRequest;
 import com.inet.juchamsi.global.api.ApiResult;
 import com.inet.juchamsi.global.error.AlreadyExistException;
 import com.inet.juchamsi.global.error.NotFoundException;
@@ -20,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -130,37 +126,6 @@ public class OwnerApiController {
             return ERROR("해당 회원을 찾을 수가 없습니다", HttpStatus.NO_CONTENT);
         } catch (AlreadyExistException e) {
             return ERROR("이미 존재하는 핸드폰 번호입니다.", HttpStatus.CONFLICT);
-        }
-    }
-
-    // 세입자 신규 회원가입 요청 목록
-    @ApiOperation(value = "세입자(tenant) 신규 회원가입 요청 목록", notes = "새롭게 회원가입 신청한 세입자 목록을 확인합니다")
-    @GetMapping("/tenant/new/{vill_id}")
-    public ApiResult<List<TenantRequestResponse>> showNewRequestTenant(@ApiParam(value = "villa-id") @PathVariable(value = "villa_id") Long villaId) {
-        try {
-            List<TenantRequestResponse> response = ownerService.showNewRequestTenant(villaId);
-            return OK(response);
-        }
-        catch(NotFoundException e) {
-            return ERROR("해당 빌라가 존재하지 않습니다.", HttpStatus.NO_CONTENT);
-        }
-    }
-
-    // 세입자 회원가입 요청 처리
-    @ApiOperation(value = "세입자(tenant) 회원가입 요청 관리", notes = "세입자의 회원가입 승인 여부를 결정합니다.")
-    @GetMapping("/{id}/{approve}")
-    public ApiResult<Void> manageApprove(
-            @ApiParam(value = "admin-id")
-            @PathVariable(value = "id") String tenantId,
-            @ApiParam(value = "approve-or-not")
-            @PathVariable(value = "approve") String approve
-    ) {
-        log.debug("admin={}, approve={}", tenantId, approve);
-        try {
-            ownerService.manageApprove(tenantId, Approve.valueOf(approve));
-            return OK(null);
-        } catch (NotFoundException e) {
-            return ERROR("해당 회원을 찾을 수가 없습니다.", HttpStatus.NO_CONTENT);
         }
     }
 

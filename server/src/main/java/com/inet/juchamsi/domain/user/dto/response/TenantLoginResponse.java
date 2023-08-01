@@ -8,6 +8,7 @@ import lombok.Data;
 @Data
 public class TenantLoginResponse {
     private TokenInfo tokenInfo;
+    private Long id;
     private String phoneNumber;
     private String loginId;
     private String name;
@@ -21,8 +22,9 @@ public class TenantLoginResponse {
     public TenantLoginResponse() {}
 
     @Builder
-    public TenantLoginResponse(TokenInfo tokenInfo, String phoneNumber, String loginId, String name, int totalMileage, String carNumber, int villaNumber, String approved, Villa villa) {
+    public TenantLoginResponse(TokenInfo tokenInfo, Long id, String phoneNumber, String loginId, String name, int totalMileage, String carNumber, int villaNumber, String approved, Villa villa) {
         this.tokenInfo = tokenInfo;
+        this.id = id;
         this.phoneNumber = phoneNumber;
         this.loginId = loginId;
         this.name = name;
