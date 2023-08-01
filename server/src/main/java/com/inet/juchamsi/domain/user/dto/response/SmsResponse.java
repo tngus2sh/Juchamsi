@@ -4,6 +4,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
+// refactor: 컬럼에 private 붙이기
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

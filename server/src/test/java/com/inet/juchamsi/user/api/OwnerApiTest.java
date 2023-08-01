@@ -7,6 +7,7 @@ import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateAdminRequest;
 import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
+import com.inet.juchamsi.domain.user.dto.request.ModifyOwnerRequest;
 import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.domain.user.entity.Grade;
 import com.inet.juchamsi.domain.user.entity.User;
@@ -238,15 +239,10 @@ public class OwnerApiTest {
     @DisplayName("집주인  회원정보 수정")
     void modifyUser() throws Exception {
         // given
-        String object  = objectMapper.writeValueAsString(CreateOwnerRequest.builder()
-                .villaIdNumber("62218271")
+        String object  = objectMapper.writeValueAsString(ModifyOwnerRequest.builder()
                 .phoneNumber("01099998888")
                 .loginId("ownerId")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
-                .name("김주참")
-                .carNumber("12가 1234")
-                .villaNumber(201)
-                .grade(Grade.OWNER.name())
                 .build());
 
         // when
@@ -264,15 +260,10 @@ public class OwnerApiTest {
     @DisplayName("집주인 회원정보 수정 ## 해당 회원이 없을 때")
     void modifyUserNoPresent() throws Exception {
         // given
-        String object  = objectMapper.writeValueAsString(CreateOwnerRequest.builder()
-                .villaIdNumber("62218271")
+        String object  = objectMapper.writeValueAsString(ModifyOwnerRequest.builder()
                 .phoneNumber("01099998888")
                 .loginId("ownerIdssss")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
-                .name("박주참")
-                .carNumber("12가 1234")
-                .villaNumber(201)
-                .grade(Grade.OWNER.name())
                 .build());
 
         // when
@@ -292,15 +283,10 @@ public class OwnerApiTest {
     void modifyUserDuplicatedPhoneNumber() throws  Exception {
         // given
         compareUser();
-        String object  = objectMapper.writeValueAsString(CreateOwnerRequest.builder()
-                .villaIdNumber("62218271")
+        String object  = objectMapper.writeValueAsString(ModifyOwnerRequest.builder()
                 .phoneNumber("01098765432")
                 .loginId("ownerId")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
-                .name("김주참")
-                .grade(Grade.OWNER.name())
-                .carNumber("12가 1234")
-                .villaNumber(201)
                 .build());
 
         // when
@@ -319,15 +305,10 @@ public class OwnerApiTest {
     @DisplayName("집주인 회원정보 수정 ## 해당 빌라 없을 때")
     void modifyUserNoPresentVilla() throws  Exception {
         // given
-        String object  = objectMapper.writeValueAsString(CreateOwnerRequest.builder()
-                .villaIdNumber("623-8271")
+        String object  = objectMapper.writeValueAsString(ModifyOwnerRequest.builder()
                 .phoneNumber("01099998888")
                 .loginId("ownerId")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
-                .name("김주참")
-                .grade(Grade.OWNER.name())
-                .carNumber("12가 1234")
-                .villaNumber(201)
                 .build());
 
         // when
