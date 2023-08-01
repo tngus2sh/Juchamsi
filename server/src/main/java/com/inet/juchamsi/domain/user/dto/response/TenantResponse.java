@@ -19,7 +19,7 @@ public class TenantResponse {
     public TenantResponse() {}
 
     @Builder
-    public TenantResponse(Long id, Long villaId, String villaIdNumber, String phoneNumber, String loginId, String name, String carNumber, int villaNumber) {
+    public TenantResponse(Long id, Long villaId, String villaIdNumber, String phoneNumber, String loginId, String name, int totalMileage, String carNumber, int villaNumber) {
         this.id = id;
         this.villaId = villaId;
         this.villaIdNumber = villaIdNumber;
