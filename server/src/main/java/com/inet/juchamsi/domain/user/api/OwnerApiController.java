@@ -6,10 +6,7 @@ import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.dto.request.ModifyOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminOwnerLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
-import com.inet.juchamsi.domain.user.dto.response.TenantRequestResponse;
-import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.domain.villa.application.VillaService;
-import com.inet.juchamsi.domain.villa.dto.request.CreateVillaRequest;
 import com.inet.juchamsi.global.api.ApiResult;
 import com.inet.juchamsi.global.error.AlreadyExistException;
 import com.inet.juchamsi.global.error.NotFoundException;
@@ -20,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

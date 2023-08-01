@@ -5,8 +5,6 @@ import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.dto.request.ModifyOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminOwnerLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
-import com.inet.juchamsi.domain.user.dto.response.TenantRequestResponse;
-import com.inet.juchamsi.domain.user.entity.Approve;
 
 import java.util.List;
 

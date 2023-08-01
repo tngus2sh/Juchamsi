@@ -8,8 +8,6 @@ import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.dto.request.ModifyOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminOwnerLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
-import com.inet.juchamsi.domain.user.dto.response.TenantRequestResponse;
-import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.domain.villa.application.VillaService;
 import com.inet.juchamsi.domain.villa.dao.VillaRepository;
