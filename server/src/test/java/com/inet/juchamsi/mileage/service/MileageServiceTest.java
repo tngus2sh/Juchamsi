@@ -2,6 +2,7 @@ package com.inet.juchamsi.mileage.service;
 
 import com.inet.juchamsi.domain.mileage.application.MileageService;
 import com.inet.juchamsi.domain.mileage.dao.MileageRepository;
+import com.inet.juchamsi.domain.mileage.dto.request.GetMileageRequest;
 import com.inet.juchamsi.domain.mileage.dto.response.MileageResponse;
 import com.inet.juchamsi.domain.mileage.entity.Mileage;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static com.inet.juchamsi.global.common.Active.ACTIVE;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -47,12 +49,47 @@ public class MileageServiceTest {
         Villa targetVilla = insertVilla();
         User targetUser = insertUser();
         Mileage targetMileage = insertMileage(targetUser);
-        Long userId = targetUser.getId();
+        String loginId = targetUser.getLoginId();
 
-//        GetMileageRequest request = GEtMileageRequest
+        GetMileageRequest request = GetMileageRequest.builder()
+                .loginId(loginId)
+                .point(100)
+                .type("적립")
+                .description("출차 시간 등록 적립")
+                .build();
 
         // when
-//        mileageService.showMileage();
+        mileageService.createMileage(request);
+
+        // then
+        Optional<User> findUser = userRepository.findByLoginId(loginId);
+        assertNotNull(findUser);
+        System.out.println(findUser.get());
+    }
+
+    @Test
+    @DisplayName("마일리지 등록 ## 사용")
+    void useMileage() {
+        // given
+        Villa targetVilla = insertVilla();
+        User targetUser = insertUser();
+        Mileage targetMileage = insertMileage(targetUser);
+        String loginId = targetUser.getLoginId();
+
+        GetMileageRequest request = GetMileageRequest.builder()
+                .loginId(loginId)
+                .point(-3000)
+                .type("사용")
+                .description("마일리지 출금")
+                .build();
+
+        // when
+        mileageService.createMileage(request);
+
+        // then
+        Optional<User> findUser = userRepository.findByLoginId(loginId);
+        assertNotNull(findUser);
+        System.out.println(findUser.get());
     }
 
     @Test
@@ -89,6 +126,7 @@ public class MileageServiceTest {
                 .loginPassword(passwordEncoder.encode("userPw123!"))
                 .phoneNumber("01012341234")
                 .name("김주참")
+                .totalMileage(5000)
                 .grade(Grade.ADMIN)
                 .approve(Approve.APPROVE)
                 .active(Active.ACTIVE)

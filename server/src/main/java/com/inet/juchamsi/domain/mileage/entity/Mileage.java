@@ -25,14 +25,18 @@ public class Mileage extends TimeBaseEntity {
     @Column(name = "type")
     private String type;
 
+    @Column
+    private String description;
+
 
     public Mileage() {}
 
     @Builder
-    public Mileage(Long id, User user, int point, String type) {
+    public Mileage(Long id, User user, int point, String type, String description) {
         this.id = id;
         this.user = user;
         this.point = point;
         this.type = type;
+        this.description = description;
     }
 }

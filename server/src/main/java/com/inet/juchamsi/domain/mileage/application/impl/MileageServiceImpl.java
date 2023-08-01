@@ -2,6 +2,7 @@ package com.inet.juchamsi.domain.mileage.application.impl;
 
 import com.inet.juchamsi.domain.mileage.application.MileageService;
 import com.inet.juchamsi.domain.mileage.dao.MileageRepository;
+import com.inet.juchamsi.domain.mileage.dto.request.GetMileageRequest;
 import com.inet.juchamsi.domain.mileage.dto.response.MileageResponse;
 import com.inet.juchamsi.domain.mileage.entity.Mileage;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
@@ -45,5 +46,24 @@ public class MileageServiceImpl implements MileageService {
         }
 
         return response;
+    }
+
+    @Override
+    public void createMileage(GetMileageRequest request) {
+        Optional<User> findUser = userRepository.findByLoginId(request.getLoginId());
+        if(!findUser.isPresent()) {
+            throw new NotFoundException(User.class, request.getLoginId());
+        }
+
+        Mileage mileage = Mileage.builder()
+                .user(findUser.get())
+                .point(request.getPoint())
+                .type(request.getType())
+                .description(request.getDescription())
+                .build();
+
+        mileageRepository.save(mileage);
+
+        userRepository.getMileage(findUser.get().getLoginId(), request.getPoint());
     }
 }
