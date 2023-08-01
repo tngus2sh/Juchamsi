@@ -4,9 +4,11 @@ import com.inet.juchamsi.domain.user.application.TenantService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
+import com.inet.juchamsi.domain.user.dto.request.ModifyTenantRequest;
+import com.inet.juchamsi.domain.user.dto.response.TenantLoginResponse;
+import com.inet.juchamsi.domain.user.dto.response.TenantRequestResponse;
 import com.inet.juchamsi.domain.user.dto.response.TenantResponse;
 import com.inet.juchamsi.domain.user.entity.Approve;
-import com.inet.juchamsi.domain.user.entity.Grade;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.domain.villa.dao.VillaRepository;
 import com.inet.juchamsi.domain.villa.entity.Villa;
@@ -27,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.inet.juchamsi.domain.user.entity.Approve.WAIT;
+import static com.inet.juchamsi.domain.user.entity.Approve.*;
 import static com.inet.juchamsi.domain.user.entity.Grade.USER;
 import static com.inet.juchamsi.global.common.Active.ACTIVE;
 
@@ -60,29 +62,10 @@ public class TenantServiceImpl implements TenantService {
         }
 
         Optional<Villa> findVilla = villaRepository.findById(connectedVillaId.get());
-        User user = User.createUser(findVilla.get(), request.getPhoneNumber(), request.getLoginId(), passwordEncoder.encode(request.getLoginPassword()), request.getName(), USER, request.getCarNumber(), request.getVillaNumber(), WAIT, ACTIVE, "USER");
+        User user = User.createUserTenant(findVilla.get(), request.getPhoneNumber(), request.getLoginId(), passwordEncoder.encode(request.getLoginPassword()), request.getName(), 0, USER, request.getCarNumber(), request.getVillaNumber(), WAIT, ACTIVE, "USER");
         User saveUser = userRepository.save(user);
 
         return saveUser.getId();
-    }
-
-    @Override
-    public List<TenantResponse> showUser() {
-        List<TenantResponse> tenantResponseList = new ArrayList<>();
-        List<User> all = userRepository.findAllByGradeAndActive(USER, ACTIVE).get();
-        for (User user : all) {
-            tenantResponseList.add(
-                    TenantResponse.builder()
-                            .id(user.getId())
-                            .villaIdNumber(user.getVilla().getIdNumber())
-                            .phoneNumber(user.getPhoneNumber())
-                            .name(user.getName())
-                            .carNumber(user.getCarNumber())
-                            .villaNumber(user.getVillaNumber())
-                            .build()
-            );
-        }
-        return tenantResponseList;
     }
 
     @Override
@@ -99,13 +82,52 @@ public class TenantServiceImpl implements TenantService {
                 .villaIdNumber(villa.getIdNumber())
                 .phoneNumber(user.getPhoneNumber())
                 .name(user.getName())
+                .totalMileage(user.getTotalMileage())
                 .carNumber(user.getCarNumber())
                 .villaNumber(user.getVillaNumber())
                 .build();
     }
 
     @Override
-    public TokenInfo loginUser(LoginRequest request) {
+    public List<TenantResponse> showApproveTenant(Long villaId, Approve approve) {
+        Optional<Villa> targetVilla = villaRepository.findById(villaId);
+        if(!targetVilla.isPresent()) {
+            throw new NotFoundException(Villa.class, villaId);
+        }
+
+        List<User> userList = userRepository.findVillaTenant(targetVilla.get(), approve, ACTIVE, USER);
+        List<TenantResponse> response = new ArrayList<>();
+
+        for (User user : userList) {
+            TenantResponse tenantResponse = TenantResponse.builder()
+                    .id(user.getId())
+                    .villaId(user.getVilla().getId())
+                    .villaIdNumber(user.getVilla().getIdNumber())
+                    .phoneNumber(user.getPhoneNumber())
+                    .loginId(user.getLoginId())
+                    .name(user.getName())
+                    .carNumber(user.getCarNumber())
+                    .villaNumber(user.getVillaNumber())
+                    .build();
+
+            response.add(tenantResponse);
+        }
+        return response;
+    }
+
+    @Override
+    public void manageApprove(String tenantId, Approve approve) {
+        Optional<Long> tenantLoginId = userRepository.existLoginId(tenantId);
+        if (tenantLoginId.isEmpty()) {
+            throw new NotFoundException(User.class, tenantId);
+        }
+
+        // 승인 상태 수정
+        userRepository.updateApprove(tenantId, approve);
+    }
+
+    @Override
+    public TenantLoginResponse loginUser(LoginRequest request) {
         String loginId = request.getLoginId();
         String password = request.getLoginPassword();
 
@@ -117,7 +139,27 @@ public class TenantServiceImpl implements TenantService {
 
         userRepository.updateRefreshToken(loginId, password);
 
-        return tokenInfo;
+        User user = userRepository.findByLoginId(loginId).get();
+        Villa targetVilla = user.getVilla();
+        Villa villa = Villa.builder()
+                .id(targetVilla.getId())
+                .name(targetVilla.getName())
+                .address(targetVilla.getAddress())
+                .idNumber(targetVilla.getIdNumber())
+                .totalCount(targetVilla.getTotalCount())
+                .build();
+
+        return TenantLoginResponse.builder()
+                .tokenInfo(tokenInfo)
+                .phoneNumber(user.getPhoneNumber())
+                .loginId(user.getLoginId())
+                .name(user.getName())
+                .totalMileage(user.getTotalMileage())
+                .carNumber(user.getCarNumber())
+                .villaNumber(user.getVillaNumber())
+                .approved(user.getApprove().name())
+                .villa(villa)
+                .build();
     }
 
     @Override
@@ -132,7 +174,7 @@ public class TenantServiceImpl implements TenantService {
     }
 
     @Override
-    public void modifyUser(CreateTenantRequest request) {
+    public void modifyUser(ModifyTenantRequest request) {
         Optional<User> oUser = userRepository.findByLoginIdAndActive(request.getLoginId(), Active.ACTIVE);
         System.out.println("oUser = " + oUser);
         if (oUser.isEmpty()) {
@@ -150,6 +192,7 @@ public class TenantServiceImpl implements TenantService {
         }
 
         userRepository.updateTenant(request.getLoginId(), request.getPhoneNumber(), request.getCarNumber(), request.getVillaNumber());
+        userRepository.updateApproveModify(request.getLoginId(), MODIFY);
     }
 
     @Override

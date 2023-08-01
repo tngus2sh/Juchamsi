@@ -7,6 +7,7 @@ import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
+import com.inet.juchamsi.domain.user.dto.request.ModifyTenantRequest;
 import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.domain.villa.dao.VillaRepository;
@@ -232,15 +233,16 @@ public class TenantApiTest {
     }
 
     @Test
-    @DisplayName("회원 전체 조회")
+    @DisplayName("빌라 내 회원 전체 조회")
     void showUser() throws Exception {
         // given
         Villa targetVilla = insertVilla();
         User targetUser = insertUser(targetVilla);
         compareUser();
+        Long villaId = targetVilla.getId();
 
         // when
-        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.get("/tenant"));
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.get("/tenant/all/{villa_id}", villaId));
 
         // then
         actions.andDo(print())
@@ -275,12 +277,10 @@ public class TenantApiTest {
         // given
         Villa targetVilla = insertVilla();
         User targetUser = insertUser(targetVilla);
-        String object  = objectMapper.writeValueAsString(CreateTenantRequest.builder()
+        String object  = objectMapper.writeValueAsString(ModifyTenantRequest.builder()
                 .villaIdNumber("62218271")
                 .phoneNumber("01099998888")
                 .loginId("userId")
-                .loginPassword(passwordEncoder.encode("userPw123!"))
-                .name("김주참")
                 .carNumber("12가 1234")
                 .villaNumber(201)
                 .build());
@@ -302,12 +302,10 @@ public class TenantApiTest {
         // given
         Villa targetVilla = insertVilla();
         User targetUser = insertUser(targetVilla);
-        String object  = objectMapper.writeValueAsString(CreateTenantRequest.builder()
+        String object  = objectMapper.writeValueAsString(ModifyTenantRequest.builder()
                 .villaIdNumber("62218271")
                 .phoneNumber("01099998888")
                 .loginId("userIdaaaa")
-                .loginPassword(passwordEncoder.encode("userPw123!"))
-                .name("박주참")
                 .carNumber("12가 1234")
                 .villaNumber(201)
                 .build());
@@ -331,12 +329,10 @@ public class TenantApiTest {
         Villa targetVilla = insertVilla();
         User targetUser = insertUser(targetVilla);
         compareUser();
-        String object  = objectMapper.writeValueAsString(CreateTenantRequest.builder()
+        String object  = objectMapper.writeValueAsString(ModifyTenantRequest.builder()
                 .villaIdNumber("62218271")
                 .phoneNumber("01098765432")
                 .loginId("userId")
-                .loginPassword(passwordEncoder.encode("userPw123!"))
-                .name("김주참")
                 .carNumber("12가 1234")
                 .villaNumber(201)
                 .build());
@@ -359,12 +355,10 @@ public class TenantApiTest {
         // given
         Villa targetVilla = insertVilla();
         User targetUser = insertUser(targetVilla);
-        String object  = objectMapper.writeValueAsString(CreateTenantRequest.builder()
+        String object  = objectMapper.writeValueAsString(ModifyTenantRequest.builder()
                 .villaIdNumber("623-8271")
                 .phoneNumber("01099998888")
                 .loginId("userId")
-                .loginPassword(passwordEncoder.encode("userPw123!"))
-                .name("김주참")
                 .carNumber("12가 1234")
                 .villaNumber(201)
                 .build());
