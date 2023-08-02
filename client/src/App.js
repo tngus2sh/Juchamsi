@@ -21,6 +21,8 @@ import MobileParkinglogPage from './pages/mobile/parkinglot'
 import MobileMycarparkingPage from './pages/mobile/mycarparking'
 import MobileTermessagePage from './pages/mobile/termessage'
 import MobileAccountPage from './pages/mobile/account'
+import MobileUpdateAccountPage from './pages/mobile/updateaccount'
+import MobileMileageChangePage from './pages/mobile/MileageChange'
 
 import './App.css';
 
@@ -56,6 +58,8 @@ function App() {
               <Route path="/Mobile/Mycar" element={<MobileMycarparkingPage />}/>
               <Route path="/Mobile/Termessage" element={<MobileTermessagePage />}/>
               <Route path="/Mobile/Account" element={<MobileAccountPage />}/>
+              <Route path="/Mobile/Account/Update" element={<MobileUpdateAccountPage />}/>
+              <Route path="/Mobile/Mileage/Change" element={<MobileMileageChangePage />}/>
                <Route path="/mainPage" element={ <WebMainPage/>} />
           </Routes>
           </BrowserRouter>

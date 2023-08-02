@@ -1,0 +1,134 @@
+.mileagechangetext1 {
+    position: absolute;
+    top:8%;
+    left:10%;
+    width: 80%;
+}
+
+.pointtext1 {
+    font-size: 15px;
+}
+
+.pointtext2 {
+    font-size: 15px;
+}
+
+.pointtext3 {
+    position: absolute;
+    top:23px;
+    font-size: 15px;
+}
+
+.pointbox1 {
+    position: absolute;
+    top: 160%;
+    left:70%;
+}
+
+.bankname1 {
+    position: absolute;
+    top:60%;
+    left:-20%;
+}
+
+.bankname2 {
+    position: absolute;
+    top:10px;
+    left:15%;
+}
+
+.stack1 {
+    position: absolute;
+    top:150%;
+    left:15%;
+    width:80%;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stack3 {
+    position: absolute;
+    top:200%;
+    left:15%;
+    width:80%;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stack2 {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    top:60%;
+    left:0%;
+}
+
+.formcontrol1 {
+    position: absolute;
+    top:35px;
+    left:15%;
+}
+
+.bankname3 {
+    position: absolute;
+    top:100%;
+    left:-20%;
+}
+
+
+.bankname4 {
+    position: absolute;
+    top:550%;
+    left:-20%;
+}
+
+.bankname5 {
+    position: absolute;
+    top:160px;
+    left:20%;
+}
+
+
+.okbtn {
+    position: absolute;
+    width: 100px;
+    height: 30px;
+    left: 15%;
+    top: 65%;
+    
+    background: #33907C;
+    opacity: 0.8;
+    border-radius: 32px;
+}
+
+
+.mileagechangetext2 {
+    position: absolute;
+    top:30%;
+    left:20%;
+    color: aliceblue;
+    font-size: 15px;
+}
+
+.closebtn {
+    position: absolute;
+    width: 100px;
+    height: 30px;
+    left: 60%;
+    top: 65%;
+    
+    background: #33907C;
+    opacity: 0.8;
+    border-radius: 32px;
+}
+
+.mileagechangetext3 {
+    position: absolute;
+    top:30%;
+    left:35%;
+    color: aliceblue;
+    font-size: 15px;
+}

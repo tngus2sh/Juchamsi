@@ -1,0 +1,158 @@
+.firstinfo {
+    position: absolute;
+    top:5%;
+    left:10%;
+}
+
+.idstyle {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+
+.namestyle {
+    position: absolute;
+    top:60%;
+    left:45%;
+    font-size: 14px;
+    color:blue;
+}
+
+.editicon {
+    position: absolute;
+    top:25px;
+    left:30%;
+}
+
+.hr1 {
+    position: absolute;
+    width: 100%;
+    top:18%;
+    opacity: 0.3;
+}
+
+.miletext1 {
+    position: absolute;
+    top:22%;
+    left:5%;
+    font-size: 13px;
+}
+
+.mileimg {
+    width: 10%;
+    height: 5%;
+    position: absolute;
+    top:26%;
+    left:20%;
+}
+
+.miletext {
+    position: absolute;
+    font-size: 20px;
+    top:26.5%;
+    left:40%;
+}
+
+.descripticon {
+    position: absolute;
+    top:26.5%;
+    left:70%;
+}
+
+.hr2 {
+    position: absolute;
+    width: 100%;
+    top:33%;
+    opacity: 0.3;
+}
+
+.miletext2 {
+    position: absolute;
+    top:38%;
+    left:5%;
+    font-size: 13px;
+}
+
+.miletext3 {
+    position: absolute;
+    top:41.5%;
+    left:12%;
+    font-size: 9px;
+    opacity: 0.5;
+}
+
+.mileagebtn {
+        position: absolute;
+        width: 100px;
+        height: 35px;
+        left: 32%;
+        top: 49%;
+        background: #33907C;
+        opacity: 0.8;
+        border-radius: 32px;
+}
+
+.mileagebtntext{
+    position: absolute;
+    top:20%;
+    left:30%;
+    color: aliceblue;
+    font-size: 20px;
+}
+
+.modaltext1 {
+    position: absolute;
+    top:6%;
+    left:30%;
+}
+
+.modaltext2 {
+    position: absolute;
+    top:18%;
+    left:10%;
+    font-size: 12px;
+    color:gray;
+}
+
+.modaltext3 {
+    position: absolute;
+    top:18%;
+    left:23%;
+    font-size: 12px;
+    color: gray;
+}
+
+.modaltext4 {
+    position: absolute;
+    top:18%;
+    left:36%;
+    font-size: 12px;
+    color: gray;
+}
+
+.modaltext2.selected {
+    color:black
+}
+
+.modaltext3.selected {
+    color:black
+}
+
+.modaltext4.selected {
+    color:black
+}
+
+.mileagecontent {
+    position: absolute;
+    top:30%;
+    left:10%;
+}
+
+.pointtext {
+    position: relative;
+    top:25%;
+}
+
+.pointtext1 {
+    font-size: 8px;
+}

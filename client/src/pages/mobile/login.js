@@ -16,10 +16,12 @@ import FormGroup from '@mui/material/FormGroup';
 import Box from '@mui/material/Box';
 import { useSelector, useDispatch } from 'react-redux';
 import { setAutoLoginChecked, setUsername, setPassword } from '../../redux/mobileauthlogin';
+import { setCarNumber, setid, setloginId, setname, setphoneNumber, setaccessToken, setrefreshToken} from '../../redux/mobileUserinfo'
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
+import axiosInstance from '../../axios/axios'
 
 
 function Login() {
@@ -63,7 +65,7 @@ function Login() {
   }
 
   // 최초 로그인여부 판별할 함수(추후 서버와 연결시 서버에서 true,flase값 받아와야할듯)
-  let firstlogin = true
+  let firstlogin = false
 
   const handleOpenLoginResultPage = () => {
     // 아이디와 비밀번호가 입력되어 있을 때만 이동
@@ -71,7 +73,29 @@ function Login() {
       if (firstlogin === true) {
         handleOpenFirstLoginCheck()
       } else {
-        navigate('/Mobile/Parkinglot');
+        axiosInstance({
+          method:'post',
+          url:'/tenant/login',
+          data:{
+            "loginId": username,
+            "loginPassword": password
+          },
+        })
+        .then((res) => {
+          // setCarNumber, setid, setloginId, setname, setphoneNumber, setaccessToken, setrefreshToken
+          dispatch(setCarNumber(res.data.response.carNumber));
+          dispatch(setid(res.data.response.id));
+          dispatch(setloginId(res.data.response.loginId));
+          dispatch(setname(res.data.response.name));
+          dispatch(setphoneNumber(res.data.response.phoneNumber));
+          dispatch(setaccessToken(res.data.response.tokenInfo.accessToken));
+          dispatch(setrefreshToken(res.data.response.tokenInfo.accessToken));
+          navigate('/Mobile/Parkinglot')
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+        
       }
     }
   };
