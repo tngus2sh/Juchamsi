@@ -39,6 +39,7 @@ public class MileageServiceImpl implements MileageService {
                     .id(mileage.getId())
                     .point(mileage.getPoint())
                     .type(mileage.getType())
+                    .description(mileage.getDescription())
                     .createDate(mileage.getCreatedDate())
                     .lastModifiedDate(mileage.getLastModifiedDate())
                     .build();
