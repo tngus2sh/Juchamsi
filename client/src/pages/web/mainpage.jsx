@@ -88,15 +88,15 @@ const MainPage = () => {
     navigate("/");
   };
   useEffect(() => {
-    if (!isLogin) {
-      navigate("/"); // 리다이렉트
-    }
+    // if (!isLogin) {
+    //   navigate("/"); // 리다이렉트
+    // }
   });
 
   return (
     <ThemeProvider theme={theme}>
-      <Grid container sx={{ height: "100vh" }} maxWidth="lg">
-        <Grid item xs={3} sx={{ height: "100vh", backgroundColor: "#2D4356" }} maxWidth="lg">
+      <Grid container sx={{ height: "100vh" }}>
+        <Grid item xs={2.5} sx={{ height: "100vh", backgroundColor: "#2D4356" }} maxWidth="lg">
           <Grid container>
             <Grid item xs={1} />
             <Grid item xs={5}>
@@ -277,9 +277,13 @@ const MainPage = () => {
         </Grid>
         <Grid
           item
-          xs={9}
-          sx={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}
-          maxWidth="lg"
+          xs={9.5}
+          sx={{
+            height: "100vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
           {mainStep[activeIndex]}
         </Grid>

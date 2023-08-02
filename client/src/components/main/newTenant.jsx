@@ -9,7 +9,8 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import http from "../../axios/http";
 import { useSelector, useDispatch } from "react-redux";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
+import Toolbar from "@mui/material/Toolbar";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -79,7 +80,10 @@ const NewTenant = () => {
     return <div>Loading...</div>;
   }
   return (
-    <TableContainer component={Paper}>
+    <TableContainer sx={{ width: "80%" }} component={Paper}>
+      <Toolbar sx={{ display: "flex", justifyContent: "center" }}>
+        <Typography style={{ fontSize: "20px" }}>신규 세입자 신청 목록</Typography>
+      </Toolbar>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
