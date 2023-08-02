@@ -104,6 +104,18 @@
     border-radius: 32px;
 }
 
+.okbtn2 {
+    position: absolute;
+    width: 100px;
+    height: 30px;
+    left: 15%;
+    top: 65%;
+    
+    background: #33907C;
+    opacity: 0.8;
+    border-radius: 32px;
+}
+
 
 .mileagechangetext2 {
     position: absolute;
@@ -131,4 +143,76 @@
     left:35%;
     color: aliceblue;
     font-size: 15px;
+}
+
+.okbtn1 {
+    position: absolute;
+    width: 100px;
+    height: 30px;
+    left: 35%;
+    top: 180%;
+    
+    background: #33907C;
+    opacity: 0.8;
+    border-radius: 32px;
+}
+
+.mileagechangetext4 {
+    position: absolute;
+    top:30%;
+    left:30%;
+    color: aliceblue;
+    font-size: 15px;
+}
+
+
+.okbtn3 {
+    position: absolute;
+    width: 100px;
+    height: 30px;
+    left: 15%;
+    top: 65%;
+    
+    background: #111111;
+    opacity: 0.25;
+    border-radius: 32px;
+}
+
+.mileageresulttext1 {
+    display: flex;
+    justify-content: space-between;
+}
+
+.mileagetext2 {
+    font-size: 10px;
+    opacity: 0.5;
+}
+
+.easypw1 {
+    position: absolute;
+    top:10%;
+}
+
+.okbtn4 {
+    position: absolute;
+    width: 100px;
+    height: 30px;
+    left: 30%;
+    top: 85%;
+    
+    background: #33907C;
+    opacity: 0.8;
+    border-radius: 32px;
+}
+
+.okbtn5 {
+    position: absolute;
+    width: 100px;
+    height: 30px;
+    left: 30%;
+    top: 85%;
+    
+    background: #111111;
+    opacity: 0.25;
+    border-radius: 32px;
 }
