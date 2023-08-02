@@ -53,12 +53,9 @@ function App() {
               <Route path="/Mobile/Findpw" element={<MobileFindPwPage />}/>
               <Route path="/Mobile/Signup" element={<MobileSignupPage />}/>
               <Route path="/Mobile/Parkinglot" element={<MobileParkinglogPage />}/>
-<<<<<<< HEAD
-=======
               <Route path="/Mobile/Mycar" element={<MobileMycarparkingPage />}/>
               <Route path="/Mobile/Termessage" element={<MobileTermessagePage />}/>
               <Route path="/Mobile/Account" element={<MobileAccountPage />}/>
->>>>>>> 4af6d02b3afdf5a007840fa60f59aa2857f6180c
                <Route path="/mainPage" element={ <WebMainPage/>} />
           </Routes>
           </BrowserRouter>
