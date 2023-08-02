@@ -15,11 +15,4 @@ public interface SmsService {
     String sendSmsToCheckUser(MessageRequest messageRequest)throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException;
 
     SmsResponse sendSmsToFindPassword(MessageRequest messageRequest)throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException;
-
-    // 핸드폰 인증
-//    String sendSmsToCheckUser(CheckUserRequest request);
-
-    // 임시 비밀번호 발급
-//    void sendSmsToFindPassword(CheckUserRequest request);
-
 }

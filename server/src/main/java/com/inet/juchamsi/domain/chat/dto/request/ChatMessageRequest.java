@@ -16,10 +16,10 @@ public class ChatMessageRequest {
     }
 
     private MessageType type;
-    // 채팅방 ID
-    private String roomId;
-    // 보내는 사람
+    // 보내는 사람 : 사용자 닉네임(차 번호)
     private String sender;
+    // 보내는 사람 : 사용자 아이디
+    private String senderId;
     // 내용
     private String message;
 }

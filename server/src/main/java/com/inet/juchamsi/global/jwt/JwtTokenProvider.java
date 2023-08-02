@@ -1,5 +1,6 @@
 package com.inet.juchamsi.global.jwt;
 
+import com.inet.juchamsi.global.error.JwtTokenException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -92,14 +93,17 @@ public class JwtTokenProvider {
             return true;
         } catch (SecurityException | MalformedJwtException e) {
             log.info("Invalid JWT Token", e);
+            throw new JwtTokenException(JwtTokenProvider.class, token);
         } catch (ExpiredJwtException e) {
             log.info("Expired JWT Token", e);
+            throw new JwtTokenException(JwtTokenProvider.class, token);
         } catch (UnsupportedJwtException e) {
             log.info("UnSupported JWT Token", e);
+            throw new JwtTokenException(JwtTokenProvider.class, token);
         } catch (IllegalArgumentException e) {
             log.info("JWT claims string is empty", e);
+            throw new JwtTokenException(JwtTokenProvider.class, token);
         }
-        return false;
     }
 
     private Claims parseClaims(String accessToken) {
