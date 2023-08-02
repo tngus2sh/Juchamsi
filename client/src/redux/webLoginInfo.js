@@ -8,7 +8,8 @@ const webLoginInfo = createSlice({
     villaName: '',
     parkingLotCol: '',
     identification: '',
-    villaIdNumber:''
+    villaIdNumber: '',
+    isLogin: false
     
   },
   reducers: {
@@ -30,8 +31,20 @@ const webLoginInfo = createSlice({
     setVillaIdNumber: (state, action) => {
       state.villaIdNumber = action.payload;
     },
+    setIsLogin: (state, action) => {
+      state.isLogin = action.payload;
+    },
+    setLogout: (state) => {
+      state.name = '';
+      state.roadAddress = '';
+      state.villaName = '';
+      state.parkingLotCol = '';
+      state.identification = '';
+      state.villaIdNumber = '';
+      state.isLogin = false;
+    },
   },
 });
 
-export const { setName, setRoadAddress, setVillaName, setParkingLotCol, setIdentification, setVillaIdNumber } = webLoginInfo.actions;
+export const { setName, setRoadAddress, setVillaName, setParkingLotCol, setIdentification, setVillaIdNumber, setIsLogin, setLogout } = webLoginInfo.actions;
 export default webLoginInfo.reducer;

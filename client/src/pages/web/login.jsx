@@ -24,6 +24,7 @@ import {
   setParkingLotCol,
   setIdentification,
   setVillaIdNumber,
+  setIsLogin,
 } from "../../redux/webLoginInfo";
 import http from "../../axios/http";
 
@@ -72,7 +73,7 @@ const Login = () => {
           dispatch(setIdentification(response.data.response.villa.idNumber));
           dispatch(setParkingLotCol(response.data.response.villa.totalCount));
           dispatch(setVillaIdNumber(response.data.response.villa.id));
-
+          dispatch(setIsLogin(true));
           navigate("/mainPage");
         } else {
           // 로그인 실패한 경우

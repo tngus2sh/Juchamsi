@@ -17,6 +17,7 @@ const persistConfig = {
 }
 const rootReducer = combineReducers({
   form: formSlice,
+  mycar:mobileMycarstatus,
   loginform: loginform,
   addressOpen: addressOpen,
   auth: mobileauthlogin,

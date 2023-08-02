@@ -17,7 +17,14 @@ const Step3 = () => {
   const dispatch = useDispatch();
   const step3Data = useSelector((state) => state.form.step3Data);
   const open = useSelector((state) => state.addressOpen.open);
+  // 체크박스(개인정보 이용동의) 상태를 관리
+  const [isChecked, setIsChecked] = useState(false);
 
+  // 체크박스의 상태를 변경하는 함수
+  const handleCheckboxChange = (event) => {
+    setIsChecked(event.target.checked);
+    dispatch(setStep3Data({ privacyAgreement: event.target.checked }));
+  };
   const handleVillaNameChange = (e) => {
     dispatch(setStep3Data({ villaName: e.target.value }));
   };
@@ -107,6 +114,8 @@ const Step3 = () => {
                 </Typography>
               }
               style={{ display: "flex", justifyContent: "start" }}
+              checked={isChecked}
+              onChange={handleCheckboxChange}
             />
           </Grid>
           <Grid item xs={2} style={{ marginTop: "13px" }}>
