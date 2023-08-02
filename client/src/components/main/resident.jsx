@@ -366,7 +366,7 @@ const Resident = () => {
   }
   return (
     <React.Fragment>
-      <Box sx={{ width: "100%", ml: "70px" }}>
+      <Box sx={{ width: "70%" }}>
         <Paper sx={{ width: "100%" }}>
           <Toolbar>
             <Grid container alignItems="center">
