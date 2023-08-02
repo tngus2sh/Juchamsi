@@ -32,13 +32,13 @@ public class ChatRoomApiController {
 
     // 모든 채팅리스트 목록 반환
     @ApiOperation(value = "모든 채팅리스트 목록 반환", notes = "loginId에 해당하는 회원의 채팅 목록을 반환한다.")
-    @GetMapping("/rooms/{loginId}")
+    @GetMapping("/rooms/{userId}")
     public ApiResult<List<ChatRoomResponse>> showChatRoom(
-            @ApiParam(value = "loginId")
-            @PathVariable(value = "loginId") String loginId
+            @ApiParam(value = "userId")
+            @PathVariable(value = "userId") String userId
     ) {
-        log.debug("# get showChatRoom={}", loginId);
-        return OK(chatService.showChatRoom(loginId));
+        log.debug("# get showChatRoom={}", userId);
+        return OK(chatService.showChatRoom(userId));
     }
 
     // 특정 채팅방 조회
@@ -49,12 +49,16 @@ public class ChatRoomApiController {
             @PathVariable("roomId") String roomId
     ) {
         log.debug("# get roomInfo={}", roomId);
-        return OK(chatService.showDetailChatRoom(roomId));
+        try {
+            ChatRoomResponse respone = chatService.showDetailChatRoom(roomId);
+            return OK(respone);
+        } catch (NotFoundException e) {
+            return ERROR("채팅룸을 찾을 수가 없습니다.", HttpStatus.NO_CONTENT);
+        }
     }
 
     /* 유저간 채팅방 */
     // 채팅방 생성
-    // TODO: 채팅방 이름이 상대방 이름이 되도록 해야함
     @ApiOperation(value = "유저간 채팅방 생성", notes = "request에 담겨진 userIdOne과 userIdTwo에 해당하는 회원의 채팅방을 개설한다.")
     @PostMapping("/room")
     public ApiResult<ChatRoomResponse> createChatRoom(
