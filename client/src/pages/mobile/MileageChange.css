@@ -10,7 +10,7 @@
 }
 
 .pointtext2 {
-    font-size: 15px;
+    font-size: 13px;
 }
 
 .pointtext3 {
@@ -35,6 +35,7 @@
     position: absolute;
     top:10px;
     left:15%;
+    z-index: 1;
 }
 
 .stack1 {
@@ -64,6 +65,16 @@
     position: absolute;
     top:60%;
     left:0%;
+}
+
+.stack4 {
+    position: absolute;
+    top:150%;
+    left:15%;
+    width:80%;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .formcontrol1 {
@@ -150,7 +161,7 @@
     width: 100px;
     height: 30px;
     left: 35%;
-    top: 180%;
+    top: 196%;
     
     background: #33907C;
     opacity: 0.8;
@@ -215,4 +226,25 @@
     background: #111111;
     opacity: 0.25;
     border-radius: 32px;
+}
+
+.okbtn6 {
+    position: absolute;
+    width: 100px;
+    height: 30px;
+    left: 35%;
+    top: 70%;
+    
+    background: #33907C;
+    opacity: 0.8;
+    border-radius: 32px;
+}
+
+
+.mileageresulttext2 {
+    position: absolute;
+    top:30%;
+    left:35%;
+    color: aliceblue;
+    font-size: 15px;
 }

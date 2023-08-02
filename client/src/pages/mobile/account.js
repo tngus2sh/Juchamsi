@@ -95,7 +95,7 @@ function Account() {
             <hr className='hr1'/>
             <p className='miletext1'>현재 마일리지</p>
             <img src={process.env.PUBLIC_URL + '/img/mobile/2.png'} className='mileimg'></img>
-            <p className='miletext'>1000</p>
+            <p className='miletext'>20000</p>
             <DescriptionIcon className='descripticon' onClick={handleOpenMileage} />
             <Modal open={MileageOpen} onClose={handleCloseMileage} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
                 <Box sx={style1}>

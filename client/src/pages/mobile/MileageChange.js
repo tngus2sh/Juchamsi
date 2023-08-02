@@ -16,6 +16,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import CallIcon from '@mui/icons-material/Call';
 
 function MileageChange() {
     const [showPassword, setShowPassword] = React.useState(false);
@@ -61,6 +62,11 @@ function MileageChange() {
         navigate('/Mobile/Account');
     };
 
+    const handleResultModal = () => {
+        setOpenResultModal(false)
+        navigate('/Mobile/Account')
+    }
+
     const handleCloseModal = () => {
         setOpenModal(false);
     };
@@ -88,6 +94,7 @@ function MileageChange() {
     };
 
     const handleOpenNewModal = () => {
+        setOpenFinalModal(false)
         setOpenResultModal(true);
     };
 
@@ -174,12 +181,26 @@ function MileageChange() {
         overflowY: 'auto', // 스크롤바 추가
     };
 
+    // modal 스타일
+    const style2 = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 230,
+        height:'100px',
+        bgcolor: 'white',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+    };
+
     return (
         <div>
             <div className='mileagechangetext1'>
                 <Stack direction="row" sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <p className='pointtext1'>보유마일리지</p>
-                    <p className='pointtext2'>{usermileage}</p>
+                    <p className='pointtext1'>{usermileage}</p>
                 </Stack>
                 <br />
                 <Stack direction="row" className='stack2'>
@@ -274,7 +295,7 @@ function MileageChange() {
                 <br />
                 <Stack
                     direction="row"
-                    className='stack1'
+                    className='stack4'
                 >
                     <p className='bankname4'>계좌번호</p>
                     <TextField
@@ -295,28 +316,62 @@ function MileageChange() {
             </Box>
             <Modal open={openModal} onClose={handleCloseModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
                 <Box sx={style1}>
+                <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ textAlign: 'center' }}>
+                    <span style={{fontSize:'24px', fontWeight:'bolder'}}>안내사항</span>
+                </Typography>
+                <hr/>
+                <br/>
                     <Typography id="modal-modal-description">
                         <span style={{fontSize:'16px', fontWeight:'bold'}}>1.마일리지</span>
                         <br/>
                         <br/>
-                        <span style={{fontSize:'12px', fontWeight:'bold'}}>1-1. 최소 1000마일리지 이상만 마일리지 교환을 신청할 수있으며  1000포인트 단위로 마일리지 교환이 가능합니다.</span>
+                        <span style={{fontSize:'12px', fontWeight:'bold'}}>1-1. 최소 1000마일리지 이상만 마일리지 </span>
+                        <span style={{marginLeft:'22px', fontSize:'12px', fontWeight:'bold'}}>
+                        교환을 신청할 수있으며  1000포인트 
+                        </span>
+                        <span style={{marginLeft:'22px', fontSize:'12px', fontWeight:'bold'}}>
+                        단위로 마일리지 교환이 가능합니다.
+                        </span>
                         <br/>
                         <br/>
-                        <span style={{fontSize:'12px', fontWeight:'bold'}}>1-2. 마일리지 교환 신청 후 영업일 기준 2~3일 정도 시간이 소요됩니다.</span>
+                        <span style={{fontSize:'12px', fontWeight:'bold'}}>1-2. 마일리지 교환 신청 후 영업일 기준</span>
+                        <span style={{marginLeft:'22px', fontSize:'12px', fontWeight:'bold'}}>
+                        2~3일 정도 시간이 소요됩니다.
+                        </span>
                         <br/>
                         <br/>
-                        <span style={{fontSize:'12px', fontWeight:'bold'}}>1-3. 영업일 3일 이후에도 마일리지 교환이 완료되지 않을경우 고객센터로 문의해주시기 바랍니다.</span>
+                        <span style={{fontSize:'12px', fontWeight:'bold'}}>1-3. 영업일 3일 이후에도 마일리지 교환이 </span>
+                        <span style={{marginLeft:'22px', fontSize:'12px', fontWeight:'bold'}}>
+                        완료되지 않을경우 고객센터로 문의해
+                        </span>
+                        <span style={{marginLeft:'22px', fontSize:'12px', fontWeight:'bold'}}>
+                        주시기 바랍니다.
+                        </span>
                         <br/>
-                        <span style={{fontSize:'12px', fontWeight:'bold'}}>고객센터 : 02-123-4567</span>
+                        <span style={{marginLeft:'22px', fontSize:'12px', fontWeight:'bold'}}>
+                        ☎  고객센터 : 02-123-4567
+                        </span>
                         <br/>
                         <br/>
                         <span style={{fontSize:'16px', fontWeight:'bold'}}>2.은행 정보 관련</span>
                         <br/>
                         <br/>
-                        <span style={{fontSize:'12px', fontWeight:'bold'}}>2-1. 예금주, 은행명, 계좌번호 오기재로 인한 마일리지 환급문제의 경우 당사에서 책임지지 않음을 안내드립니다.</span>
+                        <span style={{fontSize:'12px', fontWeight:'bold'}}>2-1. 예금주, 은행명, 계좌번호 오기재로 인</span>
+                        <span style={{marginLeft:'22px', fontSize:'12px', fontWeight:'bold'}}>
+                        한 마일리지 환급문제의 경우 당사에
+                        </span>
+                        <span style={{marginLeft:'22px', fontSize:'12px', fontWeight:'bold'}}>
+                        서 책임지지 않음을 안내드립니다.
+                        </span>
                         <br/>
                         <br/>
-                        <span style={{fontSize:'12px', fontWeight:'bold'}}>2-2. 별도의 은행명, 계좌번호, 예금주 확인을 진행하지 않음으로 신청자 본인이 잘 확인해서 입력해주시기 바랍니다.</span>
+                        <span style={{fontSize:'12px', fontWeight:'bold'}}>2-2. 별도의 은행명, 계좌번호, 예금주 확인</span>
+                        <span style={{marginLeft:'22px', fontSize:'12px', fontWeight:'bold'}}>
+                        을 진행하지 않음으로 신청자 본인이
+                        </span>
+                        <span style={{marginLeft:'22px', fontSize:'12px', fontWeight:'bold'}}>
+                        잘 확인해서 입력해주시기 바랍니다.
+                        </span>
                     </Typography>
                     <Box
                         component="span"
@@ -342,17 +397,17 @@ function MileageChange() {
                     {/* 사용자가 선택한 값을 표시 */}
                     <Stack direction="row" sx={{ display: 'flex', justifyContent: 'space-between' }}>
                         <p className='pointtext1'>현재 보유 마일리지</p>
-                        <p className='pointtext2'>{usermileage}</p>
+                        <p className='pointtext1'>{usermileage}</p>
                     </Stack>
                     <br/>
                     <Stack direction="row" sx={{ display: 'flex', justifyContent: 'space-between' }}>
                         <p className='pointtext1'>현금 교환 마일리지</p>
-                        <p className='pointtext2'>{changemileage}</p>
+                        <p className='pointtext1'>{changemileage}</p>
                     </Stack>
                     <br/>
                     <Stack direction="row" sx={{ display: 'flex', justifyContent: 'space-between' }}>
                         <p className='pointtext1'>교환후 남은 마일리지</p>
-                        <p className='pointtext2'>{usermileage - changemileage}</p>
+                        <p className='pointtext1'>{usermileage - changemileage}</p>
                     </Stack>
                     <br/>
                     <br/>
@@ -381,7 +436,7 @@ function MileageChange() {
                             </IconButton>
                             </InputAdornment>
                         }
-                        label="비밀번호"
+                        label="간편 비밀번호"
                         name="password1"
                         value={password1}
                         onChange={handleInputChange}
@@ -398,8 +453,17 @@ function MileageChange() {
                 </Box>
             </Modal>
             <Modal open={openResultModal} onClose={() => setOpenResultModal(false)}>
-                <Box sx={style1}>
-                    <p>결과창</p>
+                <Box sx={style2}>
+                    <p className='pointtext2'>입력하신 계좌로 신청하신 마일리지가 입급됩니다.</p>
+                    <br/>
+                    <p className='pointtext2'>영업일 기준 2~3일의 시간이 소요될 수 있습니다.</p>
+                    <Box
+                        component="span"
+                        className='okbtn6'
+                        onClick={handleResultModal}
+                    >
+                        <p className="mileageresulttext2">확인</p>
+                    </Box>
                 </Box>
             </Modal>
             <Footer AccounticonColor="#33907C" />
