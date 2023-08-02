@@ -8,10 +8,10 @@ import com.inet.juchamsi.domain.chat.dto.request.ChatMessageRequest;
 import com.inet.juchamsi.domain.chat.dto.request.ChatRoomRequest;
 import com.inet.juchamsi.domain.chat.dto.request.SystemChatRoomRequest;
 import com.inet.juchamsi.domain.chat.dto.response.ChatRoomResponse;
+import com.inet.juchamsi.domain.chat.dto.response.MessageResponse;
 import com.inet.juchamsi.domain.chat.entity.ChatPeople;
 import com.inet.juchamsi.domain.chat.entity.ChatRoom;
 import com.inet.juchamsi.domain.chat.entity.Message;
-import com.inet.juchamsi.domain.chat.entity.Type;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.global.error.AlreadyExistException;
@@ -20,7 +20,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.inet.juchamsi.domain.chat.entity.Status.ALIVE;
 import static com.inet.juchamsi.domain.chat.entity.Type.GENERAL;
@@ -39,8 +41,8 @@ public class ChatServiceImpl implements ChatService {
     
     // 채팅방 불러오기
     @Override
-    public List<ChatRoomResponse> showChatRoom(String loginId) {
-        List<ChatRoom> results = chatRoomRepository.findAllRoomsByLoginIdAndStatus(loginId, ACTIVE, ALIVE);
+    public List<ChatRoomResponse> showChatRoom(String userId) {
+        List<ChatRoom> results = chatRoomRepository.findAllRoomsByLoginIdAndStatus(userId, ACTIVE, ALIVE);
         List<ChatRoomResponse> chatRoomResponses = new ArrayList<>();
         for (ChatRoom result : results) {
             chatRoomResponses.add(ChatRoomResponse.builder()
@@ -58,10 +60,13 @@ public class ChatServiceImpl implements ChatService {
         if (result.isEmpty()) {
             throw new NotFoundException(ChatRoom.class, roomId);
         }
+        // 이전 채팅방 글 불러오기
+        List<MessageResponse> messageUserDtos = messageRepository.findAllByChatRoom(roomId, ALIVE);
         
         return ChatRoomResponse.builder()
                 .roomId(result.get().getRoomId())
                 .roomName(result.get().getRoomName())
+                .messageList(messageUserDtos)
                 .build();
     }
 
