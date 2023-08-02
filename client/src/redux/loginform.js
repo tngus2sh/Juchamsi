@@ -1,17 +1,29 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  id: '',
-  password: ''
+  loginId: '',
+  loginPassword: '',
+  isStoreLoginChecked: false,
+  storedId: '',
 };
 
-const AddressOpen = createSlice({
+const loginform = createSlice({
   name: 'loginform',
   initialState,
   reducers: {
-    
+    setLoginId: (state, action) => {
+      state.loginId = action.payload;
+    },
+    setLoginPassword: (state, action) => {
+      state.loginPassword = action.payload;
+    },
+    setIsStoreLoginChecked: (state, action) => {
+      state.loginPassword = action.payload;
+    },
+    setStoredId: (state, action) => {
+      state.loginPassword = action.payload;
+    },
   },
 });
-
-// export const { setOpen, setClose} = AddressOpen.actions;
-export default AddressOpen.reducer;
+export const { setLoginId, setLoginPassword, setIsStoreLoginChecked, setStoredId} = loginform.actions;
+export default loginform.reducer;

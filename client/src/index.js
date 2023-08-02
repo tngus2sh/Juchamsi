@@ -4,15 +4,32 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
-import store from './redux/store';
+import { persistor, store } from './redux/store';
+import { PersistGate } from 'redux-persist/integration/react';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+  
+>>>>>>> 900a47ebafb3058221e19406e7115d342661060e
+=======
+  
+>>>>>>> 900a47ebafb3058221e19406e7115d342661060e
     <Provider store={store}>
-      <App />
+    <PersistGate loading={null} persistor={persistor}>
+        <App />
+        </PersistGate>
     </Provider>
-  </React.StrictMode>
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+  
+>>>>>>> 900a47ebafb3058221e19406e7115d342661060e
+=======
+  
+>>>>>>> 900a47ebafb3058221e19406e7115d342661060e
 );
 
 reportWebVitals();

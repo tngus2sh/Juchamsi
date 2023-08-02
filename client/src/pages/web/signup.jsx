@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Container from "@mui/material/Container";
 import styled from "styled-components";
 import Button from "@mui/material/Button";
@@ -13,6 +13,8 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import HorizontalLinearStepper from "../../components/signup/Stepper";
+import { resetForm } from "../../redux/formslice";
+import { useDispatch } from "react-redux";
 
 const theme = createTheme({
   palette: {
@@ -23,6 +25,10 @@ const theme = createTheme({
 });
 
 const SignUpPage = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(resetForm());
+  });
   return (
     <ThemeProvider theme={theme}>
       <Container

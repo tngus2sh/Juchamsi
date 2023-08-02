@@ -3,18 +3,27 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     step1Data: {
         name: '',
-        phoneNumber: '',
+    phoneNumber: '',
+    verificationNumber: '',
+    certification: false
+    
     },
     step2Data: {
-      id: '',
-      password: '',
-      password2: ''
+      loginId: '',
+      loginPassword: '',
+      loginPassword2: '',
+      idConfirmation: false,
+      passwordMatching: false
+
+
   },
     step3Data: {
-      zipCode: '',
-      address: '',
-      jibunAddress:'',
+      roadZipCode : '',
+      roadAddress : '',
+      regionAddress :'',
       villaName: '',
+      parkingLotCol: '',
+      privacyAgreement: false
   },
 };
 
@@ -31,8 +40,13 @@ const formSlice = createSlice({
     setStep3Data: (state, action) => {
       state.step3Data = { ...state.step3Data, ...action.payload };
     },
+    resetForm: (state) => {
+      state.step1Data = initialState.step1Data;
+      state.step2Data = initialState.step2Data;
+      state.step3Data = initialState.step3Data;
+    },
   },
 });
 
-export const { setStep1Data, setStep2Data, setStep3Data } = formSlice.actions;
+export const { setStep1Data, setStep2Data, setStep3Data, resetForm} = formSlice.actions;
 export default formSlice.reducer;

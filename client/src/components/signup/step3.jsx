@@ -17,9 +17,20 @@ const Step3 = () => {
   const dispatch = useDispatch();
   const step3Data = useSelector((state) => state.form.step3Data);
   const open = useSelector((state) => state.addressOpen.open);
+  // 체크박스(개인정보 이용동의) 상태를 관리
+  const [isChecked, setIsChecked] = useState(false);
 
+  // 체크박스의 상태를 변경하는 함수
+  const handleCheckboxChange = (event) => {
+    setIsChecked(event.target.checked);
+    dispatch(setStep3Data({ privacyAgreement: event.target.checked }));
+  };
   const handleVillaNameChange = (e) => {
     dispatch(setStep3Data({ villaName: e.target.value }));
+  };
+
+  const handleParkingLotColChange = (e) => {
+    dispatch(setStep3Data({ parkingLotCol: e.target.value }));
   };
 
   const handleOpen = () => {
@@ -37,8 +48,8 @@ const Step3 = () => {
           <Grid item xs={7}>
             <InputBox
               tag={"빌라 주소"}
-              name={"zipcode"}
-              value={step3Data.zipCode}
+              name={"roadZipCode"}
+              value={step3Data.roadZipCode}
               height={"15px"}
             />
           </Grid>
@@ -62,9 +73,14 @@ const Step3 = () => {
         </Grid>
       </Box>
       <Box sx={{ height: "5px" }} />
-      <InputBox name={"address"} value={step3Data.address} height={"15px"} />
+      <InputBox name={"roadAddress"} value={step3Data.roadAddress} height={"15px"} />
       <Box sx={{ height: "5px" }} />
-      <InputBox tag={"빌라 이름"} name={"villaName"} height={"20px"} />
+      <InputBox
+        tag={"빌라 이름"}
+        name={"villaName"}
+        onChange={handleVillaNameChange}
+        height={"20px"}
+      />
 
       <Box sx={{ marginTop: "7px" }}>
         <Typography style={{ fontSize: 12, textAlign: "left", fontWeight: "bold" }}>
@@ -72,13 +88,18 @@ const Step3 = () => {
         </Typography>
         <Grid container>
           <Grid item xs={2}>
-            <InputBox name={"left-count"} type={"number"} height={"20px"} />
+            <InputBox
+              name={"parkingLotCol"}
+              type={"number"}
+              height={"20px"}
+              onChange={handleParkingLotColChange}
+            />
           </Grid>
           <Grid item xs={1} sx={{ marginTop: 1 }}>
             X
           </Grid>
           <Grid item xs={2}>
-            <InputBox name={"right-count"} type={"number"} height={"20px"} />
+            <InputBox name={"parkingLotRow"} type={"number"} height={"20px"} value={2} disabled />
           </Grid>
         </Grid>
         <Grid container>
@@ -93,6 +114,8 @@ const Step3 = () => {
                 </Typography>
               }
               style={{ display: "flex", justifyContent: "start" }}
+              checked={isChecked}
+              onChange={handleCheckboxChange}
             />
           </Grid>
           <Grid item xs={2} style={{ marginTop: "13px" }}>

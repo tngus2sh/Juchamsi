@@ -47,8 +47,10 @@ public class CreateTenantRequest {
     @ApiModelProperty(example = "1가1234")
     private String carNumber;
 
+    // refactor
+//    @NotBlank
+//    @Pattern(regexp = "^[0-9]*$")
     @Range(min = 1)
-    @Pattern(regexp = "^[0-9]*$")
     @ApiModelProperty(example = "101")
     private int villaNumber;
 

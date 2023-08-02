@@ -2,10 +2,9 @@ package com.inet.juchamsi.user.service;
 
 import com.inet.juchamsi.domain.user.application.TenantService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
-import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
-import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
+import com.inet.juchamsi.domain.user.dto.request.ModifyTenantRequest;
 import com.inet.juchamsi.domain.user.dto.response.TenantResponse;
 import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.domain.user.entity.Grade;
@@ -28,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static com.inet.juchamsi.domain.user.entity.Approve.APPROVE;
 import static com.inet.juchamsi.domain.user.entity.Approve.WAIT;
 import static com.inet.juchamsi.domain.user.entity.Grade.USER;
 import static com.inet.juchamsi.global.common.Active.ACTIVE;
@@ -110,22 +110,6 @@ public class TenantServiceTest {
     }
 
     @Test
-    @DisplayName("회원 전체 조회")
-    void showUser() {
-        // given
-        Villa targetVilla = insertVilla();
-        User targetUser = insertUser(targetVilla);
-        compareUser(targetVilla);
-
-        // when
-        List<TenantResponse> responseList = tenantService.showUser();
-
-        // then
-        System.out.println("responseList = " + responseList);
-        assertNotNull(responseList);
-    }
-
-    @Test
     @DisplayName("회원 상세 조회")
     void showDetailUser() {
         // given
@@ -142,6 +126,56 @@ public class TenantServiceTest {
     }
 
     @Test
+    @DisplayName("빌라 내 승인된 세입자 전체 조회")
+    void showUser() {
+        // given
+        Villa targetVilla = insertVilla();
+        User targetUser = insertUser(targetVilla);
+        compareUser(targetVilla);
+        Long villaId = targetVilla.getId();
+
+        // when
+        List<TenantResponse> responseList = tenantService.showApproveTenant(villaId, APPROVE);
+
+        // then
+        System.out.println("responseList = " + responseList);
+        assertNotNull(responseList);
+    }
+
+    @Test
+    @DisplayName("빌라 내 신규 회원가입 한 세입자 전체 조회")
+    void showNewRequestTenant() {
+        // given
+        Villa targetVilla = insertVilla();
+        User ownerUser = insertUser(targetVilla);
+        User tenantUser = insertTenantUser(targetVilla);
+        Long villaId = targetVilla.getId();
+
+        // when
+        List<TenantResponse> tenantResponseList = tenantService.showApproveTenant(villaId, WAIT);
+
+        // then
+        assertNotNull(tenantResponseList);
+    }
+
+    @Test
+    @DisplayName("세입자 승인상태 수정")
+    void manageApprove() {
+        // given
+        Villa targetVilla = insertVilla();
+        User targetUser = insertUser(targetVilla);
+        tenantUser();
+
+        // when
+        String tenantId = "tenantId";
+        Approve approve = APPROVE;
+        tenantService.manageApprove(tenantId, approve);
+
+        // then
+        assertThat(userRepository.findByLoginId(tenantId).get().getApprove()).isEqualTo(APPROVE);
+    }
+
+    @Test
     @DisplayName("세입자 회원정보 수정 ## 핸드폰 번호 수정")
     void modifyUser() {
         // given
@@ -149,12 +183,10 @@ public class TenantServiceTest {
         User targetUser = insertUser(targetVilla);
 
         // when
-        CreateTenantRequest request = CreateTenantRequest.builder()
+        ModifyTenantRequest request = ModifyTenantRequest.builder()
                 .villaIdNumber("62218271")
                 .loginId("userId")
-                .loginPassword(passwordEncoder.encode("userPw123!"))
                 .phoneNumber("01098765432")
-                .name("김주참")
                 .carNumber("12가 1234")
                 .villaNumber(201)
                 .build();
@@ -173,12 +205,10 @@ public class TenantServiceTest {
         User targetUser = insertUser(targetVilla);
 
         // when
-        CreateTenantRequest request = CreateTenantRequest.builder()
+        ModifyTenantRequest request = ModifyTenantRequest.builder()
                 .villaIdNumber("62218271")
                 .loginId("leeUser")
-                .loginPassword(passwordEncoder.encode("userPw123!"))
                 .phoneNumber("01098765432")
-                .name("이주참")
                 .carNumber("12가 1234")
                 .villaNumber(201)
                 .build();
@@ -198,12 +228,10 @@ public class TenantServiceTest {
         User secondUser = compareUser(targetVilla);
 
         // when
-        CreateTenantRequest request = CreateTenantRequest.builder()
+        ModifyTenantRequest request = ModifyTenantRequest.builder()
                 .villaIdNumber("62218271")
                 .loginId("userId")
-                .loginPassword(passwordEncoder.encode("userPw123!"))
                 .phoneNumber("01098765432")
-                .name("김주참")
                 .carNumber("12가 1234")
                 .villaNumber(201)
                 .build();
@@ -222,12 +250,10 @@ public class TenantServiceTest {
         User targetUser = insertUser(targetVilla);
 
         // when
-        CreateTenantRequest request = CreateTenantRequest.builder()
+        ModifyTenantRequest request = ModifyTenantRequest.builder()
                 .villaIdNumber("6220-271")
                 .loginId("userId")
-                .loginPassword(passwordEncoder.encode("userPw123!"))
                 .phoneNumber("01012345678")
-                .name("김주참")
                 .carNumber("12가 1234")
                 .villaNumber(201)
                 .build();
@@ -290,12 +316,49 @@ public class TenantServiceTest {
                 .phoneNumber("01098765432")
                 .name("이주참")
                 .grade(Grade.USER)
-                .approve(Approve.APPROVE)
+                .approve(APPROVE)
                 .active(Active.ACTIVE)
                 .carNumber("98나 1234")
                 .villaNumber(101)
                 .roles(Collections.singletonList("USER"))
                 .build();
         return userRepository.save(user);
+    }
+
+    private User insertTenantUser(Villa villa) {
+        User user = User.builder()
+                .villa(villa)
+                .loginId("tenantId")
+                .loginPassword(passwordEncoder.encode("userPw123!"))
+                .phoneNumber("01099998888")
+                .name("최입자")
+                .grade(Grade.USER)
+                .approve(Approve.WAIT)
+                .active(Active.ACTIVE)
+                .roles(Collections.singletonList("USER"))
+                .build();
+        return userRepository.save(user);
+    }
+
+    private User tenantUser() {
+        Villa villa = Villa.builder()
+                .name("삼성 빌라")
+                .address("광주 광산구 하남산단6번로 107")
+                .idNumber("62218271")
+                .totalCount(6)
+                .active(ACTIVE)
+                .build();
+        villaRepository.save(villa);
+        return userRepository.save(User.builder()
+                .villa(villa)
+                .loginId("tenantId")
+                .loginPassword(passwordEncoder.encode("userPw123!"))
+                .phoneNumber("01099998888")
+                .name("최입자")
+                .grade(Grade.USER)
+                .approve(Approve.WAIT)
+                .active(Active.ACTIVE)
+                .roles(Collections.singletonList("USER"))
+                .build());
     }
 }

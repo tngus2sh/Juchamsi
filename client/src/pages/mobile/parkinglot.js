@@ -4,25 +4,23 @@ import Footer from './footer';
 import Box from '@mui/material/Box';
 import DriveEtaIcon from '@mui/icons-material/DriveEta';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 function Parkinglot() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleOpenMycarPage = () => {
     // 내 주차현황 페이지로 이동
     navigate('/Mobile/Mycar');
   };
 
-  // 주차장 행
-  const Boxrow = 3;
-  // 주차장 열
-  const BoxColumn = 2;
-  // 주차장 해당위치 차량 주차여부
-  const BoxItem = [true, false, true, false, false, true];
-  // 내 차량 주차 위치
-  const mycar = 2;
-  // 차량별 출차 시간
-  const Outtime = ['23.08.01 09:00', '', '23.08.01 08:00', '', '', '23.08.01 07:00'];
+  // Redux 상태에서 정보 가져오기
+  const BoxItem = useSelector((state) => state.mycar.BoxItem);
+  const mycar = useSelector((state) => state.mycar.mycar);
+  const Outtime = useSelector((state) => state.mycar.Outtime);
+  const Boxrow = useSelector((state) => state.mycar.Boxrow);
+  const BoxColumn = useSelector((state) => state.mycar.BoxColumn);
 
   // Box 그리드를 생성하는 함수
   const renderBoxGrid = () => {

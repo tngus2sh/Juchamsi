@@ -1,5 +1,5 @@
 import { Button, Container, Divider, Tab } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
@@ -42,6 +42,8 @@ import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutli
 import DriveEtaIcon from "@mui/icons-material/DriveEta";
 import HistoryIcon from "@mui/icons-material/History";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import http from "../../axios/http";
+import { useSelector, useDispatch } from "react-redux";
 
 const CurrentDate = () => {
   const currentDate = new Date();
@@ -55,32 +57,16 @@ const CurrentDate = () => {
   );
 };
 
-function createData(loginId, name, villa_number, car_number, phone_number, parking_state) {
-  return {
-    loginId,
-    name,
-    villa_number,
-    car_number,
-    phone_number,
-    parking_state,
-  };
-}
-
-const rows = [
-  createData("ssafy", "김싸피", "102호", "27보 3736", "010-1111-2222", "주차 중"),
-  createData("Donut", "이싸피", 25.0, 51, 4.9),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Honeycomb", 408, 3.2, 87, 6.5),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Jelly Bean", 375, 0.0, 94, 0.0),
-  createData("KitKat", 518, 26.0, 65, 7.0),
-  createData("Lollipop", 392, 0.2, 98, 0.0),
-  createData("Marshmallow", 318, 0, 81, 2.0),
-  createData("Nougat", 360, 19.0, 9, 37.0),
-  createData("Oreo", 437, 18.0, 63, 4.0),
-];
+// function createData(loginId, name, villaNumber, carNumber, phoneNumber, parkingState) {
+//   return {
+//     loginId,
+//     name,
+//     villaNumber,
+//     carNumber,
+//     phoneNumber,
+//     parkingState,
+//   };
+// }
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -124,19 +110,19 @@ const headCells = [
     label: "이름",
   },
   {
-    id: "villa_number",
+    id: "villaNumber",
     numeric: false,
     disablePadding: false,
     label: "호수",
   },
   {
-    id: "car_number",
+    id: "carNumber",
     numeric: false,
     disablePadding: false,
     label: "차번호",
   },
   {
-    id: "phone_number",
+    id: "phoneNumber",
     numeric: false,
     disablePadding: false,
     label: "핸드폰번호",
@@ -285,12 +271,34 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const Resident = () => {
+  const [loading, setLoading] = React.useState(true);
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("loginId");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rows, setRows] = React.useState([]);
+
+  const villaIdNumber = useSelector((state) => state.webInfo.villaIdNumber);
+
+  useEffect(() => {
+    TenantList();
+  }, []);
+
+  async function TenantList() {
+    await http
+      .get(`/tenant/approve/${villaIdNumber}`)
+      .then((response) => {
+        console.log(response.data.response);
+        setRows(response.data.response);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error while fetching data:", error);
+        setLoading(false);
+      });
+  }
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -351,12 +359,14 @@ const Resident = () => {
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage
       ),
-    [order, orderBy, page, rowsPerPage]
+    [order, orderBy, page, rowsPerPage, rows]
   );
-
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   return (
     <React.Fragment>
-      <Box sx={{ width: "100%", ml: "70px" }}>
+      <Box sx={{ width: "70%" }}>
         <Paper sx={{ width: "100%" }}>
           <Toolbar>
             <Grid container alignItems="center">
@@ -442,10 +452,10 @@ const Resident = () => {
                         {row.loginId}
                       </TableCell>
                       <TableCell align="center">{row.name}</TableCell>
-                      <TableCell align="center">{row.villa_number}</TableCell>
-                      <TableCell align="center">{row.car_number}</TableCell>
-                      <TableCell align="center">{row.phone_number}</TableCell>
-                      <TableCell align="center">{row.parking_state}</TableCell>
+                      <TableCell align="center">{row.villaNumber}</TableCell>
+                      <TableCell align="center">{row.carNumber}</TableCell>
+                      <TableCell align="center">{row.phoneNumber}</TableCell>
+                      <TableCell align="center">주차</TableCell>
                     </TableRow>
                   );
                 })}

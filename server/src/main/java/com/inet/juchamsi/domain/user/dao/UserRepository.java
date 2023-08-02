@@ -28,6 +28,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select u from User u where u.active=:active and u.grade=:grade")
     Optional<List<User>> findAllByGradeAndActive(@Param("grade") Grade grade, @Param("active") Active active);
 
+    @Query("select u from User u where u.villa=:villa and u.approve=:approve and u.active=:active and u.grade=:grade")
+    List<User> findVillaTenant(@Param("villa") Villa villa, @Param("approve") Approve approve, @Param("active") Active active, @Param("grade") Grade grade);
+
     @Query("select u from User u where u.loginId=:loginId")
     Optional<User> findByLoginId(@Param("loginId") String loginId);
 
@@ -45,8 +48,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<Void> updateTenant(@Param("loginId") String loginId, @Param("phoneNumber") String phoneNumber, @Param("carNumber") String carNumber, @Param("villaNumber") int villaNumber);
 
     @Modifying(clearAutomatically = true)
-    @Query("update User u set u.phoneNumber=:phoneNumber, u.carNumber=:carNumber where u.loginId=:loginId")
-    Optional<Void> updateOwner(@Param("loginId") String loginId, @Param("phoneNumber") String phoneNumberr, @Param("carNumber") String carNumber);
+    @Query("update User u set u.phoneNumber=:phoneNumber where u.loginId=:loginId")
+    Optional<Void> updateOwner(@Param("loginId") String loginId, @Param("phoneNumber") String phoneNumberr);
+
+    @Modifying(clearAutomatically = true)
+    @Query("update User u set u.approve=:approve where u.loginId=:loginId")
+    Optional<Void> updateApproveModify(@Param("loginId") String loginId, @Param("approve") Approve approve);
 
     @Modifying(clearAutomatically = true)
     @Query("update User u set u.phoneNumber=:phoneNumber where u.loginId=:loginId")
@@ -72,4 +79,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u from User u where u.villa=:villa and u.approve=:approve")
     List<User> findNewRequestTenant(@Param("villa") Villa villa, @Param("approve") Approve approve);
+
+    @Modifying(clearAutomatically = true)
+    @Query("update User u set u.totalMileage=u.totalMileage + :point where u.loginId=:loginId")
+    Optional<Void> getMileage(@Param("loginId") String loginId, @Param("point") int point);
 }

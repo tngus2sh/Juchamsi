@@ -2,12 +2,8 @@ package com.inet.juchamsi.user.service;
 
 import com.inet.juchamsi.domain.user.application.OwnerService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
-import com.inet.juchamsi.domain.user.dto.request.CreateAdminRequest;
-import com.inet.juchamsi.domain.user.dto.request.CreateOwnerRequest;
-import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
-import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
+import com.inet.juchamsi.domain.user.dto.request.*;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
-import com.inet.juchamsi.domain.user.dto.response.TenantRequestResponse;
 import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.domain.user.entity.Grade;
 import com.inet.juchamsi.domain.user.entity.User;
@@ -145,15 +141,10 @@ public class OwnerServiceTest {
         User targetUser = insertUser(targetVilla);
 
         // when
-        CreateOwnerRequest request = CreateOwnerRequest.builder()
-                .villaIdNumber("62218271")
+        ModifyOwnerRequest request = ModifyOwnerRequest.builder()
                 .loginId("ownerId")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
                 .phoneNumber("01098765432")
-                .name("김주참")
-                .grade(Grade.OWNER.name())
-                .carNumber("12가 1234")
-                .villaNumber(201)
                 .build();
         ownerService.modifyUser(request);
 
@@ -170,15 +161,10 @@ public class OwnerServiceTest {
         User targetUser = insertUser(targetVilla);
 
         // when
-        CreateOwnerRequest request = CreateOwnerRequest.builder()
-                .villaIdNumber("62218271")
+        ModifyOwnerRequest request = ModifyOwnerRequest.builder()
                 .loginId("leeAdmin")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
                 .phoneNumber("01098765432")
-                .name("이주참")
-                .grade(Grade.OWNER.name())
-                .carNumber("12가 1234")
-                .villaNumber(201)
                 .build();
 
         // then
@@ -196,15 +182,10 @@ public class OwnerServiceTest {
         User secondUser = compareUser(targetVilla);
 
         // when
-        CreateOwnerRequest request = CreateOwnerRequest.builder()
-                .villaIdNumber("62218271")
+        ModifyOwnerRequest request = ModifyOwnerRequest.builder()
                 .loginId("ownerId")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
                 .phoneNumber("01098765432")
-                .name("김주참")
-                .grade(Grade.OWNER.name())
-                .carNumber("12가 1234")
-                .villaNumber(201)
                 .build();
 
         // then
@@ -221,55 +202,16 @@ public class OwnerServiceTest {
         User targetUser = insertUser(targetVilla);
 
         // when
-        CreateOwnerRequest request = CreateOwnerRequest.builder()
-                .villaIdNumber("6220-271")
+        ModifyOwnerRequest request = ModifyOwnerRequest.builder()
                 .loginId("ownerId")
                 .loginPassword(passwordEncoder.encode("userPw123!"))
                 .phoneNumber("01012345678")
-                .name("김주참")
-                .carNumber("12가 1234")
-                .villaNumber(201)
                 .build();
 
         // then
         System.out.println("userRepository = " + userRepository.findByLoginId("ownerId").get());
         AssertionsForClassTypes.assertThatThrownBy(() -> ownerService.modifyUser(request))
                 .isInstanceOf(NotFoundException.class);
-    }
-
-
-    @Test
-    @DisplayName("세입자 신규 회원가입 요청 목록")
-    void showNewRequestTenant() {
-        // given
-        Villa targetVilla = insertVilla();
-        User ownerUser = insertUser(targetVilla);
-        User tenantUser = insertTenantUser(targetVilla);
-        Long villaId = targetVilla.getId();
-
-        // when
-        List<TenantRequestResponse> tenantResponseList = ownerService.showNewRequestTenant(villaId);
-
-        // then
-        assertNotNull(tenantResponseList);
-    }
-
-
-    @Test
-    @DisplayName("세입자 승인상태 수정")
-    void manageApprove() {
-        // given
-        Villa targetVilla = insertVilla();
-        User targetUser = insertUser(targetVilla);
-        tenantUser();
-
-        // when
-        String tenantId = "tenantId";
-        Approve approve = Approve.APPROVE;
-        ownerService.manageApprove(tenantId, approve);
-
-        // then
-        assertThat(userRepository.findByLoginId(tenantId).get().getApprove()).isEqualTo(Approve.APPROVE);
     }
 
     @Test
@@ -331,42 +273,5 @@ public class OwnerServiceTest {
                 .roles(Collections.singletonList("OWNER"))
                 .build();
         return userRepository.save(user);
-    }
-
-    private User insertTenantUser(Villa villa) {
-        User user = User.builder()
-                .villa(villa)
-                .loginId("tenantId")
-                .loginPassword(passwordEncoder.encode("userPw123!"))
-                .phoneNumber("01099998888")
-                .name("최입자")
-                .grade(Grade.USER)
-                .approve(Approve.WAIT)
-                .active(Active.ACTIVE)
-                .roles(Collections.singletonList("USER"))
-                .build();
-        return userRepository.save(user);
-    }
-
-    private User tenantUser() {
-        Villa villa = Villa.builder()
-                .name("삼성 빌라")
-                .address("광주 광산구 하남산단6번로 107")
-                .idNumber("62218271")
-                .totalCount(6)
-                .active(ACTIVE)
-                .build();
-        villaRepository.save(villa);
-        return userRepository.save(User.builder()
-                .villa(villa)
-                .loginId("tenantId")
-                .loginPassword(passwordEncoder.encode("userPw123!"))
-                .phoneNumber("01099998888")
-                .name("최입자")
-                .grade(Grade.USER)
-                .approve(Approve.WAIT)
-                .active(Active.ACTIVE)
-                .roles(Collections.singletonList("USER"))
-                .build());
     }
 }
