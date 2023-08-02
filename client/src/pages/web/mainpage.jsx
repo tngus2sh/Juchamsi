@@ -26,6 +26,7 @@ import ParkingLotInfo from "../../components/main/parkingLotInfo";
 import ParkingLotHistory from "../../components/main/parkingLotHistory";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { setLogout } from "../../redux/webLoginInfo";
 
 const theme = createTheme({
   palette: {
@@ -44,7 +45,9 @@ const mainStep = [
 ];
 
 const MainPage = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const isLogin = useSelector((state) => state.webInfo.isLogin);
   const ownerName = useSelector((state) => state.webInfo.name);
   const roadAddress = useSelector((state) => state.webInfo.roadAddress);
   const villaName = useSelector((state) => state.webInfo.villaName);
@@ -81,9 +84,14 @@ const MainPage = () => {
   const handleLogout = () => {
     // 로그아웃 처리
     //store에 있는 데이터 삭제해야 함!
-
+    dispatch(setLogout());
     navigate("/");
   };
+  useEffect(() => {
+    if (!isLogin) {
+      navigate("/"); // 리다이렉트
+    }
+  });
 
   return (
     <ThemeProvider theme={theme}>

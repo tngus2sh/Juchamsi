@@ -13,6 +13,7 @@ import { Grid } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import http from "../../axios/http";
+import CustomModal from "./customModal";
 
 const step = [<Step1 />, <Step2 />, <Step3 />];
 
@@ -27,6 +28,9 @@ const theme = createTheme({
 export default function HorizontalLinearStepper() {
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = React.useState(0);
+  const [open, setOpen] = React.useState(false);
+  const [modalMessage, setModalMessage] = React.useState("");
+
   const name = useSelector((state) => state.form.step1Data.name);
   const phoneNumber = useSelector((state) => state.form.step1Data.phoneNumber);
   const loginId = useSelector((state) => state.form.step2Data.loginId);
@@ -37,27 +41,59 @@ export default function HorizontalLinearStepper() {
   const villaName = useSelector((state) => state.form.step3Data.villaName);
   const parkingLotCol = useSelector((state) => state.form.step3Data.parkingLotCol);
 
+  const certification = useSelector((state) => state.form.step1Data.certification);
+  const idConfirmation = useSelector((state) => state.form.step2Data.idConfirmation);
+  const passwordMatching = useSelector((state) => state.form.step2Data.passwordMatching);
+  const privacyAgreement = useSelector((state) => state.form.step3Data.privacyAgreement);
+
   const handleNext = () => {
     if (activeStep === 0) {
       if (name.trim() === "") {
-        console.log("이름을 입력하세요");
+        setModalMessage("이름을 입력하세요");
+        setOpen(true);
       } else if (phoneNumber.trim() === "") {
-        console.log("전화번호를 입력하세요");
+        setModalMessage("휴대폰번호를 입력하세요");
+        setOpen(true);
+      } else if (!certification) {
+        setModalMessage("휴대폰번호 인증해주세요");
+        setOpen(true);
       } else {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
       }
     } else if (activeStep === 1) {
       if (loginId.trim() === "") {
-        console.log("아이디를 입력하세요");
+        setModalMessage("아이디를 입력하세요");
+        setOpen(true);
       } else if (loginPassword.trim() === "") {
-        console.log("비밀번호를 입력하세요");
+        setModalMessage("비밀번호를 입력하세요");
+        setOpen(true);
+      } else if (!idConfirmation) {
+        setModalMessage("아이디를 다시 입력하세요");
+        setOpen(true);
+      } else if (!passwordMatching) {
+        setModalMessage("비밀번호를 일치시키세요");
+        setOpen(true);
       } else {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
       }
     } else if (activeStep === step.length - 1) {
-      // 회원가입 수행
-      handleSubmit();
-      navigate("/");
+      if (roadZipCode.trim() === "") {
+        setModalMessage("빌라 주소를 입력하세요");
+        setOpen(true);
+      } else if (villaName.trim() === "") {
+        setModalMessage("빌라 이름을 입력하세요");
+        setOpen(true);
+      } else if (parkingLotCol.trim() === "") {
+        setModalMessage("총 주차대수를 입력하세요");
+        setOpen(true);
+      } else if (!privacyAgreement) {
+        setModalMessage("개인정보에 동의해주세요");
+        setOpen(true);
+      } else {
+        // 회원가입 수행
+        handleSubmit();
+        navigate("/");
+      }
     }
   };
 
@@ -87,6 +123,8 @@ export default function HorizontalLinearStepper() {
     }
   }
 
+  const handleClose = () => setOpen(false);
+
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ width: "100%", marginTop: "30px" }}>
@@ -110,6 +148,7 @@ export default function HorizontalLinearStepper() {
           </Box>
         </React.Fragment>
       </Box>
+      <CustomModal open={open} handleClose={handleClose} message={modalMessage} />
     </ThemeProvider>
   );
 }

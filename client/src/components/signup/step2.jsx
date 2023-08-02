@@ -11,6 +11,7 @@ import { setStep2Data } from "../../redux/formslice";
 import InputBox from "./inputbox";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import http from "../../axios/http";
 
 const Step2 = () => {
   const [error, setError] = useState("");
@@ -23,19 +24,37 @@ const Step2 = () => {
 
   const dispatch = useDispatch();
 
-  const handleIdChange = (e) => {
+  const handleIdChange = async (e) => {
     const inputValue = e.target.value;
+
     if (inputValue.length === 0) {
       setError("");
     } else if (inputValue.length < 5) {
       setError("너무 짧습니다");
       setIsMatch(false);
     } else {
-      setError("사용가능합니다.");
-      setIsMatch(true);
+      const isAvailable = await newTenantList(inputValue);
+      if (isAvailable) {
+        setError("사용 가능한 아이디입니다.");
+        setIsMatch(true);
+        dispatch(setStep2Data({ idConfirmation: true }));
+      } else {
+        setError("이미 사용 중인 아이디입니다.");
+        setIsMatch(false);
+      }
     }
     dispatch(setStep2Data({ loginId: inputValue }));
   };
+
+  async function newTenantList(inputValue) {
+    try {
+      const response = await http.get(`/user/id/${inputValue}`);
+      return response.data.success;
+    } catch (error) {
+      console.error("Error while fetching data:", error);
+      return false;
+    }
+  }
 
   const handleBlur = () => {
     if (loginPassword.trim() === "" || loginPassword2.trim() === "") {
@@ -46,6 +65,7 @@ const Step2 = () => {
     } else {
       setError2("비밀번호가 일치합니다.");
       setIsMatch2(true);
+      dispatch(setStep2Data({ passwordMatching: true }));
     }
   };
 
