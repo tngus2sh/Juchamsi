@@ -4,6 +4,7 @@ import com.inet.juchamsi.domain.parking.application.ParkingLotService;
 import com.inet.juchamsi.domain.parking.application.ParkingService;
 import com.inet.juchamsi.domain.parking.dto.request.CreateLotRequest;
 import com.inet.juchamsi.domain.parking.dto.request.CreateParkingHistoryRequest;
+import com.inet.juchamsi.domain.parking.dto.request.EntranceRequest;
 import com.inet.juchamsi.domain.parking.dto.response.ParkingHistoryResponse;
 import com.inet.juchamsi.domain.parking.dto.response.ParkingLotResponse;
 import com.inet.juchamsi.global.api.ApiResult;
@@ -29,6 +30,19 @@ import static com.inet.juchamsi.global.api.ApiResult.OK;
 public class ParkingApiController {
     private final ParkingLotService parkingLotService;
     private final ParkingService parkingService;
+
+    @ApiOperation(value = "입차 정보 수집", notes = "입차된 주차의 주차위치와 해당 유저의 mac 주소를 받습니다.")
+    @PostMapping("/entrance")
+    public ApiResult<Void> collectEntrance(
+            @ApiParam(value = "user-parking-dto")
+            EntranceRequest request
+    ) {
+        log.debug("collectEntrance={}", request);
+        // TODO: 주차 위치를 '주차 내역'테이블에 넣기
+        // TODO: 유저에 mac 주소 컬럼을 만들고 거기에 해당 mac 주소 넣기
+        System.out.println("request = " + request);
+        return OK(null);
+    } 
 
     @ApiOperation(value = "주차장 등록", notes = "집 주인은 회원가입 시 주차장 크기를 입력해 등록합니다")
     @PostMapping("/lot")
