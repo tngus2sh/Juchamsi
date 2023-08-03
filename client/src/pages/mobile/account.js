@@ -11,17 +11,16 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import axiosInstance from '../../axios/axios'
-import Alert from '@mui/material/Alert';
 
 
 function Account() {
     const navigate = useNavigate();
-    const carNumber = useSelector((state) => state.mobileInfo.carNumber);
     const loginId = useSelector((state) => state.mobileInfo.loginId);
     const name = useSelector((state) => state.mobileInfo.name);
-    const phoneNumber = useSelector((state) => state.mobileInfo.phoneNumber);
     const totalmileage = useSelector((state) => state.mobileInfo.totalMileage)
     const [MileageOpen, setMileageOpen] = React.useState(false);
+    const ID = useSelector((state) => state.mobileInfo.id)
+
     const handleOpenupdateAccount = () => {
         navigate('/Mobile/Account/Update')
     }
@@ -34,13 +33,9 @@ function Account() {
         }
     }
     const handleOpenMileage = () => {
-        console.log(loginId)
         axiosInstance({
             method:'get',
-            url:`/mileage/${loginId}`,
-            data:{
-                'id':loginId
-            }
+            url:`/mileage/${ID}`,
           })
           .then((res) => {
             console.log(res)
@@ -115,7 +110,7 @@ function Account() {
             </Fab>
             <hr className='hr1'/>
             <p className='miletext1'>현재 마일리지</p>
-            <img src={process.env.PUBLIC_URL + '/img/mobile/2.png'} className='mileimg'></img>
+            <img src={process.env.PUBLIC_URL + '/img/mobile/2.png'} className='mileimg' alt='moneylogo'></img>
             <p className='miletext'>{totalmileage}</p>
             <DescriptionIcon className='descripticon' onClick={handleOpenMileage} />
             <Modal open={MileageOpen} onClose={handleCloseMileage} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">

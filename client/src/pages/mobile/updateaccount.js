@@ -6,14 +6,13 @@ import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import { useNavigate } from 'react-router-dom';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import axiosInstance from '../../axios/axios'
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { setCarNumber, setid, setloginId, setname, setphoneNumber, setaccessToken, setrefreshToken, setVillaNumber, setvillaIdNumber} from '../../redux/mobileUserinfo'
+import { setCarNumber, setphoneNumber, setVillaNumber} from '../../redux/mobileUserinfo'
 
 function Account() {
     const dispatch = useDispatch()
@@ -39,8 +38,7 @@ function Account() {
     const [phoneModalFalseOpen, setPhoneModalFalseOpen] = React.useState(false);
     const handleOpenPhoneTrueCheck = () => setPhoneModalTrueOpen(true);
     const handleOpenPhoneFalseCheck = () => setPhoneModalFalseOpen(true);
-    const handleClosePhoneTrueCheck = () => {setPhoneModalTrueOpen(false); setphonenumbecheck(true);}
-    const [phonenumbercheck, setphonenumbecheck] = React.useState('');
+    const handleClosePhoneTrueCheck = () => setPhoneModalTrueOpen(false)
     const [newcarResult, setnewResult] = React.useState(false);
     const [newhouseResult, setnewhouseResult] = React.useState(false);
 
