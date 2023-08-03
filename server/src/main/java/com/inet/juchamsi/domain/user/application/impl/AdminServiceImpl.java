@@ -26,6 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import static com.inet.juchamsi.global.common.Active.ACTIVE;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -49,7 +51,7 @@ public class AdminServiceImpl implements AdminService {
             throw new AlreadyExistException(User.class, phoneNumber.get());
         }
 
-        User user = User.createUserAdmin(dto.getPhoneNumber(), dto.getLoginId(), passwordEncoder.encode(dto.getLoginPassword()), dto.getName(), Grade.ADMIN, Approve.WAIT, Active.ACTIVE, "ADMIN");
+        User user = User.createUserAdmin(dto.getPhoneNumber(), dto.getLoginId(), passwordEncoder.encode(dto.getLoginPassword()), dto.getName(), Grade.ADMIN, Approve.WAIT, ACTIVE, "ADMIN");
         User savedUser = userRepository.save(user);
         return savedUser.getId();
     }
@@ -78,6 +80,12 @@ public class AdminServiceImpl implements AdminService {
     public AdminOwnerLoginResponse loginUser(LoginRequest request) {
         String adminId = request.getLoginId();
         String password  = request.getLoginPassword();
+
+        Optional<Long> userIdOp = userRepository.existLoginIdAndActive(adminId, ACTIVE);
+        if (userIdOp.isEmpty()) {
+            throw new NotFoundException(User.class, adminId);
+        }
+
         // 1. login ID/PW를 기반으로 Authentication 객체 생성
         // 이때 authentication은 인증 여부를 확인하는 authenticated 값이 false
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(adminId, password);
@@ -114,7 +122,7 @@ public class AdminServiceImpl implements AdminService {
     // 회원정보 수정
     @Override
     public void modifyUser(CreateAdminRequest dto) {
-        Optional<User> oUser = userRepository.findByLoginIdAndActive(dto.getLoginId(), Active.ACTIVE);
+        Optional<User> oUser = userRepository.findByLoginIdAndActive(dto.getLoginId(), ACTIVE);
         System.out.println("oUser = " + oUser);
         if (oUser.isEmpty()) {
             throw new NotFoundException(User.class, dto.getLoginId());
