@@ -10,6 +10,8 @@ import { useNavigate } from 'react-router-dom';
 import DescriptionIcon from '@mui/icons-material/Description';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
+import axiosInstance from '../../axios/axios'
+import Alert from '@mui/material/Alert';
 
 
 function Account() {
@@ -18,15 +20,34 @@ function Account() {
     const loginId = useSelector((state) => state.mobileInfo.loginId);
     const name = useSelector((state) => state.mobileInfo.name);
     const phoneNumber = useSelector((state) => state.mobileInfo.phoneNumber);
+    const totalmileage = useSelector((state) => state.mobileInfo.totalMileage)
     const [MileageOpen, setMileageOpen] = React.useState(false);
     const handleOpenupdateAccount = () => {
         navigate('/Mobile/Account/Update')
     }
 
     const handleOpenMileageChange = () => {
-        navigate('/Mobile/Mileage/Change')
+        if (totalmileage >= 3000) {
+            navigate('/Mobile/Mileage/Change')
+        } else {
+            alert('3000마일리지 이상 보유시 교환이 가능합니다.')
+        }
     }
     const handleOpenMileage = () => {
+        console.log(loginId)
+        axiosInstance({
+            method:'get',
+            url:`/mileage/${loginId}`,
+            data:{
+                'id':loginId
+            }
+          })
+          .then((res) => {
+            console.log(res)
+          })
+          .catch((err) => {
+            console.log(err)
+          })
         setMileageOpen(true); // 모달 열기
     }
     const handleCloseMileage = () => {
@@ -95,7 +116,7 @@ function Account() {
             <hr className='hr1'/>
             <p className='miletext1'>현재 마일리지</p>
             <img src={process.env.PUBLIC_URL + '/img/mobile/2.png'} className='mileimg'></img>
-            <p className='miletext'>20000</p>
+            <p className='miletext'>{totalmileage}</p>
             <DescriptionIcon className='descripticon' onClick={handleOpenMileage} />
             <Modal open={MileageOpen} onClose={handleCloseMileage} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
                 <Box sx={style1}>
