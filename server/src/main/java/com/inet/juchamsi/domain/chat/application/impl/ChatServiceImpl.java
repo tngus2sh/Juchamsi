@@ -4,10 +4,7 @@ import com.inet.juchamsi.domain.chat.application.ChatService;
 import com.inet.juchamsi.domain.chat.dao.ChatPeopleRepository;
 import com.inet.juchamsi.domain.chat.dao.ChatRoomRepository;
 import com.inet.juchamsi.domain.chat.dao.MessageRepository;
-import com.inet.juchamsi.domain.chat.dto.request.ChatMessageRequest;
-import com.inet.juchamsi.domain.chat.dto.request.ChatRoomRequest;
-import com.inet.juchamsi.domain.chat.dto.request.SystemChatRoomRequest;
-import com.inet.juchamsi.domain.chat.dto.request.SystemMessageRequest;
+import com.inet.juchamsi.domain.chat.dto.request.*;
 import com.inet.juchamsi.domain.chat.dto.response.ChatRoomResponse;
 import com.inet.juchamsi.domain.chat.dto.response.MessageResponse;
 import com.inet.juchamsi.domain.chat.entity.ChatPeople;
@@ -62,7 +59,7 @@ public class ChatServiceImpl implements ChatService {
             throw new NotFoundException(ChatRoom.class, roomId);
         }
         // 이전 채팅방 글 불러오기
-        List<MessageResponse> messageUserDtos = messageRepository.findAllByChatRoom(roomId, ALIVE);
+        List<MessageChatRoomDto> messageUserDtos = messageRepository.findAllByChatRoomIdAndStatus(roomId, ALIVE);
         
         return ChatRoomResponse.builder()
                 .roomId(result.get().getRoomId())
