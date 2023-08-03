@@ -2,6 +2,7 @@ package com.inet.juchamsi.domain.chat.api;
 
 import com.inet.juchamsi.domain.chat.application.ChatService;
 import com.inet.juchamsi.domain.chat.dto.request.ChatMessageRequest;
+import com.inet.juchamsi.domain.chat.dto.request.SystemMessageRequest;
 import com.inet.juchamsi.global.api.ApiResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -33,6 +34,17 @@ public class MessageApiController {
         // 메세지 내용 저장
         chatService.createChat(roomId, request);
         
+        return OK(null);
+    }
+
+    @MessageMapping("/system/message/{roomId}")
+    public ApiResult<Void> system(@DestinationVariable String roomId, SystemMessageRequest request) {
+        // 시스템에서 발생한 메시지를 클라이언트로 전송합니다.
+        sendingOperations.convertAndSend("/topic/system/room/" + roomId, request);
+        
+        // 메세지 내용 저장
+        chatService.createSystemChat(roomId, request);
+
         return OK(null);
     }
 }
