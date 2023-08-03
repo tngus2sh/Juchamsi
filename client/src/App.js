@@ -23,6 +23,7 @@ import MobileTermessagePage from './pages/mobile/termessage'
 import MobileAccountPage from './pages/mobile/account'
 import MobileUpdateAccountPage from './pages/mobile/updateaccount'
 import MobileMileageChangePage from './pages/mobile/MileageChange'
+import MobilePasswordUpdatePage from './pages/mobile/passwordchange'
 
 import './App.css';
 
@@ -60,6 +61,7 @@ function App() {
               <Route path="/Mobile/Account" element={<MobileAccountPage />}/>
               <Route path="/Mobile/Account/Update" element={<MobileUpdateAccountPage />}/>
               <Route path="/Mobile/Mileage/Change" element={<MobileMileageChangePage />}/>
+              <Route path="/Mobile/Acoount/Update/PasswordChange" element={<MobilePasswordUpdatePage />}/>
                <Route path="/mainPage" element={ <WebMainPage/>} />
           </Routes>
           </BrowserRouter>

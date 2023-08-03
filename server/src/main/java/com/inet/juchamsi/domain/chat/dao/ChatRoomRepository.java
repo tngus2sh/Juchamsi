@@ -18,7 +18,7 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
     @Query("select cr.id from ChatPeople cp left join cp.user u left join cp.chatRoom cr where u.loginId=:userIdOne or u.loginId=:userIdTwo and u.active=:active and cr.type=:type")
     Optional<Long> existChatRoomByUserId(@Param("userIdOne") String userIdOne, @Param("userIdTwo") String userIdTwo, @Param("active") Active active, @Param("type") Type type);
 
-    // 채팅방 생성 순서 최근 å순으로 반환
+    // 채팅방 생성 순서 최근 순으로 반환
     @Query("select cr from ChatPeople cp left join cp.user u left join cp.chatRoom cr where u.loginId=:loginId and u.active=:active and cr.status=:status order by cr.createdDate desc")
     List<ChatRoom> findAllRoomsByLoginIdAndStatus(@Param("loginId") String loginId, @Param("active") Active active, @Param("status") Status status);
 

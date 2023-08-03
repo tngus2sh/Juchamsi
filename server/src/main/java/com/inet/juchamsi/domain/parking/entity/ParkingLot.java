@@ -29,10 +29,6 @@ public class ParkingLot extends TimeBaseEntity {
     @Column(name="seat_number", nullable = false)
     private int seatNumber;
 
-    @Enumerated(STRING)
-    @Column(name = "parking_flag", nullable = false)
-    private ParkingFlag parkingFlag;
-
     @Column(name = "front_number")
     private int frontNumber;
 
@@ -48,11 +44,10 @@ public class ParkingLot extends TimeBaseEntity {
     public ParkingLot() {}
 
     @Builder
-    public ParkingLot(Long id, Villa villa, int seatNumber, ParkingFlag parkingFlag, int frontNumber, int backNumber, Active active) {
+    public ParkingLot(Long id, Villa villa, int seatNumber, int frontNumber, int backNumber, Active active) {
         this.id = id;
         this.villa = villa;
         this.seatNumber = seatNumber;
-        this.parkingFlag = parkingFlag;
         this.frontNumber = frontNumber;
         this.backNumber = backNumber;
         this.active = active;
@@ -62,21 +57,19 @@ public class ParkingLot extends TimeBaseEntity {
     /*
         연관관계 편의 메서드
      */
-    public static ParkingLot createFrontParkingLot(Villa villa, int seatNumber, ParkingFlag parkingFlag, int backNumber, Active active) {
+    public static ParkingLot createFrontParkingLot(Villa villa, int seatNumber, int backNumber, Active active) {
         return ParkingLot.builder()
                 .villa(villa)
                 .seatNumber(seatNumber)
-                .parkingFlag(parkingFlag)
                 .backNumber(backNumber)
                 .active(active)
                 .build();
     }
 
-    public static ParkingLot createBackParkingLot(Villa villa, int seatNumber, ParkingFlag parkingFlag, int frontNumber, Active active) {
+    public static ParkingLot createBackParkingLot(Villa villa, int seatNumber, int frontNumber, Active active) {
         return ParkingLot.builder()
                 .villa(villa)
                 .seatNumber(seatNumber)
-                .parkingFlag(parkingFlag)
                 .frontNumber(frontNumber)
                 .active(active)
                 .build();

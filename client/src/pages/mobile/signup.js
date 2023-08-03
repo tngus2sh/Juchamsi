@@ -230,7 +230,7 @@ const handlePhoneModalConfirmClick = () => {
             "loginPassword": password1,
             "name": username,
             "phoneNumber": phonenumber,
-            "villaIdNumber": villranumber,
+            "villaIdNumber": Number(villranumber),
             "villaNumber": Number(housenumber)
           },
         })
