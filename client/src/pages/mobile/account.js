@@ -13,6 +13,7 @@ import Box from '@mui/material/Box';
 import axiosInstance from '../../axios/axios'
 
 
+
 function Account() {
     const navigate = useNavigate();
     const loginId = useSelector((state) => state.mobileInfo.loginId);
@@ -20,6 +21,7 @@ function Account() {
     const totalmileage = useSelector((state) => state.mobileInfo.totalMileage)
     const [MileageOpen, setMileageOpen] = React.useState(false);
     const ID = useSelector((state) => state.mobileInfo.id)
+    const imageUrl = useSelector((state) => state.mobileInfo.imageUrl); // 이미지 URL 가져오기
 
     const handleOpenupdateAccount = () => {
         navigate('/Mobile/Account/Update')
@@ -98,7 +100,7 @@ function Account() {
         <div>
             <div className='firstinfo'>
                 <Stack direction="row" spacing={2}>
-                    <Avatar alt="Remy Sharp" src={process.env.PUBLIC_URL + '/img/mobile/1.jpg'} sx={{ width: 50, height: 50 }}/>
+                    <Avatar alt="Remy Sharp" src={imageUrl} sx={{ width: 50, height: 50 }}/>
                     <Stack direction="column">
                         <p className='idstyle'>{loginId}</p>
                         <p className='namestyle'>{name}</p>

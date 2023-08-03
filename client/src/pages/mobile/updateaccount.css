@@ -16,14 +16,33 @@
     position: absolute;
     width: 100px;
     height: 20px;
-    left: 65%;
-    top: 12%;
+    left: 35%;
+    top: 73%;
     background:#33907C;
     opacity: 0.8;
     border-radius: 32px;
 }
 
 .Loginoutbtntext{
+position: absolute;
+top:20%;
+left:20%;
+color: aliceblue;
+font-size: 15px;
+}
+
+.Signoutbtn {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: 64%;
+    top: 12%;
+    background:red;
+    opacity: 0.6;
+    border-radius: 32px;
+}
+
+.Signoutbtntext{
 position: absolute;
 top:20%;
 left:20%;
