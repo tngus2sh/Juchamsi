@@ -30,11 +30,12 @@ public class MessageApiController {
         if (ChatMessageRequest.MessageType.ENTER.equals(request.getType())) {
             request.setMessage(request.getSender() + "님이 입장하셨습니다.");
         }
+        // 메세지 내용 저장
+        chatService.createChat(roomId, request);
+        
         // topic-1대다, queue-1대1
         sendingOperations.convertAndSend("/topic/chat/room/"+ roomId,request);
         
-        // 메세지 내용 저장
-        chatService.createChat(roomId, request);
         
         return OK(null);
     }
