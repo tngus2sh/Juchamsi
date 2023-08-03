@@ -17,11 +17,12 @@ import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import CallIcon from '@mui/icons-material/Call';
+import { useSelector } from 'react-redux';
 
 function MileageChange() {
     const [showPassword, setShowPassword] = React.useState(false);
     const navigate = useNavigate();
-    const usermileage = 20000;
+    const usermileage = useSelector((state) => state.mobileInfo.totalMileage);
     const [changemileage, setchangemileage] = React.useState(3000);
     const [maxMileage, setMaxMileage] = React.useState(usermileage);
     const [openModal, setOpenModal] = React.useState(false);
@@ -30,7 +31,7 @@ function MileageChange() {
     const [bankName, setBankName] = React.useState(10); // 기본 값 설정
     const [password1, setPasswordLocal1] = React.useState('');
     const [simplePasswordEntered, setSimplePasswordEntered] = React.useState(false);
-
+    
 
     const handlechangemileageChange = (event) => {
         setchangemileage(event.target.value);

@@ -26,7 +26,7 @@
 
 .hr1 {
     position: absolute;
-    width: 100%;
+    width: 99.5%;
     top:18%;
     opacity: 0.3;
 }
@@ -50,7 +50,7 @@
     position: absolute;
     font-size: 20px;
     top:26.5%;
-    left:40%;
+    left:50%;
 }
 
 .descripticon {
@@ -61,7 +61,7 @@
 
 .hr2 {
     position: absolute;
-    width: 100%;
+    width: 99.5%;
     top:33%;
     opacity: 0.3;
 }
