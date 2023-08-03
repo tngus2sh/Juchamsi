@@ -6,7 +6,6 @@ import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import TextsmsIcon from '@mui/icons-material/Textsms';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 
-
 function Footer(props) {
     const navigate = useNavigate();
 
@@ -40,7 +39,7 @@ function Footer(props) {
             <ManageAccountsIcon className='footeraccounticon' sx={{ fontSize: 50, color: props.AccounticonColor }} onClick={handleOpenAccountPage}/>
             <img
               className="footerlogo"
-              src={process.env.PUBLIC_URL + '/img/kiosk/예비로고.png'}
+              src={process.env.PUBLIC_URL + '/img/kiosk/logo1.png'}
               alt={'title'}
             ></img>
         </div>

@@ -8,6 +8,6 @@ import java.util.List;
 
 @Transactional
 public interface MileageService {
-    List<MileageResponse> showMileage(Long userId);
+    List<MileageResponse> showMileage(String userId);
     void createMileage(GetMileageRequest request);
 }

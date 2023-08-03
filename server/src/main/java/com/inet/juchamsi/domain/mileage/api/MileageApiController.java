@@ -31,8 +31,8 @@ public class MileageApiController {
     private final MileageService mileageService;
 
     @ApiOperation(value = "마일리지 조회", notes = "내 마일리지 내역을 조회할 수 있습니다.")
-    @GetMapping("/{id}")
-    public ApiResult<List<MileageResponse>> showMileage(@ApiParam(value = "tenant-id") @PathVariable("id") Long userId) {
+    @GetMapping("/{userId}")
+    public ApiResult<List<MileageResponse>> showMileage(@ApiParam(value = "tenant-id") @PathVariable("userId") String userId) {
         try {
             List<MileageResponse> response = mileageService.showMileage(userId);
             return OK(response);
