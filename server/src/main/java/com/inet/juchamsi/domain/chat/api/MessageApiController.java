@@ -23,8 +23,10 @@ public class MessageApiController {
     private final SimpMessageSendingOperations sendingOperations;
     private final ChatService chatService;
 
-    @MessageMapping("/chat/message/{roomId}")
-    public ApiResult<Void> enter(@DestinationVariable String roomId,  ChatMessageRequest request) { // @PathVariable이 아닌 @DestinationVariable로 roomId를 받아서 가져와야한다.
+    @MessageMapping("/chat/message")
+//    public ApiResult<Void> enter(@DestinationVariable(value = "roomId") String roomId,  ChatMessageRequest request) { // @PathVariable이 아닌 @DestinationVariable로 roomId를 받아서 가져와야한다.
+    public ApiResult<Void> enter(ChatMessageRequest request) { // @PathVariable이 아닌 @DestinationVariable로 roomId를 받아서 가져와야한다.
+        String roomId = request.getRoomId();
         if (ChatMessageRequest.MessageType.ENTER.equals(request.getType())) {
             request.setMessage(request.getSender() + "님이 입장하셨습니다.");
         }
