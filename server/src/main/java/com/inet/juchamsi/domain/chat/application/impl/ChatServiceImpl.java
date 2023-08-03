@@ -4,9 +4,7 @@ import com.inet.juchamsi.domain.chat.application.ChatService;
 import com.inet.juchamsi.domain.chat.dao.ChatPeopleRepository;
 import com.inet.juchamsi.domain.chat.dao.ChatRoomRepository;
 import com.inet.juchamsi.domain.chat.dao.MessageRepository;
-import com.inet.juchamsi.domain.chat.dto.request.ChatMessageRequest;
-import com.inet.juchamsi.domain.chat.dto.request.ChatRoomRequest;
-import com.inet.juchamsi.domain.chat.dto.request.SystemChatRoomRequest;
+import com.inet.juchamsi.domain.chat.dto.request.*;
 import com.inet.juchamsi.domain.chat.dto.response.ChatRoomResponse;
 import com.inet.juchamsi.domain.chat.dto.response.MessageResponse;
 import com.inet.juchamsi.domain.chat.entity.ChatPeople;
@@ -61,31 +59,13 @@ public class ChatServiceImpl implements ChatService {
             throw new NotFoundException(ChatRoom.class, roomId);
         }
         // 이전 채팅방 글 불러오기
-        List<MessageResponse> messageUserDtos = messageRepository.findAllByChatRoom(roomId, ALIVE);
+        List<MessageChatRoomDto> messageUserDtos = messageRepository.findAllByChatRoomIdAndStatus(roomId, ALIVE);
         
         return ChatRoomResponse.builder()
                 .roomId(result.get().getRoomId())
                 .roomName(result.get().getRoomName())
                 .messageList(messageUserDtos)
                 .build();
-    }
-
-    // 메세지 저장
-    @Override
-    public void createChat(String roomId, ChatMessageRequest request) {
-        String userId = request.getSenderId();
-        String message = request.getMessage();
-        // 채팅 참여 식별키를 가져와서 넣어야함
-        Optional<ChatPeople> chatPeople = chatPeopleRepository.findIdByRoomIdAndUserId(userId, roomId, ACTIVE, ALIVE);
-        if (chatPeople.isEmpty()) {
-            throw new NotFoundException(ChatRoom.class, roomId);
-        }
-
-        // 메세지 저장
-        messageRepository.save(Message.builder()
-                .chatPeople(chatPeople.get())
-                .content(message)
-                .build());
     }
 
     /* 유저간 채팅방 */
@@ -122,6 +102,24 @@ public class ChatServiceImpl implements ChatService {
                 .roomName(room.getRoomName())
                 .build();
     }
+    
+    // 메세지 저장
+    @Override
+    public void createChat(String roomId, ChatMessageRequest request) {
+        String userId = request.getSenderId();
+        String message = request.getMessage();
+        // 채팅 참여 식별키를 가져와서 넣어야함
+        Optional<ChatPeople> chatPeople = chatPeopleRepository.findIdByRoomIdAndUserId(userId, roomId, ACTIVE, ALIVE);
+        if (chatPeople.isEmpty()) {
+            throw new NotFoundException(ChatRoom.class, roomId);
+        }
+
+        // 메세지 저장
+        messageRepository.save(Message.builder()
+                .chatPeople(chatPeople.get())
+                .content(message)
+                .build());
+    }
 
     /* 시스템 채팅방 */
     // 시스템 채팅방 생성
@@ -149,4 +147,23 @@ public class ChatServiceImpl implements ChatService {
                 .roomName(room.getRoomName())
                 .build();
     }
+
+    // 시스템 메세지 저장
+    @Override
+    public void createSystemChat(String roomId, SystemMessageRequest request) {
+        String userId = request.getSenderId();
+        String message = request.getMessage();
+        // 채팅 참여 식별키를 가져와서 넣어야함
+        Optional<ChatPeople> chatPeople = chatPeopleRepository.findIdByRoomIdAndUserId(userId, roomId, ACTIVE, ALIVE);
+        if (chatPeople.isEmpty()) {
+            throw new NotFoundException(ChatRoom.class, roomId);
+        }
+
+        // 메세지 저장
+        messageRepository.save(Message.builder()
+                .chatPeople(chatPeople.get())
+                .content(message)
+                .build());
+    }
+    
 }
