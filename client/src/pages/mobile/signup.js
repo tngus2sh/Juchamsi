@@ -14,7 +14,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Checkbox from '@mui/material/Checkbox';
-import axios from 'axios';
+import axiosInstance from '../../axios/axios'
 
 function Signup() {
 
@@ -139,19 +139,17 @@ function Signup() {
 
     // 아이디 중복체크 버튼 클릭 이벤트 핸들러
     const handleOpenCheckID = () => {
-      let idcheckresult = null;
       if (isLoginButtonClickable === true) {
         // idcheckresult에 따라서 '사용가능or중복' 여부 판별해서 보여주는 모달창 결정
         // true는 중복, false는 사용가능
-        axios({
+        axiosInstance({
           method:'get',
-          url:`https://afba-121-178-98-20.ngrok-free.app/user/id/${id}`,
+          url:`/user/id/${id}`,
           data:{
             "id": id,
           },
         })
         .then((res) => {
-          console.log(res.data.success)
           if (res.data.success === true) {
             handleOpenIDFalseCheck();
             // 중복체크가 완료되었으므로 isIdChecked를 true로 설정
@@ -171,16 +169,15 @@ function Signup() {
     // 핸드폰번호 인증버튼 사용가능여부 판별
     const handleOpenCheckPhonenumber = () => {
         if (isPhonenumberButtonClickable === true) {
-          axios({
+          axiosInstance({
             method:'post',
-            url:'https://afba-121-178-98-20.ngrok-free.app/sms/check',
+            url:'/sms/check',
             data:{
               "name": username,
               "to": phonenumber
             },
           })
           .then((res) => {
-            console.log(res.data.response)
             setPhoneCheckingNumber(res.data.response);
             handleOpenPhonenumberCheck()
           })
@@ -192,7 +189,6 @@ function Signup() {
 
 // 핸드폰 인증 모달 확인버튼 클릭 이벤트 핸들러
 const handlePhoneModalConfirmClick = () => {
-  console.log(phoneCheckingNumber)
   if (phonechecknumber === phoneCheckingNumber) {
     // 인증이 성공한 경우
     // 기존모달 종료
@@ -224,9 +220,10 @@ const handlePhoneModalConfirmClick = () => {
         phonenumbecheck === true &&
         isPrivacyAgreed === true
       ) {
-        axios({
+        axiosInstance({
           method:'post',
-          url:'https://afba-121-178-98-20.ngrok-free.app/tenant',
+          url:'/tenant',
+
           data:{
             "carNumber": carnumber,
             "loginId": id,

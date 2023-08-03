@@ -145,7 +145,7 @@ public class TenantApiController {
     public ApiResult<Void> manageApprove(
             @ApiParam(value = "admin-id")
             @PathVariable(value = "id") String tenantId,
-            @ApiParam(value = "approve-or-not")
+            @ApiParam(value = "APPRROVE-or-DECLINE")
             @PathVariable(value = "approve") String approve
     ) {
         log.debug("admin={}, approve={}", tenantId, approve);

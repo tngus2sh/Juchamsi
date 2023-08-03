@@ -12,6 +12,7 @@ public class MileageResponse {
     private Long id;
     private int point;
     private String type;
+    private String description;
     private LocalDateTime createDate;
     private LocalDateTime lastModifiedDate;
 
@@ -19,10 +20,11 @@ public class MileageResponse {
     public MileageResponse() {}
 
     @Builder
-    public MileageResponse(Long id, int point, String type, LocalDateTime createDate, LocalDateTime lastModifiedDate) {
+    public MileageResponse(Long id, int point, String type, String description, LocalDateTime createDate, LocalDateTime lastModifiedDate) {
         this.id = id;
         this.point = point;
         this.type = type;
+        this.description = description;
         this.createDate = createDate;
         this.lastModifiedDate = lastModifiedDate;
     }

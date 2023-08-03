@@ -174,8 +174,8 @@ function MycarParking() {
                   slotProps={{
                     toolbar: { toolbarFormat: 'YYYY년 MM월 DD일', hidden: false },
                   }}
-                  
-                sx={{ '& input': { textAlign: 'center' } }}/>
+                  disablePast={true}
+                  sx={{ '& input': { textAlign: 'center' } }}/>
                 <DemoContainer components={['TimePicker']} sx={{mt:4}}>
                   <TimePicker label="출차 예정 시간" ampm={false} value={selectedTime} onChange={handleTimeChange} sx={{ '& input': { textAlign: 'center' } }}/>
                 </DemoContainer>
