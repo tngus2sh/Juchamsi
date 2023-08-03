@@ -1,5 +1,6 @@
 package com.inet.juchamsi.domain.parking.entity;
 
+import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.global.common.Active;
 import com.inet.juchamsi.global.common.TimeBaseEntity;
 import lombok.Builder;
@@ -22,6 +23,10 @@ public class ParkingHistory extends TimeBaseEntity {
     @Column
     private Long id;
 
+    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne
+    private User user;
+
     @JoinColumn(name = "parking_lot_id", nullable = false)
     @ManyToOne
     private ParkingLot parkingLot;
@@ -37,19 +42,12 @@ public class ParkingHistory extends TimeBaseEntity {
     private Timestamp outTime;
 
     @Builder
-    public ParkingHistory(Long id, ParkingLot parkingLot, Active active, Timestamp inTime, Timestamp outTime) {
+    public ParkingHistory(Long id, User user, ParkingLot parkingLot, Active active, Timestamp inTime, Timestamp outTime) {
         this.id = id;
+        this.user = user;
         this.parkingLot = parkingLot;
         this.active = active;
         this.inTime = inTime;
         this.outTime = outTime;
-    }
-
-    public static ParkingHistory createParkingHistory(ParkingLot parkingLot, Active active, Timestamp inTime, Timestamp outTime) {
-        return ParkingHistory.builder()
-                .parkingLot(parkingLot)
-                .active(ACTIVE)
-                .inTime(inTime)
-                .build();
     }
 }
