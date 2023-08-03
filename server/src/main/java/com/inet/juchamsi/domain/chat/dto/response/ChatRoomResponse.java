@@ -1,5 +1,6 @@
 package com.inet.juchamsi.domain.chat.dto.response;
 
+import com.inet.juchamsi.domain.chat.dto.request.MessageChatRoomDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,10 +16,10 @@ public class ChatRoomResponse {
 
     private String roomId;
     private String roomName;
-    private List<MessageResponse> messageList;
+    private List<MessageChatRoomDto> messageList;
 
     @Builder
-    public ChatRoomResponse(String roomId, String roomName, List<MessageResponse> messageList) {
+    public ChatRoomResponse(String roomId, String roomName, List<MessageChatRoomDto> messageList) {
         this.roomId = roomId;
         this.roomName = roomName;
         this.messageList = messageList;
