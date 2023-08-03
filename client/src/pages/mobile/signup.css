@@ -1,7 +1,7 @@
 .signuptologin {
     position: absolute;
-    top:348px;
-    left:0px;
+    top:290px;
+    left:30px;
 }
 
 .signuptext {
@@ -120,7 +120,7 @@
     width: 60px;
     height: 60px;
     left: 40%;
-    top: 800px;
+    top: 130%;
     }
 
 .password-mismatch-text {

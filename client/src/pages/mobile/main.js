@@ -38,7 +38,7 @@ function Home() {
         <img
           ref={transitionRef}
           className="mainlogo"
-          src={'../../public/img/kiosk/logo1.png'}
+          src={process.env.PUBLIC_URL + '/img/kiosk/logo1.png'}
           alt="title"
         ></img>
       </CSSTransition>
