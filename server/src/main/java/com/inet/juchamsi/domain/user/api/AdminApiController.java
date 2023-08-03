@@ -77,6 +77,8 @@ public class AdminApiController {
         try {
             AdminOwnerLoginResponse response = adminService.loginUser(request);
             return OK(response);
+        } catch (NotFoundException e) {
+            return ERROR("존재하지 않는 회원입니다.", HttpStatus.BAD_REQUEST);
         } catch (BadCredentialsException e) {
             return ERROR("아이디 또는 비밀번호를 잘못 입력했습니다", HttpStatus.UNAUTHORIZED);
         }

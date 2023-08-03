@@ -61,7 +61,7 @@ public class TenantServiceImpl implements TenantService {
         }
 
         Optional<Villa> findVilla = villaRepository.findById(connectedVillaId.get());
-        User user = User.createUserTenant(findVilla.get(), request.getPhoneNumber(), request.getLoginId(), passwordEncoder.encode(request.getLoginPassword()), request.getName(), 0, USER, request.getCarNumber(), request.getVillaNumber(), WAIT, ACTIVE, "USER");
+        User user = User.createUserTenant(findVilla.get(), request.getPhoneNumber(), request.getLoginId(), passwordEncoder.encode(request.getLoginPassword()), request.getName(), 0, USER, null, request.getCarNumber(), request.getVillaNumber(), WAIT, ACTIVE, "USER");
         User saveUser = userRepository.save(user);
 
         return saveUser.getId();
@@ -129,6 +129,12 @@ public class TenantServiceImpl implements TenantService {
     public TenantLoginResponse loginUser(LoginRequest request) {
         String loginId = request.getLoginId();
         String password = request.getLoginPassword();
+
+        // 현재 활성화 되어있는 사용자인지 판단
+        Optional<Long> userIdOp = userRepository.existLoginIdAndActive(loginId, ACTIVE);
+        if (userIdOp.isEmpty()) {
+            throw new NotFoundException(User.class, loginId);
+        }
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginId, password);
 
