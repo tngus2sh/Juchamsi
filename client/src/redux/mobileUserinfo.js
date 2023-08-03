@@ -13,6 +13,7 @@ const mobileUserinfo = createSlice({
     villaNumber:"",
     villaIdNumber: "",
     totalMileage:"",
+    imageUrl: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png", // 기본 이미지 URL
     
   },
   reducers: {
@@ -45,10 +46,13 @@ const mobileUserinfo = createSlice({
     },
     setTotalMileage: (state, action) => {
       state.totalMileage = action.payload
-    }
+    },
+    setImageUrl: (state, action) => {
+      state.imageUrl = action.payload;
+    },
   },
 });
 
 export const { setCarNumber, setid, setloginId, setname, setphoneNumber, setaccessToken, 
-               setrefreshToken, setVillaNumber, setvillaIdNumber, setTotalMileage } = mobileUserinfo.actions;
+               setrefreshToken, setVillaNumber, setvillaIdNumber, setTotalMileage, setImageUrl } = mobileUserinfo.actions;
 export default mobileUserinfo.reducer;

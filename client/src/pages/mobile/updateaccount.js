@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import './updateaccount.css'
 import Footer from './footer';
 import { useSelector, useDispatch } from 'react-redux';
@@ -12,7 +12,7 @@ import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import axiosInstance from '../../axios/axios'
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { setCarNumber, setphoneNumber, setVillaNumber} from '../../redux/mobileUserinfo'
+import { setCarNumber, setphoneNumber, setVillaNumber, setImageUrl} from '../../redux/mobileUserinfo'
 
 function Account() {
     const dispatch = useDispatch()
@@ -21,7 +21,7 @@ function Account() {
     const loginId = useSelector((state) => state.mobileInfo.loginId);
     const name = useSelector((state) => state.mobileInfo.name);
     const phoneNumber = useSelector((state) => state.mobileInfo.phoneNumber);
-    const password = localStorage.getItem('password').length;
+    const password = useSelector((state) => state.auth.password).length;
     const pw = '*'.repeat(password);
     const villarnumber = useSelector((state) => state.mobileInfo.villaNumber)
     const villaidnumber = useSelector((state) => state.mobileInfo.villaIdNumber)
@@ -41,6 +41,9 @@ function Account() {
     const handleClosePhoneTrueCheck = () => setPhoneModalTrueOpen(false)
     const [newcarResult, setnewResult] = React.useState(false);
     const [newhouseResult, setnewhouseResult] = React.useState(false);
+    const fileInput = useRef(null);
+    const imageUrl = useSelector((state) => state.mobileInfo.imageUrl); // 이미지 URL 가져오기
+
 
     const style3 = {
         position: 'absolute',
@@ -99,6 +102,19 @@ function Account() {
           url:`/tenant/logout/${loginId}`,
         })
         .then(() => {
+          navigate('/Mobile/Login')
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+      }
+
+      const handleSignoutOpen = () => {
+        axiosInstance({
+          method:'delete',
+          url:`/tenant/${loginId}`,
+        })
+        .then((res) => {
           navigate('/Mobile/Login')
         })
         .catch((err) => {
@@ -174,8 +190,6 @@ function Account() {
       if (phonenumber.trim() !== '') {
         handleCloseupdatephonenumber()
         handleOpenupdatephonenumberupdate()
-      } else {
-        console.log(2)
       }
     }
 
@@ -190,8 +204,6 @@ function Account() {
       if (newcarnumber.trim() !== '') {
         handlecloseupdatecarnumber()
         handleOpenupdatecarnumber()
-      } else {
-        console.log(2)
       }
     }
 
@@ -199,8 +211,6 @@ function Account() {
       if (newhousenumber.trim() !== '') {
         handlecloseupdatehousenumber()
         handleOpenupdateHousenumber()
-      } else {
-        console.log(2)
       }
     }
 
@@ -255,8 +265,6 @@ function Account() {
         },
       })
       .then((res) => {
-        console.log(phoneNumber)
-        console.log(res)
         if (res.data.success === true) {
           dispatch(setphoneNumber(phonenumber));
           navigate('/Mobile/Login')
@@ -283,6 +291,7 @@ function Account() {
         },
       })
       .then((res) => {
+        console.log(res)
         if (res.data.success === true) {
           dispatch(setCarNumber(newcarnumber));
           navigate('/Mobile/Login')
@@ -319,6 +328,22 @@ function Account() {
       })
     }
 
+    const handleImageChange = (e) => {
+      const file = e.target.files[0];
+  
+      if (file) {
+        const reader = new FileReader();
+  
+        reader.onload = (e) => {
+          const imageUrl = e.target.result;
+          dispatch(setImageUrl(imageUrl)); // 이미지 URL을 Redux 상태에 저장
+        };
+  
+        reader.readAsDataURL(file);
+      }
+    };
+    
+
     return (
         <div>
           <Box sx={{        
@@ -330,19 +355,35 @@ function Account() {
           </Box>
             <div className='updatefirstinfo'>
                 <Stack direction="row" spacing={2}>
-                    <Avatar alt="Remy Sharp" src={process.env.PUBLIC_URL + '/img/mobile/1.jpg'} sx={{ width: 50, height: 50 }}/>
+                    <Avatar alt="Remy Sharp" src={imageUrl} sx={{ width: 50, height: 50 }}
+                      onClick={() => fileInput.current.click()} // 파일 입력(input) 요소를 클릭하도록 설정
+                      />
                     <Stack direction="column">
                         <p className='idstyle'>{loginId}</p>
                         <p className='namestyle'>{name}</p>
                     </Stack>
                 </Stack>
             </div>
+            <input
+              type="file"
+              accept="image/*"
+              style={{ display: 'none' }}
+              ref={fileInput}
+              onChange={handleImageChange}
+            />
             <Box
                 component="span"
                 className='Loginoutbtn'
                 onClick={handleLoginoutOpen}
             >
                 <p className="Loginoutbtntext">로그아웃</p>
+            </Box>
+            <Box
+                component="span"
+                className='Signoutbtn'
+                onClick={handleSignoutOpen}
+            >
+                <p className="Signoutbtntext">회원탈퇴</p>
             </Box>
             <Box component="span" className='userinfobox'>
             </Box>

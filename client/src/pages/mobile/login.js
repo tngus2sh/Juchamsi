@@ -93,6 +93,7 @@ function Login() {
           dispatch(setVillaNumber(res.data.response.villaNumber));
           dispatch(setvillaIdNumber(res.data.response.villa.idNumber));
           dispatch(setTotalMileage(res.data.response.totalMileage))
+          dispatch(setPassword(password))
           navigate('/Mobile/Parkinglot')
         })
         .catch((err) => {

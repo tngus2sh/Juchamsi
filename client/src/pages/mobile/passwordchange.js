@@ -108,6 +108,7 @@ function Passwordchange() {
     // 비밀번호 변경 완료시 결과
     const handleOpenChangePasswordResultPage = () => {
         if (isChangePasswordClickable) {
+            console.log(carNumber)
             axiosInstance({
                 method:'put',
                 url:'/tenant',
@@ -122,6 +123,7 @@ function Passwordchange() {
                 },
               })
               .then((res) => {
+                console.log(res)
                 if (res.data.success === true) {
                   dispatch(setPassword(password2));
                   navigate('/Mobile/Login')
