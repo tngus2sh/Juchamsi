@@ -38,9 +38,11 @@ public class ParkingApiController {
             EntranceRequest request
     ) {
         log.debug("collectEntrance={}", request);
-        // TODO: 주차 위치를 '주차 내역'테이블에 넣기
-        // TODO: 유저에 mac 주소 컬럼을 만들고 거기에 해당 mac 주소 넣기
-        System.out.println("request = " + request);
+        try {
+            parkingService.createEntrance(request);
+        } catch (NotFoundException e) {
+            return ERROR("존재하지 않는 정보입니다.", HttpStatus.NO_CONTENT);
+        }
         return OK(null);
     } 
 
