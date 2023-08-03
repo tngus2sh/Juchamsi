@@ -1,6 +1,6 @@
 package com.inet.juchamsi.domain.chat.dao;
 
-import com.inet.juchamsi.domain.chat.dto.response.MessageResponse;
+import com.inet.juchamsi.domain.chat.dto.request.MessageChatRoomDto;
 import com.inet.juchamsi.domain.chat.entity.Message;
 import com.inet.juchamsi.domain.chat.entity.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +12,6 @@ import java.util.List;
 public interface MessageRepository extends JpaRepository<Message, Long> {
 
     // 해당 채팅방의 메세지 오래된 순으로 불러오기
-    @Query("select u.loginId, u.carNumber, m.content, m.createdDate from Message m left join fetch m.chatPeople cp left join fetch cp.chatRoom cr left join fetch cp.user u where cr.roomId=:roomId and cr.status=:status order by m.createdDate asc ")
-    List<MessageResponse> findAllByChatRoom(@Param("roomId") String roomId, @Param("status") Status status);
+    @Query("select new com.inet.juchamsi.domain.chat.dto.request.MessageChatRoomDto(u.loginId, u.carNumber, m.content, m.createdDate) from Message m left join m.chatPeople cp left join cp.chatRoom cr left join cp.user u where cr.roomId=:roomId and cr.status=:status order by m.createdDate asc ")
+    List<MessageChatRoomDto> findAllByChatRoomIdAndStatus(@Param("roomId") String roomId, @Param("status") Status status);
 }
