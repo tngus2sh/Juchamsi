@@ -10,6 +10,6 @@ import java.util.List;
 
 public interface MileageRepository extends JpaRepository<Mileage, Long> {
 
-    @Query("select m from Mileage m where m.user=:user")
+    @Query("select m from Mileage m where m.user=:user order by m.createdDate desc")
     List<Mileage> showMyMileage(@Param("user") User user);
 }
