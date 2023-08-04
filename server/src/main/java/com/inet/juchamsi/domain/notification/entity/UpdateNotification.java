@@ -31,8 +31,6 @@ public class UpdateNotification {
     private Long timeToLive;
 
 
-    public UpdateNotification() {}
-
     @Builder
     public UpdateNotification(String loginId, LocalDateTime outTime, Long timeToLive) {
         this.loginId = loginId;
