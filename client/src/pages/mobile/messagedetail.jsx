@@ -25,13 +25,16 @@ import http from "./../../axios/http";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 import SendIcon from "@mui/icons-material/Send";
+import Fab from "@mui/material/Fab";
 
 const Messagedetail = () => {
   const navigate = useNavigate();
   const params = useParams();
   const roomId = params.id;
-  const sender = useSelector((state) => state.mobileInfo.loginId);
+  const [targetNickName, setTargetNickName] = useState("");
+  const senderId = useSelector((state) => state.mobileInfo.loginId);
   // const [room, setRoom] = useState({});
+  const [messageStorage, setMessageStorage] = useState([]);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const wsRef = useRef(null);
@@ -53,8 +56,24 @@ const Messagedetail = () => {
   // }, []);
 
   useEffect(() => {
+    fetchMessage();
     connect();
-  }, [roomId, sender]);
+  }, [roomId, senderId]);
+
+  async function fetchMessage() {
+    await http
+      .get(`/chat/room/${senderId}/${roomId}`)
+      .then((response) => {
+        console.log("채팅방 상세조회");
+        console.log(response.data);
+        setTargetNickName(response.data.response.nickName);
+        setMessageStorage(response.data.response.messageList);
+      })
+      .catch((error) => {
+        // 요청 실패 시 에러 처리
+        console.error("Error while submitting:", error);
+      });
+  }
 
   const connect = () => {
     const ws = Stomp.over(new SockJS("/ws/chat"));
@@ -64,14 +83,14 @@ const Messagedetail = () => {
       function (frame) {
         ws.subscribe("/topic/chat/room/" + roomId, function (message) {
           console.log("message 리스트??");
-          console.log(message);
+          // console.log(message);
           const recv = JSON.parse(message.body);
           recvMessage(recv);
         });
         ws.send(
           "/app/chat/message",
           {},
-          JSON.stringify({ type: "ENTER", roomId: roomId, sender: sender })
+          JSON.stringify({ type: "ENTER", roomId: roomId, senderId: senderId })
         );
       },
       function (error) {
@@ -93,33 +112,56 @@ const Messagedetail = () => {
   //     });
   // };
 
-  const sendMessage = () => {
-    const ws = Stomp.over(new SockJS("/ws/chat"));
-    ws.connect({}, function () {
-      ws.send(
-        "/app/chat/message",
-        {},
-        JSON.stringify({
-          type: "TALK",
-          roomId: roomId,
-          sender: sender,
-          message: message,
-        })
-      );
-    });
-    setMessage("");
-  };
-
   const recvMessage = (recv) => {
     console.log(recv);
     setMessages((prevMessages) => [
       ...prevMessages,
       {
         type: recv.type,
-        sender: recv.type === "ENTER" ? "[알림]" : recv.sender,
+        senderId: recv.senderId,
         message: recv.message,
       },
     ]);
+  };
+
+  const sendMessage = () => {
+    if (wsRef.current && wsRef.current.connected) {
+      wsRef.current.send(
+        "/app/chat/message",
+        {},
+        JSON.stringify({
+          type: "TALK",
+          roomId: roomId,
+          senderId: senderId,
+          message: message,
+        }),
+        () => {
+          setMessage("");
+        }
+      );
+    } else {
+      console.log("WebSocket is not connected."); // 연결이 수립되지 않았을 경우 로그 출력
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      if (message.trim() !== "") {
+        sendMessage();
+        setMessage("");
+      }
+    }
+  };
+
+  // message.createdDate를 원하는 형식으로 변환하는 함수
+  const formatDateTime = (dateTimeString) => {
+    const dateTime = new Date(dateTimeString);
+    const hours = dateTime.getHours();
+    const minutes = dateTime.getMinutes();
+    const amOrPm = hours >= 12 ? "오후" : "오전";
+    const formattedHours = hours % 12 || 12;
+    const formattedMinutes = minutes < 10 ? "0" + minutes : minutes;
+    return `${amOrPm} ${formattedHours}:${formattedMinutes}`;
   };
 
   return (
@@ -132,85 +174,85 @@ const Messagedetail = () => {
         <ChatContainer>
           <ConversationHeader>
             <ConversationHeader.Back onClick={handleBackToListClick} />
-            <Avatar name="Joe" />
-            <ConversationHeader.Content userName="Joe" info="Active 10 mins ago" />
+            <ConversationHeader.Content userName={targetNickName} info="" />
           </ConversationHeader>
-          <MessageList typingIndicator={<TypingIndicator content="Emily is typing" />}>
-            <MessageSeparator content="Saturday, 30 November 2019" />
-            <Message
-              model={{
-                message: "Hello my friend1",
-                sentTime: "15 mins ago",
-                sender: "Emily",
-                direction: "incoming",
-                position: "first",
-              }}
-            >
-              <Avatar />
-            </Message>
+          <MessageList>
+            {messageStorage.length === 0 ? (
+              <MessageSeparator content="대화를 시작해주세요" />
+            ) : (
+              messageStorage.map((message, index) => (
+                <Message
+                  key={index}
+                  model={{
+                    message: message.message,
+                    sender: message.loginId,
+                    direction: message.loginId === senderId ? "outgoing" : "incoming",
+                    position: "single",
+                  }}
+                >
+                  <Message.Footer
+                    sender={
+                      message.senderId === senderId ? "" : formatDateTime(message.createdDate)
+                    }
+                    sentTime={
+                      message.senderId === senderId ? formatDateTime(message.createdDate) : ""
+                    }
+                  />
+                </Message>
+              ))
+            )}
 
-            <Message
-              model={{
-                message: "Hello my friend2",
-                sentTime: "15 mins ago",
-                sender: "Emily",
-                direction: "incoming",
-                position: "normal",
-              }}
-            >
-              <Avatar />
-            </Message>
-
-            <Message
-              model={{
-                message: "Hello my friend3",
-                sentTime: "15 mins ago",
-                direction: "outgoing",
-                position: "first",
-              }}
-            >
-              <Avatar />
-            </Message>
-
-            <MessageSeparator content="Saturday, 31 November 2019" />
-
-            {messages.map((message, index) => (
-              <Message
-                key={index}
-                model={{
-                  message: message.message,
-                  sentTime: "15 mins ago",
-                  sender: message.sender,
-                  direction: "outgoing",
-                  position: "first",
-                }}
-              >
-                <Avatar />
-              </Message>
-            ))}
+            {messages.map((message, index) =>
+              message.type === "ENTER" ? null : ( // <MessageSeparator key={index} content={message.message} as="h2" />
+                <Message
+                  key={index}
+                  model={{
+                    message: message.message,
+                    sender: message.senderId,
+                    direction: message.senderId === senderId ? "outgoing" : "incoming",
+                    position: "single",
+                  }}
+                >
+                  <Message.Footer
+                    sender={
+                      message.senderId === senderId
+                        ? ""
+                        : new Date().toLocaleTimeString("ko-KR").replace(/:\d+ /, " ")
+                    }
+                    sentTime={
+                      message.senderId === senderId
+                        ? new Date().toLocaleTimeString("ko-KR").replace(/:\d+ /, " ")
+                        : ""
+                    }
+                  />
+                </Message>
+              )
+            )}
           </MessageList>
-
-          {/* <MessageInput
-            placeholder="Type message here"
-            onChange={handleChange}
-            onAttachClick={(e) => {
-              if (e.key === "Enter") sendMessage();
-            }}
-          /> */}
         </ChatContainer>
       </div>
-      <Grid container>
+      <Grid container sx={{ pt: "5%" }}>
         <Grid item xs={9}>
           <TextField
             id="outlined-basic"
             value={message}
             onChange={handleMessageChange}
+            onKeyDown={handleKeyDown}
             variant="outlined"
             size="small"
           />
         </Grid>
         <Grid item xs={3}>
-          <SendIcon onClick={sendMessage} />
+          <Fab color="primary" aria-label="add">
+            <SendIcon
+              onClick={() => {
+                if (message.trim() !== "") {
+                  sendMessage();
+                  setMessage("");
+                }
+              }}
+            />
+          </Fab>
         </Grid>
       </Grid>
     </React.Fragment>
