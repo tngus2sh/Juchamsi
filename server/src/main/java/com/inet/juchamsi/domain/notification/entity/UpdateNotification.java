@@ -1,6 +1,7 @@
 package com.inet.juchamsi.domain.notification.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.redis.core.RedisHash;
@@ -28,4 +29,14 @@ public class UpdateNotification {
 
     @TimeToLive(unit = TimeUnit.SECONDS)
     private Long timeToLive;
+
+
+    public UpdateNotification() {}
+
+    @Builder
+    public UpdateNotification(String loginId, LocalDateTime outTime, Long timeToLive) {
+        this.loginId = loginId;
+        this.outTime = outTime;
+        this.timeToLive = timeToLive;
+    }
 }
