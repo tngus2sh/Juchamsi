@@ -4,8 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inet.juchamsi.domain.notification.application.NotificationService;
 import com.inet.juchamsi.domain.notification.dao.UpdateNotificationRepository;
+import com.inet.juchamsi.domain.notification.dto.request.CreateNotificationRequest;
 import com.inet.juchamsi.domain.notification.dto.request.CreateTimeNotificationRequest;
 import com.inet.juchamsi.domain.notification.dto.request.CreateUpdateNotificationRequest;
+import com.inet.juchamsi.domain.notification.entity.Notification;
 import com.inet.juchamsi.domain.notification.entity.TimeNotification;
 import com.inet.juchamsi.domain.notification.entity.UpdateNotification;
 import com.inet.juchamsi.global.redis.RedisUtils;
@@ -52,13 +54,38 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
+    public String createNotification(CreateNotificationRequest request) {
+        LocalDateTime now = LocalDateTime.now();
+        System.out.println("출차 시간: " + request.getOutTime());
+        Duration duration = Duration.between(now, request.getOutTime());
+        Long seconds = duration.getSeconds() + 120;
+        System.out.println("만료 시간: " + seconds);
+        seconds = 20l;
+
+//        Notification notification = Notification.builder()
+//                .loginId(request.getLoginId())
+//                .message(request.getMessage())
+//                .build();
+
+        String key = request.getOutTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+
+        for(int i = 0; i < 3; i++) {
+            String userId = request.getLoginId() + i;
+            redisUtils.setRedisHash(key, userId, request.getMessage(), seconds);
+        }
+
+        return null;
+    }
+
+    @Override
     public String createUpdateNotification(CreateUpdateNotificationRequest request) {
         LocalDateTime now = LocalDateTime.now();
         Duration duration = Duration.between(now, request.getOutTime());
         Long seconds = duration.getSeconds() + 120;
+        seconds = 10l;
 
         UpdateNotification updateNotification = UpdateNotification.builder()
-                .loginId(request.getLoginId())
+                .id(request.getLoginId())
                 .outTime(request.getOutTime())
                 .timeToLive(seconds)
                 .build();
@@ -66,4 +93,5 @@ public class NotificationServiceImpl implements NotificationService {
         UpdateNotification notification = updateNotificationRepository.save(updateNotification);
         return notification.getId();
     }
+
 }

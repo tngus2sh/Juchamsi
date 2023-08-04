@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.RedisKeyValueAdapter;
 import org.springframework.data.redis.core.TimeToLive;
 import org.springframework.data.redis.core.index.Indexed;
 
@@ -12,7 +13,7 @@ import javax.persistence.Id;
 import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 
-@AllArgsConstructor
+//@AllArgsConstructor
 @NoArgsConstructor
 @Data
 @RedisHash(value = "UpdateNotification")
@@ -22,9 +23,6 @@ public class UpdateNotification {
     private String id;
 
     @Indexed
-    private String loginId;
-
-    @Indexed
     private LocalDateTime outTime;
 
     @TimeToLive(unit = TimeUnit.SECONDS)
@@ -32,8 +30,8 @@ public class UpdateNotification {
 
 
     @Builder
-    public UpdateNotification(String loginId, LocalDateTime outTime, Long timeToLive) {
-        this.loginId = loginId;
+    public UpdateNotification(String id, LocalDateTime outTime, Long timeToLive) {
+        this.id = id;
         this.outTime = outTime;
         this.timeToLive = timeToLive;
     }
