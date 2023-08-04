@@ -9,6 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -20,6 +21,7 @@ import static com.inet.juchamsi.global.api.ApiResult.OK;
 
 @RestController
 @RequiredArgsConstructor
+@Log4j2
 @Api(tags = "메세지")
 public class MessageApiController {
     
@@ -30,19 +32,18 @@ public class MessageApiController {
     public ApiResult<Void> enter(ChatMessageRequest request) {
         String roomId = request.getRoomId();
         if (ChatMessageRequest.MessageType.ENTER.equals(request.getType())) {
-            request.setMessage(request.getSender() + "님이 입장하셨습니다.");
+            request.setMessage(request.getSenderId() + "님이 입장하셨습니다.");
+        } else {
+            // 메세지 내용 저장
+            try {
+                chatService.createChat(request);
+                log.debug("createChat={}", request);
+            } catch (NotFoundException e) {
+                ERROR("사용자를 찾을 수 없습니다.", HttpStatus.BAD_REQUEST);
+            }
         }
-        // 메세지 내용 저장
-        try {
-            chatService.createChat(request);
-        } catch (NotFoundException e) {
-            ERROR("사용자를 찾을 수 없습니다.", HttpStatus.BAD_REQUEST);
-        }
-        
         // topic-1대다, queue-1대1
-        sendingOperations.convertAndSend("/topic/chat/room/"+ roomId,request);
-        
-        
+        sendingOperations.convertAndSend("/topic/chat/room/" + roomId, request);
         return OK(null);
     }
 
