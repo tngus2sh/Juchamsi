@@ -22,4 +22,5 @@ public class ChatMessageRequest {
     private String senderId;
     // 내용
     private String message;
+    private String roomId;
 }

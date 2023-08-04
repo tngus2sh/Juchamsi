@@ -23,9 +23,9 @@ public class MileageServiceImpl implements MileageService {
     private final UserRepository userRepository;
 
     @Override
-    public List<MileageResponse> showMileage(Long userId) {
-        Optional<User> findUser = userRepository.findById(userId);
-        if(!findUser.isPresent()) {
+    public List<MileageResponse> showMileage(String userId) {
+        Optional<User> findUser = userRepository.findByLoginId(userId);
+        if(findUser.isEmpty()) {
             throw new NotFoundException(User.class, userId);
         }
 

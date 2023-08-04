@@ -38,7 +38,7 @@ function Home() {
         <img
           ref={transitionRef}
           className="mainlogo"
-          src={process.env.PUBLIC_URL + '/img/kiosk/예비로고.png'}
+          src={process.env.PUBLIC_URL + '/img/kiosk/logo1.png'}
           alt="title"
         ></img>
       </CSSTransition>

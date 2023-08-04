@@ -22,6 +22,11 @@ import MobileMycarparkingPage from './pages/mobile/mycarparking'
 import MobileTermessagePage from './pages/mobile/termessage'
 import MobileAccountPage from './pages/mobile/account'
 import Messagedetail from './pages/mobile/messagedetail';
+
+import MobileUpdateAccountPage from './pages/mobile/updateaccount'
+import MobileMileageChangePage from './pages/mobile/MileageChange'
+import MobilePasswordUpdatePage from './pages/mobile/passwordchange'
+
 import './App.css';
 
 const isMobile = window.matchMedia('(max-width: 600px)').matches;
@@ -57,6 +62,9 @@ function App() {
               <Route path="/Mobile/Termessage" element={<MobileTermessagePage />} />
               <Route path="/Mobile/Termessage/:id" element={<Messagedetail/>} /> 
               <Route path="/Mobile/Account" element={<MobileAccountPage />}/>
+              <Route path="/Mobile/Account/Update" element={<MobileUpdateAccountPage />}/>
+              <Route path="/Mobile/Mileage/Change" element={<MobileMileageChangePage />}/>
+              <Route path="/Mobile/Acoount/Update/PasswordChange" element={<MobilePasswordUpdatePage />}/>
                <Route path="/mainPage" element={ <WebMainPage/>} />
           </Routes>
           </BrowserRouter>

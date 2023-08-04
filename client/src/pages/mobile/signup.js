@@ -217,7 +217,7 @@ const handlePhoneModalConfirmClick = () => {
         isIdChecked === true &&
         passwordMismatch === false &&
         passwordChecking === false &&
-        phonenumbecheck === true &&
+        // phonenumbecheck === true &&
         isPrivacyAgreed === true
       ) {
         axiosInstance({
@@ -230,7 +230,7 @@ const handlePhoneModalConfirmClick = () => {
             "loginPassword": password1,
             "name": username,
             "phoneNumber": phonenumber,
-            "villaIdNumber": villranumber,
+            "villaIdNumber": Number(villranumber),
             "villaNumber": Number(housenumber)
           },
         })
@@ -247,7 +247,7 @@ const handlePhoneModalConfirmClick = () => {
         } else if (isIdChecked === false) {
           alert('아이디 중복체크를 실시해주시기 바랍니다.');
         } else if (phonenumbecheck === false) {
-          alert('핸드폰 인증을 진행해 주시기 바랍니다.')
+          // alert('핸드폰 인증을 진행해 주시기 바랍니다.')
         }
       }
     };
@@ -378,7 +378,7 @@ const handlePhoneModalConfirmClick = () => {
     <div>
       <img
         className="signuplogo"
-        src={process.env.PUBLIC_URL + '/img/kiosk/예비로고.png'}
+        src={process.env.PUBLIC_URL + '/img/kiosk/logo1.png'}
         alt={'title'}
       ></img>
       <TextField
