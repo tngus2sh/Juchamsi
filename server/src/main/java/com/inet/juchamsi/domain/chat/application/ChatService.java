@@ -19,7 +19,7 @@ public interface ChatService {
     public ChatRoomResponse createRoom(ChatRoomRequest request);
 
     // 메세지 저장
-    public void createChat(String roomId, ChatMessageRequest request);
+    public void createChat(ChatMessageRequest request);
 
     /* 시스템 대화방 */
     // 대화방 생성
