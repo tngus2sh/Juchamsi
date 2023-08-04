@@ -12,7 +12,7 @@ public interface ChatService {
 
     public List<ChatRoomResponse> showChatRoom(String userId);
 
-    public ChatRoomResponse showDetailChatRoom(String roomId);
+    public ChatRoomResponse showDetailChatRoom(String userId, String roomId);
     
     /* 사용자끼리 대화방 */
     // 대화방 생성
