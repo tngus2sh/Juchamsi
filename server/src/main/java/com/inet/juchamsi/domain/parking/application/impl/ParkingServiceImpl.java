@@ -29,7 +29,9 @@ public class ParkingServiceImpl implements ParkingService {
     @Override
     public void createEntrance(EntranceRequest request) {
         // 주차 위치로 주차장 정보 가져오기
-        int seatNumber = request.getZone();
+        String groundAddress = request.getGroundAddress();
+        // TODO: string -> int로 바꾸는 작업 필요
+        int seatNumber = 1;
         Optional<ParkingLot> parkingLot =  parkingLotRepository.findBySeatNumber(seatNumber, ACTIVE);
         if (parkingLot.isEmpty()) {
             throw new NotFoundException(ParkingLot.class, seatNumber);
