@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
+import StepIcon from "@mui/material/StepIcon";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -46,6 +47,21 @@ export default function HorizontalLinearStepper() {
   const passwordMatching = useSelector((state) => state.form.step2Data.passwordMatching);
   const privacyAgreement = useSelector((state) => state.form.step3Data.privacyAgreement);
 
+  // const CustomStepIcon = (props) => {
+  //   const { active, completed, icon } = props;
+
+  //   return (
+  //     <StepIcon
+  //       classes={{
+  //         root: {
+  //           color: "mainColor",
+  //         },
+  //       }}
+  //       icon={icon}
+  //     />
+  //   );
+  // };
+
   const handleNext = () => {
     if (activeStep === 0) {
       if (name.trim() === "") {
@@ -54,9 +70,9 @@ export default function HorizontalLinearStepper() {
       } else if (phoneNumber.trim() === "") {
         setModalMessage("휴대폰번호를 입력하세요");
         setOpen(true);
-      } else if (!certification) {
-        setModalMessage("휴대폰번호 인증해주세요");
-        setOpen(true);
+        // } else if (!certification) {
+        //   setModalMessage("휴대폰번호 인증해주세요");
+        //   setOpen(true);
       } else {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
       }
@@ -114,6 +130,7 @@ export default function HorizontalLinearStepper() {
     try {
       // HTTP POST 요청 보내기
       await http.post(`/owner`, formData);
+      alert("ㅎㅇ");
       console.log("ㅎㅇ");
       // 회원가입 완료 후 메인 페이지로 이동
       navigate("/");
