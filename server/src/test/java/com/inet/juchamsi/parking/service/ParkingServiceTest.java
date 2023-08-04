@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.inet.juchamsi.domain.parking.entity.ParkingFlag.EMPTY;
 import static com.inet.juchamsi.global.common.Active.ACTIVE;
 import static com.inet.juchamsi.global.common.Active.DISABLED;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -109,7 +108,6 @@ public class ParkingServiceTest {
             ParkingLot parkingLot = ParkingLot.builder()
                     .villa(villa)
                     .seatNumber(i)
-                    .parkingFlag(EMPTY)
                     .backNumber(i + parkingLotCol)
                     .active(ACTIVE)
                     .build();
@@ -118,7 +116,6 @@ public class ParkingServiceTest {
             parkingLot = ParkingLot.builder()
                     .villa(testVilla)
                     .seatNumber(i)
-                    .parkingFlag(EMPTY)
                     .backNumber(i + parkingLotCol)
                     .active(ACTIVE)
                     .build();
@@ -127,7 +124,6 @@ public class ParkingServiceTest {
             parkingLot = ParkingLot.builder()
                     .villa(villa)
                     .seatNumber(i + parkingLotCol)
-                    .parkingFlag(EMPTY)
                     .frontNumber(i)
                     .active(ACTIVE)
                     .build();
@@ -136,7 +132,6 @@ public class ParkingServiceTest {
             parkingLot = ParkingLot.builder()
                     .villa(testVilla)
                     .seatNumber(i + parkingLotCol)
-                    .parkingFlag(EMPTY)
                     .frontNumber(i)
                     .active(ACTIVE)
                     .build();
