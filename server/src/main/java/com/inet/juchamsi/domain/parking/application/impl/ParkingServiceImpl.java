@@ -50,5 +50,16 @@ public class ParkingServiceImpl implements ParkingService {
                         .inTime(inTime)
                         .outTime(null)
                         .build());
+        // 주차 위치 정보로부터 뒤차가 있을 경우 해당 차의 출차시간에 맞춰 알람을 보낸다.
+        int backNumber = parkingLot.get().getBackNumber();
+        if (backNumber != 0) {
+            // 뒤차 정보 -> 뒤차의 자리 번호로 해당 주차장 식별키를 알아내 주차장 히스토리에 현재 주차되어 있는 차를 찾음
+            Optional<Long> parkingOp = parkingHistoryRepository.existByParkingHistoryAndActive(backNumber, ACTIVE);
+            if (parkingOp.isPresent()) {
+                // TODO: 현재 주차가 되어있음 -> 해당 차의 출차시간에 맞춰 알람 보냄
+                // TODO: 뒤차주에게 현 차주의 출차시간을 알람으로 보내줌
+            }
+        }
+        // 주차가 됐다는 알람을 사용자(차주)에게 전송한다.
     }
 }
