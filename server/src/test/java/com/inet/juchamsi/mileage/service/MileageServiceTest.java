@@ -99,7 +99,7 @@ public class MileageServiceTest {
         Villa targetVilla = insertVilla();
         User targetUser = insertUser();
         Mileage targetMileage = insertMileage(targetUser);
-        Long userId = targetUser.getId();
+        String userId = targetUser.getLoginId();
 
         // when
         List<MileageResponse> respone = mileageService.showMileage(userId);

@@ -105,9 +105,10 @@ public class ChatServiceImpl implements ChatService {
     
     // 메세지 저장
     @Override
-    public void createChat(String roomId, ChatMessageRequest request) {
+    public void createChat(ChatMessageRequest request) {
         String userId = request.getSenderId();
         String message = request.getMessage();
+        String roomId = request.getRoomId();
         // 채팅 참여 식별키를 가져와서 넣어야함
         Optional<ChatPeople> chatPeople = chatPeopleRepository.findIdByRoomIdAndUserId(userId, roomId, ACTIVE, ALIVE);
         if (chatPeople.isEmpty()) {

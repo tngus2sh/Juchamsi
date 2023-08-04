@@ -4,6 +4,7 @@ import com.inet.juchamsi.domain.parking.application.ParkingLotService;
 import com.inet.juchamsi.domain.parking.application.ParkingService;
 import com.inet.juchamsi.domain.parking.dto.request.CreateLotRequest;
 import com.inet.juchamsi.domain.parking.dto.request.CreateParkingHistoryRequest;
+import com.inet.juchamsi.domain.parking.dto.request.EntranceRequest;
 import com.inet.juchamsi.domain.parking.dto.response.ParkingHistoryResponse;
 import com.inet.juchamsi.domain.parking.dto.response.ParkingLotResponse;
 import com.inet.juchamsi.global.api.ApiResult;
@@ -29,6 +30,21 @@ import static com.inet.juchamsi.global.api.ApiResult.OK;
 public class ParkingApiController {
     private final ParkingLotService parkingLotService;
     private final ParkingService parkingService;
+
+    @ApiOperation(value = "입차 정보 수집", notes = "입차된 주차의 주차위치와 해당 유저의 mac 주소를 받습니다.")
+    @PostMapping("/entrance")
+    public ApiResult<Void> collectEntrance(
+            @ApiParam(value = "user-parking-dto")
+            EntranceRequest request
+    ) {
+        log.debug("collectEntrance={}", request);
+        try {
+            parkingService.createEntrance(request);
+        } catch (NotFoundException e) {
+            return ERROR("존재하지 않는 정보입니다.", HttpStatus.NO_CONTENT);
+        }
+        return OK(null);
+    } 
 
     @ApiOperation(value = "주차장 등록", notes = "집 주인은 회원가입 시 주차장 크기를 입력해 등록합니다")
     @PostMapping("/lot")

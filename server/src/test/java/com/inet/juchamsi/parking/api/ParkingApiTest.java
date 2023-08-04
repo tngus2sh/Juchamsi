@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.inet.juchamsi.domain.parking.entity.ParkingFlag.EMPTY;
 import static com.inet.juchamsi.global.common.Active.ACTIVE;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -91,7 +90,6 @@ public class ParkingApiTest {
             ParkingLot parkingLot = ParkingLot.builder()
                     .villa(villa)
                     .seatNumber(i)
-                    .parkingFlag(EMPTY)
                     .backNumber(i + parkingLotCol)
                     .active(ACTIVE)
                     .build();
@@ -100,7 +98,6 @@ public class ParkingApiTest {
             parkingLot = ParkingLot.builder()
                     .villa(testVilla)
                     .seatNumber(i)
-                    .parkingFlag(EMPTY)
                     .backNumber(i + parkingLotCol)
                     .active(ACTIVE)
                     .build();
@@ -109,7 +106,6 @@ public class ParkingApiTest {
             parkingLot = ParkingLot.builder()
                     .villa(villa)
                     .seatNumber(i + parkingLotCol)
-                    .parkingFlag(EMPTY)
                     .frontNumber(i)
                     .active(ACTIVE)
                     .build();
@@ -118,7 +114,6 @@ public class ParkingApiTest {
             parkingLot = ParkingLot.builder()
                     .villa(testVilla)
                     .seatNumber(i + parkingLotCol)
-                    .parkingFlag(EMPTY)
                     .frontNumber(i)
                     .active(ACTIVE)
                     .build();
