@@ -1,14 +1,10 @@
-package com.inet.juchamsi.notification.service;
+package com.inet.juchamsi.token.service;
 
 import com.inet.juchamsi.domain.token.dao.TokenRepository;
 import com.inet.juchamsi.domain.token.entity.Token;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
-import com.inet.juchamsi.domain.user.entity.Approve;
-import com.inet.juchamsi.domain.user.entity.Grade;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.domain.villa.dao.VillaRepository;
-import com.inet.juchamsi.domain.villa.entity.Villa;
-import com.inet.juchamsi.global.common.Active;
 import com.inet.juchamsi.global.notification.application.FirebaseCloudMessageService;
 import com.inet.juchamsi.global.notification.dto.request.FCMNotificationRequest;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +22,7 @@ import static com.inet.juchamsi.global.common.Active.ACTIVE;
 
 @SpringBootTest
 @Transactional
-public class NotificationServiceTest {
+public class TokenServiceTest {
 
     @Autowired
     FirebaseCloudMessageService FCMService;
