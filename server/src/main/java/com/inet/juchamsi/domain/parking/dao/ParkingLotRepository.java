@@ -18,4 +18,8 @@ public interface ParkingLotRepository extends JpaRepository<ParkingLot, Long> {
     // 자리 번호로 주차장 정보 가져오기
     @Query("select p from ParkingLot p where p.seatNumber=:seatNumber and p.active=:active")
     Optional<ParkingLot> findBySeatNumber(@Param("seatNumber") int seatNumber, @Param("active")Active active);
+
+    // 자리 맥 주소로 주차장 정보 가져오기
+    @Query("select p from ParkingLot p where p.seatMacAddress=:seatMacAddress and p.active=:active")
+    Optional<ParkingLot> findBySeatMacAddress(@Param("seatMacAddress") String seatMacAddress, @Param("active") Active active);
 }
