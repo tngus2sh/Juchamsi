@@ -10,10 +10,13 @@ import com.inet.juchamsi.domain.parking.dto.response.ParkingHistoryResponse;
 import com.inet.juchamsi.domain.parking.dto.response.ParkingLotResponse;
 import com.inet.juchamsi.global.api.ApiResult;
 import com.inet.juchamsi.global.error.NotFoundException;
+import com.inet.juchamsi.global.notification.application.FirebaseCloudMessageService;
+import com.inet.juchamsi.global.notification.dto.request.FCMNotificationRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +27,7 @@ import static com.inet.juchamsi.global.api.ApiResult.ERROR;
 import static com.inet.juchamsi.global.api.ApiResult.OK;
 
 @RestController
-@Slf4j
+@Log4j2
 @RequiredArgsConstructor
 @Api(tags = {"주차장"})
 @RequestMapping("/parking")
@@ -40,9 +43,9 @@ public class ParkingApiController {
             EntranceExitRequest request
     ) {
         log.debug("createEntrance={}", request);
-        System.out.println("request = " + request);
         try {
             parkingService.createEntrance(request);
+            // 입차 알림
         } catch (NotFoundException e) {
             return ERROR("존재하지 않는 정보입니다.", HttpStatus.NO_CONTENT);
         }
