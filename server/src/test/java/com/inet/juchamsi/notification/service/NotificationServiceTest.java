@@ -1,11 +1,7 @@
 package com.inet.juchamsi.notification.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inet.juchamsi.domain.notification.application.NotificationService;
 import com.inet.juchamsi.domain.notification.dto.request.CreateNotificationRequest;
-import com.inet.juchamsi.domain.notification.dto.request.CreateTimeNotificationRequest;
-import com.inet.juchamsi.domain.notification.dto.request.CreateUpdateNotificationRequest;
-import com.inet.juchamsi.domain.notification.entity.TimeNotification;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.global.redis.RedisUtils;
@@ -19,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.util.Collections;
-import java.util.Objects;
+import java.util.Map;
 
 import static com.inet.juchamsi.domain.user.entity.Approve.APPROVE;
 import static com.inet.juchamsi.domain.user.entity.Grade.USER;
@@ -41,46 +37,7 @@ public class NotificationServiceTest {
 
     @Test
     @DisplayName("시간 알림 등록")
-    void createTimeNotification() throws JsonProcessingException {
-        // given
-        User targetUser = insertUser();
-        LocalDateTime outTime = Year.of(2023).atMonth(8).atDay(4).atTime(12, 11);
-        CreateTimeNotificationRequest request = CreateTimeNotificationRequest.builder()
-                .loginId(targetUser.getLoginId())
-                .outTime(outTime)
-                .message("출차 예상 시간 15분 전입니다.")
-                .build();
-
-        // when
-        String key = notificationService.createTimeNotification(request);
-
-        // then
-        TimeNotification timeNotification = redisUtils.getRedisValue(key, TimeNotification.class);
-        System.out.println(timeNotification);
-    }
-
-    @Test
-    @DisplayName("시간 알림 등록")
-    void createUpdateNotification() throws JsonProcessingException {
-        // given
-        User targetUser = insertUser();
-        LocalDateTime outTime = Year.of(2023).atMonth(8).atDay(4).atTime(12, 11);
-        CreateUpdateNotificationRequest request = CreateUpdateNotificationRequest.builder()
-                .loginId(targetUser.getLoginId())
-                .outTime(outTime)
-                .build();
-
-        // when
-        String key = notificationService.createUpdateNotification(request);
-
-        // then
-//        TimeNotification timeNotification = redisUtils.getRedisValue(key, TimeNotification.class);
-//        System.out.println(timeNotification);
-    }
-
-    @Test
-    @DisplayName("시간 알림 등록")
-    void createNotification() throws JsonProcessingException {
+    void createNotification() {
         // given
         User targetUser = insertUser();
         LocalDateTime outTime = Year.of(2023).atMonth(8).atDay(4).atTime(12, 11);
@@ -94,8 +51,12 @@ public class NotificationServiceTest {
         String key = notificationService.createNotification(request);
 
         // then
-//        TimeNotification timeNotification = redisUtils.getRedisValue(key, TimeNotification.class);
-//        System.out.println(timeNotification);
+        Map<String, String> entries = redisUtils.getRedisHash(key);
+
+        for(String field : entries.keySet()) {
+            String value = (String) entries.get(field);
+            System.out.println(field + " : " + value);
+        }
     }
 
 
