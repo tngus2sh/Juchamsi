@@ -4,7 +4,7 @@ import com.inet.juchamsi.domain.parking.application.ParkingLotService;
 import com.inet.juchamsi.domain.parking.application.ParkingService;
 import com.inet.juchamsi.domain.parking.dto.request.CreateLotRequest;
 import com.inet.juchamsi.domain.parking.dto.request.CreateParkingHistoryRequest;
-import com.inet.juchamsi.domain.parking.dto.request.EntranceRequest;
+import com.inet.juchamsi.domain.parking.dto.request.EntranceExitRequest;
 import com.inet.juchamsi.domain.parking.dto.response.ParkingHistoryResponse;
 import com.inet.juchamsi.domain.parking.dto.response.ParkingLotResponse;
 import com.inet.juchamsi.global.api.ApiResult;
@@ -33,11 +33,11 @@ public class ParkingApiController {
 
     @ApiOperation(value = "입차 정보 수집", notes = "입차된 주차의 주차위치와 해당 유저의 mac 주소를 받습니다.")
     @PostMapping("/entrance")
-    public ApiResult<Void> collectEntrance(
+    public ApiResult<Void> createEntrance(
             @ApiParam(value = "user-parking-dto")
-            EntranceRequest request
+            EntranceExitRequest request
     ) {
-        log.debug("collectEntrance={}", request);
+        log.debug("createEntrance={}", request);
         System.out.println("request = " + request);
         try {
             parkingService.createEntrance(request);
@@ -45,7 +45,24 @@ public class ParkingApiController {
             return ERROR("존재하지 않는 정보입니다.", HttpStatus.NO_CONTENT);
         }
         return OK(null);
-    } 
+    }
+
+    @ApiOperation(value = "출차 정보 등록", notes = "출차된 차의 위치정보와 해당 유저의 mac 주소를 받습니다.")
+    @PostMapping("exit")
+    public ApiResult<Void> createExit(
+            @ApiParam(value = "user-parking-dto")
+            EntranceExitRequest request
+    ) {
+        log.debug("createExit={}", request);
+        System.out.println("request = " + request);
+        try {
+            parkingService.createExit(request);
+            return OK(null);
+        } catch (NotFoundException e) {
+            return ERROR("존재하지 않는 정보입니다.", HttpStatus.BAD_REQUEST);
+        }
+
+    }
 
     @ApiOperation(value = "주차장 등록", notes = "집 주인은 회원가입 시 주차장 크기를 입력해 등록합니다")
     @PostMapping("/lot")
