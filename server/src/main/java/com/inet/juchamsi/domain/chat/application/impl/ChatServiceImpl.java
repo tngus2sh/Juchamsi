@@ -135,7 +135,13 @@ public class ChatServiceImpl implements ChatService {
     }
 
     // 채팅방 삭제
-    public void removeChatRoom(String userId) {
+    @Override
+    public void removeChatRoom(String macAddress) {
+        Optional<User> userOptional = userRepository.findUserByMacAddress(macAddress, ACTIVE);
+        if (userOptional.isEmpty()) {
+            throw new NotFoundException(User.class, macAddress);
+        }
+        String userId = userOptional.get().getLoginId();
         // userId로 해당하는 채팅방 삭제
         Optional<Long> chatRoomIdOptional = chatRoomRepository.findIdByloginIdAndActive(userId, ACTIVE, ALIVE);
         if (chatRoomIdOptional.isEmpty()) {
