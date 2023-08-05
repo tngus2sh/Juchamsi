@@ -6,6 +6,7 @@ import com.inet.juchamsi.domain.chat.dao.ChatRoomRepository;
 import com.inet.juchamsi.domain.chat.dao.MessageRepository;
 import com.inet.juchamsi.domain.chat.dto.request.*;
 import com.inet.juchamsi.domain.chat.dto.response.ChatRoomResponse;
+import com.inet.juchamsi.domain.chat.dto.response.ChatRoomUserResponse;
 import com.inet.juchamsi.domain.chat.dto.response.MessageResponse;
 import com.inet.juchamsi.domain.chat.entity.ChatPeople;
 import com.inet.juchamsi.domain.chat.entity.ChatRoom;
@@ -40,12 +41,13 @@ public class ChatServiceImpl implements ChatService {
     // 채팅방 불러오기
     @Override
     public List<ChatRoomResponse> showChatRoom(String userId) {
-        List<ChatRoom> results = chatRoomRepository.findAllRoomsByLoginIdAndStatus(userId, ACTIVE, ALIVE);
+        List<ChatRoomUserResponse> results = chatRoomRepository.findAllRoomsByLoginIdAndStatus(userId, ACTIVE, ALIVE);
         List<ChatRoomResponse> chatRoomResponses = new ArrayList<>();
-        for (ChatRoom result : results) {
+        for (ChatRoomUserResponse result : results) {
             chatRoomResponses.add(ChatRoomResponse.builder()
                             .roomId(result.getRoomId())
                             .roomName(result.getRoomName())
+                            .nickName(result.getCarNumber())
                             .build());
         }
         return chatRoomResponses;
@@ -53,17 +55,27 @@ public class ChatServiceImpl implements ChatService {
     
     // 채팅방 하나 불러오기
     @Override
-    public ChatRoomResponse showDetailChatRoom(String roomId) {
-        Optional<ChatRoom> result = chatRoomRepository.findChatRoomByIdAndLoginIdAndStatus(roomId, ALIVE);
-        if (result.isEmpty()) {
+    public ChatRoomResponse showDetailChatRoom(String userId, String roomId) {
+        Optional<User> userOp = userRepository.findByLoginId(userId);
+        if (userOp.isEmpty()) {
+            throw new NotFoundException(User.class, userId);
+        }
+        List<ChatRoomUserResponse> results = chatRoomRepository.findChatRoomByIdAndLoginIdAndStatus(roomId, ALIVE);
+        if (results.isEmpty()) {
             throw new NotFoundException(ChatRoom.class, roomId);
+        }
+        String nickName = null;
+        for (ChatRoomUserResponse result : results) {
+            if (result.getCarNumber().equals(userOp.get().getCarNumber())) continue;
+            nickName = result.getCarNumber();
         }
         // 이전 채팅방 글 불러오기
         List<MessageChatRoomDto> messageUserDtos = messageRepository.findAllByChatRoomIdAndStatus(roomId, ALIVE);
         
         return ChatRoomResponse.builder()
-                .roomId(result.get().getRoomId())
-                .roomName(result.get().getRoomName())
+                .roomId(results.get(0).getRoomId())
+                .roomName(results.get(0).getRoomName())
+                .nickName(nickName)
                 .messageList(messageUserDtos)
                 .build();
     }
