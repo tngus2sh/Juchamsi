@@ -38,6 +38,7 @@ public class ParkingApiController {
             EntranceRequest request
     ) {
         log.debug("collectEntrance={}", request);
+        System.out.println("request = " + request);
         try {
             parkingService.createEntrance(request);
         } catch (NotFoundException e) {

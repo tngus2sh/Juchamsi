@@ -30,7 +30,15 @@ const Step3 = () => {
   };
 
   const handleParkingLotColChange = (e) => {
-    dispatch(setStep3Data({ parkingLotCol: e.target.value }));
+    const inputValue = e.target.value;
+
+    // 음수가 입력되었을 때 처리
+    if (inputValue < 1) {
+      e.target.value = 1;
+      return;
+    }
+    // 음수가 아닌 경우 처리
+    dispatch(setStep3Data({ parkingLotCol: inputValue }));
   };
 
   const handleOpen = () => {
