@@ -7,8 +7,8 @@ import lombok.Getter;
 public class FCMNotificationRequest {
 
     private String loginId;
-    private String title;
-    private String body;
+    private String title; // 알림 제목
+    private String body; // 알림 내용
 
 
     public FCMNotificationRequest() {}
