@@ -1,5 +1,6 @@
 package com.inet.juchamsi.domain.parking.api;
 
+import com.inet.juchamsi.domain.chat.application.ChatService;
 import com.inet.juchamsi.domain.parking.application.ParkingLotService;
 import com.inet.juchamsi.domain.parking.application.ParkingService;
 import com.inet.juchamsi.domain.parking.dto.request.CreateLotRequest;
@@ -30,6 +31,7 @@ import static com.inet.juchamsi.global.api.ApiResult.OK;
 public class ParkingApiController {
     private final ParkingLotService parkingLotService;
     private final ParkingService parkingService;
+    private final ChatService chatService;
 
     @ApiOperation(value = "입차 정보 수집", notes = "입차된 주차의 주차위치와 해당 유저의 mac 주소를 받습니다.")
     @PostMapping("/entrance")
@@ -57,11 +59,11 @@ public class ParkingApiController {
         System.out.println("request = " + request);
         try {
             parkingService.createExit(request);
+            chatService.removeChatRoom(request.getMacAddress()); // 채팅방 없애기
             return OK(null);
         } catch (NotFoundException e) {
             return ERROR("존재하지 않는 정보입니다.", HttpStatus.BAD_REQUEST);
         }
-
     }
 
     @ApiOperation(value = "주차장 등록", notes = "집 주인은 회원가입 시 주차장 크기를 입력해 등록합니다")

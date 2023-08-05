@@ -1,5 +1,8 @@
 package com.inet.juchamsi.domain.parking.application.impl;
 
+import com.inet.juchamsi.domain.chat.dao.ChatRoomRepository;
+import com.inet.juchamsi.domain.chat.entity.ChatRoom;
+import com.inet.juchamsi.domain.chat.entity.Status;
 import com.inet.juchamsi.domain.parking.application.ParkingService;
 import com.inet.juchamsi.domain.parking.dao.ParkingHistoryRepository;
 import com.inet.juchamsi.domain.parking.dao.ParkingLotRepository;
@@ -10,6 +13,7 @@ import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.global.error.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import net.bytebuddy.dynamic.TypeResolutionStrategy;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
@@ -26,6 +30,7 @@ public class ParkingServiceImpl implements ParkingService {
     private final ParkingLotRepository parkingLotRepository;
     private final ParkingHistoryRepository parkingHistoryRepository;
     private final UserRepository userRepository;
+    private final ChatRoomRepository chatRoomRepository;
 
     // 입차 위치 정보 저장
     @Override
@@ -75,12 +80,11 @@ public class ParkingServiceImpl implements ParkingService {
             throw new NotFoundException(ParkingLot.class, groundMacAddress);
         }
         // mac 주소로 현재 주차 표시 되어있는 주차 내역 정보 가져오기
-        Optional<ParkingHistory> parkingHistoryOptional = parkingHistoryRepository.findAllBySeatMacAddressAndActive(groundMacAddress, ACTIVE);
+        Optional<ParkingHistory> parkingHistoryOptional = parkingHistoryRepository.findBySeatMacAddressAndActive(groundMacAddress, ACTIVE);
         if (parkingHistoryOptional.isEmpty()) {
             throw new NotFoundException(ParkingHistory.class, groundMacAddress);
         }
         // 주차 내역 정보 업데이트
         parkingHistoryRepository.updateParkingHistory(DISABLED, parkingHistoryOptional.get().getId());
-        // TODO: 유저간 채팅방 삭제
     }
 }
