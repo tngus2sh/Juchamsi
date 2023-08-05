@@ -134,6 +134,18 @@ public class ChatServiceImpl implements ChatService {
                 .build());
     }
 
+    // 채팅방 삭제
+    public void removeChatRoom(String userId) {
+        // userId로 해당하는 채팅방 삭제
+        Optional<Long> chatRoomIdOptional = chatRoomRepository.findIdByloginIdAndActive(userId, ACTIVE, ALIVE);
+        if (chatRoomIdOptional.isEmpty()) {
+            throw new NotFoundException(ChatRoom.class, userId);
+        }
+
+        // chatRoomId에 해당하는 채팅방 비활성화로 바꾸기
+        chatRoomRepository.updateStatus(chatRoomIdOptional.get(), ALIVE);
+    }
+
     /* 시스템 채팅방 */
     // 시스템 채팅방 생성
     @Override
