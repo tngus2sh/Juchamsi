@@ -85,12 +85,13 @@ const MainPage = () => {
     // 로그아웃 처리
     //store에 있는 데이터 삭제해야 함!
     dispatch(setLogout());
+    // http.get("/owner/logout/{id}");
     navigate("/");
   };
   useEffect(() => {
-    // if (!isLogin) {
-    //   navigate("/"); // 리다이렉트
-    // }
+    if (!isLogin) {
+      navigate("/"); // 리다이렉트
+    }
   });
 
   return (

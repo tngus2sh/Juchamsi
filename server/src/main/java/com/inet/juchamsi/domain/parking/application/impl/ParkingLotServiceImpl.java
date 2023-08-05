@@ -43,10 +43,10 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 
         ParkingLot parkingLot;
         for(int i = 1; i <= parkingLotCol; i++) {
-            parkingLot = ParkingLot.createFrontParkingLot(villa, i, (i + parkingLotCol), ACTIVE);
+            parkingLot = ParkingLot.createFrontParkingLot(villa, i, "**", (i + parkingLotCol), ACTIVE);
             parkingLotRepository.save(parkingLot);
 
-            parkingLot = ParkingLot.createBackParkingLot(villa, (i + parkingLotCol), i, ACTIVE);
+            parkingLot = ParkingLot.createBackParkingLot(villa, (i + parkingLotCol), "**",  i, ACTIVE);
             parkingLotRepository.save(parkingLot);
         }
     }

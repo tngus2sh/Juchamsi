@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class EntranceRequest {
     String macAddress;
-    int zone;
+    String groundAddress;
 }

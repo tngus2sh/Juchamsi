@@ -25,4 +25,10 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
 
     @Query("select new com.inet.juchamsi.domain.chat.dto.response.ChatRoomUserResponse(u.carNumber, cr.roomId, cr.roomName) from ChatPeople cp left join cp.user u left join cp.chatRoom cr where cr.roomId=:roomId and cr.status=:status")
     List<ChatRoomUserResponse> findChatRoomByIdAndLoginIdAndStatus(@Param("roomId") String roomId, @Param("status") Status status);
+
+    @Query("select cr.id from ChatPeople cp left join cp.user u left join cp.chatRoom cr where u.loginId=:loginId and u.active=:active and cr.status=:status")
+    Optional<Long> findIdByloginIdAndActive(@Param("loginId") String loginId, @Param("active") Active active, @Param("status") Status status);
+
+    @Query("update ChatRoom cr set cr.status=:status where cr.id=:id")
+    Optional<Void> updateStatus(@Param("id") Long id, @Param("status") Status status);
 }
