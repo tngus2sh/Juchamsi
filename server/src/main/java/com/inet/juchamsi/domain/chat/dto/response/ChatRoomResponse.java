@@ -1,13 +1,12 @@
 package com.inet.juchamsi.domain.chat.dto.response;
 
-import com.inet.juchamsi.domain.chat.dto.request.MessageChatRoomDto;
+import com.inet.juchamsi.domain.chat.dto.service.MessageChatRoomDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter

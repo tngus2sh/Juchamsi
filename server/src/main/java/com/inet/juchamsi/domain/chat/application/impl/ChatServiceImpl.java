@@ -6,8 +6,9 @@ import com.inet.juchamsi.domain.chat.dao.ChatRoomRepository;
 import com.inet.juchamsi.domain.chat.dao.MessageRepository;
 import com.inet.juchamsi.domain.chat.dto.request.*;
 import com.inet.juchamsi.domain.chat.dto.response.ChatRoomResponse;
-import com.inet.juchamsi.domain.chat.dto.response.ChatRoomUserResponse;
-import com.inet.juchamsi.domain.chat.dto.response.MessageResponse;
+import com.inet.juchamsi.domain.chat.dto.service.ChatRoomUserDto;
+import com.inet.juchamsi.domain.chat.dto.service.MessageChatRoomDto;
+import com.inet.juchamsi.domain.chat.dto.service.SystemMessageDto;
 import com.inet.juchamsi.domain.chat.entity.ChatPeople;
 import com.inet.juchamsi.domain.chat.entity.ChatRoom;
 import com.inet.juchamsi.domain.chat.entity.Message;
@@ -19,9 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.inet.juchamsi.domain.chat.entity.Status.ALIVE;
 import static com.inet.juchamsi.domain.chat.entity.Type.GENERAL;
@@ -41,9 +40,9 @@ public class ChatServiceImpl implements ChatService {
     // 채팅방 불러오기
     @Override
     public List<ChatRoomResponse> showChatRoom(String userId) {
-        List<ChatRoomUserResponse> results = chatRoomRepository.findAllRoomsByLoginIdAndStatus(userId, ACTIVE, ALIVE);
+        List<ChatRoomUserDto> results = chatRoomRepository.findAllRoomsByLoginIdAndStatus(userId, ACTIVE, ALIVE);
         List<ChatRoomResponse> chatRoomResponses = new ArrayList<>();
-        for (ChatRoomUserResponse result : results) {
+        for (ChatRoomUserDto result : results) {
             chatRoomResponses.add(ChatRoomResponse.builder()
                             .roomId(result.getRoomId())
                             .roomName(result.getRoomName())
@@ -60,12 +59,12 @@ public class ChatServiceImpl implements ChatService {
         if (userOp.isEmpty()) {
             throw new NotFoundException(User.class, userId);
         }
-        List<ChatRoomUserResponse> results = chatRoomRepository.findChatRoomByIdAndLoginIdAndStatus(roomId, ALIVE);
+        List<ChatRoomUserDto> results = chatRoomRepository.findChatRoomByIdAndLoginIdAndStatus(roomId, ALIVE);
         if (results.isEmpty()) {
             throw new NotFoundException(ChatRoom.class, roomId);
         }
         String nickName = null;
-        for (ChatRoomUserResponse result : results) {
+        for (ChatRoomUserDto result : results) {
             if (result.getCarNumber().equals(userOp.get().getCarNumber())) continue;
             nickName = result.getCarNumber();
         }
@@ -181,9 +180,11 @@ public class ChatServiceImpl implements ChatService {
 
     // 시스템 메세지 저장
     @Override
-    public void createSystemChat(String roomId, SystemMessageRequest request) {
-        String userId = request.getSenderId();
-        String message = request.getMessage();
+    public void createSystemChat(SystemMessageDto messageDto) { // TODO parameter modify
+        String userId = messageDto.getSenderId();
+        String message = messageDto.getMessage();
+        String roomId = messageDto.getRoomId();
+
         // 채팅 참여 식별키를 가져와서 넣어야함
         Optional<ChatPeople> chatPeople = chatPeopleRepository.findIdByRoomIdAndUserId(userId, roomId, ACTIVE, ALIVE);
         if (chatPeople.isEmpty()) {
