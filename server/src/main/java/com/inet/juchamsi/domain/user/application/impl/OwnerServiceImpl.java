@@ -131,6 +131,12 @@ public class OwnerServiceImpl implements OwnerService {
     public AdminOwnerLoginResponse loginUser(LoginRequest request) {
         String ownerId = request.getLoginId();
         String password = request.getLoginPassword();
+
+        Optional<Long> userIdOp = userRepository.existLoginIdAndActive(ownerId, ACTIVE);
+        if (userIdOp.isEmpty()) {
+            throw new NotFoundException(User.class, ownerId);
+        }
+
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(ownerId, password);
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);

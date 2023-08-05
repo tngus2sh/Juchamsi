@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.inet.juchamsi.domain.parking.entity.ParkingFlag.EMPTY;
 import static com.inet.juchamsi.global.common.Active.ACTIVE;
 import static com.inet.juchamsi.global.common.Active.DISABLED;
 
@@ -31,7 +30,7 @@ public class ParkingLotServiceImpl implements ParkingLotService {
     @Transactional
     public void createParkingLot(Long villaId, int parkingLotCol) {
         Optional<Villa> targetVilla = villaRepository.findById(villaId);
-        if(!targetVilla.isPresent()) {
+        if(targetVilla.isEmpty()) {
             throw new NotFoundException(Villa.class, villaId);
         }
 
@@ -44,10 +43,10 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 
         ParkingLot parkingLot;
         for(int i = 1; i <= parkingLotCol; i++) {
-            parkingLot = ParkingLot.createFrontParkingLot(villa, i, EMPTY, (i + parkingLotCol), ACTIVE);
+            parkingLot = ParkingLot.createFrontParkingLot(villa, i, "**", (i + parkingLotCol), ACTIVE);
             parkingLotRepository.save(parkingLot);
 
-            parkingLot = ParkingLot.createBackParkingLot(villa, (i + parkingLotCol), EMPTY, i, ACTIVE);
+            parkingLot = ParkingLot.createBackParkingLot(villa, (i + parkingLotCol), "**",  i, ACTIVE);
             parkingLotRepository.save(parkingLot);
         }
     }
@@ -70,7 +69,6 @@ public class ParkingLotServiceImpl implements ParkingLotService {
                     .id(parkingLot.getId())
                     .villaId(villaId)
                     .seatNumber(parkingLot.getSeatNumber())
-                    .parkingFlag(parkingLot.getParkingFlag().toString())
                     .frontNumber(parkingLot.getFrontNumber())
                     .backNumber(parkingLot.getBackNumber())
                     .createDate(parkingLot.getCreatedDate())
