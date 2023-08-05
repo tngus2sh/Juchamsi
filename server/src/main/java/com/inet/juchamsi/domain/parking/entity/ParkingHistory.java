@@ -32,7 +32,7 @@ public class ParkingHistory extends TimeBaseEntity {
     private ParkingLot parkingLot;
 
     @Enumerated(STRING)
-    @Column(name = "active")
+    @Column(nullable = false)
     private Active active;
 
     @Column(name = "in_time")

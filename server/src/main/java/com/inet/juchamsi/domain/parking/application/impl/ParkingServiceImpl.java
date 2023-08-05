@@ -1,21 +1,27 @@
 package com.inet.juchamsi.domain.parking.application.impl;
 
+import com.inet.juchamsi.domain.chat.dao.ChatRoomRepository;
+import com.inet.juchamsi.domain.chat.entity.ChatRoom;
+import com.inet.juchamsi.domain.chat.entity.Status;
 import com.inet.juchamsi.domain.parking.application.ParkingService;
 import com.inet.juchamsi.domain.parking.dao.ParkingHistoryRepository;
 import com.inet.juchamsi.domain.parking.dao.ParkingLotRepository;
-import com.inet.juchamsi.domain.parking.dto.request.EntranceRequest;
+import com.inet.juchamsi.domain.parking.dto.request.EntranceExitRequest;
 import com.inet.juchamsi.domain.parking.entity.ParkingHistory;
 import com.inet.juchamsi.domain.parking.entity.ParkingLot;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.global.error.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import net.bytebuddy.dynamic.TypeResolutionStrategy;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.sql.Timestamp;
 import java.util.Optional;
 
 import static com.inet.juchamsi.global.common.Active.ACTIVE;
+import static com.inet.juchamsi.global.common.Active.DISABLED;
 
 @Service
 @RequiredArgsConstructor
@@ -24,10 +30,11 @@ public class ParkingServiceImpl implements ParkingService {
     private final ParkingLotRepository parkingLotRepository;
     private final ParkingHistoryRepository parkingHistoryRepository;
     private final UserRepository userRepository;
+    private final ChatRoomRepository chatRoomRepository;
 
     // 입차 위치 정보 저장
     @Override
-    public void createEntrance(EntranceRequest request) {
+    public void createEntrance(EntranceExitRequest request) {
         // 주차 위치로 주차장 정보 가져오기
         String groundAddress = request.getGroundAddress();
         Optional<ParkingLot>  parkingLot = parkingLotRepository.findBySeatMacAddress(groundAddress, ACTIVE);
@@ -62,5 +69,22 @@ public class ParkingServiceImpl implements ParkingService {
             }
         }
         // 주차가 됐다는 알람을 사용자(차주)에게 전송한다.
+    }
+
+    @Override
+    public void createExit(EntranceExitRequest request) {
+        // 주차 위치 맥 주소를 받아온다.
+        String groundMacAddress = request.getGroundAddress();
+        Optional<ParkingLot> parkingLotOptional = parkingLotRepository.findBySeatMacAddress(groundMacAddress, ACTIVE);
+        if (parkingLotOptional.isEmpty()) {
+            throw new NotFoundException(ParkingLot.class, groundMacAddress);
+        }
+        // mac 주소로 현재 주차 표시 되어있는 주차 내역 정보 가져오기
+        Optional<ParkingHistory> parkingHistoryOptional = parkingHistoryRepository.findBySeatMacAddressAndActive(groundMacAddress, ACTIVE);
+        if (parkingHistoryOptional.isEmpty()) {
+            throw new NotFoundException(ParkingHistory.class, groundMacAddress);
+        }
+        // 주차 내역 정보 업데이트
+        parkingHistoryRepository.updateParkingHistory(DISABLED, parkingHistoryOptional.get().getId());
     }
 }

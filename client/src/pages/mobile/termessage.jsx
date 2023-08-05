@@ -17,6 +17,8 @@ import http from "../../axios/http";
 import Button from "@mui/material/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser1, setUser2, setRoomNumber } from "../../redux/chatInfo";
+import PersonIcon from "@mui/icons-material/Person";
+import { Typography } from "@mui/material";
 
 function Termessage() {
   const navigate = useNavigate();
@@ -49,7 +51,7 @@ function Termessage() {
     //   return;
 
     http
-      .post("/chat/room", { userIdOne: loginId, userIdTwo: "useridd2" })
+      .post("/chat/room", { userIdOne: loginId, userIdTwo: "userid2" })
       .then((response) => {
         console.log(response.data.response.roomId);
         // redux에 담음
@@ -77,25 +79,48 @@ function Termessage() {
 
   return (
     <React.Fragment>
+      <Typography>대화중인 목록</Typography>
+      <Divider />
       <div
         style={{
           height: "340px",
         }}
       >
-        {chatRooms.map((item) => (
-          <ConversationList key={item.roomId}>
-            <Conversation
-              name={item.roomName}
-              lastSenderName=""
-              info={item.roomId}
-              onClick={() => enterRoom(item.roomId)}
-            >
-              <Avatar />
-            </Conversation>
-          </ConversationList>
-        ))}
-        ;
+        <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
+          {chatRooms.map((item) => (
+            <React.Fragment key={item.roomId}>
+              <ListItem
+                sx={{
+                  "&:active": {
+                    backgroundColor: "#CACACA",
+                  },
+                }}
+                onClick={() => enterRoom(item.roomId)}
+              >
+                <ListItemAvatar>
+                  <Avatar>
+                    <ImageIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText primary={item.roomName} secondary="Jan 9, 2014" />
+              </ListItem>
+              <Divider />
+            </React.Fragment>
+          ))}
+        </List>
       </div>
+      {/* // <ConversationList key={item.roomId}>
+          //   <Conversation
+          //     name={item.roomName}
+          //     lastSenderName=""
+          //     info={""}
+          //     onClick={() => enterRoom(item.roomId)}
+          //   >
+          //     <Avatar>
+          //       <PersonIcon sx={{ width: "100%", height: "100px" }} />
+          //     </Avatar>
+          //   </Conversation>
+          // </ConversationList> */}
 
       <Button className="btn btn-primary" type="button" onClick={createRoom}>
         채팅방 개설
