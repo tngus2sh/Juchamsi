@@ -16,12 +16,15 @@ public class ChatRoomResponse {
 
     private String roomId;
     private String roomName;
+    // 채팅 하는 사람 닉네임
+    private String nickName;
     private List<MessageChatRoomDto> messageList;
 
     @Builder
-    public ChatRoomResponse(String roomId, String roomName, List<MessageChatRoomDto> messageList) {
+    public ChatRoomResponse(String roomId, String roomName, String nickName, List<MessageChatRoomDto> messageList) {
         this.roomId = roomId;
         this.roomName = roomName;
+        this.nickName = nickName;
         this.messageList = messageList;
     }
 }
