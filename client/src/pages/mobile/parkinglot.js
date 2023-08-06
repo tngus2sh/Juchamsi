@@ -5,6 +5,10 @@ import Box from '@mui/material/Box';
 import DriveEtaIcon from '@mui/icons-material/DriveEta';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import Button from '@mui/material/Button';
+import InCar from '../../components/mobile/incar';
+import { Container } from '@mui/material';
+import { setWhenEnteringCar } from '../../redux/mobileUserinfo'; 
 
 
 function Parkinglot() {
@@ -23,6 +27,9 @@ function Parkinglot() {
   const Boxrow = useSelector((state) => state.mycar.Boxrow);
   const BoxColumn = useSelector((state) => state.mycar.BoxColumn);
 
+
+  const open = useSelector((state) => state.mobileInfo.whenEnteringCar);
+  const handleOpen = () => dispatch(setWhenEnteringCar(true));
   const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
   const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
 
@@ -80,14 +87,18 @@ function Parkinglot() {
   };
 
   return (
-    <div>
-      <Box className='ParkinglotBox' sx={{ border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: '10px'}}>
+    <React.Fragment>
+      <Container sx={{height:"100vh", weight:"100%"}}>
+      <Box className='ParkinglotBox' sx={{ width: 250, height: 250, border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: '10px'}}>
         <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
           {renderBoxGrid()}
         </Box>
-      </Box>
+      <Button sx={{mt:"30px"}} onClick={handleOpen}>입차 하면</Button>
+        </Box>
+      <InCar open={open} />
+        </Container>
       <Footer HomeiconColor="#33907C" />
-    </div>
+    </React.Fragment>
   );
 }
 

@@ -85,14 +85,14 @@ const MainPage = () => {
 
   const handleLogout = () => {
     // 로그아웃 처리
-    //store에 있는 데이터 삭제해야 함!
-    dispatch(setLogout());
     // 토큰도 없애야댐
     http
       .get(`/owner/logout/${loginId}`)
       .then((response) => {
         alert("로그아웃 되었습니다.");
-        console.log(response.data);
+        //store에 있는 데이터 삭제해야 함!
+        dispatch(setLogout());
+        // console.log(response.data);
       })
       .catch((error) => {
         // 요청 실패 시 에러 처리
