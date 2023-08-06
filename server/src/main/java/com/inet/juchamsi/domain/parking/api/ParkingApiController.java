@@ -60,7 +60,11 @@ public class ParkingApiController {
             EntranceOutTimeRequest request
     ) {
         log.debug("createOutTime={}", request);
-        
+        try {
+            parkingService.createOutTime(request);
+        } catch (NotFoundException e) {
+            return ERROR("존재하지 않는 정보입니다.", HttpStatus.NO_CONTENT);
+        }
         return OK(null);
     }
 
