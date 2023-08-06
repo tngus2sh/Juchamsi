@@ -73,7 +73,7 @@ public class ParkingServiceImpl implements ParkingService {
         }
 
         // 현재 시간 출력
-        Timestamp inTime = new Timestamp(System.currentTimeMillis());
+        LocalDateTime inTime = LocalDateTime.now();
 
         // 주차 히스토리 저장
         parkingHistoryRepository.save(ParkingHistory.builder()
@@ -104,13 +104,27 @@ public class ParkingServiceImpl implements ParkingService {
             throw new NotFoundException(ParkingHistory.class, seatNumber);
         }
 
-        // 가져온 식별키로 출차시간 수정하기
-        parkingHistoryRepository.updateOutTime(Timestamp.valueOf(outTime), parkingHistoryOptional.get().getId());
+        // 가져온 별키로 출차시간 수정하기
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime dateTime = LocalDateTime.parse(outTime, formatter);
+
+        parkingHistoryRepository.updateOutTime(dateTime, parkingHistoryOptional.get().getId());
+
+        notifyToCarOwner(ExitTimeDto.builder()
+                .seatNumber(seatNumber)
+                .outTime(outTime)
+                .loginId(userId)
+                .build());
+
+        notifyToBackNumber(ExitTimeDto.builder()
+                .seatNumber(seatNumber)
+                .outTime(outTime)
+                .loginId(userId)
+                .build());
     }
 
-    @Override
     public void notifyToCarOwner(ExitTimeDto exitTimeDto) {
-        String outTimeStr = exitTimeDto.getOutTime().toString();
+        String outTimeStr = exitTimeDto.getOutTime();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy:MM:dd HH:mm");
         LocalDateTime outTime = LocalDateTime.parse(outTimeStr, formatter);
         LocalDateTime outTimeBeforeFifteen = outTime.minusMinutes(15);
@@ -132,14 +146,15 @@ public class ParkingServiceImpl implements ParkingService {
     }
 
     // 출차시간 등록
-
-    @Override
     public void notifyToBackNumber(ExitTimeDto exitTimeDto) {
+        String villaIdNumber = exitTimeDto.getVillaIdNumber();
         int seatNumber = exitTimeDto.getSeatNumber();
-        String outTime = exitTimeDto.getOutTime().format(DateTimeFormatter.ofPattern("yyyy:MM:dd HH:mm"));
+        String outTimeStr = exitTimeDto.getOutTime();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy:MM:dd HH:mm");
+        LocalDateTime outTime = LocalDateTime.parse(outTimeStr, formatter);
 
         // 주차 위치로 주차장 정보 가져오기
-        Optional<ParkingLot> parkingLotOptional = parkingLotRepository.findBySeatNumber(seatNumber, ACTIVE);
+        Optional<ParkingLot> parkingLotOptional = parkingLotRepository.findBySeatNumber(villaIdNumber, seatNumber, ACTIVE);
         if (parkingLotOptional.isEmpty()) {
             throw new NotFoundException(ParkingLot.class, seatNumber);
         }
@@ -162,7 +177,7 @@ public class ParkingServiceImpl implements ParkingService {
             // 현재 주차가 되어있음 -> 해당 차의 출차시간에 맞춰 알람 보냄
             notificationService.createNotification(CreateNotificationRequest.builder()
                     .loginId(backNumberLoginId)
-                    .notiTime(backLoginIdOptional.get().getOutTime().toLocalDateTime())
+                    .notiTime(backLoginIdOptional.get().getOutTime())
                     .message(EXIT_FRONT_MESSAGE)
                     .build());
 
@@ -217,11 +232,15 @@ public class ParkingServiceImpl implements ParkingService {
                         .build());
 
                 // 시스템 메시지 저장
-//                chatService.createSystemChat(SystemMessageDto.builder()
-//                        .senderId(SYSTEM_ID)
-//                        .message(ENTRANCE_FRONT_EXIT_TIME_MESSAGE + "\n" + "[" + value + "]")
-//                        .roomId()
-//                        .build());
+                Optional<String> chatRoomOptional = chatRoomRepository.findRoomIdByLoginIdAndType(field, SYSTEM, ALIVE);
+                if (chatRoomOptional.isEmpty()) {
+                    throw new NotFoundException(ChatRoom.class, field);
+                }
+                chatService.createSystemChat(SystemMessageDto.builder()
+                        .senderId(SYSTEM_ID)
+                        .message(value)
+                        .roomId(chatRoomOptional.get())
+                        .build());
             }
         }
     }
