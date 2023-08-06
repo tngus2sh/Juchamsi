@@ -25,6 +25,7 @@ import {
   setIdentification,
   setVillaIdNumber,
   setIsLogin,
+  setId,
 } from "../../redux/webLoginInfo";
 import http from "../../axios/http";
 
@@ -67,6 +68,7 @@ const Login = () => {
           // 로그인 성공한 경우
           console.log(response.data);
           // 로그인데이터저장
+          dispatch(setId(response.data.response.loginId));
           dispatch(setName(response.data.response.name));
           dispatch(setRoadAddress(response.data.response.villa.address));
           dispatch(setVillaName(response.data.response.villa.name));

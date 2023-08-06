@@ -1,0 +1,18 @@
+.custom-chat-container {
+  height: 90vh;
+}
+.custom-chat-container .cs-message-list {
+  background-color: rgb(187, 186, 186);
+  height: 100vh;
+}
+.custom-chat-container .cs-message.cs-message--outgoing.cs-message--single:not(:first-child) {
+  margin-bottom: 0;
+}
+
+.custom-chat-container .cs-message.cs-message--outgoing.cs-message--single .cs-message__content {
+  background-color: bisque;
+}
+
+.cs-message.cs-message--incoming.cs-message--single .cs-message__content{
+  background-color: aqua;
+}

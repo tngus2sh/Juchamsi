@@ -12,6 +12,7 @@ import { setStep3Data } from "../../redux/formslice";
 import { setOpen, setClose } from "../../redux/addressOpen";
 import DaumPost from "./DaumPost";
 import InputBox from "./inputbox";
+import PrivacyAgreement from "../../components/signup/privacyagreement";
 
 const Step3 = () => {
   const dispatch = useDispatch();
@@ -19,6 +20,10 @@ const Step3 = () => {
   const open = useSelector((state) => state.addressOpen.open);
   // 체크박스(개인정보 이용동의) 상태를 관리
   const [isChecked, setIsChecked] = useState(false);
+  // 개인정보 모달
+  const [privacyCheck, setPrivacyCheck] = React.useState(false);
+  const handleOpenPrivacyOpen = () => setPrivacyCheck(true);
+  const handleClosePrivacyClose = () => setPrivacyCheck(false);
 
   // 체크박스의 상태를 변경하는 함수
   const handleCheckboxChange = (event) => {
@@ -39,6 +44,12 @@ const Step3 = () => {
 
   const handleClose = () => {
     dispatch(setClose());
+  };
+
+  // 개인정보 이용약관 클릭시
+  const PrivacyBtnClick = () => {
+    // 개인정보 이용약관 모들 오픈
+    handleOpenPrivacyOpen();
   };
 
   return (
@@ -119,7 +130,7 @@ const Step3 = () => {
             />
           </Grid>
           <Grid item xs={2} style={{ marginTop: "13px" }}>
-            <Link to="/signup" variant="body2">
+            <Link onClick={PrivacyBtnClick} variant="body2">
               <Typography style={{ fontSize: "11px" }}>더보기</Typography>
             </Link>
           </Grid>
@@ -137,6 +148,7 @@ const Step3 = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      <PrivacyAgreement open={privacyCheck} onClose={handleClosePrivacyClose} />
     </React.Fragment>
   );
 };

@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const webLoginInfo = createSlice({
   name: 'webInfo',
   initialState: {
+    id: '',
     name: '',
     roadAddress : '',
     villaName: '',
@@ -13,6 +14,9 @@ const webLoginInfo = createSlice({
     
   },
   reducers: {
+    setId: (state, action) => {
+      state.id = action.payload;
+    },
     setName: (state, action) => {
       state.name = action.payload;
     },
@@ -35,6 +39,7 @@ const webLoginInfo = createSlice({
       state.isLogin = action.payload;
     },
     setLogout: (state) => {
+      state.id = '';
       state.name = '';
       state.roadAddress = '';
       state.villaName = '';
@@ -46,5 +51,5 @@ const webLoginInfo = createSlice({
   },
 });
 
-export const { setName, setRoadAddress, setVillaName, setParkingLotCol, setIdentification, setVillaIdNumber, setIsLogin, setLogout } = webLoginInfo.actions;
+export const { setId, setName, setRoadAddress, setVillaName, setParkingLotCol, setIdentification, setVillaIdNumber, setIsLogin, setLogout } = webLoginInfo.actions;
 export default webLoginInfo.reducer;
