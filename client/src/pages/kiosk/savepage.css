@@ -1,18 +1,22 @@
-.idfiled {
-    position:absolute;
-    left:15%;
-    top:24%;
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
 }
 
-.pwfiled {
-    position:absolute;
-    left:15%;
-    top:40%;
+.user-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
-.keypad {
-    position: absolute;
-    top:50%;
-    left:15%;
+.password-container {
+  margin-top: 1.5rem;
 }
 
+.keypad-container {
+  margin-top: 3rem;
+  text-align: center;
+}
