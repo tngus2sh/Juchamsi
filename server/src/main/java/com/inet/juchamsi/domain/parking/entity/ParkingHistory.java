@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import static com.inet.juchamsi.global.common.Active.ACTIVE;
 import static javax.persistence.EnumType.STRING;
@@ -36,13 +36,13 @@ public class ParkingHistory extends TimeBaseEntity {
     private Active active;
 
     @Column(name = "in_time")
-    private Timestamp inTime;
+    private LocalDateTime inTime;
 
     @Column(name = "out_time")
-    private Timestamp outTime;
+    private LocalDateTime outTime;
 
     @Builder
-    public ParkingHistory(Long id, User user, ParkingLot parkingLot, Active active, Timestamp inTime, Timestamp outTime) {
+    public ParkingHistory(Long id, User user, ParkingLot parkingLot, Active active, LocalDateTime inTime, LocalDateTime outTime) {
         this.id = id;
         this.user = user;
         this.parkingLot = parkingLot;
