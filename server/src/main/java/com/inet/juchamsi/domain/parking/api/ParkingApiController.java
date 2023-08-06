@@ -6,6 +6,7 @@ import com.inet.juchamsi.domain.parking.application.ParkingService;
 import com.inet.juchamsi.domain.parking.dto.request.CreateLotRequest;
 import com.inet.juchamsi.domain.parking.dto.request.CreateParkingHistoryRequest;
 import com.inet.juchamsi.domain.parking.dto.request.EntranceExitRequest;
+import com.inet.juchamsi.domain.parking.dto.request.EntranceOutTimeRequest;
 import com.inet.juchamsi.domain.parking.dto.response.ParkingHistoryResponse;
 import com.inet.juchamsi.domain.parking.dto.response.ParkingLotResponse;
 import com.inet.juchamsi.global.api.ApiResult;
@@ -52,8 +53,19 @@ public class ParkingApiController {
         return OK(null);
     }
 
+    @ApiOperation(value = "출차시간 등록", notes = "입차된 차의 사용자 id와 주차위치로 출차시간을 등록합니다.")
+    @PostMapping("/out-time")
+    public ApiResult<Void> createOutTime(
+            @ApiParam(value = "user-out-time-dto")
+            EntranceOutTimeRequest request
+    ) {
+        log.debug("createOutTime={}", request);
+        
+        return OK(null);
+    }
+
     @ApiOperation(value = "출차 정보 등록", notes = "출차된 차의 위치정보와 해당 유저의 mac 주소를 받습니다.")
-    @PostMapping("exit")
+    @PostMapping("/exit")
     public ApiResult<Void> createExit(
             @ApiParam(value = "user-parking-dto")
             EntranceExitRequest request
