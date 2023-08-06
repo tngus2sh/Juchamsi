@@ -84,11 +84,13 @@ function Findid() {
       </Box>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <p className='loginbtntext'>아이디를 찾을 필요가 없으신가요? </p>
-        <Button className='findloginbtn' onClick={handleOpen}>로그인</Button>
+        <div className='findloginbtn'>
+        <Button onClick={handleOpen}>로그인</Button>
+        </div>
       </div>
       <img
         className="logo"
-        src={process.env.PUBLIC_URL + '/img/kiosk/예비로고.png'}
+        src={process.env.PUBLIC_URL + '/img/kiosk/logo1.png'}
         alt={'title'}
       ></img>
     </div>

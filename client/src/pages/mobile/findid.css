@@ -2,8 +2,8 @@
     position: absolute;
     width: 200px;
     height: 45px;
-    left: 20%;
-    top: 346px;
+    left: 25%;
+    top: 45%;
     
     background: #111111;
     opacity: 0.25;
@@ -14,8 +14,8 @@
     position: absolute;
     width: 200px;
     height: 45px;
-    left: 20%;
-    top: 346px;
+    left: 25%;
+    top: 45%;
     
     background: #33907C;
     opacity: 0.8;
@@ -46,13 +46,13 @@
 
 .findloginbtn {
     position: absolute;
-    top:370px;
-    left:120px;
+    top:59%;
+    left:65%;
 }
 
 .loginbtntext {
     position: absolute;
-    top:465px;
-    left:40px;
+    top:60%;
+    left:10%;
 }
 

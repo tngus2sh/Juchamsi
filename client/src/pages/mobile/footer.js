@@ -5,6 +5,10 @@ import Box from '@mui/material/Box';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import TextsmsIcon from '@mui/icons-material/Textsms';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import { useState, useEffect } from 'react';
+
+
+
 
 function Footer(props) {
     const navigate = useNavigate();
@@ -25,11 +29,33 @@ function Footer(props) {
       // 마이페이지로 이동
       navigate('/Mobile/Account');
     };
+
+    const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
+    const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
+
+    useEffect(() => {
+      const handleResize = () => {
+        setViewportWidth(window.innerWidth);
+        setViewportHeight(window.innerHeight);
+      };
+  
+      window.addEventListener('resize', handleResize);
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+    }, []);
+  
+  
+    const footerWidth = viewportWidth * 1;
+    const footerHeight = viewportHeight * 0.13
+
+
+
     return (
         <div>
             <Box sx={{        
-                width: 320,
-                height: 80,
+                width: footerWidth,
+                height: footerHeight,
                 backgroundColor: '#212121',
                 }} className='footer_box'>
             </Box>

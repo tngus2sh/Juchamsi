@@ -230,7 +230,7 @@ const handlePhoneModalConfirmClick = () => {
             "loginPassword": password1,
             "name": username,
             "phoneNumber": phonenumber,
-            "villaIdNumber": Number(villranumber),
+            "villaIdNumber": villranumber,
             "villaNumber": Number(housenumber)
           },
         })
@@ -256,7 +256,7 @@ const handlePhoneModalConfirmClick = () => {
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         if (name === 'username') {
-            const onlyKorean = value.replace(/[^ㄱ-ㅎㅏ-ㅣ가-힣]/g, '');
+            const onlyKorean = value.replace(/[a-zA-Z0-9]/g, '');
             const namemaxLength = 4;
             const nametruncatedValue = onlyKorean.slice(0,namemaxLength)
             setUsernameLocal(nametruncatedValue);
@@ -333,7 +333,7 @@ const handlePhoneModalConfirmClick = () => {
     // 자동차 번호가  변경될 때 호출되는 이벤트 핸들러
     const handleCarnumberChange = (e) => {
     // 숫자,한글만 입력가능하도록 규칙 설정
-    const onlyCarnumber = e.target.value.replace(/[^ㄱ-ㅎㅏ-ㅣ가-힣/0-9/ ]/g, '');
+    const onlyCarnumber = e.target.value.replace(/[a-zA-Z]/g, '');
 
     // 최대 9자까지만 입력 가능하도록 제한
     const carnumbermaxLength = 9;
@@ -381,15 +381,17 @@ const handlePhoneModalConfirmClick = () => {
         src={process.env.PUBLIC_URL + '/img/kiosk/logo1.png'}
         alt={'title'}
       ></img>
+      <div className="signupid">
       <TextField
         required
-        className="signupid"
+        
         id="outlined-id-input"
         label="아이디"
         name="ID"
         value={id}
         onChange={handleIDChange}
       />
+      </div>
       {idcheck ? (
         <Box component="span" className="idcheckbox1">
           <p className="idchecktext">사용가능</p>
@@ -403,7 +405,8 @@ const handlePhoneModalConfirmClick = () => {
           <p className="idchecktext">중복체크</p>
         </Box>
       )}
-      <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined" className="signuppw1" required>
+      <div className="signuppw1">
+      <FormControl sx={{ m: 1 }} variant="outlined"  required>
         <InputLabel htmlFor="outlined-adornment-password1">비밀번호</InputLabel>
         <OutlinedInput
           id="outlined-adornment-password1"
@@ -426,8 +429,10 @@ const handlePhoneModalConfirmClick = () => {
           onChange={handleInputChange}
         />
       </FormControl>
+      </div>
       {passwordChecking && <p className="password-check-text">비밀번호에는 숫자,문자,특수문자가 최소 1개이상씩 포함되어야 합니다.</p>}
-      <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined" className="signuppw2" required>
+      <div className="signuppw2">
+      <FormControl sx={{ m: 1 }} variant="outlined" required>
         <InputLabel htmlFor="outlined-adornment-password2">비밀번호 확인</InputLabel>
         <OutlinedInput
           id="outlined-adornment-password2"
@@ -450,10 +455,12 @@ const handlePhoneModalConfirmClick = () => {
           onChange={handleInputChange}
         />
       </FormControl>
+
+      </div>
       {passwordMismatch && <p className="password-mismatch-text">비밀번호가 다릅니다. 다시 확인바랍니다.</p>}
+      <div className="signupname">
       <TextField
         required
-        className="signupname"
         id="outlined-name-input"
         label="이름"
         name="username"
@@ -461,9 +468,10 @@ const handlePhoneModalConfirmClick = () => {
         onChange={handleInputChange}
         sx={{ '& input': { textAlign: 'center' } }}
       />
+      </div>
+      <div className="signupphonenumber">
       <TextField
         required
-        className="signupphonenumber"
         id="outlined-phonenumber-input"
         label="핸드폰 번호"
         name="phonenumber"
@@ -471,6 +479,7 @@ const handlePhoneModalConfirmClick = () => {
         onChange={handlePhoneNumberChange}
         sx={{ '& input': { textAlign: 'center' } }}
       />
+      </div>
         {phonenumbecheck ? (
           <Box component="span" className="phonenumbercheck3">
             <p className="phonechecktext">인증완료</p>
@@ -484,9 +493,9 @@ const handlePhoneModalConfirmClick = () => {
             <p className="phonechecktext">핸드폰 인증</p>
           </Box>
         )}
+        <div className="carnumber">
       <TextField
         required
-        className="carnumber"
         id="outlined-carnumber-input"
         label="자동차 번호"
         name="carnumber"
@@ -494,10 +503,13 @@ const handlePhoneModalConfirmClick = () => {
         onChange={handleCarnumberChange}
         sx={{ '& input': { textAlign: 'center' } }}
       />
-      <p className='carnumbertext'>서울 12가 1234 = 12가 1234 로 입력</p>
+        </div>
+      <div className='carnumbertext'>
+      <p>서울 12가 1234 = 12가 1234 로 입력</p>
+      </div>
+      <div className="villranumber">
       <TextField
         required
-        className="villranumber"
         id="outlined-villranumber-input"
         label="빌라 식별번호"
         name="villranumber"
@@ -505,9 +517,10 @@ const handlePhoneModalConfirmClick = () => {
         onChange={handlevillranumberChange}
         sx={{ '& input': { textAlign: 'center' } }}
       />
+      </div>
+      <div className="housenumber">
       <TextField
         required
-        className="housenumber"
         id="outlined-housenumber-input"
         label="호수"
         name="housenumber"
@@ -515,9 +528,13 @@ const handlePhoneModalConfirmClick = () => {
         onChange={handlehousenumberChange}
         sx={{ '& input': { textAlign: 'center' } }}
       />
-      <Button className='Privacybtnstyle' onClick={PrivacyBtnClick}>
+      </div>
+      <div className='Privacybtnstyle'>
+      <Button onClick={PrivacyBtnClick}>
         개인정보 이용약관
       </Button>
+      </div>
+      
       <div className='checkboxstyle'>
         {/* 개인정보 이용약관 체크박스 */}
         <Checkbox
@@ -533,9 +550,11 @@ const handlePhoneModalConfirmClick = () => {
         <p className="signuptext1">회원가입</p>
       </Box>
       <p className="signuptext">이미 가입된 회원이신가요?</p>
-      <Button className="signuptologin" onClick={handleOpenLogin}>
+      <div className="signuptologin">
+      <Button onClick={handleOpenLogin}>
         로그인
       </Button>
+      </div>
 
       {/* 아이디 중복 검사 결과 사용가능할 경우 보여주는 모달 */}
       <Modal open={IDModalFalseopen} onClose={handleCloseIDCheckFalse} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">

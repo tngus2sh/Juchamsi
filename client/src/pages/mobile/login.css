@@ -1,34 +1,38 @@
 .logo {
     position: absolute;
-    width: 60px;
-    height: 60px;
+    width: 20%;
+    height: 10%;
     left: 40%;
-    top: 560px;
+    top: 90%;
     }
+
+
 
 .id {
     position: absolute;
-    top:130px;
+    top:28%;
+    left:20%
 }
-
 
 .pw {
     position: absolute;
-    top:140px;
+    top:36%;
+    left:18%;
+    width: 65%;
 }
 
 .autologin {
     position: absolute;
-    top:260px;
-    left:16%;
+    top:45%;
+    left:20%;
 }
 
 .loginbox2 {
     position: absolute;
     width: 200px;
     height: 45px;
-    left: 20%;
-    top: 330px;
+    left: 26%;
+    top: 53%;
     
     background: #33907C;
     opacity: 0.8;
@@ -40,9 +44,8 @@
     position: absolute;
     width: 200px;
     height: 45px;
-    left: 20%;
-    top: 330px;
-    
+    left: 26%;
+    top: 53%;
     background: #111111;
     opacity: 0.25;
     border-radius: 32px;
@@ -58,26 +61,26 @@
 
 .findidbtn {
     position: absolute;
-    top:260px;
-    left:30px;
+    top:60%;
+    left:25%;
 }
 
 .findpwbtn {
     position: absolute;
-    top:260px;
-    left:40px;
+    top:60%;
+    left:50%;
 }
 
 .findsignupbtn {
     position: absolute;
-    top:380px;
-    left:-30px;
+    top:79%;
+    left:60%;
 }
 
 .findsignup {
     position: absolute;
-    top:517px;
-    left:50px;
+    top:80%;
+    left:20%;
 }
 
 

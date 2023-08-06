@@ -208,16 +208,19 @@ function Login() {
         src={process.env.PUBLIC_URL + '/img/kiosk/logo1.png'}
         alt={'title'}
       ></img>
+      <div className='id'>
       <TextField
         required
-        className='id'
         id="outlined-id-input"
         label="아이디"
         name="username"
         value={username}
         onChange={handleInputChange}
       />
-      <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined" className='pw' required>
+      </div>
+      <div className='pw'>
+
+      <FormControl sx={{ m: 1 }} variant="outlined"  required>
         <InputLabel htmlFor="outlined-adornment-password">비밀번호</InputLabel>
         <OutlinedInput
           id="outlined-adornment-password"
@@ -240,6 +243,7 @@ function Login() {
           onChange={handleInputChange}
         />
       </FormControl>
+      </div>
       <Box
         component="span"
         className={`loginbox ${isLoginButtonClickable ? 'loginbox2' : 'loginbox1'}`}
@@ -258,10 +262,19 @@ function Login() {
           label="로그인 정보 저장"
         />
       </FormGroup>
-      <Button className='findidbtn' onClick={handleOpenID}>아이디 찾기</Button>
-      <Button className='findpwbtn' onClick={handleOpenPW}>비밀번호 찾기</Button>
-      <p className='findsignup'>회원이 아니신가요?</p>
-      <Button className='findsignupbtn' onClick={handleOpenSignup}>회원가입</Button>
+      <div className='findidbtn'>
+      <Button  onClick={handleOpenID}>아이디 찾기</Button>
+
+      </div>
+      <div className='findpwbtn'>
+      <Button onClick={handleOpenPW}>비밀번호 찾기</Button>
+      </div>
+      <div className='findsignup'>
+      <p >회원이 아니신가요?</p>
+      </div>
+      <div className='findsignupbtn'>
+      <Button onClick={handleOpenSignup}>회원가입</Button>
+      </div>
 
       {/* 최초 로그인시 간편비밀번호 입력 모달창 */}
       <Modal open={FirstLogin} onClose={handleCloseFirstLoginCheck} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
