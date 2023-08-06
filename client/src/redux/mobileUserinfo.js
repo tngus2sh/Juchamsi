@@ -1,22 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+const initialState = {
+  carNumber: '',
+  id: null,
+  loginId:'',
+  name: "",
+  phoneNumber: "",
+  accessToken:"",
+  refreshToken:"",
+  villaNumber:"",
+  villaIdNumber: "",
+  totalMileage:"",
+  imageUrl: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png", // 기본 이미지 URL
+  userMacAdress: "",
+  whenEnteringCar: false
+};
+
 const mobileUserinfo = createSlice({
   name: 'mobileUserinfo',
-  initialState: {
-    carNumber: '',
-    id: null,
-    loginId:'',
-    name: "",
-    phoneNumber: "",
-    accessToken:"",
-    refreshToken:"",
-    villaNumber:"",
-    villaIdNumber: "",
-    totalMileage:"",
-    imageUrl: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png", // 기본 이미지 URL
-    
-  },
+  initialState,
   reducers: {
+    initialState,
     setCarNumber: (state, action) => {
       state.carNumber = action.payload;
     },
@@ -50,9 +54,18 @@ const mobileUserinfo = createSlice({
     setImageUrl: (state, action) => {
       state.imageUrl = action.payload;
     },
+    setUserMacAdress: (state, action) => {
+      state.userMacAdress = action.payload;
+    },
+    setWhenEnteringCar: (state, action) => {
+      state.whenEnteringCar = action.payload;
+    },
+    setLogout: () => initialState,
   },
+    
+  
 });
 
 export const { setCarNumber, setid, setloginId, setname, setphoneNumber, setaccessToken, 
-               setrefreshToken, setVillaNumber, setvillaIdNumber, setTotalMileage, setImageUrl } = mobileUserinfo.actions;
+               setrefreshToken, setVillaNumber, setvillaIdNumber, setTotalMileage, setImageUrl, setUserMacAdress, setWhenEnteringCar, setLogout} = mobileUserinfo.actions;
 export default mobileUserinfo.reducer;

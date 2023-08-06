@@ -22,7 +22,6 @@ const rootReducer = combineReducers({
   loginform: loginform,
   addressOpen: addressOpen,
   auth: mobileauthlogin,
-  mycar: mobileMycarstatus,
   chatInfo: persistReducer(persistConfig, chatInfo),
   webInfo: persistReducer(persistConfig, webLoginInfo),
   mobileInfo: persistReducer(persistConfig, mobielUserinfo),

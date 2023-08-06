@@ -16,7 +16,7 @@ import FormGroup from '@mui/material/FormGroup';
 import Box from '@mui/material/Box';
 import { useSelector, useDispatch } from 'react-redux';
 import { setAutoLoginChecked, setUsername, setPassword } from '../../redux/mobileauthlogin';
-import { setCarNumber, setid, setloginId, setname, setphoneNumber, setaccessToken, setrefreshToken, setVillaNumber, setvillaIdNumber, setTotalMileage} from '../../redux/mobileUserinfo'
+import { setCarNumber, setid, setloginId, setname, setphoneNumber, setaccessToken, setrefreshToken, setVillaNumber, setvillaIdNumber, setTotalMileage, setUserMacAdress} from '../../redux/mobileUserinfo'
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
@@ -82,7 +82,7 @@ function Login() {
           },
         })
         .then((res) => {
-          // setCarNumber, setid, setloginId, setname, setphoneNumber, setaccessToken, setrefreshToken
+          // setCarNumber, setid, setloginId, setname, setphoneNumber, setaccessToken, setrefreshToken, setUserMacAdress
           dispatch(setCarNumber(res.data.response.carNumber));
           dispatch(setid(res.data.response.id));
           dispatch(setloginId(res.data.response.loginId));
@@ -94,6 +94,7 @@ function Login() {
           dispatch(setvillaIdNumber(res.data.response.villa.idNumber));
           dispatch(setTotalMileage(res.data.response.totalMileage))
           dispatch(setPassword(password))
+          dispatch(setUserMacAdress("ed:dd:dd:dd"));
           navigate('/Mobile/Parkinglot')
         })
         .catch((err) => {
@@ -110,7 +111,7 @@ function Login() {
         handleCloseFirstLoginCheck()
         handleOpenFirstPasswordCheck()
       } else {
-        alert('간편비밀번호는 6개의 숫자로 등록해주시 바랍니다.')
+        alert('간편비밀번호는 6개의 숫자로 등록해주시기 바랍니다.')
       }
     }
   }

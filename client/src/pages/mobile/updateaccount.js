@@ -12,7 +12,7 @@ import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import axiosInstance from '../../axios/axios'
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { setCarNumber, setphoneNumber, setVillaNumber, setImageUrl} from '../../redux/mobileUserinfo'
+import { setCarNumber, setphoneNumber, setVillaNumber, setImageUrl, setLogout} from '../../redux/mobileUserinfo'
 
 function Account() {
     const dispatch = useDispatch()
@@ -102,7 +102,8 @@ function Account() {
           url:`/tenant/logout/${loginId}`,
         })
         .then(() => {
-          navigate('/Mobile/Login')
+            dispatch(setLogout());
+            navigate('/Mobile/Login')
         })
         .catch((err) => {
           console.log(err)
