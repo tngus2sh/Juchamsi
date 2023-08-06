@@ -16,7 +16,7 @@ import FormGroup from '@mui/material/FormGroup';
 import Box from '@mui/material/Box';
 import { useSelector, useDispatch } from 'react-redux';
 import { setAutoLoginChecked, setUsername, setPassword } from '../../redux/mobileauthlogin';
-import { setCarNumber, setid, setloginId, setname, setphoneNumber, setaccessToken, setrefreshToken, setVillaNumber, setvillaIdNumber, setTotalMileage, setUserMacAdress} from '../../redux/mobileUserinfo'
+import { setCarNumber, setid, setloginId, setname, setphoneNumber, setaccessToken, setrefreshToken, setVillaNumber, setvillaIdNumber, setTotalMileage, setUserMacAdress, setWhenEnteringCar} from '../../redux/mobileUserinfo'
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
@@ -106,7 +106,8 @@ function Login() {
             dispatch(setvillaIdNumber(res.data.response.villa.idNumber));
             dispatch(setTotalMileage(res.data.response.totalMileage))
             dispatch(setPassword(password))
-             dispatch(setUserMacAdress("ed:dd:dd:dd"));
+            dispatch(setUserMacAdress("ed:dd:dd:dd"));
+            dispatch(setWhenEnteringCar(false));
             navigate('/Mobile/Parkinglot')
           } else if (res.data.response.approved === 'WAIT') {
             setShowAlert(true); // Alert을 표시

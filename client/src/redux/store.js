@@ -2,10 +2,11 @@
 import loginform from './loginform';
 import formSlice from './formslice';
 import addressOpen from './addressOpen';
-import mobileauthlogin from './mobileauthlogin'
-import mobileMycarstatus from './mobileparking'
+import mobileauthlogin from './mobileauthlogin';
+import mobileMycarstatus from './mobileparking';
 import webLoginInfo from './webLoginInfo';
-import mobielUserinfo from './mobileUserinfo'
+import mobielUserinfo from './mobileUserinfo';
+import chatInfo from './chatInfo';
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import storage from 'redux-persist/lib/storage';
 import { persistReducer, persistStore } from 'redux-persist';

@@ -20,6 +20,7 @@ import MobileSignupPage from './pages/mobile/signup'
 import MobileParkinglogPage from './pages/mobile/parkinglot'
 import MobileMycarparkingPage from './pages/mobile/mycarparking'
 import MobileTermessagePage from './pages/mobile/termessage'
+import MobileTermessageChatPage from './pages/mobile/messagedetail'
 import MobileAccountPage from './pages/mobile/account'
 import MobileUpdateAccountPage from './pages/mobile/updateaccount'
 import MobileMileageChangePage from './pages/mobile/MileageChange'
@@ -64,7 +65,8 @@ function App() {
               <Route path="/Mobile/Signup" element={<MobileSignupPage />}/>
               <Route path="/Mobile/Parkinglot" element={<MobileParkinglogPage />}/>
               <Route path="/Mobile/Mycar" element={<MobileMycarparkingPage />}/>
-              <Route path="/Mobile/Termessage" element={<MobileTermessagePage />}/>
+          <Route path="/Mobile/Termessage" element={<MobileTermessagePage />} />
+          <Route path="/Mobile/Termessage/:id" element={<MobileTermessageChatPage />} />
               <Route path="/Mobile/Account" element={<MobileAccountPage />}/>
               <Route path="/Mobile/Account/Update" element={<MobileUpdateAccountPage />}/>
               <Route path="/Mobile/Mileage/Change" element={<MobileMileageChangePage />}/>
