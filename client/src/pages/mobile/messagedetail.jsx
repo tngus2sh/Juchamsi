@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import "./messagedetail.css";
 import { useParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import { Grid, Typography } from "@mui/material";
@@ -168,20 +169,21 @@ const Messagedetail = () => {
     <React.Fragment>
       <div
         style={{
-          height: "600px",
+          height: "100vh",
         }}
       >
-        <ChatContainer>
+        <ChatContainer className="custom-chat-container">
           <ConversationHeader>
             <ConversationHeader.Back onClick={handleBackToListClick} />
             <ConversationHeader.Content userName={targetNickName} info="" />
           </ConversationHeader>
-          <MessageList>
+          <MessageList className="cs-message-list">
             {messageStorage.length === 0 ? (
               <MessageSeparator content="대화를 시작해주세요" />
             ) : (
               messageStorage.map((message, index) => (
                 <Message
+                  className="cs-message"
                   key={index}
                   model={{
                     message: message.message,
@@ -189,13 +191,12 @@ const Messagedetail = () => {
                     direction: message.loginId === senderId ? "outgoing" : "incoming",
                     position: "single",
                   }}
+                  style={{ color: "white" }}
                 >
                   <Message.Footer
-                    sender={
-                      message.senderId === senderId ? "" : formatDateTime(message.createdDate)
-                    }
+                    sender={message.loginId === senderId ? "" : formatDateTime(message.createdDate)}
                     sentTime={
-                      message.senderId === senderId ? formatDateTime(message.createdDate) : ""
+                      message.loginId === senderId ? formatDateTime(message.createdDate) : ""
                     }
                   />
                 </Message>
@@ -217,11 +218,11 @@ const Messagedetail = () => {
                     sender={
                       message.senderId === senderId
                         ? ""
-                        : new Date().toLocaleTimeString("ko-KR").replace(/:\d+ /, " ")
+                        : new Date().toLocaleTimeString("ko-KR").replace(/:\d+$/, "")
                     }
                     sentTime={
                       message.senderId === senderId
-                        ? new Date().toLocaleTimeString("ko-KR").replace(/:\d+ /, " ")
+                        ? new Date().toLocaleTimeString("ko-KR").replace(/:\d+$/, "")
                         : ""
                     }
                   />
@@ -230,31 +231,47 @@ const Messagedetail = () => {
             )}
           </MessageList>
         </ChatContainer>
-      </div>
-      <Grid container sx={{ pt: "5%" }}>
-        <Grid item xs={9}>
-          <TextField
-            id="outlined-basic"
-            value={message}
-            onChange={handleMessageChange}
-            onKeyDown={handleKeyDown}
-            variant="outlined"
-            size="small"
-          />
-        </Grid>
-        <Grid item xs={3}>
-          <Fab color="primary" aria-label="add">
-            <SendIcon
-              onClick={() => {
-                if (message.trim() !== "") {
-                  sendMessage();
-                  setMessage("");
-                }
+        <Grid
+          container
+          sx={{
+            height: "10vh",
+            pt: "0.3m",
+            pb: "0.3em",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "gray",
+            boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.2)",
+          }}
+        >
+          <Grid item xs={9}>
+            <TextField
+              sx={{
+                width: "95%",
+                borderRadius: "100px",
               }}
+              id="outlined-basic"
+              value={message}
+              onChange={handleMessageChange}
+              onKeyDown={handleKeyDown}
+              variant="outlined"
+              size="small"
             />
-          </Fab>
+          </Grid>
+          <Grid item xs={3}>
+            <Fab color="primary" sx={{ width: "60%", height: "7vh" }} aria-label="add">
+              <SendIcon
+                onClick={() => {
+                  if (message.trim() !== "") {
+                    sendMessage();
+                    setMessage("");
+                  }
+                }}
+              />
+            </Fab>
+          </Grid>
         </Grid>
-      </Grid>
+      </div>
     </React.Fragment>
   );
 };

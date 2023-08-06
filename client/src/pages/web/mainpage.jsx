@@ -27,6 +27,7 @@ import ParkingLotHistory from "../../components/main/parkingLotHistory";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setLogout } from "../../redux/webLoginInfo";
+import http from "../../axios/http";
 
 const theme = createTheme({
   palette: {
@@ -48,6 +49,7 @@ const MainPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isLogin = useSelector((state) => state.webInfo.isLogin);
+  const loginId = useSelector((state) => state.webInfo.id);
   const ownerName = useSelector((state) => state.webInfo.name);
   const roadAddress = useSelector((state) => state.webInfo.roadAddress);
   const villaName = useSelector((state) => state.webInfo.villaName);
@@ -85,7 +87,17 @@ const MainPage = () => {
     // 로그아웃 처리
     //store에 있는 데이터 삭제해야 함!
     dispatch(setLogout());
-    // http.get("/owner/logout/{id}");
+    // 토큰도 없애야댐
+    http
+      .get(`/owner/logout/${loginId}`)
+      .then((response) => {
+        alert("로그아웃 되었습니다.");
+        console.log(response.data);
+      })
+      .catch((error) => {
+        // 요청 실패 시 에러 처리
+        console.error("Error while submitting:", error);
+      });
     navigate("/");
   };
   useEffect(() => {
