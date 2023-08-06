@@ -54,9 +54,10 @@ function Account() {
     const handleOpenMileage = () => {
         axiosInstance({
             method:'get',
-            url:`/mileage/${ID}`,
+            url:`/mileage/${loginId}`,
           })
           .then((res) => {
+            
             console.log(res)
           })
           .catch((err) => {

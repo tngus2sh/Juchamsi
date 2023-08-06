@@ -22,6 +22,8 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import axiosInstance from '../../axios/axios'
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
 
 
 function Login() {
@@ -64,6 +66,15 @@ function Login() {
     navigate('/Mobile/Signup')
   }
 
+  // 가입승인대기 상태
+  const [showAlert, setShowAlert] = React.useState(false);
+
+  // 수정사항대기 상태
+  const [showAlert1, setShowAlert1] = React.useState(false);
+
+  // 거절 상태
+  const [showAlert2, setShowAlert2] = React.useState(false);
+
   // 최초 로그인여부 판별할 함수(추후 서버와 연결시 서버에서 true,flase값 받아와야할듯)
   let firstlogin = false
 
@@ -82,19 +93,36 @@ function Login() {
           },
         })
         .then((res) => {
-          // setCarNumber, setid, setloginId, setname, setphoneNumber, setaccessToken, setrefreshToken
-          dispatch(setCarNumber(res.data.response.carNumber));
-          dispatch(setid(res.data.response.id));
-          dispatch(setloginId(res.data.response.loginId));
-          dispatch(setname(res.data.response.name));
-          dispatch(setphoneNumber(res.data.response.phoneNumber));
-          dispatch(setaccessToken(res.data.response.tokenInfo.accessToken));
-          dispatch(setrefreshToken(res.data.response.tokenInfo.accessToken));
-          dispatch(setVillaNumber(res.data.response.villaNumber));
-          dispatch(setvillaIdNumber(res.data.response.villa.idNumber));
-          dispatch(setTotalMileage(res.data.response.totalMileage))
-          dispatch(setPassword(password))
-          navigate('/Mobile/Parkinglot')
+          if (res.data.response.approved === 'APPROVE') {
+            // setCarNumber, setid, setloginId, setname, setphoneNumber, setaccessToken, setrefreshToken
+            dispatch(setCarNumber(res.data.response.carNumber));
+            dispatch(setid(res.data.response.id));
+            dispatch(setloginId(res.data.response.loginId));
+            dispatch(setname(res.data.response.name));
+            dispatch(setphoneNumber(res.data.response.phoneNumber));
+            dispatch(setaccessToken(res.data.response.tokenInfo.accessToken));
+            dispatch(setrefreshToken(res.data.response.tokenInfo.accessToken));
+            dispatch(setVillaNumber(res.data.response.villaNumber));
+            dispatch(setvillaIdNumber(res.data.response.villa.idNumber));
+            dispatch(setTotalMileage(res.data.response.totalMileage))
+            dispatch(setPassword(password))
+            navigate('/Mobile/Parkinglot')
+          } else if (res.data.response.approved === 'WAIT') {
+            setShowAlert(true); // Alert을 표시
+            setTimeout(() => {
+              setShowAlert(false); // 5초 후에 Alert을 숨김
+            }, 5000);
+          } else if (res.data.response.approved === 'MODIFY') {
+            setShowAlert1(true); // Alert을 표시
+            setTimeout(() => {
+              setShowAlert1(false); // 5초 후에 Alert을 숨김
+            }, 5000);
+          } else {
+            setShowAlert2(true); // Alert을 표시
+            setTimeout(() => {
+              setShowAlert2(false); // 5초 후에 Alert을 숨김
+            }, 5000);
+          }
         })
         .catch((err) => {
           console.log(err)
@@ -171,6 +199,49 @@ function Login() {
       localStorage.removeItem('password');
     }
   }, [isAutoLoginChecked, username, password]);
+  
+  // 홈 화면에 추가 팝업
+  const [showAddToHomeScreen, setShowAddToHomeScreen] = React.useState(false);
+  let deferredPrompt;
+
+  const handleBeforeInstallPrompt = (e) => {
+    // 기본 설치 팝업을 차단하기 위해 기본 이벤트를 막습니다.
+    e.preventDefault();
+    
+    // 나중에 사용하기 위해 이벤트를 저장합니다.
+    deferredPrompt = e;
+    
+    // "홈 화면에 추가" 버튼을 표시합니다.
+    setShowAddToHomeScreen(true);
+  };
+
+  const handleAddToHomeScreen = () => {
+    if (deferredPrompt) {
+      // 브라우저의 설치 팝업을 표시합니다.
+      deferredPrompt.prompt();
+      
+      // 사용자의 응답을 기다립니다.
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User accepted the A2HS prompt');
+        } else {
+          console.log('User dismissed the A2HS prompt');
+        }
+        // deferredPrompt 변수를 초기화합니다.
+        deferredPrompt = null;
+      });
+    }
+  };
+
+  React.useEffect(() => {
+    // beforeinstallprompt 이벤트에 대한 이벤트 리스너를 추가합니다.
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    // 컴포넌트가 언마운트될 때 이벤트 리스너를 제거합니다.
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
 
   // modal 스타일
   const style1 = {
@@ -322,6 +393,21 @@ function Login() {
           </Box>
         </Box>
       </Modal>
+      {/* "홈 화면에 추가" 버튼 */}
+      {showAddToHomeScreen && (
+      <div className="addToHomeScreenButton" onClick={handleAddToHomeScreen}>
+        홈 화면에 추가하시겠습니까?
+      </div>
+      )}
+      {showAlert && (
+        <Alert severity="error">가입 승인대기 상태입니다. 관리자가 승인해야 서비스 이용이 가능합니다.</Alert>
+      )}
+      {showAlert1 && (
+        <Alert severity="warning">수정사항 반영대기 상태입니다. 관리자가 승인해야 서비스 이용이 가능합니다.</Alert>
+      )}
+      {showAlert2 && (
+        <Alert severity="warning">회원가입이 거절되었습니다. 빌라식별번호 및 회원가입시 정보입력을 다시 확인하고 회원가입 바랍니다.</Alert>
+      )}
     </div>
   );
 }

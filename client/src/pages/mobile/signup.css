@@ -206,7 +206,7 @@
     width: 80px;
     height: 30px;
     left: 36%;
-    top: 152px;
+    top: 80%;
     
     background: #33907C;
     opacity: 1;
@@ -264,4 +264,8 @@
     position: absolute;
     top:78%;
     left:25%;
+}
+
+.Privacymodalstyle {
+    background-color: #33907C;
 }
