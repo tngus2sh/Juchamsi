@@ -36,7 +36,7 @@ font-size: 15px;
     width: 100px;
     height: 20px;
     left: 64%;
-    top: 12%;
+    top: 11%;
     background:red;
     opacity: 0.6;
     border-radius: 32px;
@@ -119,27 +119,27 @@ font-size: 15px;
 
 .editnote1 {
     position: absolute;
-    top:25%;
+    top:24%;
     left:84%;
 }
 .editnote2 {
     position: absolute;
-    top:35%;
+    top:34%;
     left:84%;
 }
 .editnote3 {
     position: absolute;
-    top:45%;
+    top:44%;
     left:84%;
 }
 .editnote4 {
     position: absolute;
-    top:55%;
+    top:54%;
     left:84%;
 }
 .editnote5 {
     position: absolute;
-    top:65%;
+    top:64%;
     left:84%;
 }
 

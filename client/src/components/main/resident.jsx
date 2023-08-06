@@ -1,5 +1,5 @@
 import { Button, Container, Divider, Tab } from "@mui/material";
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
@@ -353,7 +353,7 @@ const Resident = () => {
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
-  const visibleRows = useMemo(
+  const visibleRows = React.useMemo(
     () =>
       stableSort(rows, getComparator(order, orderBy)).slice(
         page * rowsPerPage,

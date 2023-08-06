@@ -142,13 +142,13 @@ function MycarParking() {
                 readOnly: true,
             }}
             sx={{position:'absolute', top:'7%', left:'10%',  '& input': { textAlign: 'center' }, width:'80%' }}/>
-            <Button onClick={handleOpen} sx={{position:'absolute', top:'16%', left:'66%'}}>시간 변경</Button>
+            <Button onClick={handleOpen} sx={{position:'absolute', top:'13%', left:'75%'}}>시간 변경</Button>
             <p style={{position:'absolute', top:'22%',left:'11%', fontSize:'13px'}}>앞(뒤)차 여부</p>
             <Box className={`mycarparkingbox1 ${isothercar ? 'mycarparkingbox2' : 'mycarparkingbox1'}`} sx={{width:'39.5%', height:'8%', border:'0.5px solid', display:'inline-block'}}>
-            <p style={{position:'absolute', top:'30%', left:'40%'}}>O</p>
+            <p style={{position:'absolute', top:'40%', left:'45%'}}>O</p>
             </Box>
             <Box className={`mycarparkingbox1 ${isothercar ? 'mycarparkingbox3' : 'mycarparkingbox4'}`} sx={{width:'39.5%', height:'8%', border:'0.5px solid', display:'inline-block'}}>
-            <p style={{position:'absolute', top:'30%', left:'40%'}}>X</p>
+            <p style={{position:'absolute', top:'40%', left:'45%'}}>X</p>
             </Box>
             {isothercar && (
               <TextField
@@ -161,7 +161,7 @@ function MycarParking() {
                 sx={{ position: 'absolute', top: '40%', left: '10%', '& input': { textAlign: 'center' }, width: '80%' }}
               />
               )}
-              <Button onClick={handleOpenChat} sx={{position:'absolute', top:'50%', left:'63%'}}>대화방 생성</Button>
+              <Button onClick={handleOpenChat} sx={{position:'absolute', top:'46%', left:'71%'}}>대화방 생성</Button>
             <Modal
               open={open}
               onClose={handleClose}
@@ -175,7 +175,7 @@ function MycarParking() {
                     toolbar: { toolbarFormat: 'YYYY년 MM월 DD일', hidden: false },
                   }}
                   disablePast={true}
-                  sx={{ '& input': { textAlign: 'center' } }}/>
+                  sx={{ '& input': { textAlign: 'center' }}} className='outdaystyle1' />
                 <DemoContainer components={['TimePicker']} sx={{mt:4}}>
                   <TimePicker label="출차 예정 시간" ampm={false} value={selectedTime} onChange={handleTimeChange} sx={{ '& input': { textAlign: 'center' } }}/>
                 </DemoContainer>

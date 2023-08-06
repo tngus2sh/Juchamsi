@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import './account.css'
 import Footer from './footer';
 import { useSelector } from 'react-redux';
@@ -22,6 +22,23 @@ function Account() {
     const [MileageOpen, setMileageOpen] = React.useState(false);
     const ID = useSelector((state) => state.mobileInfo.id)
     const imageUrl = useSelector((state) => state.mobileInfo.imageUrl); // 이미지 URL 가져오기
+
+    const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
+    const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
+  
+  
+    useEffect(() => {
+      const handleResize = () => {
+        setViewportWidth(window.innerWidth);
+        setViewportHeight(window.innerHeight);
+      };
+  
+      window.addEventListener('resize', handleResize);
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+    }, []);
+  
 
     const handleOpenupdateAccount = () => {
         navigate('/Mobile/Account/Update')
@@ -85,8 +102,8 @@ function Account() {
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: 230,
-        height:'260px',
+        width: viewportWidth*0.6,
+        height:viewportHeight*0.4,
         bgcolor: 'white',
         border: '2px solid #000',
         boxShadow: 24,
@@ -107,9 +124,11 @@ function Account() {
                     </Stack>
                 </Stack>
             </div>
-            <Fab color="secondary" aria-label="edit" className='editicon' onClick={handleOpenupdateAccount}>
+            <div className='editicon'>
+            <Fab color="secondary" aria-label="edit" onClick={handleOpenupdateAccount}>
                 <EditIcon />
             </Fab>
+            </div>
             <hr className='hr1'/>
             <p className='miletext1'>현재 마일리지</p>
             <img src={process.env.PUBLIC_URL + '/img/mobile/2.png'} className='mileimg' alt='moneylogo'></img>

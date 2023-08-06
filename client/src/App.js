@@ -1,11 +1,11 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Reset as GlobalReset } from 'styled-reset';
 
 import LoginPage from './pages/web/login';
 import SignUpPage from './pages/web/signup';
 import WebMainPage from './pages/web/mainpage'
 import KioskMainPage from './pages/kiosk/main'
-import MobileMainPage from './pages/mobile/main'
 import KiosksavePage from './pages/kiosk/savepage'
 import KioskfindPage from './pages/kiosk/findpage'
 import KiosksavingPage from './pages/kiosk/savingpage'
@@ -21,30 +21,35 @@ import MobileParkinglogPage from './pages/mobile/parkinglot'
 import MobileMycarparkingPage from './pages/mobile/mycarparking'
 import MobileTermessagePage from './pages/mobile/termessage'
 import MobileAccountPage from './pages/mobile/account'
-import Messagedetail from './pages/mobile/messagedetail';
-
 import MobileUpdateAccountPage from './pages/mobile/updateaccount'
 import MobileMileageChangePage from './pages/mobile/MileageChange'
 import MobilePasswordUpdatePage from './pages/mobile/passwordchange'
 
 import './App.css';
 
-const isMobile = window.matchMedia('(max-width: 600px)').matches;
-const isKiosk = window.matchMedia('(max-width: 1000px)').matches;
-
 function App() {
+
   return (
     <div className="App">
         <GlobalReset/>
           <BrowserRouter>
             <Routes>
-            {isMobile ? (
-                <Route path="/" element={<MobileMainPage />} />
-              ) : isKiosk ? (
-                <Route path="/" element={<KioskMainPage />} />
-              ) : (
-                <Route path="/" element={<LoginPage />} />
-              )}
+            <Route
+            path="/"
+            element={
+              <Navigate
+                to={
+                  window.matchMedia('(max-width: 600px)').matches
+                    ? '/Mobile/Login'
+                    : window.matchMedia('(max-width: 1000px)').matches
+                    ? '/Kiosk/Main'
+                    : '/Web/Main'
+                }
+              />
+            }
+          />
+              <Route path="/Web/Main" element={<LoginPage />} />
+              <Route path="/Kiosk/Main" element={<KioskMainPage />} />
               <Route path="/Kiosk/savepage" element={<KiosksavePage />} />
               <Route path="/Kiosk/findpage" element={<KioskfindPage />} />
               <Route path="/Kiosk/savingpage" element={<KiosksavingPage />} />
@@ -59,8 +64,7 @@ function App() {
               <Route path="/Mobile/Signup" element={<MobileSignupPage />}/>
               <Route path="/Mobile/Parkinglot" element={<MobileParkinglogPage />}/>
               <Route path="/Mobile/Mycar" element={<MobileMycarparkingPage />}/>
-              <Route path="/Mobile/Termessage" element={<MobileTermessagePage />} />
-              <Route path="/Mobile/Termessage/:id" element={<Messagedetail/>} /> 
+              <Route path="/Mobile/Termessage" element={<MobileTermessagePage />}/>
               <Route path="/Mobile/Account" element={<MobileAccountPage />}/>
               <Route path="/Mobile/Account/Update" element={<MobileUpdateAccountPage />}/>
               <Route path="/Mobile/Mileage/Change" element={<MobileMileageChangePage />}/>

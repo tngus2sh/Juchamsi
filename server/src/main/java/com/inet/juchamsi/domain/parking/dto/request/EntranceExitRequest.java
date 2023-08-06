@@ -3,7 +3,7 @@ package com.inet.juchamsi.domain.parking.dto.request;
 import lombok.Data;
 
 @Data
-public class EntranceRequest {
+public class EntranceExitRequest {
     String macAddress;
-    int zone;
+    String groundAddress;
 }

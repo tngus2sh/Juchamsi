@@ -50,13 +50,7 @@ const Login = () => {
   }, [isStoreLoginChecked]);
   const loginMove = (e) => {
     // 로그인 실행
-    if (loginId.trim() === "") {
-      alert("아이디를 입력하세요");
-    } else if (loginPassword.trim() === "") {
-      alert("비밀번호를 입력하세요");
-    } else {
-      loginSubmit();
-    }
+    loginSubmit();
   };
 
   async function loginSubmit() {
@@ -85,7 +79,7 @@ const Login = () => {
           navigate("/mainPage");
         } else {
           // 로그인 실패한 경우
-          alert("아이디 또는 비밀번호를 확인해주세요");
+          console.log("로그인 실패");
         }
       })
       .catch((error) => {

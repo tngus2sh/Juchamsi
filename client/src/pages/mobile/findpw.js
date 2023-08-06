@@ -132,13 +132,15 @@ function Findpw() {
       </Box>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <p className="loginbtntext">비밀번호를 찾을 필요가 없으신가요? </p>
-        <Button className="findpwloginbtn" onClick={handleOpenLogin}>
+        <div className="findpwloginbtn">
+        <Button  onClick={handleOpenLogin}>
           로그인
         </Button>
+        </div>
       </div>
       <img
         className="logo"
-        src={process.env.PUBLIC_URL + '/img/kiosk/예비로고.png'}
+        src={process.env.PUBLIC_URL + '/img/kiosk/logo1.png'}
         alt={'title'}
       ></img>
 

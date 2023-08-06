@@ -3,10 +3,7 @@ package com.inet.juchamsi.domain.parking.entity;
 import com.inet.juchamsi.domain.villa.entity.Villa;
 import com.inet.juchamsi.global.common.Active;
 import com.inet.juchamsi.global.common.TimeBaseEntity;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -15,6 +12,7 @@ import static javax.persistence.EnumType.STRING;
 @Entity
 @Getter
 @ToString
+@NoArgsConstructor
 public class ParkingLot extends TimeBaseEntity {
 
     @Id
@@ -29,6 +27,9 @@ public class ParkingLot extends TimeBaseEntity {
     @Column(name="seat_number", nullable = false)
     private int seatNumber;
 
+    @Column(name = "seat_mac_address", nullable = false)
+    private String seatMacAddress;
+
     @Column(name = "front_number")
     private int frontNumber;
 
@@ -41,13 +42,12 @@ public class ParkingLot extends TimeBaseEntity {
     private Active active;
 
 
-    public ParkingLot() {}
-
     @Builder
-    public ParkingLot(Long id, Villa villa, int seatNumber, int frontNumber, int backNumber, Active active) {
+    public ParkingLot(Long id, Villa villa, int seatNumber, String seatMacAddress, int frontNumber, int backNumber, Active active) {
         this.id = id;
         this.villa = villa;
         this.seatNumber = seatNumber;
+        this.seatMacAddress = seatMacAddress;
         this.frontNumber = frontNumber;
         this.backNumber = backNumber;
         this.active = active;
@@ -57,19 +57,21 @@ public class ParkingLot extends TimeBaseEntity {
     /*
         연관관계 편의 메서드
      */
-    public static ParkingLot createFrontParkingLot(Villa villa, int seatNumber, int backNumber, Active active) {
+    public static ParkingLot createFrontParkingLot(Villa villa, int seatNumber, String seatMacAddress, int backNumber, Active active) {
         return ParkingLot.builder()
                 .villa(villa)
                 .seatNumber(seatNumber)
+                .seatMacAddress(seatMacAddress)
                 .backNumber(backNumber)
                 .active(active)
                 .build();
     }
 
-    public static ParkingLot createBackParkingLot(Villa villa, int seatNumber, int frontNumber, Active active) {
+    public static ParkingLot createBackParkingLot(Villa villa, int seatNumber, String seatMacAddress, int frontNumber, Active active) {
         return ParkingLot.builder()
                 .villa(villa)
                 .seatNumber(seatNumber)
+                .seatMacAddress(seatMacAddress)
                 .frontNumber(frontNumber)
                 .active(active)
                 .build();

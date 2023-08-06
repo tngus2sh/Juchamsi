@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './parkinglot.css';
 import Footer from './footer';
 import Box from '@mui/material/Box';
 import DriveEtaIcon from '@mui/icons-material/DriveEta';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+
 
 function Parkinglot() {
   const navigate = useNavigate();
@@ -22,6 +23,26 @@ function Parkinglot() {
   const Boxrow = useSelector((state) => state.mycar.Boxrow);
   const BoxColumn = useSelector((state) => state.mycar.BoxColumn);
 
+  const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
+  const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
+
+
+  useEffect(() => {
+    const handleResize = () => {
+      setViewportWidth(window.innerWidth);
+      setViewportHeight(window.innerHeight);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+
+  const boxWidth = (viewportWidth * 0.7 - (Boxrow * 10)) / Boxrow;
+  const boxHeight = (viewportHeight * 0.3 - (BoxColumn * 10)) / BoxColumn;
+
   // Box 그리드를 생성하는 함수
   const renderBoxGrid = () => {
     const boxes = [];
@@ -33,8 +54,8 @@ function Parkinglot() {
         boxes.push(
           <button key={`${i}-${j}`} onClick={MycarIcon ? handleOpenMycarPage : null} style={{ border: 'none', backgroundColor: 'transparent', padding: 0 }}>
             <Box key={`${i}-${j}`} sx={{
-              width: (200 - (Boxrow * 10)) / Boxrow,
-              height: (180 - (BoxColumn * 10)) / BoxColumn,
+              width: boxWidth,
+              height: boxHeight,
               border: '1px solid',
               marginBottom: '3px',
               marginRight: '10px',
@@ -48,7 +69,7 @@ function Parkinglot() {
             }}>
               {showIcon && <DriveEtaIcon sx={{ fontSize: 50 }} />}
             </Box>
-            <p style={{ color: '#33907C', fontSize: '12px', textAlign: 'center', display: 'inline-block' }}>
+            <p style={{ color: '#33907C', fontSize: '16px', textAlign: 'center', display: 'inline-block' }}>
               {Outtime[index] && (Outtime[index].length > 10 ? `~${Outtime[index].substring(9, 16)}` : Outtime[index])}
             </p>
           </button>
@@ -60,7 +81,7 @@ function Parkinglot() {
 
   return (
     <div>
-      <Box className='ParkinglotBox' sx={{ width: 250, height: 250, border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: '10px'}}>
+      <Box className='ParkinglotBox' sx={{ border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: '10px'}}>
         <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
           {renderBoxGrid()}
         </Box>

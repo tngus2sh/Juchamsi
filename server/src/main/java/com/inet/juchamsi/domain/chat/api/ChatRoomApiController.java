@@ -43,14 +43,16 @@ public class ChatRoomApiController {
 
     // 특정 채팅방 조회
     @ApiOperation(value = "특정 회원의 채팅방 조회", notes = "roomId에 해당하는 방 정보를 가져온다.")
-    @GetMapping("/room/{roomId}")
+    @GetMapping("/room/{userId}/{roomId}")
     public ApiResult<ChatRoomResponse> roomInfo(
+            @ApiParam("user-id")
+            @PathVariable("userId") String userId,
             @ApiParam("room-id")
             @PathVariable("roomId") String roomId
     ) {
         log.debug("# get roomInfo={}", roomId);
         try {
-            ChatRoomResponse respone = chatService.showDetailChatRoom(roomId);
+            ChatRoomResponse respone = chatService.showDetailChatRoom(userId, roomId);
             return OK(respone);
         } catch (NotFoundException e) {
             return ERROR("채팅룸을 찾을 수가 없습니다.", HttpStatus.NO_CONTENT);
