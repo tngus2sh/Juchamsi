@@ -23,6 +23,13 @@ public class RedisUtils {
         redisTemplate.opsForValue().set(key, objectMapper.writeValueAsString(o),  ttl, TimeUnit.SECONDS);
     }
 
+    /**
+     *
+     * @param key "2023:08:04 12:34"
+     * @param loginId "userId"
+     * @param message "출차시간이 되었습니다."
+     * @param ttl 만료시간
+     */
     public void setRedisHash(String key, String loginId, String message, Long ttl) {
         HashOperations<String, String, String> hashOperations = stringRedisTemplate.opsForHash();
         hashOperations.put(key, loginId, message);
@@ -35,7 +42,12 @@ public class RedisUtils {
         return objectMapper.readValue(redisValue, classType);
     }
 
-    public Map<String, String> getRedisHash(String key) {
+    /**
+     *
+     * @param key "2023:08:04 12:34"
+     * @return loginId, message -> "userId", "출차시간이 되었습니다."
+     */
+    public Map<String, String> getRedisHash(String key) { // redis 디비 정보 가져오기
         HashOperations<String, String, String> hashOperations = stringRedisTemplate.opsForHash();
         return hashOperations.entries(key);
     }
