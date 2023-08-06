@@ -15,12 +15,6 @@ public interface ParkingService {
     // 현재 차주의 출차시간 저장하기
     void createOutTime(EntranceOutTimeRequest request);
 
-    // 현재 차주의 출차시간에 대한 알람 주기
-    void notifyToCarOwner(ExitTimeDto exitTimeDto);
-
-    // 뒤 차주에게 현재 앞 차주의 출차시간에 대한 알람 주기
-    void notifyToBackNumber(ExitTimeDto exitTimeDto);
-
     // 출차시 출차 정보 넣기
     void createExit(EntranceExitRequest request);
 
