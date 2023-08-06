@@ -101,9 +101,9 @@ const MainPage = () => {
     navigate("/");
   };
   useEffect(() => {
-    if (!isLogin) {
-      navigate("/"); // 리다이렉트
-    }
+    // if (!isLogin) {
+    //   navigate("/"); // 리다이렉트
+    // }
   });
 
   return (

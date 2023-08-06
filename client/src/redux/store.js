@@ -5,7 +5,6 @@ import addressOpen from './addressOpen';
 import mobileauthlogin from './mobileauthlogin'
 import mobileMycarstatus from './mobileparking'
 import webLoginInfo from './webLoginInfo';
-import chatInfo from './chatInfo'
 import mobielUserinfo from './mobileUserinfo'
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import storage from 'redux-persist/lib/storage';

@@ -12,7 +12,7 @@ public interface ChatService {
 
     public List<ChatRoomResponse> showChatRoom(String userId);
 
-    public ChatRoomResponse showDetailChatRoom(String roomId);
+    public ChatRoomResponse showDetailChatRoom(String userId, String roomId);
     
     /* 사용자끼리 대화방 */
     // 대화방 생성
@@ -20,6 +20,9 @@ public interface ChatService {
 
     // 메세지 저장
     public void createChat(ChatMessageRequest request);
+
+    // 채팅방 삭제
+    public void removeChatRoom(String macAddress);
 
     /* 시스템 대화방 */
     // 대화방 생성

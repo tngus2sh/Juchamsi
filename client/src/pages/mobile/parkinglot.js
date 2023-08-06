@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './parkinglot.css';
 import Footer from './footer';
 import Box from '@mui/material/Box';
@@ -9,6 +9,7 @@ import Button from '@mui/material/Button';
 import InCar from '../../components/mobile/incar';
 import { Container } from '@mui/material';
 import { setWhenEnteringCar } from '../../redux/mobileUserinfo'; 
+
 
 function Parkinglot() {
   const navigate = useNavigate();
@@ -29,6 +30,25 @@ function Parkinglot() {
 
   const open = useSelector((state) => state.mobileInfo.whenEnteringCar);
   const handleOpen = () => dispatch(setWhenEnteringCar(true));
+  const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
+  const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
+
+
+  useEffect(() => {
+    const handleResize = () => {
+      setViewportWidth(window.innerWidth);
+      setViewportHeight(window.innerHeight);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+
+  const boxWidth = (viewportWidth * 0.7 - (Boxrow * 10)) / Boxrow;
+  const boxHeight = (viewportHeight * 0.3 - (BoxColumn * 10)) / BoxColumn;
 
   // Box 그리드를 생성하는 함수
   const renderBoxGrid = () => {
@@ -41,8 +61,8 @@ function Parkinglot() {
         boxes.push(
           <button key={`${i}-${j}`} onClick={MycarIcon ? handleOpenMycarPage : null} style={{ border: 'none', backgroundColor: 'transparent', padding: 0 }}>
             <Box key={`${i}-${j}`} sx={{
-              width: (200 - (Boxrow * 10)) / Boxrow,
-              height: (180 - (BoxColumn * 10)) / BoxColumn,
+              width: boxWidth,
+              height: boxHeight,
               border: '1px solid',
               marginBottom: '3px',
               marginRight: '10px',
@@ -56,7 +76,7 @@ function Parkinglot() {
             }}>
               {showIcon && <DriveEtaIcon sx={{ fontSize: 50 }} />}
             </Box>
-            <p style={{ color: '#33907C', fontSize: '12px', textAlign: 'center', display: 'inline-block' }}>
+            <p style={{ color: '#33907C', fontSize: '16px', textAlign: 'center', display: 'inline-block' }}>
               {Outtime[index] && (Outtime[index].length > 10 ? `~${Outtime[index].substring(9, 16)}` : Outtime[index])}
             </p>
           </button>

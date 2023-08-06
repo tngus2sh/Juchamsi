@@ -1,39 +1,46 @@
-import './main.css';
-import Box from '@mui/material/Box';
-import { useNavigate } from 'react-router-dom';
-import { Container } from '@mui/material';
-
+import "./main.css";
+// import Box from "@mui/material/Box";
+import { useNavigate } from "react-router-dom";
+import { Container } from "@mui/material";
 
 function Home(props) {
   const navigate = useNavigate();
 
   const handleOpenSavePage = () => {
     // 보관 페이지로 이동
-    navigate('/Kiosk/savepage');
+    navigate("/Kiosk/savepage");
   };
 
   const handleOpenfindPage = () => {
     // 찾기 페이지로 이동
-    navigate('/Kiosk/findpage');
+    navigate("/Kiosk/findpage");
   };
 
   return (
     <div className="home">
-      <img
-        className="kiosklogo"
-        src={process.env.PUBLIC_URL + '/img/kiosk/예비로고.png'}
-        alt={'title'}
-      ></img>
+      <div className="logo-container">
+        <img className="kiosklogo" src={process.env.PUBLIC_URL + "/img/kiosk/logo.png"} alt={"title"}></img>
+      </div>
+
       <Container className="centerpage">
         <p>원하시는 항목을 선택해 주세요.</p>
       </Container>
 
-      <Box component="span" className="kioskmainbox1" onClick={handleOpenSavePage}>
-        <p className="kioskmaintext">보관</p>
-      </Box>
-      <Box component="span" className="kioskmainbox2" onClick={handleOpenfindPage}>
-        <p className="kioskmaintext">찾기</p>
-      </Box>
+      <div className="button-container">
+        <div className="kiosk-main-box" onClick={handleOpenSavePage}>
+          <p className="kiosk-main-text">보관</p>
+        </div>
+        <div className="kiosk-main-box" onClick={handleOpenfindPage}>
+          <p className="kiosk-main-text">찾기</p>
+        </div>
+
+        {/* <Box component="span" className="kiosk-main-box" onClick={handleOpenSavePage}>
+          <p className="kioskmaintext">보관</p>
+        </Box>
+        <Box component="span" className="kiosk-main-box" onClick={handleOpenfindPage}>
+          <p className="kioskmaintext">찾기</p>
+        </Box> */}
+      </div>
     </div>
   );
 }

@@ -1,4 +1,5 @@
-import * as React from 'react';
+import * as React from "react";
+import "./timer.css";
 
 function Timer() {
   const [minutes, setMinutes] = React.useState(10);
@@ -23,8 +24,10 @@ function Timer() {
   }, [minutes, seconds]);
 
   return (
-    <div style={{ fontSize: '70px', fontWeight: 'bold', textAlign: 'center',  position:'absolute' ,top:'30%', left:'30%'}}>
-      {minutes.toString().padStart(2, '0')}분 {seconds.toString().padStart(2, '0')}초
+    <div className="timer-text-container">
+      <div className="timer-text">
+        {minutes.toString().padStart(2, "0")}분 {seconds.toString().padStart(2, "0")}초
+      </div>
     </div>
   );
 }

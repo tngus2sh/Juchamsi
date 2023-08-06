@@ -1,6 +1,6 @@
 .footerhomeicon {
     position: absolute;
-    left: 2.15%;
+    left: 7%;
     top: 90%;
     bottom: 3%;
     color:aliceblue;
@@ -8,7 +8,7 @@
 
 .footercaricon {
     position: absolute;
-    left: 27.15%;
+    left: 30.75%;
     top: 90%;
     bottom: 3%;
     color:aliceblue;
@@ -16,7 +16,7 @@
 
 .footermessageicon {
     position: absolute;
-    left: 52.15%;
+    left: 54.5%;
     top: 90.5%;
     bottom: 3%;
     color:aliceblue;
@@ -24,7 +24,7 @@
 
 .footeraccounticon {
     position: absolute;
-    left: 77.15%;
+    left: 78.25%;
     top: 90.5%;
     bottom: 3%;
     color:aliceblue;
@@ -39,6 +39,6 @@
     position: absolute;
     width: 60px;
     height: 60px;
-    left: 40%;
+    left: 43%;
     top: 76%;
     }
