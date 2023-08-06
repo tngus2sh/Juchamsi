@@ -10,10 +10,10 @@ import java.time.LocalDateTime;
 public class BackUserOutTimeDto {
 
     private String userId;
-    private Timestamp outTime;
+    private LocalDateTime outTime;
 
     @Builder
-    public BackUserOutTimeDto(String userId, Timestamp outTime) {
+    public BackUserOutTimeDto(String userId, LocalDateTime outTime) {
         this.userId = userId;
         this.outTime = outTime;
     }
