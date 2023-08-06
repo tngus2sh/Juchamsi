@@ -51,4 +51,9 @@ public class RedisUtils {
         HashOperations<String, String, String> hashOperations = stringRedisTemplate.opsForHash();
         return hashOperations.entries(key);
     }
+
+    public void deleteRedisKey(String key, String loginId) {
+        HashOperations<String, String, String> hashOperations = stringRedisTemplate.opsForHash();
+        hashOperations.delete(key, loginId);
+    }
 }
