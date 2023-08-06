@@ -6,6 +6,7 @@ import com.inet.juchamsi.domain.parking.application.ParkingService;
 import com.inet.juchamsi.domain.parking.dto.request.CreateLotRequest;
 import com.inet.juchamsi.domain.parking.dto.request.CreateParkingHistoryRequest;
 import com.inet.juchamsi.domain.parking.dto.request.EntranceExitRequest;
+import com.inet.juchamsi.domain.parking.dto.request.EntranceOutTimeRequest;
 import com.inet.juchamsi.domain.parking.dto.response.ParkingHistoryResponse;
 import com.inet.juchamsi.domain.parking.dto.response.ParkingLotResponse;
 import com.inet.juchamsi.global.api.ApiResult;
@@ -52,8 +53,38 @@ public class ParkingApiController {
         return OK(null);
     }
 
+    @ApiOperation(value = "출차시간 등록", notes = "입차된 차의 사용자 id와 주차위치로 출차시간을 등록합니다.")
+    @PostMapping("/out_time")
+    public ApiResult<Void> createOutTime(
+            @ApiParam(value = "user-out-time-dto")
+            EntranceOutTimeRequest request
+    ) {
+        log.debug("createOutTime={}", request);
+        try {
+            parkingService.createOutTime(request);
+        } catch (NotFoundException e) {
+            return ERROR("존재하지 않는 정보입니다.", HttpStatus.NO_CONTENT);
+        }
+        return OK(null);
+    }
+
+    @ApiOperation(value = "출차 시간 정보 수정", notes = "입차된 차의 사용자 id와 주차위치로 출차시간을 등록합니다.")
+    @PutMapping("/out_time")
+    public ApiResult<Void> modifyOutTime(
+            @ApiParam(value = "user-out-time-dto")
+            EntranceOutTimeRequest request
+    ) {
+        log.debug("modifyOutTime={}", request);
+        try {
+            parkingService.modifyOutTime(request);
+        } catch (NotFoundException e) {
+            return ERROR("존재하지 않는 정보입니다.", HttpStatus.NO_CONTENT);
+        }
+        return OK(null);
+    }
+
     @ApiOperation(value = "출차 정보 등록", notes = "출차된 차의 위치정보와 해당 유저의 mac 주소를 받습니다.")
-    @PostMapping("exit")
+    @PostMapping("/exit")
     public ApiResult<Void> createExit(
             @ApiParam(value = "user-parking-dto")
             EntranceExitRequest request
@@ -69,11 +100,11 @@ public class ParkingApiController {
         }
     }
 
-    @ApiOperation(value = "주차장 등록", notes = "집 주인은 회원가입 시 주차장 크기를 입력해 등록합니다")
-    @PostMapping("/lot")
-    public ApiResult<Void> createParkingLot(@ApiParam(value = "lot-dto") @RequestBody CreateLotRequest createLotRequest) {
-        return null;
-    }
+//    @ApiOperation(value = "주차장 등록", notes = "집 주인은 회원가입 시 주차장 크기를 입력해 등록합니다")
+//    @PostMapping("/lot")
+//    public ApiResult<Void> createParkingLot(@ApiParam(value = "lot-dto") @RequestBody CreateLotRequest createLotRequest) {
+//        return null;
+//    }
 
     @ApiOperation(value = "주차장 실시간 현황", notes = "사용자는 실시간 주차장 주차 현황을 확인합니다")
     @GetMapping("/lot/{villa_id}")
@@ -102,16 +133,23 @@ public class ParkingApiController {
         return OK(null);
     }
 
-    @ApiOperation(value = "주차정보 등록", notes = "주차장 사용자의 주차 시 정보가 등록됩니다.")
-    @PostMapping("")
-    public ApiResult<Void> createParkingHistory(@ApiParam(value = "parking-history-dto") @RequestBody CreateParkingHistoryRequest createParkingHistoryRequest) {
-        return null;
-    }
-
     @ApiOperation(value = "주차장 실시간 현황 상세 조회", notes = "사용자는 각 주차 칸마다 실시간 현황을 확인합니다")
-    @GetMapping("/history/{villa_id}/{lot_id}")
-    public ApiResult<ParkingHistoryResponse> showDetailParkingLot(@ApiParam(value = "villa-id") @PathVariable("villa_id") Long villaId, @ApiParam(value = "lot-id") @PathVariable("lot_id") Long lotId) {
-        return null;
+    @GetMapping("/history/{villa_id}/{lot_id}/{seat_number}")
+    public ApiResult<ParkingHistoryResponse> showDetailParkingLot(
+            @ApiParam(value = "villa-id")
+            @PathVariable("villa_id") Long villaId,
+            @ApiParam(value = "lot-id")
+            @PathVariable("lot_id") Long lotId,
+            @ApiParam(value = "seat-number")
+            @PathVariable("seat_number") int seatNumber
+    ) {
+        log.debug("showDetailParkingL={}", villaId);
+        try {
+            ParkingHistoryResponse parkingHistoryResponse = parkingService.showDetailParkingLot(villaId, lotId, seatNumber);
+            return OK(parkingHistoryResponse);
+        } catch (NotFoundException e) {
+            return ERROR("해당하는 정보가 존재하지 않습니다.", HttpStatus.NO_CONTENT);
+        }
     }
 
 }

@@ -40,10 +40,10 @@ public class NotificationServiceTest {
     void createNotification() {
         // given
         User targetUser = insertUser();
-        LocalDateTime outTime = Year.of(2023).atMonth(8).atDay(4).atTime(12, 11);
+        LocalDateTime notiTime = Year.of(2023).atMonth(8).atDay(4).atTime(12, 11);
         CreateNotificationRequest request = CreateNotificationRequest.builder()
                 .loginId(targetUser.getLoginId())
-                .outTime(outTime)
+                .notiTime(notiTime)
                 .message("테스트")
                 .build();
 

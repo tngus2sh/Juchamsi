@@ -21,12 +21,12 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public String createNotification(CreateNotificationRequest request) {
         LocalDateTime now = LocalDateTime.now();
-        Duration duration = Duration.between(now, request.getOutTime());
+        Duration duration = Duration.between(now, request.getNotiTime());
         Long seconds = duration.getSeconds() + 120;
         System.out.println("만료 시간: " + seconds);
         seconds = 20l;
 
-        String key = request.getOutTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        String key = request.getNotiTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 
         redisUtils.setRedisHash(key, request.getLoginId(), request.getMessage(), seconds);
 

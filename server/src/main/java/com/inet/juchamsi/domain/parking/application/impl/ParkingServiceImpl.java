@@ -3,34 +3,38 @@ package com.inet.juchamsi.domain.parking.application.impl;
 import com.inet.juchamsi.domain.chat.application.ChatService;
 import com.inet.juchamsi.domain.chat.dao.ChatRoomRepository;
 import com.inet.juchamsi.domain.chat.dao.MessageRepository;
-import com.inet.juchamsi.domain.chat.dto.request.ChatMessageRequest;
 import com.inet.juchamsi.domain.chat.dto.service.SystemMessageDto;
 import com.inet.juchamsi.domain.chat.entity.ChatRoom;
-import com.inet.juchamsi.domain.chat.entity.Message;
-import com.inet.juchamsi.domain.chat.entity.Status;
+import com.inet.juchamsi.domain.notification.application.NotificationService;
+import com.inet.juchamsi.domain.notification.dto.request.CreateNotificationRequest;
 import com.inet.juchamsi.domain.parking.application.ParkingService;
 import com.inet.juchamsi.domain.parking.dao.ParkingHistoryRepository;
 import com.inet.juchamsi.domain.parking.dao.ParkingLotRepository;
 import com.inet.juchamsi.domain.parking.dto.request.EntranceExitRequest;
+import com.inet.juchamsi.domain.parking.dto.request.EntranceOutTimeRequest;
+import com.inet.juchamsi.domain.parking.dto.response.ParkingHistoryResponse;
+import com.inet.juchamsi.domain.parking.dto.service.BackUserOutTimeDto;
 import com.inet.juchamsi.domain.parking.dto.service.ExitTimeDto;
+import com.inet.juchamsi.domain.parking.dto.service.OutTimeFrontNumberDto;
+import com.inet.juchamsi.domain.parking.dto.service.ParkingHistoryDetailDto;
 import com.inet.juchamsi.domain.parking.entity.ParkingHistory;
 import com.inet.juchamsi.domain.parking.entity.ParkingLot;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.entity.User;
-import com.inet.juchamsi.global.common.ChatMessage;
+import com.inet.juchamsi.domain.villa.entity.Villa;
 import com.inet.juchamsi.global.error.NotFoundException;
 import com.inet.juchamsi.global.notification.application.FirebaseCloudMessageService;
 import com.inet.juchamsi.global.notification.dto.request.FCMNotificationRequest;
+import com.inet.juchamsi.global.redis.RedisUtils;
 import lombok.RequiredArgsConstructor;
-import net.bytebuddy.dynamic.TypeResolutionStrategy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import javax.swing.*;
-import javax.swing.text.html.Option;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.inet.juchamsi.domain.chat.entity.Status.ALIVE;
@@ -47,9 +51,10 @@ public class ParkingServiceImpl implements ParkingService {
     private final ParkingHistoryRepository parkingHistoryRepository;
     private final UserRepository userRepository;
     private final ChatRoomRepository chatRoomRepository;
-    private final MessageRepository messageRepository;
     private final FirebaseCloudMessageService firebaseCloudMessageService;
     private final ChatService chatService;
+    private final NotificationService notificationService;
+    private final RedisUtils redisUtils;
 
     // 입차 위치 정보 저장
     @Override
@@ -70,7 +75,7 @@ public class ParkingServiceImpl implements ParkingService {
         }
 
         // 현재 시간 출력
-        Timestamp inTime = new Timestamp(System.currentTimeMillis());
+        LocalDateTime inTime = LocalDateTime.now();
 
         // 주차 히스토리 저장
         parkingHistoryRepository.save(ParkingHistory.builder()
@@ -89,31 +94,131 @@ public class ParkingServiceImpl implements ParkingService {
                 .build());
     }
 
+    // 출차시간 저장
     @Override
+    public void createOutTime(EntranceOutTimeRequest request) {
+        String villaIdNumber = request.getVillaIdNumber();
+        String userId = request.getUserId();
+        int seatNumber = request.getSeatNumber();
+        String outTime = request.getOutTime();
+
+        // 자리번호와 사용자 아이디로 해당 주차내역 식별키 가져오기
+        Optional<ParkingHistory> parkingHistoryOptional = parkingHistoryRepository.findAllBySeatNumberAndLoginId(villaIdNumber, seatNumber, userId, ACTIVE);
+        if (parkingHistoryOptional.isEmpty()) {
+            throw new NotFoundException(ParkingHistory.class, seatNumber);
+        }
+
+        // 가져온 별키로 출차시간 수정하기
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime dateTime = LocalDateTime.parse(outTime, formatter);
+
+        parkingHistoryRepository.updateOutTime(dateTime, parkingHistoryOptional.get().getId());
+
+        notifyToCarOwner(ExitTimeDto.builder()
+                .seatNumber(seatNumber)
+                .outTime(outTime)
+                .loginId(userId)
+                .build());
+
+        notifyToBackNumber(ExitTimeDto.builder()
+                .seatNumber(seatNumber)
+                .outTime(outTime)
+                .loginId(userId)
+                .build());
+    }
+
+    // 출차시간 수정
+    @Override
+    public void modifyOutTime(EntranceOutTimeRequest request) {
+        String userId = request.getUserId();
+        // 원래 출차시간 구하기
+        Optional<OutTimeFrontNumberDto> parkingHistoryOptional = parkingHistoryRepository.findParkingHistoryByLoginId(userId, ACTIVE);
+        if (parkingHistoryOptional.isEmpty()) {
+            throw new NotFoundException(ParkingHistory.class, userId);
+        }
+
+        // redis에서 해당 차주의 원래 출차 시간들을 삭제하기
+        String oldOutTime = parkingHistoryOptional.get()
+                .getOutTime()
+                .format(DateTimeFormatter.ofPattern("yyyy:MM:dd HH:mm:ss"));
+        String oldOutTimeBeforeFifteen = parkingHistoryOptional.get()
+                .getOutTime()
+                .minusMinutes(15) // 15분전 출차 알림
+                .format(DateTimeFormatter.ofPattern("yyyy:MM:dd HH:mm:ss"));
+
+        redisUtils.deleteRedisKey(oldOutTime, userId);
+        redisUtils.deleteRedisKey(oldOutTimeBeforeFifteen, userId);
+
+        // 앞차가 있는지 확인
+        int frontNumber = parkingHistoryOptional.get().getFrontNumber();
+        if (frontNumber != 0) { // 앞차가 있다
+            // 앞차에 차가 있는 지 확인
+            Optional<String> loginIdOptional = parkingHistoryRepository.findLoginIdByVilla(parkingHistoryOptional.get().getVilla(), frontNumber, ACTIVE);
+
+            // 앞차가 있다면 레디스에서 현재 차주의 출차시간(key)과 앞차주의 아이디(field)값을 넣어서 삭제
+            loginIdOptional.ifPresent(s -> redisUtils.deleteRedisKey(oldOutTime, s));
+        }
+
+        // 변경된 시간으로 저장
+        createOutTime(request);
+    }
+
+    public void notifyToCarOwner(ExitTimeDto exitTimeDto) {
+        String outTimeStr = exitTimeDto.getOutTime();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy:MM:dd HH:mm");
+        LocalDateTime outTime = LocalDateTime.parse(outTimeStr, formatter);
+        LocalDateTime outTimeBeforeFifteen = outTime.minusMinutes(15);
+
+        // 15분전 알람
+        notificationService.createNotification(CreateNotificationRequest.builder()
+                .loginId(exitTimeDto.getLoginId())
+                .notiTime(outTimeBeforeFifteen)
+                .message(EXIT_REMINDER)
+                .build());
+
+        // 현재 출차시간 알람
+        notificationService.createNotification(CreateNotificationRequest.builder()
+                .loginId(exitTimeDto.getLoginId())
+                .notiTime(outTime)
+                .message(EXIT_TIME_REMINDER)
+                .build());
+
+    }
+
     public void notifyToBackNumber(ExitTimeDto exitTimeDto) {
+        String villaIdNumber = exitTimeDto.getVillaIdNumber();
         int seatNumber = exitTimeDto.getSeatNumber();
-        String outTime = exitTimeDto.getOutTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        String outTimeStr = exitTimeDto.getOutTime();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy:MM:dd HH:mm");
+        LocalDateTime outTime = LocalDateTime.parse(outTimeStr, formatter);
 
         // 주차 위치로 주차장 정보 가져오기
-        Optional<ParkingLot> parkingLotOptional = parkingLotRepository.findBySeatNumber(seatNumber, ACTIVE);
+        Optional<ParkingLot> parkingLotOptional = parkingLotRepository.findBySeatNumber(villaIdNumber, seatNumber, ACTIVE);
         if (parkingLotOptional.isEmpty()) {
             throw new NotFoundException(ParkingLot.class, seatNumber);
         }
 
         // 주차 위치 정보로부터 뒤차가 있을 경우 해당 차의 출차시간에 맞춰 알람을 보낸다.
         int backNumber = parkingLotOptional.get().getBackNumber();
+        Long villaId = parkingLotOptional.get().getVilla().getId();
         if (backNumber != 0) {
-            // 뒤차 정보 -> 뒤차의 자리 번호로 해당 주차장 식별키를 알아내 주차장 히스토리에 현재 주차되어 있는 차를 찾음
-            Optional<String> backLoginIdOptional = parkingHistoryRepository.findByParkingHistoryAndActive(backNumber, ACTIVE);
-            // TODO: 현재 주차가 되어있음 -> 해당 차의 출차시간에 맞춰 알람 보냄
+            // 뒤차 정보 -> 뒤차의 자리 번호와 빌라 식별키로 해당 주차장 식별키를 알아내 주차장 히스토리에 현재 주차되어 있는 차를 찾음
+            Optional<BackUserOutTimeDto> backLoginIdOptional = parkingHistoryRepository.findByParkingHistoryAndActive(villaId, backNumber, ACTIVE);
 
             // 뒤차주에게 현 차주의 출차시간을 알람으로 보내줌
             backLoginIdOptional.ifPresent(s -> firebaseCloudMessageService.sendNotification(FCMNotificationRequest.builder()
-                    .loginId(backLoginIdOptional.get())
+                    .loginId(backLoginIdOptional.get().getUserId())
                     .title("시스템 메세지")
                     .body(ENTRANCE_FRONT_MESSAGE)
                     .build()));
-            String backNumberLoginId = backLoginIdOptional.get();
+            String backNumberLoginId = backLoginIdOptional.get().getUserId();
+
+            // 현재 주차가 되어있음 -> 해당 차의 출차시간에 맞춰 알람 보냄
+            notificationService.createNotification(CreateNotificationRequest.builder()
+                    .loginId(backNumberLoginId)
+                    .notiTime(backLoginIdOptional.get().getOutTime())
+                    .message(EXIT_FRONT_MESSAGE)
+                    .build());
 
             // 현재 차주의 roomId 구하기
             Optional<String> roomIdOptional = chatRoomRepository.findRoomIdByLoginIdAndType(backNumberLoginId, SYSTEM, ALIVE);
@@ -147,9 +252,125 @@ public class ParkingServiceImpl implements ParkingService {
         parkingHistoryRepository.updateParkingHistory(DISABLED, parkingHistoryOptional.get().getId());
     }
 
-    // 유저에게 출차시간 15분전 알람 주기
-    @Scheduled(cron = "0 0/5 * * * ?")
-    public void notifyOutTimeToUser() {
+    @Override
+    public List<ParkingHistoryResponse> showParkingLot(Long villaId, Long lotId) {
+        List<ParkingHistoryDetailDto> parkingHistoryDetailDtoList =  parkingHistoryRepository.findAllParkingLotByVillaIdAndLotId(villaId, lotId);
+        List<ParkingHistoryResponse> list = new ArrayList<>();
 
+        for (ParkingHistoryDetailDto parkingHistoryDetailDto : parkingHistoryDetailDtoList) {
+            String frontParkingFlag = null;
+            String backParkingFlag = null;
+            String frontOutTime = null;
+            String backOutTime = null;
+            int frontNumber = parkingHistoryDetailDto.getFrontNumber();
+            int backNumber = parkingHistoryDetailDto.getBackNumber();
+
+            // 앞 차 정보 넣기
+            Optional<BackUserOutTimeDto> backUserOutTimeDtoOptionalFront = parkingHistoryRepository.findByParkingHistoryAndActive(villaId, frontNumber, ACTIVE);
+            if (backUserOutTimeDtoOptionalFront.isEmpty()) {
+                frontParkingFlag = "EMPTY";
+            } else {
+                frontParkingFlag = "FULL";
+                frontOutTime = backUserOutTimeDtoOptionalFront.get().getOutTime().toString();
+            }
+
+            // 뒤 차 정보 넣기
+            Optional<BackUserOutTimeDto> backUserOutTimeDtoOptionalBack = parkingHistoryRepository.findByParkingHistoryAndActive(villaId, backNumber, ACTIVE);
+            if (backUserOutTimeDtoOptionalBack.isEmpty()) {
+                backParkingFlag = "EMPTY";
+            } else {
+                backParkingFlag = "FULL";
+                backOutTime = backUserOutTimeDtoOptionalBack.get().getOutTime().toString();
+            }
+
+            list.add(ParkingHistoryResponse.builder()
+                            .userId(parkingHistoryDetailDto.getUserId())
+                            .outTime(parkingHistoryDetailDto.getOutTime().toString())
+                            .frontParkingFlag(frontParkingFlag)
+                            .backParkingFlag(backParkingFlag)
+                            .frontOutTime(frontOutTime)
+                            .backOutTime(backOutTime)
+                            .frontCarNumber(parkingHistoryDetailDto.getFrontNumber())
+                            .backCarNumber(parkingHistoryDetailDto.getBackNumber())
+                            .build());
+        }
+        return list;
+    }
+
+    // 각 주차장 자리마다 세부 정보 출력
+    @Override
+    public ParkingHistoryResponse showDetailParkingLot(Long villaId, Long lotId, int seatNumber) {
+        // 빌라와 주차장 아이디로 자리 번호마다 비어있는지 안 비어있는지 출력
+        Optional<ParkingHistoryDetailDto> parkingHistoryDetailDtoOptional =  parkingHistoryRepository.findParkingLotBySeatNumberAndLoginId(lotId, seatNumber);
+        if (parkingHistoryDetailDtoOptional.isEmpty())
+            throw new NotFoundException(ParkingHistoryDetailDto.class, seatNumber);
+
+        String frontParkingFlag = null;
+        String backParkingFlag = null;
+        String frontOutTime = null;
+        String backOutTime = null;
+        int frontNumber = parkingHistoryDetailDtoOptional.get().getFrontNumber();
+        int backNumber = parkingHistoryDetailDtoOptional.get().getBackNumber();
+
+        // 앞 차 정보 넣기
+        Optional<BackUserOutTimeDto> backUserOutTimeDtoOptionalFront = parkingHistoryRepository.findByParkingHistoryAndActive(villaId, frontNumber, ACTIVE);
+        if (backUserOutTimeDtoOptionalFront.isEmpty()) {
+            frontParkingFlag = "EMPTY";
+        } else {
+            frontParkingFlag = "FULL";
+            frontOutTime = backUserOutTimeDtoOptionalFront.get().getOutTime().toString();
+        }
+
+        // 뒤 차 정보 넣기
+        Optional<BackUserOutTimeDto> backUserOutTimeDtoOptionalBack = parkingHistoryRepository.findByParkingHistoryAndActive(villaId, backNumber, ACTIVE);
+        if (backUserOutTimeDtoOptionalBack.isEmpty()) {
+            backParkingFlag = "EMPTY";
+        } else {
+            backParkingFlag = "FULL";
+            backOutTime = backUserOutTimeDtoOptionalBack.get().getOutTime().toString();
+        }
+
+        return ParkingHistoryResponse.builder()
+                .userId(parkingHistoryDetailDtoOptional.get().getUserId())
+                .outTime(parkingHistoryDetailDtoOptional.get().getOutTime().toString())
+                .frontParkingFlag(frontParkingFlag)
+                .backParkingFlag(backParkingFlag)
+                .frontOutTime(frontOutTime)
+                .backOutTime(backOutTime)
+                .frontCarNumber(parkingHistoryDetailDtoOptional.get().getFrontNumber())
+                .backCarNumber(parkingHistoryDetailDtoOptional.get().getBackNumber())
+                .build();
+    }
+
+    // 유저에게 출차시간 알림 주기(15분전, 출차시간이 됐을 때)
+    @Scheduled(cron = "0 0/1 * * * ?")
+    public void notifyOutTimeToUser() {
+        LocalDateTime localDateTime = LocalDateTime.now();
+        String notiTime = localDateTime.format(DateTimeFormatter.ofPattern("yyyy:MM:dd HH:mm"));
+
+        Map<String, String> entries = redisUtils.getRedisHash(notiTime);
+
+        for (String field : entries.keySet()) {
+            String value = (String) entries.get(field);
+            if (value.equals(notiTime)) {
+                // 알람 보내기
+                firebaseCloudMessageService.sendNotification(FCMNotificationRequest.builder()
+                                .loginId(field)
+                                .title(EXIT_TITLE)
+                                .body(value)
+                        .build());
+
+                // 시스템 메시지 저장
+                Optional<String> chatRoomOptional = chatRoomRepository.findRoomIdByLoginIdAndType(field, SYSTEM, ALIVE);
+                if (chatRoomOptional.isEmpty()) {
+                    throw new NotFoundException(ChatRoom.class, field);
+                }
+                chatService.createSystemChat(SystemMessageDto.builder()
+                        .senderId(SYSTEM_ID)
+                        .message(value)
+                        .roomId(chatRoomOptional.get())
+                        .build());
+            }
+        }
     }
 }
