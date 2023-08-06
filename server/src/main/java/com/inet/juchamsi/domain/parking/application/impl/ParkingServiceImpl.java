@@ -12,8 +12,11 @@ import com.inet.juchamsi.domain.parking.dao.ParkingHistoryRepository;
 import com.inet.juchamsi.domain.parking.dao.ParkingLotRepository;
 import com.inet.juchamsi.domain.parking.dto.request.EntranceExitRequest;
 import com.inet.juchamsi.domain.parking.dto.request.EntranceOutTimeRequest;
+import com.inet.juchamsi.domain.parking.dto.response.ParkingHistoryResponse;
 import com.inet.juchamsi.domain.parking.dto.service.BackUserOutTimeDto;
 import com.inet.juchamsi.domain.parking.dto.service.ExitTimeDto;
+import com.inet.juchamsi.domain.parking.dto.service.OutTimeFrontNumberDto;
+import com.inet.juchamsi.domain.parking.dto.service.ParkingHistoryDetailDto;
 import com.inet.juchamsi.domain.parking.entity.ParkingHistory;
 import com.inet.juchamsi.domain.parking.entity.ParkingLot;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
@@ -27,10 +30,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -48,7 +51,6 @@ public class ParkingServiceImpl implements ParkingService {
     private final ParkingHistoryRepository parkingHistoryRepository;
     private final UserRepository userRepository;
     private final ChatRoomRepository chatRoomRepository;
-    private final MessageRepository messageRepository;
     private final FirebaseCloudMessageService firebaseCloudMessageService;
     private final ChatService chatService;
     private final NotificationService notificationService;
@@ -92,14 +94,16 @@ public class ParkingServiceImpl implements ParkingService {
                 .build());
     }
 
+    // 출차시간 저장
     @Override
     public void createOutTime(EntranceOutTimeRequest request) {
+        String villaIdNumber = request.getVillaIdNumber();
         String userId = request.getUserId();
         int seatNumber = request.getSeatNumber();
         String outTime = request.getOutTime();
 
         // 자리번호와 사용자 아이디로 해당 주차내역 식별키 가져오기
-        Optional<ParkingHistory> parkingHistoryOptional = parkingHistoryRepository.findAllBySeatNumberAndLoginId(seatNumber, userId, ACTIVE);
+        Optional<ParkingHistory> parkingHistoryOptional = parkingHistoryRepository.findAllBySeatNumberAndLoginId(villaIdNumber, seatNumber, userId, ACTIVE);
         if (parkingHistoryOptional.isEmpty()) {
             throw new NotFoundException(ParkingHistory.class, seatNumber);
         }
@@ -121,6 +125,42 @@ public class ParkingServiceImpl implements ParkingService {
                 .outTime(outTime)
                 .loginId(userId)
                 .build());
+    }
+
+    // 출차시간 수정
+    @Override
+    public void modifyOutTime(EntranceOutTimeRequest request) {
+        String userId = request.getUserId();
+        // 원래 출차시간 구하기
+        Optional<OutTimeFrontNumberDto> parkingHistoryOptional = parkingHistoryRepository.findParkingHistoryByLoginId(userId, ACTIVE);
+        if (parkingHistoryOptional.isEmpty()) {
+            throw new NotFoundException(ParkingHistory.class, userId);
+        }
+
+        // redis에서 해당 차주의 원래 출차 시간들을 삭제하기
+        String oldOutTime = parkingHistoryOptional.get()
+                .getOutTime()
+                .format(DateTimeFormatter.ofPattern("yyyy:MM:dd HH:mm:ss"));
+        String oldOutTimeBeforeFifteen = parkingHistoryOptional.get()
+                .getOutTime()
+                .minusMinutes(15) // 15분전 출차 알림
+                .format(DateTimeFormatter.ofPattern("yyyy:MM:dd HH:mm:ss"));
+
+        redisUtils.deleteRedisKey(oldOutTime, userId);
+        redisUtils.deleteRedisKey(oldOutTimeBeforeFifteen, userId);
+
+        // 앞차가 있는지 확인
+        int frontNumber = parkingHistoryOptional.get().getFrontNumber();
+        if (frontNumber != 0) { // 앞차가 있다
+            // 앞차에 차가 있는 지 확인
+            Optional<String> loginIdOptional = parkingHistoryRepository.findLoginIdByVilla(parkingHistoryOptional.get().getVilla(), frontNumber, ACTIVE);
+
+            // 앞차가 있다면 레디스에서 현재 차주의 출차시간(key)과 앞차주의 아이디(field)값을 넣어서 삭제
+            loginIdOptional.ifPresent(s -> redisUtils.deleteRedisKey(oldOutTime, s));
+        }
+
+        // 변경된 시간으로 저장
+        createOutTime(request);
     }
 
     public void notifyToCarOwner(ExitTimeDto exitTimeDto) {
@@ -145,7 +185,6 @@ public class ParkingServiceImpl implements ParkingService {
 
     }
 
-    // 출차시간 등록
     public void notifyToBackNumber(ExitTimeDto exitTimeDto) {
         String villaIdNumber = exitTimeDto.getVillaIdNumber();
         int seatNumber = exitTimeDto.getSeatNumber();
@@ -161,10 +200,10 @@ public class ParkingServiceImpl implements ParkingService {
 
         // 주차 위치 정보로부터 뒤차가 있을 경우 해당 차의 출차시간에 맞춰 알람을 보낸다.
         int backNumber = parkingLotOptional.get().getBackNumber();
-        Villa villa = parkingLotOptional.get().getVilla();
+        Long villaId = parkingLotOptional.get().getVilla().getId();
         if (backNumber != 0) {
             // 뒤차 정보 -> 뒤차의 자리 번호와 빌라 식별키로 해당 주차장 식별키를 알아내 주차장 히스토리에 현재 주차되어 있는 차를 찾음
-            Optional<BackUserOutTimeDto> backLoginIdOptional = parkingHistoryRepository.findByParkingHistoryAndActive(villa, backNumber, ACTIVE);
+            Optional<BackUserOutTimeDto> backLoginIdOptional = parkingHistoryRepository.findByParkingHistoryAndActive(villaId, backNumber, ACTIVE);
 
             // 뒤차주에게 현 차주의 출차시간을 알람으로 보내줌
             backLoginIdOptional.ifPresent(s -> firebaseCloudMessageService.sendNotification(FCMNotificationRequest.builder()
@@ -211,6 +250,96 @@ public class ParkingServiceImpl implements ParkingService {
         }
         // 주차 내역 정보 업데이트
         parkingHistoryRepository.updateParkingHistory(DISABLED, parkingHistoryOptional.get().getId());
+    }
+
+    @Override
+    public List<ParkingHistoryResponse> showParkingLot(Long villaId, Long lotId) {
+        List<ParkingHistoryDetailDto> parkingHistoryDetailDtoList =  parkingHistoryRepository.findAllParkingLotByVillaIdAndLotId(villaId, lotId);
+        List<ParkingHistoryResponse> list = new ArrayList<>();
+
+        for (ParkingHistoryDetailDto parkingHistoryDetailDto : parkingHistoryDetailDtoList) {
+            String frontParkingFlag = null;
+            String backParkingFlag = null;
+            String frontOutTime = null;
+            String backOutTime = null;
+            int frontNumber = parkingHistoryDetailDto.getFrontNumber();
+            int backNumber = parkingHistoryDetailDto.getBackNumber();
+
+            // 앞 차 정보 넣기
+            Optional<BackUserOutTimeDto> backUserOutTimeDtoOptionalFront = parkingHistoryRepository.findByParkingHistoryAndActive(villaId, frontNumber, ACTIVE);
+            if (backUserOutTimeDtoOptionalFront.isEmpty()) {
+                frontParkingFlag = "EMPTY";
+            } else {
+                frontParkingFlag = "FULL";
+                frontOutTime = backUserOutTimeDtoOptionalFront.get().getOutTime().toString();
+            }
+
+            // 뒤 차 정보 넣기
+            Optional<BackUserOutTimeDto> backUserOutTimeDtoOptionalBack = parkingHistoryRepository.findByParkingHistoryAndActive(villaId, backNumber, ACTIVE);
+            if (backUserOutTimeDtoOptionalBack.isEmpty()) {
+                backParkingFlag = "EMPTY";
+            } else {
+                backParkingFlag = "FULL";
+                backOutTime = backUserOutTimeDtoOptionalBack.get().getOutTime().toString();
+            }
+
+            list.add(ParkingHistoryResponse.builder()
+                            .userId(parkingHistoryDetailDto.getUserId())
+                            .outTime(parkingHistoryDetailDto.getOutTime().toString())
+                            .frontParkingFlag(frontParkingFlag)
+                            .backParkingFlag(backParkingFlag)
+                            .frontOutTime(frontOutTime)
+                            .backOutTime(backOutTime)
+                            .frontCarNumber(parkingHistoryDetailDto.getFrontNumber())
+                            .backCarNumber(parkingHistoryDetailDto.getBackNumber())
+                            .build());
+        }
+        return list;
+    }
+
+    // 각 주차장 자리마다 세부 정보 출력
+    @Override
+    public ParkingHistoryResponse showDetailParkingLot(Long villaId, Long lotId, int seatNumber) {
+        // 빌라와 주차장 아이디로 자리 번호마다 비어있는지 안 비어있는지 출력
+        Optional<ParkingHistoryDetailDto> parkingHistoryDetailDtoOptional =  parkingHistoryRepository.findParkingLotBySeatNumberAndLoginId(lotId, seatNumber);
+        if (parkingHistoryDetailDtoOptional.isEmpty())
+            throw new NotFoundException(ParkingHistoryDetailDto.class, seatNumber);
+
+        String frontParkingFlag = null;
+        String backParkingFlag = null;
+        String frontOutTime = null;
+        String backOutTime = null;
+        int frontNumber = parkingHistoryDetailDtoOptional.get().getFrontNumber();
+        int backNumber = parkingHistoryDetailDtoOptional.get().getBackNumber();
+
+        // 앞 차 정보 넣기
+        Optional<BackUserOutTimeDto> backUserOutTimeDtoOptionalFront = parkingHistoryRepository.findByParkingHistoryAndActive(villaId, frontNumber, ACTIVE);
+        if (backUserOutTimeDtoOptionalFront.isEmpty()) {
+            frontParkingFlag = "EMPTY";
+        } else {
+            frontParkingFlag = "FULL";
+            frontOutTime = backUserOutTimeDtoOptionalFront.get().getOutTime().toString();
+        }
+
+        // 뒤 차 정보 넣기
+        Optional<BackUserOutTimeDto> backUserOutTimeDtoOptionalBack = parkingHistoryRepository.findByParkingHistoryAndActive(villaId, backNumber, ACTIVE);
+        if (backUserOutTimeDtoOptionalBack.isEmpty()) {
+            backParkingFlag = "EMPTY";
+        } else {
+            backParkingFlag = "FULL";
+            backOutTime = backUserOutTimeDtoOptionalBack.get().getOutTime().toString();
+        }
+
+        return ParkingHistoryResponse.builder()
+                .userId(parkingHistoryDetailDtoOptional.get().getUserId())
+                .outTime(parkingHistoryDetailDtoOptional.get().getOutTime().toString())
+                .frontParkingFlag(frontParkingFlag)
+                .backParkingFlag(backParkingFlag)
+                .frontOutTime(frontOutTime)
+                .backOutTime(backOutTime)
+                .frontCarNumber(parkingHistoryDetailDtoOptional.get().getFrontNumber())
+                .backCarNumber(parkingHistoryDetailDtoOptional.get().getBackNumber())
+                .build();
     }
 
     // 유저에게 출차시간 알림 주기(15분전, 출차시간이 됐을 때)
