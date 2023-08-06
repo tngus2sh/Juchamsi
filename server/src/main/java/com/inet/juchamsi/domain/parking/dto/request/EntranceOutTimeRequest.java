@@ -8,8 +8,9 @@ import javax.validation.constraints.NotBlank;
 public class EntranceOutTimeRequest {
 
     @NotBlank
+    private String villaIdNumber; // 빌라 식별 번호
+    @NotBlank
     private String userId; // 사용자 id
-
     private int seatNumber; // 주차 위치
     @NotBlank
     private String outTime; // 출차 시간
