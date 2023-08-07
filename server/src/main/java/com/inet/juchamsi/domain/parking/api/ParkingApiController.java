@@ -10,6 +10,7 @@ import com.inet.juchamsi.domain.parking.dto.request.EntranceOutTimeRequest;
 import com.inet.juchamsi.domain.parking.dto.request.ExitRequest;
 import com.inet.juchamsi.domain.parking.dto.response.ParkingHistoryDetailResponse;
 import com.inet.juchamsi.global.api.ApiResult;
+import com.inet.juchamsi.global.error.AlreadyExistException;
 import com.inet.juchamsi.global.error.NotFoundException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -47,6 +48,8 @@ public class ParkingApiController {
             // 입차 알림
         } catch (NotFoundException e) {
             return ERROR("존재하지 않는 정보입니다.", HttpStatus.NO_CONTENT);
+        } catch (AlreadyExistException e) {
+            return ERROR("해당 자리는 이미 주차되어 있는 자리입니다.", HttpStatus.CONFLICT);
         }
         return OK(null);
     }
@@ -57,7 +60,12 @@ public class ParkingApiController {
             @ApiParam(value = "user_id")
             @PathVariable(value = "user_id") String userId
     ) {
-        return OK(parkingService.isParkingNow(userId));
+        try {
+            ParkingNowResponse parkingNowResponse = parkingService.isParkingNow(userId);
+            return OK(parkingNowResponse);
+        } catch (NotFoundException e) {
+            return ERROR("존재하지 않는 정보입니다.", HttpStatus.NO_CONTENT);
+        }
     }
 
     @ApiOperation(value = "출차시간 등록", notes = "입차된 차의 사용자 id와 주차위치로 출차시간을 등록합니다.")
@@ -68,12 +76,12 @@ public class ParkingApiController {
     ) {
         log.debug("createOutTime={}", request);
         try {
-//            // test =======================================================
-//            parkingService.createEntrance(EntranceRequest.builder()
-//                            .groundAddress("B0:A7:32:DB:C8:46")
-//                            .macAddress("dc:a6:32:70:b7:ca")
-//                            .build());
-//            // =============================================================
+            // test =======================================================
+            parkingService.createEntrance(EntranceRequest.builder()
+                            .groundAddress("B0:A7:32:DB:C8:46")
+                            .macAddress("dc:a6:32:70:b7:ca")
+                            .build());
+            // =============================================================
             parkingService.createOutTime(request);
         } catch (NotFoundException e) {
             return ERROR("존재하지 않는 정보입니다.", HttpStatus.NO_CONTENT);
