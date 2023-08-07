@@ -1,4 +1,4 @@
-package com.inet.juchamsi.domain.parking.application.impl;
+package com.inet.juchamsi.domain.parking.dto.response;
 
 
 import lombok.Builder;
