@@ -4,6 +4,7 @@ import com.inet.juchamsi.domain.parking.dto.service.BackUserOutTimeDto;
 import com.inet.juchamsi.domain.parking.dto.service.OutTimeFrontNumberDto;
 import com.inet.juchamsi.domain.parking.dto.service.ParkingHistoryDetailDto;
 import com.inet.juchamsi.domain.parking.entity.ParkingHistory;
+import com.inet.juchamsi.domain.parking.entity.ParkingLot;
 import com.inet.juchamsi.domain.villa.entity.Villa;
 import com.inet.juchamsi.global.common.Active;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,14 +21,18 @@ public interface ParkingHistoryRepository extends JpaRepository<ParkingHistory, 
     // 사용자 아이디로 지금 현재 주차 되어있는지 확인
     @Query("select ph.id from ParkingHistory ph left join ph.user u where u.loginId=:loginId and ph.outTime is null order by ph.createdDate desc")
     Optional<Long> findActiveByLoginId(@Param("loginId") String loginId);
-    
+
+    // 사용자 맥 주소로 현재 주차되어있는 위치를 가져옴
+    @Query("select ph from ParkingHistory ph left join ph.user u where u.macAddress=:macAddress and u.active=:uActive and ph.active=:phActive")
+    Optional<ParkingHistory> findActiveByMacAddress(@Param("macAddress") String macAddress, @Param("uActive") Active uActive, @Param("phActive") Active phActive);
+
+    // 사용자 맥 주소로 주차장 정보 가져오기
+    @Query("select pl from ParkingHistory ph left join ph.user u left join ph.parkingLot pl where u.macAddress=:macAddress and ph.active=:active")
+    Optional<ParkingLot> findParkingLotByMacAddress(@Param("macAddress") String macAddress, @Param("active") Active active);
+
     // 주차장 식별번호와 자리로 현재 주차 되어있는지 확인
     @Query("select new com.inet.juchamsi.domain.parking.dto.service.BackUserOutTimeDto(u.loginId, u.carNumber, ph.outTime)  from ParkingHistory ph left join ph.parkingLot pl left join ph.user u left join pl.villa v where v.idNumber=:villaIdNumber and pl.seatNumber=:seatNumber and ph.active=:active")
-    Optional<BackUserOutTimeDto> findByParkingHistoryAndActive(@Param("villaIdNumber") String villaIdNumber, @Param("seatNumber")int seatNumber, @Param("active") Active active);
-
-    // 주차장 맥 주소와 주차내역에서 현재 주차 되어 있다고 뜨는 목록 제일 최신 순으로 하나 가져오기
-    @Query("select ph from ParkingHistory ph left join ph.parkingLot pl where pl.seatMacAddress=:seatMacAddress and ph.active=:active order by ph.createdDate desc")
-    Optional<ParkingHistory> findBySeatMacAddressAndActive(@Param("seatMacAddress") String seatMacAddress, @Param("active") Active active);
+    Optional<BackUserOutTimeDto> findByParkingHistoryAndActive(@Param("villaIdNumber") String villaIdNumber, @Param("seatNumber") int seatNumber, @Param("active") Active active);
 
     // 주차장 자리번호와 사용자 아이디로 주차내역 가져오기
     @Query("select ph from ParkingHistory ph left join ph.parkingLot pl left join ph.user u left join pl.villa v where v.idNumber=:idNumber and pl.seatNumber=:seatNumber and u.loginId=:loginId and u.active=:active")
@@ -38,8 +43,8 @@ public interface ParkingHistoryRepository extends JpaRepository<ParkingHistory, 
     Optional<OutTimeFrontNumberDto> findParkingHistoryByLoginId(@Param("loginId") String loginId, @Param("active") Active active);
 
     // 자리번호와 빌라 식별키로 해당 차가 주차 되어있는지 확인, 해당 사용자 아이디 출력
-    @Query("select u.loginId  from ParkingHistory ph left join ph.parkingLot pl left join ph.user u where pl.villa=:villa and pl.seatNumber=:seatNumber and ph.active=:active")
-    Optional<String> findLoginIdByVilla(@Param("villa") Villa villa, @Param("seatNumber") int seatNumber, @Param("active") Active active);
+    @Query("select u.loginId  from ParkingHistory ph left join ph.parkingLot pl left join ph.user u left join pl.villa v where v.idNumber=:villaIdNumber and pl.seatNumber=:seatNumber and ph.active=:active")
+    Optional<String> findLoginIdByVilla(@Param("villaIdNumber") String villaIdNumber, @Param("seatNumber") int seatNumber, @Param("active") Active active);
 
     // 빌라 식별번호로 주차내역 제일 최신으로 그룹화해서 보여주기
     @Query("select new com.inet.juchamsi.domain.parking.dto.service.ParkingHistoryDetailDto(u.loginId, max (ph.outTime), pl.frontNumber, pl.backNumber, ph.active) from ParkingHistory ph left join ph.parkingLot pl left join pl.villa v left join ph.user u where v.id=:villaIdNumber group by pl.seatNumber")
