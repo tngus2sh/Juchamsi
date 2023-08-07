@@ -16,9 +16,14 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ParkingHistoryRepository extends JpaRepository<ParkingHistory, Long> {
-    // 주차장 식별키와 자리로 현재 주차 되어있는지 확인
-    @Query("select new com.inet.juchamsi.domain.parking.dto.service.BackUserOutTimeDto(u.loginId, ph.outTime)  from ParkingHistory ph left join ph.parkingLot pl left join ph.user u left join pl.villa v where v.id=:villaId and pl.seatNumber=:seatNumber and ph.active=:active")
-    Optional<BackUserOutTimeDto> findByParkingHistoryAndActive(@Param("villaId") Long villaId, @Param("seatNumber")int seatNumber, @Param("active") Active active);
+
+    // 사용자 아이디로 지금 현재 주차 되어있는지 확인
+    @Query("select ph.id from ParkingHistory ph left join ph.user u where u.loginId=:loginId and ph.outTime is null order by ph.createdDate desc")
+    Optional<Long> findActiveByLoginId(@Param("loginId") String loginId);
+    
+    // 주차장 식별번호와 자리로 현재 주차 되어있는지 확인
+    @Query("select new com.inet.juchamsi.domain.parking.dto.service.BackUserOutTimeDto(u.loginId, u.carNumber, ph.outTime)  from ParkingHistory ph left join ph.parkingLot pl left join ph.user u left join pl.villa v where v.idNumber=:villaIdNumber and pl.seatNumber=:seatNumber and ph.active=:active")
+    Optional<BackUserOutTimeDto> findByParkingHistoryAndActive(@Param("villaIdNumber") String villaIdNumber, @Param("seatNumber")int seatNumber, @Param("active") Active active);
 
     // 주차장 맥 주소와 주차내역에서 현재 주차 되어 있다고 뜨는 목록 제일 최신 순으로 하나 가져오기
     @Query("select ph from ParkingHistory ph left join ph.parkingLot pl where pl.seatMacAddress=:seatMacAddress and ph.active=:active order by ph.createdDate desc")
@@ -36,13 +41,13 @@ public interface ParkingHistoryRepository extends JpaRepository<ParkingHistory, 
     @Query("select u.loginId  from ParkingHistory ph left join ph.parkingLot pl left join ph.user u where pl.villa=:villa and pl.seatNumber=:seatNumber and ph.active=:active")
     Optional<String> findLoginIdByVilla(@Param("villa") Villa villa, @Param("seatNumber") int seatNumber, @Param("active") Active active);
 
-    // 빌라 아이디와 주차장 아이디로 주차내역 제일 최신으로 그룹화해서 보여주기
-    @Query("select new com.inet.juchamsi.domain.parking.dto.service.ParkingHistoryDetailDto(u.loginId, max (ph.outTime), pl.frontNumber, pl.backNumber) from ParkingHistory ph left join ph.parkingLot pl left join pl.villa v left join ph.user u where v.id=:villaId and pl.id=:lotId group by pl.seatNumber")
-    List<ParkingHistoryDetailDto> findAllParkingLotByVillaIdAndLotId(@Param("villaId") Long villaId, @Param("lotId") Long lotId);
+    // 빌라 식별번호로 주차내역 제일 최신으로 그룹화해서 보여주기
+    @Query("select new com.inet.juchamsi.domain.parking.dto.service.ParkingHistoryDetailDto(u.loginId, max (ph.outTime), pl.frontNumber, pl.backNumber, ph.active) from ParkingHistory ph left join ph.parkingLot pl left join pl.villa v left join ph.user u where v.id=:villaIdNumber group by pl.seatNumber")
+    List<ParkingHistoryDetailDto> findAllParkingLotByVillaIdAndLotId(@Param("villaIdNumber") String villaIdNumber);
 
-    // 빌라 식별키와 주차장 자리번호와 사용자 아이디로 주차내역 가져오기
-    @Query("select new com.inet.juchamsi.domain.parking.dto.service.ParkingHistoryDetailDto(u.loginId, max (ph.outTime), pl.frontNumber, pl.backNumber) from ParkingHistory ph left join ph.parkingLot pl left join ph.user u where pl.id=:lotId and pl.seatNumber=:seatNumber group by pl.seatNumber")
-    Optional<ParkingHistoryDetailDto> findParkingLotBySeatNumberAndLoginId(@Param("lotId") Long lotId, @Param("seatNumber") int seatNumber);
+    // 빌라 식별번호로 주차장 자리번호로 주차내역 가져오기
+    @Query("select new com.inet.juchamsi.domain.parking.dto.service.ParkingHistoryDetailDto(u.loginId, max (ph.outTime), pl.frontNumber, pl.backNumber, ph.active) from ParkingHistory ph left join ph.parkingLot pl left join ph.user u left join pl.villa v where v.id=:villaIdNumber and pl.seatNumber=:seatNumber group by pl.seatNumber")
+    Optional<ParkingHistoryDetailDto> findParkingLotBySeatNumberAndLoginId(@Param("villaIdNumber") String villaIdNumber, @Param("seatNumber") int seatNumber);
 
     // 주차 내역 업데이트
     @Modifying(clearAutomatically = true)
