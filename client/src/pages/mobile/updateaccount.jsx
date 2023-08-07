@@ -12,13 +12,7 @@ import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import axiosInstance from "../../axios/axios";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import {
-  setCarNumber,
-  setphoneNumber,
-  setVillaNumber,
-  setImageUrl,
-  setLogout,
-} from "../../redux/mobileUserinfo";
+import { setCarNumber, setphoneNumber, setVillaNumber, setImageUrl, setLogout } from "../../redux/mobileUserinfo";
 import { Grid } from "@mui/material";
 import Button from "@mui/material/Button";
 import UpdateModal from "../../components/mobile/updateModal";
@@ -355,30 +349,78 @@ function Account() {
       <Box
         sx={{
           width: "100%",
-          height: "2.8rem",
+          height: "3.3rem",
           backgroundColor: "#112D4E",
           position: "fixed",
           top: 0,
         }}
       >
-        <Grid container sx={{ justifyContent: "center", height: "2.8rem", alignContent: "center" }}>
+        <Grid container sx={{ justifyContent: "center", height: "3.3rem", alignContent: "center" }}>
           <KeyboardBackspaceIcon
             sx={{
               position: "fixed",
               left: 0,
               color: "white",
               width: "2.1rem",
-              height: "2.4rem",
+              height: "2.8rem",
               ml: ".5rem",
               mt: ".2rem",
             }}
             onClick={handleopenmypage}
           />
-          <Typography className="myinfoupdatetext">내 정보 수정</Typography>
+          <Typography className="main-info-text">회원 정보 수정</Typography>
         </Grid>
       </Box>
-      <Box className="userinfobox0">
-        <Grid container sx={{ height: "10vh", alignItems: "center", mt: ".7rem", ml: ".6rem" }}>
+
+      <div className="user-profile-container">
+        <div className="user-img-container">
+          <Avatar
+            alt="Remy Sharp"
+            src={imageUrl}
+            sx={{ width: "5rem", height: "5rem" }}
+            onClick={() => fileInput.current.click()} // 파일 입력(input) 요소를 클릭하도록 설정
+          />
+        </div>
+        <div className="user-text-container">
+          <Typography>{loginId}</Typography>
+          <Typography style={{ fontSize: "0.95rem" }}>{name}</Typography>
+        </div>
+      </div>
+
+      <div className="user-update-container">
+        <div className="update-header-container" style={{ fontSize: "1.2rem" }}>
+          <p>회원 정보</p>
+        </div>
+
+        <div className="user-update-text-container">
+          <div className="update-pw-container" onClick={editnoteclick1}>
+            <div>
+              <p>비밀번호</p>
+            </div>
+            <div>
+              <p>{pw}</p>
+            </div>
+            <EditNoteIcon className="editnote1" />
+          </div>
+        </div>
+      </div>
+      <Box className="user-info-box">
+        {/* <div className="user-info-flex-container">
+          <div className="user-img-container">
+            <Avatar
+              alt="Remy Sharp"
+              src={imageUrl}
+              sx={{ width: "3.5rem", height: "3.5rem" }}
+              onClick={() => fileInput.current.click()} // 파일 입력(input) 요소를 클릭하도록 설정
+            />
+          </div>
+          <div className="user-info-container">
+            <Typography>{loginId}</Typography>
+            <Typography className="namestyle">{name}</Typography>
+          </div>
+        </div> */}
+
+        {/* <Grid container sx={{ height: "10vh", alignItems: "center", mt: ".7rem", ml: ".6rem" }}>
           <Stack direction="row" spacing={2}>
             <Avatar
               alt="Remy Sharp"
@@ -391,22 +433,19 @@ function Account() {
               <Typography className="namestyle">{name}</Typography>
             </Stack>
           </Stack>
-        </Grid>
+        </Grid> */}
       </Box>
 
-      <input
-        type="file"
-        accept="image/*"
-        style={{ display: "none" }}
-        ref={fileInput}
-        onChange={handleImageChange}
-      />
+      {/* <input type="file" accept="image/*" style={{ display: "none" }} ref={fileInput} onChange={handleImageChange} /> */}
+
       <Box component="span" className="Loginoutbtn" onClick={handleLoginoutOpen}>
         <p className="Loginoutbtntext">로그아웃</p>
       </Box>
+
       <Box component="span" className="Signoutbtn" onClick={handleSignoutOpen}>
         <p className="Signoutbtntext">회원탈퇴</p>
       </Box>
+
       <Box component="span" className="userinfobox"></Box>
       <div onClick={editnoteclick1}>
         <p className="updatepw">비밀번호 </p>
@@ -419,43 +458,13 @@ function Account() {
         <EditNoteIcon className="editnote2" />
       </div>
       {/* 핸드폰 인증 */}
-      <UpdateModal
-        open={updatephonenumber}
-        onClose={handleCloseupdatephonenumber}
-        style={style3}
-        name="phonenumber"
-        label="핸드폰 번호"
-        value={phonenumber}
-        onChange={handlePhoneNumberChange}
-        onClick={handleChangePhoneCheck}
-      />
-
+      <UpdateModal open={updatephonenumber} onClose={handleCloseupdatephonenumber} style={style3} name="phonenumber" label="핸드폰 번호" value={phonenumber} onChange={handlePhoneNumberChange} onClick={handleChangePhoneCheck} />
       {/* 인증 번호 입력 */}
-      <UpdateModal
-        open={updatephonenumberupdate}
-        onClose={handleCloseupdatephonenumberupdate}
-        style={style3}
-        name="phonenumber"
-        label="인증 번호"
-        value={phonechecknumber}
-        onChange={handlephonechecknumberChange}
-        onClick={handlePhoneModalConfirmClick}
-      />
-
+      <UpdateModal open={updatephonenumberupdate} onClose={handleCloseupdatephonenumberupdate} style={style3} name="phonenumber" label="인증 번호" value={phonechecknumber} onChange={handlephonechecknumberChange} onClick={handlePhoneModalConfirmClick} />
       {/* 핸드폰 인증 성공 */}
-      <Modal
-        open={phoneModalTrueOpen}
-        onClose={handleClosePhoneTrueCheck}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+      <Modal open={phoneModalTrueOpen} onClose={handleClosePhoneTrueCheck} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style3}>
-          <Typography
-            id="modal-modal-title"
-            variant="h6"
-            component="h2"
-            sx={{ textAlign: "center" }}
-          >
+          <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ textAlign: "center" }}>
             인증 성공
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
@@ -466,21 +475,10 @@ function Account() {
           </Box>
         </Box>
       </Modal>
-
       {/* 핸드폰 인증 실패 */}
-      <Modal
-        open={phoneModalFalseOpen}
-        onClose={handleClosePhoneFalseCheck}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+      <Modal open={phoneModalFalseOpen} onClose={handleClosePhoneFalseCheck} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style3}>
-          <Typography
-            id="modal-modal-title"
-            variant="h6"
-            component="h2"
-            sx={{ textAlign: "center" }}
-          >
+          <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ textAlign: "center" }}>
             인증 실패
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
@@ -491,29 +489,13 @@ function Account() {
           </Box>
         </Box>
       </Modal>
-
       <div onClick={editnoteclick3}>
         <p className="updatecarnumber">차량 번호 </p>
         <p className="updatecarnumber1">{carNumber}</p>
         <EditNoteIcon className="editnote3" />
       </div>
-
-      <UpdateModal
-        open={updatecarnumberModal}
-        onClose={handlecloseupdatecarnumber}
-        style={style3}
-        label="자동차 번호"
-        name="newcarnumber"
-        value={newcarnumber}
-        onChange={handleCarNumberChange}
-        onClick={handleChangeCarResult}
-      />
-      <Modal
-        open={newcarResult}
-        onClose={handleCloseCarTrueCheck}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+      <UpdateModal open={updatecarnumberModal} onClose={handlecloseupdatecarnumber} style={style3} label="자동차 번호" name="newcarnumber" value={newcarnumber} onChange={handleCarNumberChange} onClick={handleChangeCarResult} />
+      <Modal open={newcarResult} onClose={handleCloseCarTrueCheck} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style3}>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             요청을 처리하였습니다. 관리자의 승인을 기다려주시기 바랍니다.
@@ -528,22 +510,8 @@ function Account() {
         <p className="updatehousenumber1">{villarnumber}</p>
         <EditNoteIcon className="editnote4" />
       </div>
-      <UpdateModal
-        open={updatehousenumberModal}
-        onClose={handlecloseupdatehousenumber}
-        style={style3}
-        label="호수"
-        name="newhousenumber"
-        value={newhousenumber}
-        onChange={handleHouseNumberChange}
-        onClick={handleChangeHouseResult}
-      />
-      <Modal
-        open={newhouseResult}
-        onClose={handleCloseHouseTrueCheck}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+      <UpdateModal open={updatehousenumberModal} onClose={handlecloseupdatehousenumber} style={style3} label="호수" name="newhousenumber" value={newhousenumber} onChange={handleHouseNumberChange} onClick={handleChangeHouseResult} />
+      <Modal open={newhouseResult} onClose={handleCloseHouseTrueCheck} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style3}>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             요청을 처리하였습니다. 관리자의 승인을 기다려주시기 바랍니다.

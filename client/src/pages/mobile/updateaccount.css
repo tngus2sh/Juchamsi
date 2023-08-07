@@ -1,6 +1,67 @@
+.main-info-text {
+  color: white;
+}
 
+.user-profile-container {
+  margin-top: 5.3rem;
+  height: 10rem;
+  /* border: 1px solid black; */
+  text-align: center;
+}
 
+.user-img-container {
+  display: inline-block;
+  width: 5rem;
+}
 
+.user-text-container {
+  margin-top: 0.7rem;
+}
+
+.user-update-container {
+  display: inline-block;
+  width: 80%;
+  height: 20rem;
+  border: 1px solid black;
+  text-align: left;
+}
+
+.user-update-text-container {
+  margin-top: 1rem;
+}
+
+.update-pw-container {
+  display: flex;
+  align-items: center;
+}
+
+/* .user-info-box {
+  display: inline-block;
+  margin-top: 5.3rem;
+  width: 90%;
+  height: 7rem;
+  background-color: #dadada;
+  border-radius: 1rem;
+}
+
+.user-info-flex-container {
+  display: flex;
+  height: 100%;
+  align-items: center;
+}
+
+.user-img-container {
+  display: inline-block;
+  width: 3.5rem;
+  height: 3.5rem;
+  margin-left: 1.2rem;
+}
+
+.user-info-container {
+  margin-left: 1rem;
+} */
+
+/* 
 .updateidstyle {
     font-size: 20px;
     position: absolute;
@@ -201,4 +262,4 @@ font-size: 15px;
     background: #33907C;
     opacity: 1;
     border-radius: 32px;
-}
+} */
