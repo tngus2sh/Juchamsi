@@ -13,7 +13,9 @@ import java.util.Optional;
 public interface ParkingLotRepository extends JpaRepository<ParkingLot, Long> {
     @Query("select count(*) from ParkingLot p where p.villa=:villa")
     Long countByVilla(@Param("villa") Villa villa);
-    List<ParkingLot> findByVilla_Id(Long villaId);
+    
+    @Query("select p from ParkingLot p left join p.villa v where v.idNumber=:villaIdNumber")
+    List<ParkingLot> findByIdNumber(String villaIdNumber);
 
     // 빌라, 자리 번호로 주차장 정보 가져오기
     @Query("select p from ParkingLot p left join p.villa v where v.idNumber=:villaIdNumber and p.seatNumber=:seatNumber and p.active=:active")

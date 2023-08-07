@@ -53,11 +53,11 @@ public class ParkingLotServiceImpl implements ParkingLotService {
     
     @Override
     @Transactional
-    public void removeParkingLot(Long villaId) {
-        List<ParkingLot> parkingLotList = parkingLotRepository.findByVilla_Id(villaId);
+    public void removeParkingLot(String villaIdNumber) {
+        List<ParkingLot> parkingLotList = parkingLotRepository.findByIdNumber(villaIdNumber);
 
         if(parkingLotList == null || parkingLotList.size() == 0) {
-            throw new NotFoundException(ParkingLot.class, villaId);
+            throw new NotFoundException(ParkingLot.class, villaIdNumber);
         }
 
         for(int i = 0; i < parkingLotList.size(); i++) {

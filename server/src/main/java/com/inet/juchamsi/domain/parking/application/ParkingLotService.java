@@ -5,5 +5,5 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface ParkingLotService {
     void createParkingLot(Long villaId, int parkingLotCol);
-    void removeParkingLot(Long villaId);
+    void removeParkingLot(String villaIdNumber);
 }

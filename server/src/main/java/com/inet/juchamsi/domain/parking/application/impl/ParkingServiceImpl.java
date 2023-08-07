@@ -11,9 +11,12 @@ import com.inet.juchamsi.domain.notification.dto.request.CreateNotificationReque
 import com.inet.juchamsi.domain.parking.application.ParkingService;
 import com.inet.juchamsi.domain.parking.dao.ParkingHistoryRepository;
 import com.inet.juchamsi.domain.parking.dao.ParkingLotRepository;
-import com.inet.juchamsi.domain.parking.dto.request.EntranceExitRequest;
+import com.inet.juchamsi.domain.parking.dto.request.EntranceRequest;
 import com.inet.juchamsi.domain.parking.dto.request.EntranceOutTimeRequest;
+import com.inet.juchamsi.domain.parking.dto.request.ExitRequest;
 import com.inet.juchamsi.domain.parking.dto.response.ParkingHistoryDetailResponse;
+import com.inet.juchamsi.domain.parking.dto.response.ParkingHistoryResponse;
+import com.inet.juchamsi.domain.parking.dto.response.ParkingNowResponse;
 import com.inet.juchamsi.domain.parking.dto.service.BackUserOutTimeDto;
 import com.inet.juchamsi.domain.parking.dto.service.ExitTimeDto;
 import com.inet.juchamsi.domain.parking.dto.service.OutTimeFrontNumberDto;
@@ -22,7 +25,6 @@ import com.inet.juchamsi.domain.parking.entity.ParkingHistory;
 import com.inet.juchamsi.domain.parking.entity.ParkingLot;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.entity.User;
-import com.inet.juchamsi.global.common.Active;
 import com.inet.juchamsi.global.error.NotFoundException;
 import com.inet.juchamsi.global.notification.application.FirebaseCloudMessageService;
 import com.inet.juchamsi.global.notification.dto.request.FCMNotificationRequest;
@@ -31,12 +33,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static com.inet.juchamsi.domain.chat.entity.Status.ALIVE;
 import static com.inet.juchamsi.domain.chat.entity.Type.SYSTEM;
@@ -60,7 +60,7 @@ public class ParkingServiceImpl implements ParkingService {
 
     // 입차 위치 정보 저장
     @Override
-    public void createEntrance(EntranceExitRequest request) {
+    public void createEntrance(EntranceRequest request) {
         // 주차 위치로 주차장 정보 가져오기
         String groundAddress = request.getGroundAddress();
         Optional<ParkingLot>  parkingLot = parkingLotRepository.findBySeatMacAddress(groundAddress, ACTIVE);
@@ -179,7 +179,7 @@ public class ParkingServiceImpl implements ParkingService {
         int frontNumber = parkingHistoryOptional.get().getFrontNumber();
         if (frontNumber != 0) { // 앞차가 있다
             // 앞차에 차가 있는 지 확인
-            Optional<String> loginIdOptional = parkingHistoryRepository.findLoginIdByVilla(parkingHistoryOptional.get().getVilla(), frontNumber, ACTIVE);
+            Optional<String> loginIdOptional = parkingHistoryRepository.findLoginIdByVilla(parkingHistoryOptional.get().getVilla().getIdNumber(), frontNumber, ACTIVE);
 
             // 앞차가 있다면 레디스에서 현재 차주의 출차시간(key)과 앞차주의 아이디(field)값을 넣어서 삭제
             loginIdOptional.ifPresent(s -> redisUtils.deleteRedisKey(oldOutTime, s));
@@ -262,18 +262,37 @@ public class ParkingServiceImpl implements ParkingService {
     }
 
     @Override
-    public void createExit(EntranceExitRequest request) {
-        // 주차 위치 맥 주소를 받아온다.
-        String groundMacAddress = request.getGroundAddress();
-        Optional<ParkingLot> parkingLotOptional = parkingLotRepository.findBySeatMacAddress(groundMacAddress, ACTIVE);
-        if (parkingLotOptional.isEmpty()) {
-            throw new NotFoundException(ParkingLot.class, groundMacAddress);
-        }
-        // mac 주소로 현재 주차 표시 되어있는 주차 내역 정보 가져오기
-        Optional<ParkingHistory> parkingHistoryOptional = parkingHistoryRepository.findBySeatMacAddressAndActive(groundMacAddress, ACTIVE);
+    public void createExit(ExitRequest request) {
+        // 사용자 맥 주소로 현재 주차 되어있는 위치를 가져와 업데이트 한다.
+        // 사용자 맥주소로 주차 히스토리 가져오기
+        Optional<ParkingHistory> parkingHistoryOptional = parkingHistoryRepository.findActiveByMacAddress(request.getMacAddress(), ACTIVE, ACTIVE);
         if (parkingHistoryOptional.isEmpty()) {
-            throw new NotFoundException(ParkingHistory.class, groundMacAddress);
+            throw new NotFoundException(ParkingHistory.class, request.getMacAddress());
         }
+        
+        // 주차 내역에서 출차시간보다 일찍 나갔다면 알람 설정 지우기
+        LocalDateTime localDateTime = LocalDateTime.now();
+        LocalDateTime outTime = parkingHistoryOptional.get().getOutTime();
+        LocalDateTime outTimeBeforeFifteen = outTime.minusMinutes(15);
+        Optional<User> userOptional = userRepository.findUserByMacAddress(request.getMacAddress(), ACTIVE);
+        if (localDateTime.isBefore(outTime)) { // 출차시간보다 일찍 나갔을 때
+            userOptional.ifPresent(s -> redisUtils.deleteRedisKey(outTime.format(DateTimeFormatter.ofPattern("yyyy:MM:dd HH:mm")), s.getLoginId()));
+            
+            // 앞차가 있다면 앞차 알림도 삭제
+            Optional<ParkingLot> lotOptional = parkingHistoryRepository.findParkingLotByMacAddress(request.getMacAddress(), ACTIVE);
+            if (lotOptional.isEmpty()) {
+                throw new NotFoundException(ParkingLot.class, request.getMacAddress());
+            }
+            if (lotOptional.get().getFrontNumber() > 0) { // 앞차가 있을 때
+                Optional<String> frontUserIdOptional = parkingHistoryRepository.findLoginIdByVilla(lotOptional.get().getVilla().getIdNumber(), lotOptional.get().getSeatNumber(), ACTIVE);
+                frontUserIdOptional.ifPresent(s -> redisUtils.deleteRedisKey(outTime.format(DateTimeFormatter.ofPattern("yyyy:MM:dd HH:mm")), s));
+            }
+        }
+        if (localDateTime.isBefore(outTimeBeforeFifteen)) { // 출차시간 15분전보다도 일찍 나갔을 때
+            userOptional.ifPresent(s -> redisUtils.deleteRedisKey(outTimeBeforeFifteen.format(DateTimeFormatter.ofPattern("yyyy:MM:dd HH:mm")), s.getLoginId()));
+        }
+        
+        
         // 주차 내역 정보 업데이트
         parkingHistoryRepository.updateParkingHistory(DISABLED, parkingHistoryOptional.get().getId());
     }
