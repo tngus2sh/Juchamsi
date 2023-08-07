@@ -47,7 +47,7 @@ def scan_bluetooth():
                     cnt += 1
                     # ['mac', 'manuid', 'sonar', 'sonartime', 'tx', 'rssi', 'dis']
                     sendData = beacon.split(',')
-                    print sendData[0], sendData[5]
+                    print sendData[0], sendData[2], sendData[5]
 
                     # measure dis
                     # ratio = float(sendData[5])*1.0/float(sendData[4])
