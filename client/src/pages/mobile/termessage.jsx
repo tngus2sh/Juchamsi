@@ -125,7 +125,7 @@ function Termessage() {
       <Button className="btn btn-primary" type="button" onClick={createRoom}>
         채팅방 개설
       </Button>
-      <Footer TermessageiconColor="#33907C" />
+      <Footer TermessageiconColor="#B7C4CF" />
     </React.Fragment>
   );
 }

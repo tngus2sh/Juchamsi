@@ -1,14 +1,10 @@
-.updatefirstinfo {
-    position: absolute;
-    top:8%;
-    left:10%;
-}
+
 
 
 .updateidstyle {
     font-size: 20px;
     position: absolute;
-    top:30%;
+    top:37%;
     left:120%;
 }
 
@@ -59,25 +55,25 @@ font-size: 15px;
 
 .updatepw {
     position: absolute;
-    top:25%;
+    top:30%;
     left:8%
 }
 
 .updatepw1 {
     position: absolute;
-    top:25%;
+    top:30%;
     left:48%
 }
 
 .updatephonenumber {
     position: absolute;
-    top:35%;
+    top:37%;
     left:8%
 }
 
 .updatephonenumber1 {
     position: absolute;
-    top:35%;
+    top:37%;
     left:48%
 }
 
@@ -95,36 +91,36 @@ font-size: 15px;
 
 .updatehousenumber {
     position: absolute;
-    top:55%;
+    top:51%;
     left:8%
 }
 
 .updatehousenumber1 {
     position: absolute;
-    top:55%;
+    top:51%;
     left:48%
 }
 
 .updateeasypwnumber {
     position: absolute;
-    top:65%;
+    top:58%;
     left:8%
 }
 
 .updateeasypwnumber1 {
     position: absolute;
-    top:65%;
+    top:58%;
     left:48%
 }
 
 .editnote1 {
     position: absolute;
-    top:24%;
+    top:30%;
     left:84%;
 }
 .editnote2 {
     position: absolute;
-    top:34%;
+    top:37%;
     left:84%;
 }
 .editnote3 {
@@ -134,12 +130,12 @@ font-size: 15px;
 }
 .editnote4 {
     position: absolute;
-    top:54%;
+    top:51%;
     left:84%;
 }
 .editnote5 {
     position: absolute;
-    top:64%;
+    top:58%;
     left:84%;
 }
 
@@ -149,15 +145,22 @@ font-size: 15px;
     width: 92%;
     height: 50%;
     opacity: 0.2;
-    border-radius: 10%;
-    top:20%;
+    border-radius: 1rem;
+    top:27%;
+    left:4%
+}
+
+.userinfobox0 {
+    position: absolute;
+    background-color: gray;
+    width: 92%;
+    height: 13%;
+    border-radius: 1rem;
+    top:11%;
     left:4%
 }
 
 .myinfoupdatetext {
-    position: absolute;
-    top:1.3%;
-    left:15%;
     color: white;
 }
 
@@ -170,27 +173,21 @@ font-size: 15px;
 }
 
 .updatephonetext1 {
-    position: absolute;
-    top: 50%;
+    margin-top: 3%;
+    margin-left: 1%;
     font-size: 10px;
 }
 
 .updatephonenumberbtn1 {
-    position: absolute;
     width: 80px;
     height: 30px;
-    left: 36%;
-    top: 152px;
-    
-    background: #33907C;
+    margin-top: 3%;
+    background-color: #33907C;
     opacity: 1;
     border-radius: 32px;
 }
 
 .updatephonenumberbtn1text {
-    position: absolute;
-    top:5px;
-    left:26%;
     color: aliceblue;
     font-size: 18px;
 }
@@ -201,7 +198,6 @@ font-size: 15px;
     height: 40px;
     left: 30%;
     top: 70%;
-    
     background: #33907C;
     opacity: 1;
     border-radius: 32px;

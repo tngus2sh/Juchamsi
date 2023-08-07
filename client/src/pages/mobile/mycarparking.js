@@ -16,6 +16,7 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import 'dayjs/locale/ko'
 import Modal from '@mui/material/Modal';
+import { Container } from '@mui/material';
 
 
 function MycarParking() {
@@ -133,7 +134,8 @@ function MycarParking() {
     const [selectedTime, setSelectedTime] = React.useState(defaultTimePickerValue);
 
     return (
-        <div>
+      <React.Fragment>
+        <Container>
             <TextField
             id="outlined-read-only-input"
             label="출차 예정시간"
@@ -187,8 +189,9 @@ function MycarParking() {
             </Box>
           </Modal>
 
-            <Footer MycariconColor="#33907C"/>
-        </div>
+          </Container>
+          <Footer MycariconColor="#B7C4CF" />
+        </React.Fragment>
     )
 }
 
