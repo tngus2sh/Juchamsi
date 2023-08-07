@@ -18,8 +18,10 @@ def cal_dis(rssi, tx):
     return 10 ** ((tx_power - rssi) / (10 * path_loss_exponent))
 
 def scan_bluetooth():
+    sonarCount = {}
     state = 0
     cnt = 0
+    repeat = 0
     parking_url="https://3dff-121-178-98-21.ngrok-free.app/parking/entrance"
     exit_url = "https://3dff-121-178-98-21.ngrok-free.app/parking/exit"
     # url="https://e6f5-121-178-98-21.ngrok-free.app/parking/entrance"
@@ -40,8 +42,12 @@ def scan_bluetooth():
     ble_803.hci_enable_le_scan(sock)
 
     while True:
+        repeat += 1
         returnedList = ble_803.parse_events(sock, 10)
         print "----------"
+        if repeat == 10 and cnt == 0:
+            print('not park')
+            return
         for beacon in returnedList:
             for comp_str in ground_module:
                 if(beacon[0:17]==comp_str):
@@ -50,6 +56,10 @@ def scan_bluetooth():
                     sendData = beacon.split(',')
                     print(sendData)
 
+                    nowSonar = int(sendData[2])
+                    if nowSonar not in sonarCount:
+                        sonarCount[nowSonar] = 0
+                    sonarCount[nowSonar] += 1
                     # measure dis
                     # ratio = float(sendData[5])*1.0/float(sendData[4])
                     # dis = 10**((27.55-(20*math.log10(2400))+math.fabs(ratio))/20.0)
@@ -71,11 +81,12 @@ def scan_bluetooth():
                         # send Frequency
                         if cnt == 100:
                             rpiMac = getMacAddress()
+                            mostFreqSonar = max(sonarCount, key = sonarCount.get)
                             # print(max(searched))
                             # print(searched)
                             # print(rpiMac)
                             # print searched.index(max(searched))
-                            if int(sendData[2]) < 30:
+                            if mostFreqSonar < 30:
                                 datas ={'macAddress': rpiMac, 'groundAddress': ground_module[searched.index(max(searched))]}
                                 print('car_in') 
                                 response = requests.post(parking_url, data=datas)
@@ -83,16 +94,9 @@ def scan_bluetooth():
                                 datas = {'macAddress': rpiMac}
                                 print('car_out')
                                 response = requests.post(exit_url, data=datas)
-                            print searched.index(max(searched)), sendData[2]
+                            print searched.index(max(searched)), mostFreqSonar
                             return searched.index(max(searched))
-                            cnt = 0
-                            searched = [0, 0, 0, 0, 0]
-                            state = 1
-                            break
-            if state==1:
-                break
-        if state == 1:
-            break       
+ 
 
 if __name__ == '__main__':
     scan_bluetooth()
