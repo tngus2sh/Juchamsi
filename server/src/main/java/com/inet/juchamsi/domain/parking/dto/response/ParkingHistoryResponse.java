@@ -8,12 +8,14 @@ import lombok.Data;
 public class ParkingHistoryResponse {
     
     private String userId;
+    private int seatNumber;
     private String outTime;
     private String active; 
     
     @Builder
-    public ParkingHistoryResponse(String userId, String outTime, String active) {
+    public ParkingHistoryResponse(String userId, int seatNumber, String outTime, String active) {
         this.userId = userId;
+        this.seatNumber = seatNumber;
         this.outTime = outTime;
         this.active = active;
     }

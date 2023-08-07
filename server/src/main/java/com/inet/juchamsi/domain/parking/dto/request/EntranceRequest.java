@@ -1,12 +1,12 @@
 package com.inet.juchamsi.domain.parking.dto.request;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 
 @Data
+@NoArgsConstructor
 public class EntranceRequest {
     @NotBlank
     @ApiModelProperty(example = "")
@@ -14,4 +14,10 @@ public class EntranceRequest {
     @NotBlank
     @ApiModelProperty(example = "")
     String groundAddress;
+    
+    @Builder
+    public EntranceRequest(String macAddress, String groundAddress) {
+        this.macAddress = macAddress;
+        this.groundAddress = groundAddress;
+    }
 }
