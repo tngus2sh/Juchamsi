@@ -23,8 +23,8 @@ def scan_bluetooth():
     state = 0
     cnt = 0
     repeat = 0
-    parking_url="https://3dff-121-178-98-21.ngrok-free.app/parking/entrance"
-    exit_url = "https://3dff-121-178-98-21.ngrok-free.app/parking/exit"
+    parking_url="https://99f3-121-179-2-182.ngrok-free.app/parking/entrance"
+    exit_url = "https://99f3-121-179-2-182.ngrok-free.app/parking/exit"
     # url="https://e6f5-121-178-98-21.ngrok-free.app/parking/entrance"
     datas={}
     ground_module = ['b0:a7:32:db:c8:46', 'cc:db:a7:69:74:4a','cc:db:a7:69:19:7a', 'b0:a7:32:db:c3:52', '40:91:51:fc:fd:6a']
@@ -48,6 +48,9 @@ def scan_bluetooth():
         print "----------"
         if repeat == 10 and cnt == 0:
             print('not park')
+            return
+        if repeat == 100:
+            print('signal_disconnect')
             return
         for beacon in returnedList:
             for comp_str in ground_module:
@@ -88,20 +91,20 @@ def scan_bluetooth():
                             print(rpiMac)
                             # print searched.index(max(searched))
                             if mostFreqSonar < 30:
-                                # headers = {'Content-Type': 'application/json'}
+                                headers = {'Content-Type': 'application/json'}
                                 datas ={'macAddress': rpiMac, 'groundAddress': ground_module[searched.index(max(searched))]}
                                 print('car_in') 
-                                # json_data = json.dumps(datas)
-                                json_data = datas
-                                response = requests.post(parking_url, data=datas)
+                                json_data = json.dumps(datas)
+                                response = requests.post(parking_url, data=json_data, headers=headers)
                             else:
-                                # headers = {'Content-type': 'application/json'}
+                                headers = {'Content-Type': 'application/json'}
                                 datas = {'macAddress': rpiMac}
                                 print('car_out')
-                                json_data = datas
-                                response = requests.post(exit_url, data=json_data)
+                                json_data = json.dumps(datas)
+                                response = requests.post(exit_url, data=datas)
                             print searched.index(max(searched)), mostFreqSonar
                             return searched.index(max(searched))
+
  
 
 if __name__ == '__main__':
