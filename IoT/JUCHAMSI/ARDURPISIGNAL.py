@@ -11,13 +11,14 @@ if __name__ == '__main__':
             parts = line.split(": ")
             if len(parts)>=2:
                 change_value = float(parts[1])
-                time.sleep(1)
                 print(line)
                 print(change_value)
             # car move
-            if change_value > 15:
-                print 'plus 15'
-                CHECKFREQ.scan_bluetooth()
+            if change_value > 10:
+                print 'plus 10'
+                time.sleep(5)
+                test = CHECKFREQ.scan_bluetooth()
+                print(test)
                 # need to send move signal
             # car stop
             else:

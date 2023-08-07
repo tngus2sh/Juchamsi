@@ -275,80 +275,127 @@ function Login() {
 
 
   return (
-    <div>
-      <img
-        className="logo"
-        src={process.env.PUBLIC_URL + '/img/kiosk/logo1.png'}
-        alt={'title'}
-      ></img>
-      <div className='id'>
-      <TextField
-        required
-        id="outlined-id-input"
-        label="아이디"
-        name="username"
-        value={username}
-        onChange={handleInputChange}
-      />
+    <div className='login-main'>
+      <div className="header">
+        <img className="mobile-logo" src={process.env.PUBLIC_URL + "/img/kiosk/logo.png"} alt={"title"}></img>
       </div>
-      <div className='pw'>
+      
+      <div className="login-container">
+        <div className="id-container">
+          {/* <TextField
+            required
+            id="outlined-id-input"
+            className="id-input"
+            label="아이디"
+            name="username"
+            value={username}
+            onChange={handleInputChange}
+          /> */}
+          <input required className="login-input" placeholder="아이디" label="아이디" name="username" value={username} onChange={handleInputChange} ></input>
+        </div>
 
-      <FormControl sx={{ m: 1 }} variant="outlined"  required>
-        <InputLabel htmlFor="outlined-adornment-password">비밀번호</InputLabel>
-        <OutlinedInput
-          id="outlined-adornment-password"
-          type={showPassword ? 'text' : 'password'}
-          endAdornment={
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={handleClickShowPassword}
-                onMouseDown={handleMouseDownPassword}
-                edge="end"
-              >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          }
-          label="비밀번호"
-          name="password"
-          value={password}
-          onChange={handleInputChange}
-        />
-      </FormControl>
-      </div>
-      <Box
-        component="span"
-        className={`loginbox ${isLoginButtonClickable ? 'loginbox2' : 'loginbox1'}`}
-        onClick={handleOpenLoginResultPage}
-      >
-        <p className="text1">로그인</p>
-      </Box>
-      <FormGroup className='autologin'>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={isAutoLoginChecked}
-              onChange={handleAutoLoginCheckboxChange}
+        <div className="pw-container">
+          <input type={showPassword ? 'text' : 'password'} required className="login-input" placeholder="비밀번호" label="비밀번호" name="password" value={password} onChange={handleInputChange}></input>
+          {/* <IconButton onClick={handleClickShowPassword} ></IconButton> */}
+          <span className="pw-show-button">
+            <IconButton
+              aria-label="toggle password visibility"
+              onClick={handleClickShowPassword}
+              onMouseDown={handleMouseDownPassword}
+            >
+              {showPassword ? <VisibilityOff /> : <Visibility />}
+            </IconButton>
+          </span>
+          
+          {/* <FormControl sx={{ m: 1 }} variant="outlined"  required>
+            <InputLabel htmlFor="outlined-adornment-password">비밀번호</InputLabel>
+            <OutlinedInput
+              // id="outlined-adornment-password"
+              type={showPassword ? 'text' : 'password'}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              label="비밀번호"
+              name="password"
+              value={password}
+              onChange={handleInputChange}
             />
-          }
-          label="로그인 정보 저장"
-        />
-      </FormGroup>
-      <div className='findidbtn'>
-      <Button  onClick={handleOpenID}>아이디 찾기</Button>
+          </FormControl> */}
+        </div>
 
-      </div>
-      <div className='findpwbtn'>
-      <Button onClick={handleOpenPW}>비밀번호 찾기</Button>
-      </div>
-      <div className='findsignup'>
-      <p >회원이 아니신가요?</p>
-      </div>
-      <div className='findsignupbtn'>
-      <Button onClick={handleOpenSignup}>회원가입</Button>
+        <div className="login-option-container">
+          <div className="login-option-flex-container">
+            <div className="auto-login-container">
+              <FormGroup className='auto-login'>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={isAutoLoginChecked}
+                      onChange={handleAutoLoginCheckboxChange}
+                      sx={{ '& .MuiSvgIcon-root': { fontSize: '1.2rem' } }}
+                    />
+                  }
+                  // label="로그인 정보 저장"
+                  label={<span style={{ fontSize: '0.9rem' }}>자동 로그인</span>}
+                />
+              </FormGroup>
+            </div>
+
+            <div className="find-pw-container">
+              <Button onClick={handleOpenPW} sx={{ paddingRight: "0" }} style={{ fontSize: '0.9rem' }}>비밀번호 찾기</Button>
+            </div>
+          </div>
+        </div>
+        
+
+        <div className="login-button-container">
+          {/* <Box
+            component="span"
+            className={`loginbox ${isLoginButtonClickable ? 'loginbox2' : 'loginbox1'}`}
+            onClick={handleOpenLoginResultPage}
+          >
+            <p className="text1">로그인</p>
+          </Box> */}
+          <button className={ `login-box ${isLoginButtonClickable ? 'login-box-active' : 'login-box-deactive'}` } onClick={handleOpenLoginResultPage}>로그인</button>
+        </div>
+
+        <div className="signup-container">
+          <div className="signup-flex-container">
+            <div className='signup-info'>
+              <p>회원이 아니신가요?</p>
+            </div>
+
+            <div className="signup-btn">
+              <Button onClick={handleOpenSignup} style={{ fontSize: '0.87rem' }}>회원가입</Button>
+            </div>
+          </div>
+        </div>
       </div>
 
+      {/* <div className="find-container">
+        <div className="find-flex-container">
+          <div className='findidbtn'>
+            <Button onClick={handleOpenID}>아이디 찾기</Button>
+          </div>
+
+          <div className='findpwbtn'>
+            <Button onClick={handleOpenPW}>비밀번호 찾기</Button>
+          </div>
+        </div>
+      </div> */}
+
+
+
+      
       {/* 최초 로그인시 간편비밀번호 입력 모달창 */}
       <Modal open={FirstLogin} onClose={handleCloseFirstLoginCheck} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style1}>

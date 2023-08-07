@@ -12,7 +12,7 @@ void setup(){
   Wire.write(0x6B);  // PWR_MGMT_1 register
   Wire.write(0);     // set to zero (wakes up the MPU-6050)
   Wire.endTransmission(true);
-  Serial.begin(9600);
+  Serial.begin(115200);
 }
 void loop(){
   Wire.beginTransmission(MPU_addr);
@@ -30,7 +30,7 @@ void loop(){
 //  Serial.print(" |p_AcX: ");Serial.print(p_AcX-AcX);
 //  Serial.print(" |p_AcY: ");Serial.print(p_AcY-AcY);
 //  Serial.print(" |p_AcZ: ");Serial.println(p_AcZ-AcZ);
-  Serial.print("change: ");Serial.println(abs(p_AcX-AcX)+abs(p_AcY-AcY)+abs(p_AcZ-AcZ));
+  Serial.print("change: ");Serial.println(abs(p_AcX-AcX)+abs(p_AcY-AcY));
 
   p_AcX = AcX;
   p_AcY = AcY;
