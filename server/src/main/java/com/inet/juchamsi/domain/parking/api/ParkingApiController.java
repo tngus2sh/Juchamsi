@@ -3,10 +3,11 @@ package com.inet.juchamsi.domain.parking.api;
 import com.inet.juchamsi.domain.chat.application.ChatService;
 import com.inet.juchamsi.domain.parking.application.ParkingLotService;
 import com.inet.juchamsi.domain.parking.application.ParkingService;
-import com.inet.juchamsi.domain.parking.application.impl.ParkingHistoryResponse;
-import com.inet.juchamsi.domain.parking.application.impl.ParkingNowResponse;
-import com.inet.juchamsi.domain.parking.dto.request.EntranceExitRequest;
+import com.inet.juchamsi.domain.parking.dto.response.ParkingHistoryResponse;
+import com.inet.juchamsi.domain.parking.dto.response.ParkingNowResponse;
+import com.inet.juchamsi.domain.parking.dto.request.EntranceRequest;
 import com.inet.juchamsi.domain.parking.dto.request.EntranceOutTimeRequest;
+import com.inet.juchamsi.domain.parking.dto.request.ExitRequest;
 import com.inet.juchamsi.domain.parking.dto.response.ParkingHistoryDetailResponse;
 import com.inet.juchamsi.global.api.ApiResult;
 import com.inet.juchamsi.global.error.NotFoundException;
@@ -37,7 +38,7 @@ public class ParkingApiController {
     @PostMapping("/entrance")
     public ApiResult<Void> createEntrance(
             @ApiParam(value = "user-parking-dto") 
-            @RequestBody EntranceExitRequest request
+            @RequestBody EntranceRequest request
     ) {
         log.debug("createEntrance={}", request);
         try {
@@ -92,7 +93,7 @@ public class ParkingApiController {
     @PostMapping("/exit")
     public ApiResult<Void> createExit(
             @ApiParam(value = "user-parking-dto")
-            EntranceExitRequest request
+            ExitRequest request
     ) {
         log.debug("createExit={}", request);
         System.out.println("request = " + request);
@@ -107,17 +108,20 @@ public class ParkingApiController {
 
     @ApiOperation(value = "주차장 실시간 현황", notes = "사용자는 실시간 주차장 주차 현황을 확인합니다")
     @GetMapping("/lot/{villa_id_number}")
-    public ApiResult<List<ParkingHistoryResponse>> showParkingLot(@ApiParam(value = "villa-id") @PathVariable("villa_id_number") String villaIdNumber) {
+    public ApiResult<List<ParkingHistoryResponse>> showParkingLot(
+            @ApiParam(value = "villa-id-number")
+            @PathVariable(value = "villa_id_number") String villaIdNumber) {
         log.debug("ShowParkingLot={}", villaIdNumber);
-
         return OK(parkingService.showParkingLot(villaIdNumber));
     }
-
+    
     @ApiOperation(value = "주차장 삭제", notes = "사용자는 주차장을 삭제합니다")
-    @DeleteMapping("/lot/{villa_id}")
-    public ApiResult<Void> removeParkingLot(@ApiParam(value = "villa-id") @PathVariable("villa_id") Long villaId) {
+    @DeleteMapping("/lot/{villa_id_number}")
+    public ApiResult<Void> removeParkingLot(
+            @ApiParam(value = "villa_id_number")
+            @PathVariable("villa_id_number") String villaIdNumber) {
         try {
-            parkingLotService.removeParkingLot(villaId);
+            parkingLotService.removeParkingLot(villaIdNumber);
         }
         catch(NotFoundException e) {
             return ERROR("해당하는 주차장 정보가 없습니다.", HttpStatus.NO_CONTENT);
@@ -127,13 +131,13 @@ public class ParkingApiController {
     }
 
     @ApiOperation(value = "주차장 실시간 현황 상세 조회", notes = "사용자는 각 주차 칸마다 실시간 현황을 확인합니다")
-    @GetMapping("/history/{villa_id_number}/{seat_number}")
+    @GetMapping("/lot/{villa_id_number}/{seat_number}")
     public ApiResult<ParkingHistoryDetailResponse> showDetailParkingLot(
             @ApiParam(value = "villa-id-number")
             @PathVariable("villa_id_number") String villaIdNumber,
             @ApiParam(value = "seat-number")
             @PathVariable("seat_number") int seatNumber
-    ) {
+    ) { 
         log.debug("showDetailParkingL={}", villaIdNumber);
         try {
             ParkingHistoryDetailResponse parkingHistoryResponse = parkingService.showDetailParkingLot(villaIdNumber, seatNumber);
@@ -142,5 +146,4 @@ public class ParkingApiController {
             return ERROR("해당하는 정보가 존재하지 않습니다.", HttpStatus.NO_CONTENT);
         }
     }
-
 }
