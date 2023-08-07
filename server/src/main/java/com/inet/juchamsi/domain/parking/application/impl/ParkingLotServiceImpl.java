@@ -50,36 +50,7 @@ public class ParkingLotServiceImpl implements ParkingLotService {
             parkingLotRepository.save(parkingLot);
         }
     }
-
-    @Override
-    public List<ParkingLotResponse> showParkingLot(Long villaId) {
-        List<ParkingLot> parkingLotList = parkingLotRepository.findByVilla_Id(villaId);
-
-        if(parkingLotList == null || parkingLotList.size() == 0) {
-            throw new NotFoundException(ParkingLot.class, villaId);
-        }
-
-        List<ParkingLotResponse> response = new ArrayList<>();
-
-        ParkingLot parkingLot;
-        ParkingLotResponse parkingLotResponse;
-        for(int i = 0; i < parkingLotList.size(); i++) {
-            parkingLot = parkingLotList.get(i);
-            parkingLotResponse = ParkingLotResponse.builder()
-                    .id(parkingLot.getId())
-                    .villaId(villaId)
-                    .seatNumber(parkingLot.getSeatNumber())
-                    .frontNumber(parkingLot.getFrontNumber())
-                    .backNumber(parkingLot.getBackNumber())
-                    .createDate(parkingLot.getCreatedDate())
-                    .lastModifiedDate(parkingLot.getLastModifiedDate())
-                    .build();
-            response.add(parkingLotResponse);
-        }
-
-        return response;
-    }
-
+    
     @Override
     @Transactional
     public void removeParkingLot(Long villaId) {
