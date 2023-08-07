@@ -8,6 +8,7 @@ import math
 import uuid
 import requests
 import numpy as np
+import json
 
 def  getMacAddress():
     mac = uuid.UUID(int=uuid.getnode()).hex[-12:]
@@ -84,16 +85,21 @@ def scan_bluetooth():
                             mostFreqSonar = max(sonarCount, key = sonarCount.get)
                             # print(max(searched))
                             # print(searched)
-                            # print(rpiMac)
+                            print(rpiMac)
                             # print searched.index(max(searched))
                             if mostFreqSonar < 30:
+                                # headers = {'Content-Type': 'application/json'}
                                 datas ={'macAddress': rpiMac, 'groundAddress': ground_module[searched.index(max(searched))]}
                                 print('car_in') 
+                                # json_data = json.dumps(datas)
+                                json_data = datas
                                 response = requests.post(parking_url, data=datas)
                             else:
+                                # headers = {'Content-type': 'application/json'}
                                 datas = {'macAddress': rpiMac}
                                 print('car_out')
-                                response = requests.post(exit_url, data=datas)
+                                json_data = datas
+                                response = requests.post(exit_url, data=json_data)
                             print searched.index(max(searched)), mostFreqSonar
                             return searched.index(max(searched))
  
