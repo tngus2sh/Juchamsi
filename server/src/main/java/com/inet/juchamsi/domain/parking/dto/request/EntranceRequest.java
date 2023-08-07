@@ -1,12 +1,12 @@
 package com.inet.juchamsi.domain.parking.dto.request;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 
 @Data
+@NoArgsConstructor
 public class EntranceRequest {
     @NotBlank
     @ApiModelProperty(example = "")
