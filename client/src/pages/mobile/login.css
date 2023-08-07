@@ -1,33 +1,100 @@
-.logo {
-    position: absolute;
-    width: 20%;
-    height: 10%;
-    left: 40%;
-    top: 90%;
-    }
-
-
-
-.id {
-    position: absolute;
-    top:28%;
-    left:20%
+.login-main {
+  text-align: center;
 }
 
-.pw {
-    position: absolute;
-    top:36%;
-    left:18%;
-    width: 65%;
+.mobile-logo {
+  width: 8rem;
+  height: 8rem;
 }
 
-.autologin {
-    position: absolute;
-    top:45%;
-    left:20%;
+.login-container {
+  display: inline-block;
+  margin-top: 2.5rem;
+  width: 16rem;
 }
 
-.loginbox2 {
+.login-input {
+  width: 100%;
+  height: 2.3rem;
+  border-radius: 0.5rem;
+  border: 1px solid #cfcfcf;
+  text-indent: 0.6rem;
+}
+
+.login-input:focus {
+  outline: 1px solid #2d4356;
+}
+
+.pw-container {
+  margin-top: 1.5rem;
+  position: relative;
+}
+
+.pw-show-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.login-option-container {
+  margin-top: 0.3rem;
+}
+
+.login-option-flex-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.auto-login-container {
+  font-size: 0.2rem;
+}
+
+.login-button-container {
+  margin-top: 1rem;
+}
+
+.login-box {
+  width: 100%;
+  height: 2.4rem;
+  border-radius: 1.2rem;
+  border: 0px solid white;
+}
+
+.login-box-deactive {
+  background-color: #cfcfcf;
+}
+
+.login-box-active {
+  background-color: #2d4356;
+  color: white;
+}
+
+/* .find-container {
+  display: inline-block;
+  width: 16rem;
+  margin-top: 1rem;
+} */
+
+/* .find-flex-container {
+  display: flex;
+  justify-content: center;
+} */
+
+.signup-container {
+  margin-top: 1.3rem;
+  display: inline-block;
+  width: 16rem;
+  font-size: 0.9rem;
+}
+
+.signup-flex-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* .loginbox2 {
     position: absolute;
     width: 200px;
     height: 45px;
@@ -49,9 +116,9 @@
     background: #111111;
     opacity: 0.25;
     border-radius: 32px;
-}
+} */
 
-.text1 {
+/* .text1 {
     position: absolute;
     top:10px;
     left:30%;
@@ -112,4 +179,4 @@
     position: absolute;
     top:10%;
     left:10%;
-}
+} */

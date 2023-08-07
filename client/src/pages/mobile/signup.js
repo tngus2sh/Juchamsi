@@ -155,7 +155,7 @@ function Signup() {
     };
 
     // 아이디 중복체크 버튼 클릭 이벤트 핸들러
-    const handleOpenCheckID = () => {
+  const handleOpenCheckID = () => {
       if (isLoginButtonClickable === true) {
         // idcheckresult에 따라서 '사용가능or중복' 여부 판별해서 보여주는 모달창 결정
         // true는 중복, false는 사용가능
@@ -185,7 +185,7 @@ function Signup() {
 
     // 핸드폰번호 인증버튼 사용가능여부 판별
     const handleOpenCheckPhonenumber = () => {
-        if (isPhonenumberButtonClickable === true) {
+      if (isPhonenumberButtonClickable === true) {
           axiosInstance({
             method:'post',
             url:'/sms/check',
@@ -360,7 +360,7 @@ const handlePhoneModalConfirmClick = () => {
     };
 
     // 호수가 변경될 때 호출되는 이벤트 핸들러
-    const handlehousenumberChange = (e) => {
+  const handlehousenumberChange = (e) => {
     // 숫자,한글만 입력가능하도록 규칙 설정
     const onlyhousenumber = e.target.value.replace(/[^0-9/ ]/g, '');
 
@@ -392,185 +392,113 @@ const handlePhoneModalConfirmClick = () => {
 
 
   return (
-    <div>
-      <img
-        className="signuplogo"
-        src={process.env.PUBLIC_URL + '/img/kiosk/logo1.png'}
-        alt={'title'}
-      ></img>
-      <div className="signupid">
-      <TextField
-        required
-        
-        id="outlined-id-input"
-        label="아이디"
-        name="ID"
-        value={id}
-        onChange={handleIDChange}
-      />
+    <div className='signup-main'>
+      <div className="header">
+        <img className="mobile-logo" src={process.env.PUBLIC_URL + "/img/kiosk/logo.png"} alt={"title"}></img>
       </div>
-      {idcheck ? (
-        <Box component="span" className="idcheckbox1">
-          <p className="idchecktext">사용가능</p>
-        </Box>
-      ) : (
-        <Box
-          component="span"
-          className={`idcheckbox ${isLoginButtonClickable ? 'idcheckbox2' : 'idcheckbox1'}`}
-          onClick={handleOpenCheckID}
-        >
-          <p className="idchecktext">중복체크</p>
-        </Box>
-      )}
-      <div className="signuppw1">
-      <FormControl sx={{ m: 1 }} variant="outlined"  required>
-        <InputLabel htmlFor="outlined-adornment-password1">비밀번호</InputLabel>
-        <OutlinedInput
-          id="outlined-adornment-password1"
-          type={showPassword ? 'text' : 'password'}
-          endAdornment={
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={handleClickShowPassword}
-                onMouseDown={handleMouseDownPassword}
-                edge="end"
-              >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          }
-          label="비밀번호"
-          name="password1"
-          value={password1}
-          onChange={handleInputChange}
-        />
-      </FormControl>
-      </div>
-      {passwordChecking && <p className="password-check-text">비밀번호에는 숫자,문자,특수문자가 최소 1개이상씩 포함되어야 합니다.</p>}
-      <div className="signuppw2">
-      <FormControl sx={{ m: 1 }} variant="outlined" required>
-        <InputLabel htmlFor="outlined-adornment-password2">비밀번호 확인</InputLabel>
-        <OutlinedInput
-          id="outlined-adornment-password2"
-          type={showCheckPassword ? 'text' : 'password'}
-          endAdornment={
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={handleClickShowCheckPassword}
-                onMouseDown={handleMouseDownPassword}
-                edge="end"
-              >
-                {showCheckPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          }
-          label="비밀번호 확인"
-          name="password2"
-          value={password2}
-          onChange={handleInputChange}
-        />
-      </FormControl>
 
-      </div>
-      {passwordMismatch && <p className="password-mismatch-text">비밀번호가 다릅니다. 다시 확인바랍니다.</p>}
-      <div className="signupname">
-      <TextField
-        required
-        id="outlined-name-input"
-        label="이름"
-        name="username"
-        value={username}
-        onChange={handleInputChange}
-        sx={{ '& input': { textAlign: 'center' } }}
-      />
-      </div>
-      <div className="signupphonenumber">
-      <TextField
-        required
-        id="outlined-phonenumber-input"
-        label="핸드폰 번호"
-        name="phonenumber"
-        value={phonenumber}
-        onChange={handlePhoneNumberChange}
-        sx={{ '& input': { textAlign: 'center' } }}
-      />
-      </div>
-        {phonenumbecheck ? (
-          <Box component="span" className="phonenumbercheck3">
-            <p className="phonechecktext">인증완료</p>
-          </Box>
-        ) : (
-          <Box
-            component="span"
-            className={`phonenumbercheck ${isPhonenumberButtonClickable ? 'phonenumbercheck2' : 'phonenumbercheck1'}`}
-            onClick={handleOpenCheckPhonenumber}
-          >
-            <p className="phonechecktext">핸드폰 인증</p>
-          </Box>
-        )}
-        <div className="carnumber">
-      <TextField
-        required
-        id="outlined-carnumber-input"
-        label="자동차 번호"
-        name="carnumber"
-        value={carnumber}
-        onChange={handleCarnumberChange}
-        sx={{ '& input': { textAlign: 'center' } }}
-      />
+      <div className="signup-container">
+        <div className="signup-id-container">
+          <div className="signup-id-flex-container">
+            <div className="signup-id-input-container">
+              <input required className="id-input" placeholder="아이디" label="아이디" name="ID" value={id} onChange={handleIDChange} ></input>
+            </div>
+            <div className="signup-id-btn-container">
+              <button className={`signup-id-btn-container ${isLoginButtonClickable ? 'id-active' : 'id-deactive'}`} onClick={handleOpenCheckID}>중복 체크</button>
+            </div>
+          </div>
+          {/* <input required className="login-input" placeholder="아이디" label="아이디" name="ID" value={id} onChange={(e) => { handleIDChange(e); handleOpenCheckID(); } } ></input> */}
+          <div className='id-info'>{!setIsIdChecked && <p className="id-check-text">사용 가능한 아이디입니다</p>}</div>
         </div>
-      <div className='carnumbertext'>
-      <p>서울 12가 1234 = 12가 1234 로 입력</p>
-      </div>
-      <div className="villranumber">
-      <TextField
-        required
-        id="outlined-villranumber-input"
-        label="빌라 식별번호"
-        name="villranumber"
-        value={villranumber}
-        onChange={handlevillranumberChange}
-        sx={{ '& input': { textAlign: 'center' } }}
-      />
-      </div>
-      <div className="housenumber">
-      <TextField
-        required
-        id="outlined-housenumber-input"
-        label="호수"
-        name="housenumber"
-        value={housenumber}
-        onChange={handlehousenumberChange}
-        sx={{ '& input': { textAlign: 'center' } }}
-      />
-      </div>
-      <div className='Privacybtnstyle'>
-      <Button onClick={PrivacyBtnClick}>
-        개인정보 이용약관
-      </Button>
-      </div>
-      
-      <div className='checkboxstyle'>
-        {/* 개인정보 이용약관 체크박스 */}
-        <Checkbox
-          checked={isPrivacyAgreed}
-          onChange={handlePrivacyAgreeChange}
-        />
-      </div>
-      <Box
-        component="span"
-        className={`signupbox1 ${isSignupButtonClickable ? 'signupbox2' : 'signupbox1'}`}
-        onClick={handleOpenfindPage}
-      >
-        <p className="signuptext1">회원가입</p>
-      </Box>
-      <p className="signuptext">이미 가입된 회원이신가요?</p>
-      <div className="signuptologin">
-      <Button onClick={handleOpenLogin}>
-        로그인
-      </Button>
+
+        <div className="signup-pw-container">
+          <input type={showPassword ? 'text' : 'password'} required className="login-input" placeholder="비밀번호" label="비밀번호" name="password1" value={password1} onChange={handleInputChange}></input>
+          <span className="pw-show-button">
+            <IconButton
+              aria-label="toggle password visibility"
+              onClick={handleClickShowPassword}
+              onMouseDown={handleMouseDownPassword}
+            >
+              {showPassword ? <VisibilityOff /> : <Visibility />}
+            </IconButton>
+          </span>
+          <div className='pw-info'>{passwordChecking && <p className="password-check-text">비밀번호는 숫자, 문자, 특수문자를 최소<br/>1개 이상씩 포함해야 합니다</p>}</div>
+        </div>
+
+        <div className="signup-pw-container">
+          <input type={showCheckPassword ? 'text' : 'password'} required className="login-input" placeholder="비밀번호 확인" label="비밀번호 확인" name="password2" value={password2} onChange={handleInputChange}></input>
+          <span className="pw-show-button">
+            <IconButton
+              aria-label="toggle password visibility"
+              onClick={handleClickShowCheckPassword}
+              onMouseDown={handleMouseDownPassword}
+            >
+              {showCheckPassword ? <VisibilityOff /> : <Visibility />}
+            </IconButton>
+          </span>
+          <div className="pw-info">{passwordMismatch && <p className="password-mismatch-text">비밀번호가 일치하지 않습니다</p>}</div>
+        </div>
+
+        <div className="signup-name-container">
+          <input required className="login-input" placeholder="이름" label="이름" name="username" value={username} onChange={handleInputChange} ></input>
+        </div>
+
+        <div className="signup-phone-number-container">
+          <div className="signup-phone-number-flex-container">
+            <div className="signup-phone-number-input-container">
+              <input required className="phone-number-input" placeholder="핸드폰 번호" label="핸드폰 번호" name="phonenumber" value={phonenumber} onChange={handlePhoneNumberChange} ></input>
+            </div>
+            <div className="signup-phone-number-btn-container">
+              <button className={`signup-phone-number-btn-container ${isPhonenumberButtonClickable ? 'phone-number-active' : 'phone-number-deactive'}`} onClick={handleOpenCheckPhonenumber}>번호 인증</button>
+            </div>
+          </div>
+          
+        </div>
+
+        <div className="signup-car-number-container">
+          <input required className="login-input" placeholder="자동차 번호" label="자동차 번호" name="carnumber" value={carnumber} onChange={handleCarnumberChange} ></input>
+          <div className='car-number-info'>
+            <p>ex) 서울 12가 1234 → 12가 1234</p>
+          </div>
+        </div>
+
+        <div className="signup-villa-id-number-container">
+          <input required className="login-input" placeholder="빌라 식별 번호" label="빌라 식별 번호" name="villranumber" value={villranumber} onChange={handlevillranumberChange} ></input>
+        </div>
+
+        <div className="signup-villa-number-container">
+          <input required className="login-input" placeholder="호수" label="호수" name="housenumber" value={housenumber} onChange={handlehousenumberChange} ></input>
+        </div>
+
+        <div className="privacy-container" style={{ textAlign: 'left' }}>
+          {/* 개인정보 이용약관 체크박스 */}
+          <Checkbox
+            checked={isPrivacyAgreed}
+            onChange={handlePrivacyAgreeChange}
+            sx={{ '& .MuiSvgIcon-root': { fontSize: '1.1rem' } }}
+          />
+          <Button onClick={PrivacyBtnClick} style={{ fontSize: '0.9rem', paddingLeft: '0' }}>
+            개인정보 이용약관
+          </Button>
+        </div>
+
+        <div className="signup-button-container">
+          <button className={ `login-box ${isSignupButtonClickable ? 'login-box-active' : 'login-box-deactive'}` } onClick={handleOpenfindPage}>회원가입</button>
+        </div>
+
+        <div className="login-info-container">
+          <div className="login-info-flex-container">
+            <div className='login-info'>
+              <p>이미 가입된 회원이신가요?</p>
+            </div>
+
+            <div className="login-btn">
+              <Button onClick={handleOpenLogin} style={{ fontSize: '0.87rem' }}>로그인</Button>
+            </div>
+          </div>
+        </div>
+
+        <div className="empty-box"></div>
       </div>
 
       {/* 아이디 중복 검사 결과 사용가능할 경우 보여주는 모달 */}

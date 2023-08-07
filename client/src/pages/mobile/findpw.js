@@ -99,8 +99,38 @@ function Findpw() {
   };
 
   return (
-    <div>
-      <TextField
+    <div className='find-pw-main'>
+      <div className="header">
+        <img className="mobile-logo" src={process.env.PUBLIC_URL + "/img/kiosk/logo.png"} alt={"title"}></img>
+      </div>
+        
+      <div className="find-pw-page-container">
+        <div className="id-container">
+          <input required className="login-input" placeholder="아이디" label="아이디" name="id" value={id} onChange={handleIDChange} ></input>
+        </div>
+
+        <div className="phone-number-container">
+          <input required className="login-input" placeholder="핸드폰 번호" label="" name="phonenumber" value={phonenumber} onChange={handlePhoneNumberChange} ></input>
+        </div>
+
+        <div className="find-pw-button-container">
+        <button className={`find-pw-box ${isFindUserid ? 'find-box-active' : 'find-box-deactive'}`} onClick={handleOpenFindPW}>확인</button>
+        </div>
+
+        <div className="find-login-container">
+          <div className="find-login-flex-container">
+            <div className='signin-info'>
+              <p>이미 회원가입 하셨나요?</p>
+            </div>
+
+            <div className="signin-btn">
+              <Button  onClick={handleOpenLogin} style={{ fontSize: '0.87rem' }}>로그인</Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* <TextField
         required
         className="pwtoinputid"
         id="outlined-id-input"
@@ -109,11 +139,11 @@ function Findpw() {
         value={id}
         onChange={handleIDChange}
         sx={{ '& input': { textAlign: 'center' } }}
-      />
-      <Button className="pwtoid" onClick={handleOpenID}>
+      /> */}
+      {/* <Button className="pwtoid" onClick={handleOpenID}>
         아이디 찾기
-      </Button>
-      <TextField
+      </Button> */}
+      {/* <TextField
         required
         className="pwtoinputphonenumber"
         id="outlined-phonenumber-input"
@@ -122,27 +152,22 @@ function Findpw() {
         value={phonenumber}
         onChange={handlePhoneNumberChange}
         sx={{ '& input': { textAlign: 'center' } }}
-      />
-      <Box
+      /> */}
+      {/* <Box
         component="span"
         className={`findbox1 ${isFindUserid ? 'findbox2' : 'findbox1'}`}
         onClick={handleOpenFindPW}
       >
         <p className="findidtext1">확인</p>
-      </Box>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      </Box> */}
+      {/* <div style={{ display: 'flex', alignItems: 'center' }}>
         <p className="loginbtntext">비밀번호를 찾을 필요가 없으신가요? </p>
         <div className="findpwloginbtn">
         <Button  onClick={handleOpenLogin}>
           로그인
         </Button>
         </div>
-      </div>
-      <img
-        className="logo"
-        src={process.env.PUBLIC_URL + '/img/kiosk/logo1.png'}
-        alt={'title'}
-      ></img>
+      </div> */}
 
       {/* 성공 결과를 보여주는 모달 */}
       <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
