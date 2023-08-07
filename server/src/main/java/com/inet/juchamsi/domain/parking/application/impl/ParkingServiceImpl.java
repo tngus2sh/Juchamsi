@@ -127,7 +127,7 @@ public class ParkingServiceImpl implements ParkingService {
         }
 
         // 가져온 식별키로 출차시간 수정하기
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YY.MM.dd HH:mm");
         LocalDateTime dateTime = LocalDateTime.parse(outTime, formatter);
 
         parkingHistoryRepository.updateOutTime(dateTime, parkingHistoryOptional.get().getId());
@@ -303,9 +303,11 @@ public class ParkingServiceImpl implements ParkingService {
         List<ParkingHistoryResponse> list = new ArrayList<>();
 
         for (ParkingHistoryDetailDto parkingHistoryDetailDto : parkingHistoryDetailDtoList) {
+            String outTime = null;
+            if (parkingHistoryDetailDto.getOutTime() != null) outTime = parkingHistoryDetailDto.getOutTime().toString(); 
             list.add(ParkingHistoryResponse.builder()
                             .userId(parkingHistoryDetailDto.getUserId())
-                            .outTime(parkingHistoryDetailDto.getOutTime().toString())
+                            .outTime(outTime)
                             .active(parkingHistoryDetailDto.getActive().name())
                             .build());
         }
