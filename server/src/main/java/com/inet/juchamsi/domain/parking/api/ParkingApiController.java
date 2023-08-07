@@ -41,6 +41,7 @@ public class ParkingApiController {
             @RequestBody EntranceRequest request
     ) {
         log.debug("createEntrance={}", request);
+        System.out.println("request = " + request);
         try {
             parkingService.createEntrance(request);
             // 입차 알림
@@ -50,7 +51,7 @@ public class ParkingApiController {
         return OK(null);
     }
     
-    @ApiOperation(value = "현재 해당 사용자가 주차중인지 확인", notes = "사용자 아이디로 막 주차한 상태인지를 확인한다.")
+    @ApiOperation(value = "현재 주차 여부", notes = "사용자 아이디로 막 주차한 상태인지를 확인한다.")
     @GetMapping("/entrance/{user_id}")
     public ApiResult<ParkingNowResponse> isParkingNow(
             @ApiParam(value = "user_id")
@@ -67,6 +68,12 @@ public class ParkingApiController {
     ) {
         log.debug("createOutTime={}", request);
         try {
+//            // test =======================================================
+//            parkingService.createEntrance(EntranceRequest.builder()
+//                            .groundAddress("B0:A7:32:DB:C8:46")
+//                            .macAddress("dc:a6:32:70:b7:ca")
+//                            .build());
+//            // =============================================================
             parkingService.createOutTime(request);
         } catch (NotFoundException e) {
             return ERROR("존재하지 않는 정보입니다.", HttpStatus.NO_CONTENT);
@@ -81,6 +88,7 @@ public class ParkingApiController {
             EntranceOutTimeRequest request
     ) {
         log.debug("modifyOutTime={}", request);
+        System.out.println("request = " + request);
         try {
             parkingService.modifyOutTime(request);
         } catch (NotFoundException e) {
