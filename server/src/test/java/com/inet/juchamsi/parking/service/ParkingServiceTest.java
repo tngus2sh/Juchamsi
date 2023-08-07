@@ -2,7 +2,7 @@ package com.inet.juchamsi.parking.service;
 
 import com.inet.juchamsi.domain.parking.application.ParkingLotService;
 import com.inet.juchamsi.domain.parking.application.ParkingService;
-import com.inet.juchamsi.domain.parking.application.impl.ParkingHistoryResponse;
+import com.inet.juchamsi.domain.parking.dto.response.ParkingHistoryResponse;
 import com.inet.juchamsi.domain.parking.dao.ParkingLotRepository;
 import com.inet.juchamsi.domain.parking.entity.ParkingLot;
 import com.inet.juchamsi.domain.villa.dao.VillaRepository;
@@ -75,13 +75,13 @@ public class ParkingServiceTest {
         Villa testVilla = insertVilla("123456", 6);
         insertParkingLot(targetVilla, testVilla, 3);
 
-        Long villaId = targetVilla.getId();
+        String villaIdNumber = targetVilla.getIdNumber();
 
         // when
-        parkingLotService.removeParkingLot(villaId);
+        parkingLotService.removeParkingLot(villaIdNumber);
 
         // then
-        List<ParkingLot> parkingLotList = parkingLotRepository.findByVilla_Id(villaId);
+        List<ParkingLot> parkingLotList = parkingLotRepository.findByIdNumber(villaIdNumber);
         for(int i = 0; i < parkingLotList.size(); i++) {
             assertThat(parkingLotList.get(i).getActive()).isEqualTo(DISABLED);
         }
