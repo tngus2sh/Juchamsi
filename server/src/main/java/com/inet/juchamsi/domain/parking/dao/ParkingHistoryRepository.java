@@ -31,11 +31,11 @@ public interface ParkingHistoryRepository extends JpaRepository<ParkingHistory, 
     Optional<ParkingLot> findParkingLotByMacAddress(@Param("macAddress") String macAddress, @Param("active") Active active);
 
     // 주차장 식별번호와 자리로 현재 주차 되어있는지 확인
-    @Query("select new com.inet.juchamsi.domain.parking.dto.service.BackUserOutTimeDto(u.loginId, u.carNumber, ph.outTime)  from ParkingHistory ph left join ph.parkingLot pl left join ph.user u left join pl.villa v where v.idNumber=:villaIdNumber and pl.seatNumber=:seatNumber and ph.active=:active")
+    @Query("select new com.inet.juchamsi.domain.parking.dto.service.BackUserOutTimeDto(u.loginId, u.carNumber, ph.outTime)  from ParkingHistory ph left join ph.parkingLot pl left join ph.user u left join pl.villa v where v.idNumber=:villaIdNumber and pl.seatNumber=:seatNumber and ph.active=:active and ph.createdDate in (select max(ph.createdDate) from ParkingHistory ph left join ph.user u group by u.loginId)")
     Optional<BackUserOutTimeDto> findByParkingHistoryAndActive(@Param("villaIdNumber") String villaIdNumber, @Param("seatNumber") int seatNumber, @Param("active") Active active);
 
     // 주차장 자리번호와 사용자 아이디로 주차내역 가져오기
-    @Query("select ph from ParkingHistory ph left join ph.parkingLot pl left join ph.user u left join pl.villa v where v.idNumber=:idNumber and pl.seatNumber=:seatNumber and u.loginId=:loginId and u.active=:active")
+    @Query("select ph from ParkingHistory ph left join ph.parkingLot pl left join ph.user u left join pl.villa v where v.idNumber=:idNumber and pl.seatNumber=:seatNumber and u.loginId=:loginId and u.active=:active and ph.createdDate in (select max(ph.createdDate) from ParkingHistory ph left join ph.user u group by u.loginId)")
     Optional<ParkingHistory> findAllBySeatNumberAndLoginId(@Param("idNumber") String idNumber, @Param("seatNumber") int seatNumber, @Param("loginId") String loginId, @Param("active") Active active);
 
     // 사용자 아이디로 출차시간, 앞차 정보, 빌라 식별키 가져오기
@@ -47,11 +47,11 @@ public interface ParkingHistoryRepository extends JpaRepository<ParkingHistory, 
     Optional<String> findLoginIdByVilla(@Param("villaIdNumber") String villaIdNumber, @Param("seatNumber") int seatNumber, @Param("active") Active active);
 
     // 빌라 식별번호로 주차내역 제일 최신으로 그룹화해서 보여주기
-    @Query("select new com.inet.juchamsi.domain.parking.dto.service.ParkingHistoryDetailDto(u.loginId, max (ph.outTime), pl.frontNumber, pl.backNumber, ph.active) from ParkingHistory ph left join ph.parkingLot pl left join pl.villa v left join ph.user u where v.id=:villaIdNumber group by pl.seatNumber")
+    @Query("select new com.inet.juchamsi.domain.parking.dto.service.ParkingHistoryDetailDto(u.loginId, ph.outTime, pl.frontNumber, pl.backNumber, ph.active) from ParkingHistory ph left join ph.parkingLot pl left join pl.villa v left join ph.user u where v.idNumber=:villaIdNumber and ph.createdDate in (select max(ph.createdDate) from ParkingHistory ph left join ph.parkingLot pl group by pl.seatNumber)")
     List<ParkingHistoryDetailDto> findAllParkingLotByVillaIdAndLotId(@Param("villaIdNumber") String villaIdNumber);
 
     // 빌라 식별번호로 주차장 자리번호로 주차내역 가져오기
-    @Query("select new com.inet.juchamsi.domain.parking.dto.service.ParkingHistoryDetailDto(u.loginId, max (ph.outTime), pl.frontNumber, pl.backNumber, ph.active) from ParkingHistory ph left join ph.parkingLot pl left join ph.user u left join pl.villa v where v.id=:villaIdNumber and pl.seatNumber=:seatNumber group by pl.seatNumber")
+    @Query("select new com.inet.juchamsi.domain.parking.dto.service.ParkingHistoryDetailDto(u.loginId, ph.outTime, pl.frontNumber, pl.backNumber, ph.active) from ParkingHistory ph left join ph.parkingLot pl left join ph.user u left join pl.villa v where v.idNumber=:villaIdNumber and pl.seatNumber=:seatNumber and ph.createdDate in (select max(ph.createdDate) from ParkingHistory ph left join ph.parkingLot pl group by pl.seatNumber)")
     Optional<ParkingHistoryDetailDto> findParkingLotBySeatNumberAndLoginId(@Param("villaIdNumber") String villaIdNumber, @Param("seatNumber") int seatNumber);
 
     // 주차 내역 업데이트
