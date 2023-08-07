@@ -10,14 +10,16 @@ import java.time.LocalDateTime;
 public class ParkingHistoryDetailDto {
 
     private String userId;
+    private int seatNumber;
     private LocalDateTime outTime;
     private int frontNumber;
     private int backNumber;
     private Active active;
 
     @Builder
-    public ParkingHistoryDetailDto(String userId, LocalDateTime outTime, int frontNumber, int backNumber, Active active) {
+    public ParkingHistoryDetailDto(String userId, int seatNumber, LocalDateTime outTime, int frontNumber, int backNumber, Active active) {
         this.userId = userId;
+        this.seatNumber = seatNumber;
         this.outTime = outTime;
         this.frontNumber = frontNumber;
         this.backNumber = backNumber;
