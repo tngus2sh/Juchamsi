@@ -10,11 +10,13 @@ import java.time.LocalDateTime;
 public class BackUserOutTimeDto {
 
     private String userId;
+    private String carNumber;
     private LocalDateTime outTime;
 
     @Builder
-    public BackUserOutTimeDto(String userId, LocalDateTime outTime) {
+    public BackUserOutTimeDto(String userId, String carNumber, LocalDateTime outTime) {
         this.userId = userId;
+        this.carNumber = carNumber;
         this.outTime = outTime;
     }
 }
