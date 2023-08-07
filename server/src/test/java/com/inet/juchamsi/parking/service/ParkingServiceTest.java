@@ -1,8 +1,9 @@
 package com.inet.juchamsi.parking.service;
 
 import com.inet.juchamsi.domain.parking.application.ParkingLotService;
+import com.inet.juchamsi.domain.parking.application.ParkingService;
+import com.inet.juchamsi.domain.parking.application.impl.ParkingHistoryResponse;
 import com.inet.juchamsi.domain.parking.dao.ParkingLotRepository;
-import com.inet.juchamsi.domain.parking.dto.response.ParkingLotResponse;
 import com.inet.juchamsi.domain.parking.entity.ParkingLot;
 import com.inet.juchamsi.domain.villa.dao.VillaRepository;
 import com.inet.juchamsi.domain.villa.entity.Villa;
@@ -29,6 +30,8 @@ public class ParkingServiceTest {
     ParkingLotRepository parkingLotRepository;
     @Autowired
     VillaRepository villaRepository;
+    @Autowired
+    ParkingService parkingSevice;
 
 
     @Test
@@ -55,10 +58,10 @@ public class ParkingServiceTest {
         Villa testVilla = insertVilla("123456", 6);
         insertParkingLot(targetVilla, testVilla, 3);
 
-        Long villaId = targetVilla.getId();
+        String villaIdNumber = targetVilla.getIdNumber();
 
         // when
-        List<ParkingLotResponse> response =  parkingLotService.showParkingLot(villaId);
+        List<ParkingHistoryResponse> response =  parkingSevice.showParkingLot(villaIdNumber);
 
         // then
         assertNotNull(response);
