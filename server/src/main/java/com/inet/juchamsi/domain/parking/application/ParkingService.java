@@ -1,10 +1,10 @@
 package com.inet.juchamsi.domain.parking.application;
 
+import com.inet.juchamsi.domain.parking.application.impl.ParkingHistoryResponse;
+import com.inet.juchamsi.domain.parking.application.impl.ParkingNowResponse;
 import com.inet.juchamsi.domain.parking.dto.request.EntranceExitRequest;
 import com.inet.juchamsi.domain.parking.dto.request.EntranceOutTimeRequest;
-import com.inet.juchamsi.domain.parking.dto.response.ParkingHistoryResponse;
-import com.inet.juchamsi.domain.parking.dto.service.ExitTimeDto;
-import com.inet.juchamsi.domain.parking.dto.service.ParkingHistoryDetailDto;
+import com.inet.juchamsi.domain.parking.dto.response.ParkingHistoryDetailResponse;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -14,6 +14,9 @@ public interface ParkingService {
 
     // 입차시 입차 정보 넣기
     void createEntrance(EntranceExitRequest request);
+
+    // 해당 사용자 아이디로 지금 주차가 되어있는지 확인
+    ParkingNowResponse isParkingNow(String userId); 
 
     // 현재 차주의 출차시간 저장하기
     void createOutTime(EntranceOutTimeRequest request);
@@ -25,9 +28,9 @@ public interface ParkingService {
     void createExit(EntranceExitRequest request);
 
     // 주차장 정보
-    List<ParkingHistoryResponse> showParkingLot(Long villaId, Long lotId);
+    List<ParkingHistoryResponse> showParkingLot(String villaIdNumber);
 
     // 각 주차장 자리마다 세부 정보 출력
-    ParkingHistoryResponse showDetailParkingLot(Long villaId, Long lotId, int seatNumber);
+    ParkingHistoryDetailResponse showDetailParkingLot(String villaIdNumber, int seatNumber);
 
 }
