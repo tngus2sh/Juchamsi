@@ -20,7 +20,8 @@ def cal_dis(rssi, tx):
 def scan_bluetooth():
     state = 0
     cnt = 0
-    url="https://82ee-211-228-66-220.ngrok-free.app/parking/entrance"
+    parking_url="https://3dff-121-178-98-21.ngrok-free.app/parking/entrance"
+    exit_url = "https://3dff-121-178-98-21.ngrok-free.app/parking/exit"
     # url="https://e6f5-121-178-98-21.ngrok-free.app/parking/entrance"
     datas={}
     ground_module = ['b0:a7:32:db:c8:46', 'cc:db:a7:69:74:4a','cc:db:a7:69:19:7a', 'b0:a7:32:db:c3:52', '40:91:51:fc:fd:6a']
@@ -47,7 +48,7 @@ def scan_bluetooth():
                     cnt += 1
                     # ['mac', 'manuid', 'sonar', 'sonartime', 'tx', 'rssi', 'dis']
                     sendData = beacon.split(',')
-                    print sendData[0], sendData[5]
+                    print(sendData)
 
                     # measure dis
                     # ratio = float(sendData[5])*1.0/float(sendData[4])
@@ -70,13 +71,20 @@ def scan_bluetooth():
                         # send Frequency
                         if cnt == 100:
                             rpiMac = getMacAddress()
-                            print(max(searched))
-                            print(searched)
+                            # print(max(searched))
+                            # print(searched)
                             # print(rpiMac)
-                            print searched.index(max(searched))
-                            datas ={'macAddress': rpiMac, 'groundAddress': ground_module[searched.index(max(searched))]}
-                            print(datas)
-                            response = requests.post(url, data=datas)
+                            # print searched.index(max(searched))
+                            if int(sendData[2]) < 30:
+                                datas ={'macAddress': rpiMac, 'groundAddress': ground_module[searched.index(max(searched))]}
+                                print('car_in') 
+                                response = requests.post(parking_url, data=datas)
+                            else:
+                                datas = {'macAddress': rpiMac}
+                                print('car_out')
+                                response = requests.post(exit_url, data=datas)
+                            print searched.index(max(searched)), sendData[2]
+                            return searched.index(max(searched))
                             cnt = 0
                             searched = [0, 0, 0, 0, 0]
                             state = 1
