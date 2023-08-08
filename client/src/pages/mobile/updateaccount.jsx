@@ -16,6 +16,10 @@ import { setCarNumber, setphoneNumber, setVillaNumber, setImageUrl, setLogout } 
 import { Grid } from "@mui/material";
 import Button from "@mui/material/Button";
 import UpdateModal from "../../components/mobile/updateModal";
+
+import { styled } from "@mui/material/styles";
+import Paper from "@mui/material/Paper";
+
 function Account() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -46,18 +50,28 @@ function Account() {
   const fileInput = useRef(null);
   const imageUrl = useSelector((state) => state.mobileInfo.imageUrl); // 이미지 URL 가져오기
 
+  const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: "center",
+    color: theme.palette.text.secondary,
+  }));
+
   const style3 = {
     position: "absolute",
-    top: "50%",
+    top: "40%",
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: "60%",
-    height: "24vh",
+    height: "10rem",
     bgcolor: "white",
-    border: "1px solid #000",
+    border: "1px solid c5c5c5",
+    borderRadius: "0.4rem",
     boxShadow: 24,
-    p: 4,
-    maxHeight: "50vh", // 최대 높이 설정
+    padding: "2rem",
+    textAlign: "center",
+    // maxHeight: "50vh", // 최대 높이 설정
     overflowY: "auto", // 스크롤바 추가
   };
 
@@ -388,145 +402,222 @@ function Account() {
       </div>
 
       <div className="user-update-container">
-        <div className="update-header-container" style={{ fontSize: "1.2rem" }}>
+        <div className="update-header-container">
           <p>회원 정보</p>
         </div>
 
-        <div className="user-update-text-container">
+        <div className="update-text-container">
           <div className="update-pw-container" onClick={editnoteclick1}>
-            <div>
-              <p>비밀번호</p>
-            </div>
-            <div>
-              <p>{pw}</p>
-            </div>
-            <EditNoteIcon className="editnote1" />
+            <Grid container spacing={1}>
+              <Grid item xs={4}>
+                <p>비밀번호</p>
+              </Grid>
+              <Grid item xs={7}>
+                <p>{pw}</p>
+              </Grid>
+              <Grid item xs={1}>
+                <EditNoteIcon />
+              </Grid>
+            </Grid>
+          </div>
+
+          <div className="update-phone-number-container" onClick={handleOpenupdatephonenumber}>
+            <Grid id container spacing={1}>
+              <Grid item xs={4}>
+                <p>핸드폰 번호</p>
+              </Grid>
+              <Grid item xs={7}>
+                <p>{phoneNumber}</p>
+              </Grid>
+              <Grid item xs={1}>
+                <EditNoteIcon />
+              </Grid>
+            </Grid>
+          </div>
+
+          <div className="update-car-number-container" onClick={editnoteclick3}>
+            <Grid id container spacing={1}>
+              <Grid item xs={4}>
+                <p>차량 번호</p>
+              </Grid>
+              <Grid item xs={7}>
+                <p>{carNumber}</p>
+              </Grid>
+              <Grid item xs={1}>
+                <EditNoteIcon />
+              </Grid>
+            </Grid>
+          </div>
+
+          <div className="update-villa-number-container" onClick={editnoteclick4}>
+            <Grid id container spacing={1}>
+              <Grid item xs={4}>
+                <p>호수</p>
+              </Grid>
+              <Grid item xs={7}>
+                <p>{villarnumber}호</p>
+              </Grid>
+              <Grid item xs={1}>
+                <EditNoteIcon />
+              </Grid>
+            </Grid>
+          </div>
+
+          <div className="update-easy-pw-container" onClick={editnoteclick5}>
+            <Grid id container spacing={1}>
+              <Grid item xs={4}>
+                <p>간편 비밀번호</p>
+              </Grid>
+              <Grid item xs={7}>
+                <p>******</p>
+              </Grid>
+              <Grid item xs={1}>
+                <EditNoteIcon />
+              </Grid>
+            </Grid>
           </div>
         </div>
       </div>
-      <Box className="user-info-box">
-        {/* <div className="user-info-flex-container">
-          <div className="user-img-container">
-            <Avatar
-              alt="Remy Sharp"
-              src={imageUrl}
-              sx={{ width: "3.5rem", height: "3.5rem" }}
-              onClick={() => fileInput.current.click()} // 파일 입력(input) 요소를 클릭하도록 설정
-            />
-          </div>
-          <div className="user-info-container">
-            <Typography>{loginId}</Typography>
-            <Typography className="namestyle">{name}</Typography>
-          </div>
-        </div> */}
-
-        {/* <Grid container sx={{ height: "10vh", alignItems: "center", mt: ".7rem", ml: ".6rem" }}>
-          <Stack direction="row" spacing={2}>
-            <Avatar
-              alt="Remy Sharp"
-              src={imageUrl}
-              sx={{ width: "3rem", height: "3rem" }}
-              onClick={() => fileInput.current.click()} // 파일 입력(input) 요소를 클릭하도록 설정
-            />
-            <Stack direction="column" sx={{ alignItems: "start" }}>
-              <Typography>{loginId}</Typography>
-              <Typography className="namestyle">{name}</Typography>
-            </Stack>
-          </Stack>
-        </Grid> */}
-      </Box>
 
       {/* <input type="file" accept="image/*" style={{ display: "none" }} ref={fileInput} onChange={handleImageChange} /> */}
 
-      <Box component="span" className="Loginoutbtn" onClick={handleLoginoutOpen}>
+      {/* <Box component="span" className="Loginoutbtn" onClick={handleLoginoutOpen}>
         <p className="Loginoutbtntext">로그아웃</p>
       </Box>
 
       <Box component="span" className="Signoutbtn" onClick={handleSignoutOpen}>
         <p className="Signoutbtntext">회원탈퇴</p>
-      </Box>
+      </Box> */}
 
-      <Box component="span" className="userinfobox"></Box>
-      <div onClick={editnoteclick1}>
-        <p className="updatepw">비밀번호 </p>
-        <p className="updatepw1">{pw}</p>
-        <EditNoteIcon className="editnote1" />
-      </div>
-      <div onClick={handleOpenupdatephonenumber}>
-        <p className="updatephonenumber">핸드폰 번호 </p>
-        <p className="updatephonenumber1">{phoneNumber}</p>
-        <EditNoteIcon className="editnote2" />
-      </div>
       {/* 핸드폰 인증 */}
-      <UpdateModal open={updatephonenumber} onClose={handleCloseupdatephonenumber} style={style3} name="phonenumber" label="핸드폰 번호" value={phonenumber} onChange={handlePhoneNumberChange} onClick={handleChangePhoneCheck} />
+      <UpdateModal
+        open={updatephonenumber}
+        onClose={handleCloseupdatephonenumber}
+        style={style3}
+        name="phonenumber"
+        label="핸드폰 번호"
+        value={phonenumber}
+        onChange={handlePhoneNumberChange}
+        onClick={handleChangePhoneCheck}
+      />
+
       {/* 인증 번호 입력 */}
-      <UpdateModal open={updatephonenumberupdate} onClose={handleCloseupdatephonenumberupdate} style={style3} name="phonenumber" label="인증 번호" value={phonechecknumber} onChange={handlephonechecknumberChange} onClick={handlePhoneModalConfirmClick} />
+      <UpdateModal
+        open={updatephonenumberupdate}
+        onClose={handleCloseupdatephonenumberupdate}
+        style={style3}
+        name="phonenumber"
+        label="인증 번호"
+        value={phonechecknumber}
+        onChange={handlephonechecknumberChange}
+        onClick={handlePhoneModalConfirmClick}
+      />
+
       {/* 핸드폰 인증 성공 */}
       <Modal open={phoneModalTrueOpen} onClose={handleClosePhoneTrueCheck} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style3}>
-          <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ textAlign: "center" }}>
-            인증 성공
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            인증이 성공적으로 완료되었습니다. 관리자의 승인을 기다려주시기 바랍니다.
-          </Typography>
-          <Box component="span" className="Checkidresult2" onClick={handleChangPhonnumberResult}>
+          <div className="modal-flex-container" style={{ display: "flex", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
+            <div className="modal-content-container">
+              <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ textAlign: "center" }}>
+                인증 성공
+              </Typography>
+              <Typography id="modal-modal-description" sx={{ marginTop: "0.8rem", fontSize: "0.9rem" }}>
+                인증을 성공했습니다
+                <br />
+                관리자 승인을 기다려 주세요
+              </Typography>
+              <button className="login-box" onClick={handleChangPhonnumberResult} style={{ marginTop: "1rem", backgroundColor: "#2d4356", color: "white" }}>
+                확인
+              </button>
+            </div>
+          </div>
+
+          {/* <Box component="span" className="Checkidresult2" onClick={handleChangPhonnumberResult}>
             <p className="Checkidresult1text">확인</p>
-          </Box>
+          </Box> */}
         </Box>
       </Modal>
+
       {/* 핸드폰 인증 실패 */}
       <Modal open={phoneModalFalseOpen} onClose={handleClosePhoneFalseCheck} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style3}>
-          <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ textAlign: "center" }}>
-            인증 실패
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            인증이 실패하였습니다. 올바른 인증번호를 입력해주세요.
-          </Typography>
-          <Box component="span" className="Checkidresult2" onClick={handleClosePhoneFalseCheck}>
+          <div className="modal-flex-container" style={{ display: "flex", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
+            <div className="modal-content-container">
+              <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ textAlign: "center" }}>
+                인증 실패
+              </Typography>
+              <Typography id="modal-modal-description" sx={{ marginTop: "0.8rem", fontSize: "0.9rem" }}>
+                인증을 실패했습니다
+                <br />
+                바른 인증 번호를 입력해 주세요
+              </Typography>
+              <button className="login-box" onClick={handleClosePhoneFalseCheck} style={{ marginTop: "1rem", backgroundColor: "#2d4356", color: "white" }}>
+                확인
+              </button>
+            </div>
+          </div>
+
+          {/* <Box component="span" className="Checkidresult2" onClick={handleClosePhoneFalseCheck}>
             <p className="Checkidresult1text">확인</p>
-          </Box>
+          </Box> */}
         </Box>
       </Modal>
-      <div onClick={editnoteclick3}>
-        <p className="updatecarnumber">차량 번호 </p>
-        <p className="updatecarnumber1">{carNumber}</p>
-        <EditNoteIcon className="editnote3" />
-      </div>
-      <UpdateModal open={updatecarnumberModal} onClose={handlecloseupdatecarnumber} style={style3} label="자동차 번호" name="newcarnumber" value={newcarnumber} onChange={handleCarNumberChange} onClick={handleChangeCarResult} />
+
+      <UpdateModal
+        open={updatecarnumberModal}
+        onClose={handlecloseupdatecarnumber}
+        style={style3}
+        label="자동차 번호"
+        name="newcarnumber"
+        value={newcarnumber}
+        onChange={handleCarNumberChange}
+        onClick={handleChangeCarResult}
+      />
       <Modal open={newcarResult} onClose={handleCloseCarTrueCheck} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style3}>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            요청을 처리하였습니다. 관리자의 승인을 기다려주시기 바랍니다.
-          </Typography>
-          <Box component="span" className="Checkidresult2" onClick={handleChangCarnumberResult}>
-            <p className="Checkidresult1text">확인</p>
-          </Box>
+          <div className="modal-flex-container" style={{ display: "flex", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
+            <div className="modal-content-container">
+              <Typography id="modal-modal-description">
+                요청을 처리하였습니다
+                <br />
+                관리자 승인을 기다려 주세요
+              </Typography>
+              <button className="login-box" onClick={handleChangCarnumberResult} style={{ marginTop: "1rem", backgroundColor: "#2d4356", color: "white" }}>
+                확인
+              </button>
+            </div>
+          </div>
         </Box>
       </Modal>
-      <div onClick={editnoteclick4}>
-        <p className="updatehousenumber">호수 </p>
-        <p className="updatehousenumber1">{villarnumber}</p>
-        <EditNoteIcon className="editnote4" />
-      </div>
-      <UpdateModal open={updatehousenumberModal} onClose={handlecloseupdatehousenumber} style={style3} label="호수" name="newhousenumber" value={newhousenumber} onChange={handleHouseNumberChange} onClick={handleChangeHouseResult} />
+
+      <UpdateModal
+        open={updatehousenumberModal}
+        onClose={handlecloseupdatehousenumber}
+        style={style3}
+        label="호수"
+        name="newhousenumber"
+        value={newhousenumber}
+        onChange={handleHouseNumberChange}
+        onClick={handleChangeHouseResult}
+      />
       <Modal open={newhouseResult} onClose={handleCloseHouseTrueCheck} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style3}>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            요청을 처리하였습니다. 관리자의 승인을 기다려주시기 바랍니다.
-          </Typography>
-          <Box component="span" className="Checkidresult2" onClick={handleChangHousenumberResult}>
-            <p className="Checkidresult1text">확인</p>
-          </Box>
+          <div className="modal-flex-container" style={{ display: "flex", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
+            <div className="modal-content-container">
+              <Typography id="modal-modal-description">
+                요청을 처리하였습니다
+                <br />
+                관리자 승인을 기다려 주세요
+              </Typography>
+              <button className="login-box" onClick={handleChangHousenumberResult} style={{ marginTop: "1rem", backgroundColor: "#2d4356", color: "white" }}>
+                확인
+              </button>
+            </div>
+          </div>
         </Box>
       </Modal>
-      <div onClick={editnoteclick5}>
-        <p className="updateeasypwnumber">간편 비밀번호 </p>
-        <p className="updateeasypwnumber1">******</p>
-        <EditNoteIcon className="editnote5" />
-      </div>
-      <Footer AccounticonColor="#33907C" />
+
+      <Footer AccounticonColor="#B7C4CF" />
     </React.Fragment>
   );
 }

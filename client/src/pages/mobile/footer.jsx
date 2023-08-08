@@ -89,7 +89,7 @@ function Footer(props) {
           </Grid>
         </Grid> */}
       </Box>
-      <img className="footerlogo" src={process.env.PUBLIC_URL + "/img/kiosk/logo1.png"} alt={"title"}></img>
+      {/* <img className="footerlogo" src={process.env.PUBLIC_URL + "/img/kiosk/logo1.png"} alt={"title"}></img> */}
     </React.Fragment>
   );
 }
