@@ -165,7 +165,10 @@ function Account() {
             </div>
             <div className="update-info-button-container">
               <button onClick={handleOpenupdateAccount} className="account-btn">
-                회원 정보&nbsp;&nbsp;>{" "}
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div style={{ fontSize: "0.9rem" }}>&nbsp;회원 정보</div>
+                  <ArrowForwardIosRoundedIcon sx={{ fontSize: "0.8rem" }} />
+                </div>
               </button>
             </div>
           </div>
