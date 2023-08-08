@@ -25,7 +25,7 @@ public interface ParkingHistoryRepository extends JpaRepository<ParkingHistory, 
     Optional<Long> findParkingHistoryBySeatMacAddress(@Param("seatMacAddress") String seatMacAddress, @Param("active") Active active);
 
     // 사용자 아이디로 지금 현재 주차 되어있는지 확인
-    @Query("select  new com.inet.juchamsi.domain.parking.dto.service.ParkingNowDto(pl.seatNumber, v.idNumber, ph.active)  from ParkingHistory ph left join ph.user u left join ph.parkingLot pl left join pl.villa v where u.loginId=:loginId and ph.outTime is null and ph.createdDate in (select max(ph.createdDate) from ParkingHistory ph left join ph.user u group by u.loginId)")
+    @Query("select new com.inet.juchamsi.domain.parking.dto.service.ParkingNowDto(pl.seatNumber, v.idNumber, ph.active)  from ParkingHistory ph left join ph.user u left join ph.parkingLot pl left join pl.villa v where u.loginId=:loginId and ph.outTime is null and ph.createdDate in (select max(ph.createdDate) from ParkingHistory ph left join ph.user u group by u.loginId)")
     Optional<ParkingNowDto> findActiveByLoginId(@Param("loginId") String loginId);
 
     // 사용자 아이디로 출차시간, 앞차 정보, 빌라 식별키 가져오기
