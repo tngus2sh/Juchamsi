@@ -19,6 +19,8 @@ import { useDispatch, useSelector } from "react-redux";
 // import { setUser1, setUser2, setRoomNumber } from "../../redux/chatInfo";
 import PersonIcon from "@mui/icons-material/Person";
 import { Typography } from "@mui/material";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import Fab from "@mui/material/Fab";
 
 function Termessage() {
   const navigate = useNavigate();
@@ -79,7 +81,7 @@ function Termessage() {
 
   return (
     <React.Fragment>
-      <Typography>대화중인 목록</Typography>
+      <Typography variant={"h6"}>대화중인 목록</Typography>
       <Divider />
       <div
         style={{
@@ -99,10 +101,12 @@ function Termessage() {
               >
                 <ListItemAvatar>
                   <Avatar>
-                    <ImageIcon />
+                    <Fab size="small" color="#">
+                      <MailOutlineIcon />
+                    </Fab>
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary={item.roomName} secondary="Jan 9, 2014" />
+                <ListItemText primary={item.roomName} secondary=";" />
               </ListItem>
               <Divider />
             </React.Fragment>

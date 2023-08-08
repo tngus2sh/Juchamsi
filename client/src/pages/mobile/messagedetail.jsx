@@ -170,7 +170,7 @@ const Messagedetail = () => {
     <React.Fragment>
       <div
         style={{
-          height: "100vh",
+          height: window.innerHeight,
         }}
       >
         <Box
@@ -198,7 +198,7 @@ const Messagedetail = () => {
               }}
               onClick={handleBackToListClick}
             />
-            <Typography className="myinfoupdatetext">{targetNickName}</Typography>
+            <Typography sx={{ color: "white" }}>{targetNickName}</Typography>
           </Grid>
         </Box>
         <ChatContainer className="custom-chat-container">

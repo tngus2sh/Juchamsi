@@ -1,8 +1,9 @@
 .custom-chat-container {
-  height: calc(100% - 4.9rem);
+  height: calc(100vh - 4.9rem);
 }
 .custom-chat-container .cs-message-list {
   margin-top: 2.8rem;
+  max-height: calc(100vh - 7.7rem);
   background-color: rgb(187, 186, 186);
 }
 .custom-chat-container .cs-message.cs-message--outgoing.cs-message--single:not(:first-child) {
