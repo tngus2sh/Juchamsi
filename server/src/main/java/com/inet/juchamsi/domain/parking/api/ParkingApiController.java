@@ -95,9 +95,10 @@ public class ParkingApiController {
     @PutMapping("/out_time")
     public ApiResult<Void> modifyOutTime(
             @ApiParam(value = "user-out-time-dto")
-            EntranceOutTimeRequest request
+            @RequestBody EntranceOutTimeRequest request
     ) {
         log.debug("modifyOutTime={}", request);
+        log.info("modifyOutTime={}", request);
         try {
             parkingService.modifyOutTime(request);
         } catch (NotFoundException e) {
@@ -110,10 +111,9 @@ public class ParkingApiController {
     @PostMapping("/exit")
     public ApiResult<Void> createExit(
             @ApiParam(value = "user-parking-dto")
-            ExitRequest request
+            @RequestBody ExitRequest request
     ) {
-        log.debug("createExit={}", request);
-        System.out.println("request = " + request);
+        log.info("createExit={}", request);
         try {
             parkingService.createExit(request);
             chatService.removeChatRoom(request.getMacAddress()); // 채팅방 없애기

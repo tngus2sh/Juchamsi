@@ -10,7 +10,7 @@ public class ParkingHistoryResponse {
     private String userId;
     private int seatNumber;
     private String outTime;
-    private String active; 
+    private String active; // ACTIVE : 주차가 됐다, DISABLED : 비어있는 상태
     
     @Builder
     public ParkingHistoryResponse(String userId, int seatNumber, String outTime, String active) {

@@ -29,7 +29,7 @@ public interface ParkingHistoryRepository extends JpaRepository<ParkingHistory, 
     Optional<ParkingNowDto> findActiveByLoginId(@Param("loginId") String loginId);
 
     // 사용자 아이디로 출차시간, 앞차 정보, 빌라 식별키 가져오기
-    @Query("select new com.inet.juchamsi.domain.parking.dto.service.OutTimeFrontNumberDto(ph.outTime, pl.frontNumber, pl.villa) from ParkingHistory ph left join ph.user u left join ph.parkingLot pl where u.loginId=:loginId and ph.active=:active and ph.createdDate in (select max(ph.createdDate) from ParkingHistory ph left join ph.user u where u.loginId=:loginId group by u.loginId)")
+    @Query("select new com.inet.juchamsi.domain.parking.dto.service.OutTimeFrontNumberDto(ph.outTime, pl.frontNumber, v.idNumber) from ParkingHistory ph left join ph.user u left join ph.parkingLot pl left join pl.villa v where u.loginId=:loginId and ph.active=:active and ph.createdDate in (select max(ph.createdDate) from ParkingHistory ph left join ph.user u where u.loginId=:loginId group by u.loginId)")
     Optional<OutTimeFrontNumberDto> findParkingHistoryByLoginId(@Param("loginId") String loginId, @Param("active") Active active);
 
     // 자리번호와 빌라 식별키로 해당 차가 주차 되어있는지 확인, 해당 사용자 아이디 출력
@@ -64,8 +64,8 @@ public interface ParkingHistoryRepository extends JpaRepository<ParkingHistory, 
 
     // 주차장 히스토리 출차시간 업데이트
     @Modifying(clearAutomatically = true)
-    @Query("update ParkingHistory ph set ph.outTime=:outTime where ph.id=:id")
-    Optional<Void> updateOutTime(@Param("outTime") LocalDateTime OutTime, @Param("id") Long id);
+    @Query("update ParkingHistory set outTime=:outTime where id=:id")
+    Optional<Void> updateOutTime(@Param("outTime") LocalDateTime outTime, @Param("id") Long id);
 
     // 주차 내역 업데이트
     @Modifying(clearAutomatically = true)
