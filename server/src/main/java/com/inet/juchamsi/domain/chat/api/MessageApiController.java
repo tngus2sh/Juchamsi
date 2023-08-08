@@ -46,15 +46,4 @@ public class MessageApiController {
         sendingOperations.convertAndSend("/topic/chat/room/" + roomId, request);
         return OK(null);
     }
-
-    @MessageMapping("/system/message/{roomId}")
-    public ApiResult<Void> system(@DestinationVariable String roomId, SystemMessageRequest request) {
-        // 시스템에서 발생한 메시지를 클라이언트로 전송합니다.
-        sendingOperations.convertAndSend("/topic/system/room/" + roomId, request);
-        
-        // 메세지 내용 저장
-        chatService.createSystemChat(roomId, request);
-
-        return OK(null);
-    }
 }
