@@ -51,7 +51,7 @@ function Termessage() {
     //   return;
 
     http
-      .post("/chat/room", { userIdOne: loginId, userIdTwo: "userid2" })
+      .post("/chat/room", { userIdOne: loginId, userIdTwo: "user2" })
       .then((response) => {
         console.log(response.data.response.roomId);
         // // redux에 담음

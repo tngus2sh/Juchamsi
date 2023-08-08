@@ -16,7 +16,6 @@ import { setCarNumber, setphoneNumber, setVillaNumber, setImageUrl, setLogout } 
 import { Grid } from "@mui/material";
 import Button from "@mui/material/Button";
 import UpdateModal from "../../components/mobile/updateModal";
-
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 

@@ -27,6 +27,7 @@ import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 import SendIcon from "@mui/icons-material/Send";
 import Fab from "@mui/material/Fab";
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 
 const Messagedetail = () => {
   const navigate = useNavigate();
@@ -172,11 +173,35 @@ const Messagedetail = () => {
           height: "100vh",
         }}
       >
+        <Box
+          sx={{
+            width: "100%",
+            height: "2.8rem",
+            backgroundColor: "#112D4E",
+            position: "fixed",
+            top: 0,
+          }}
+        >
+          <Grid
+            container
+            sx={{ justifyContent: "center", height: "2.8rem", alignContent: "center" }}
+          >
+            <KeyboardBackspaceIcon
+              sx={{
+                position: "fixed",
+                left: 0,
+                color: "white",
+                width: "2.1rem",
+                height: "2.4rem",
+                ml: ".5rem",
+                mt: ".2rem",
+              }}
+              onClick={handleBackToListClick}
+            />
+            <Typography className="myinfoupdatetext">{targetNickName}</Typography>
+          </Grid>
+        </Box>
         <ChatContainer className="custom-chat-container">
-          <ConversationHeader>
-            <ConversationHeader.Back onClick={handleBackToListClick} />
-            <ConversationHeader.Content userName={targetNickName} info="" />
-          </ConversationHeader>
           <MessageList className="cs-message-list">
             {messageStorage.length === 0 ? (
               <MessageSeparator content="대화를 시작해주세요" />
@@ -234,14 +259,15 @@ const Messagedetail = () => {
         <Grid
           container
           sx={{
-            height: "10vh",
             pt: "0.3m",
             pb: "0.3em",
-            display: "flex",
+            boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.2)",
+            width: "100%",
+            height: "4.9rem",
+            position: "fixed",
+            bottom: 0,
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: "gray",
-            boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.2)",
           }}
         >
           <Grid item xs={9}>
@@ -259,7 +285,7 @@ const Messagedetail = () => {
             />
           </Grid>
           <Grid item xs={3}>
-            <Fab color="primary" sx={{ width: "60%", height: "7vh" }} aria-label="add">
+            <Fab color="primary" sx={{ width: "60%", height: "2.7rem" }} aria-label="add">
               <SendIcon
                 onClick={() => {
                   if (message.trim() !== "") {
