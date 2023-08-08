@@ -13,7 +13,8 @@ const initialState = {
   totalMileage:"",
   imageUrl: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png", // 기본 이미지 URL
   userMacAdress: "",
-  whenEnteringCar: false
+  whenEnteringCar: false,
+  mileagelist:[],
 };
 
 const mobileUserinfo = createSlice({
@@ -61,11 +62,15 @@ const mobileUserinfo = createSlice({
       state.whenEnteringCar = action.payload;
     },
     setLogout: () => initialState,
+    setMileageList : (state, action) => {
+      state.mileagelist = action.payload
+    }
   },
     
   
 });
 
 export const { setCarNumber, setid, setloginId, setname, setphoneNumber, setaccessToken, 
-               setrefreshToken, setVillaNumber, setvillaIdNumber, setTotalMileage, setImageUrl, setUserMacAdress, setWhenEnteringCar, setLogout} = mobileUserinfo.actions;
+               setrefreshToken, setVillaNumber, setvillaIdNumber, setTotalMileage, setImageUrl, 
+               setUserMacAdress, setWhenEnteringCar, setLogout, setMileageList} = mobileUserinfo.actions;
 export default mobileUserinfo.reducer;

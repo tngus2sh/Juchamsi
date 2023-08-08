@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import './account.css'
 import Footer from './footer';
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import EditIcon from '@mui/icons-material/Edit';
@@ -11,21 +11,24 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import axiosInstance from '../../axios/axios'
+import {setMileageList} from '../../redux/mobileUserinfo'
 
 
 
 function Account() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const loginId = useSelector((state) => state.mobileInfo.loginId);
     const name = useSelector((state) => state.mobileInfo.name);
-    const totalmileage = useSelector((state) => state.mobileInfo.totalMileage)
+    let totalmileage = useSelector((state) => state.mobileInfo.totalMileage)
     const [MileageOpen, setMileageOpen] = React.useState(false);
     const ID = useSelector((state) => state.mobileInfo.id)
     const imageUrl = useSelector((state) => state.mobileInfo.imageUrl); // 이미지 URL 가져오기
 
     const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
     const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
-  
+    // { 'id': 1, 'point': 100, 'type': '적립', 'description': '출금 시간 등록 적립', 'createdDate': 날짜, 'lastModifiedDate': 날짜}
+    const alltext = useSelector((state) => state.mobileInfo.mileagelist);
   
     useEffect(() => {
       const handleResize = () => {
@@ -38,6 +41,23 @@ function Account() {
         window.removeEventListener('resize', handleResize);
       };
     }, []);
+
+    useEffect(() => {
+        axiosInstance({
+            method:'get',
+            url:`/mileage/${loginId}`,
+          })
+          .then((res) => {
+            let milelist = []
+            for (let i=0; i<res.data.response.length; i++) {
+                milelist.push(res.data.response[i])
+            }
+            dispatch(setMileageList(milelist))
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+    }, [])
   
 
     const handleOpenupdateAccount = () => {
@@ -52,30 +72,14 @@ function Account() {
         }
     }
     const handleOpenMileage = () => {
-        axiosInstance({
-            method:'get',
-            url:`/mileage/${loginId}`,
-          })
-          .then((res) => {
-            
-            console.log(res)
-          })
-          .catch((err) => {
-            console.log(err)
-          })
+        handleTagClick('전체')
         setMileageOpen(true); // 모달 열기
     }
     const handleCloseMileage = () => {
         setMileageOpen(false); // 모달 닫기
     }
 
-    // axios결과 res.data.response 리스트 안에 딕셔너리 형태인듯?
-    // { 'id': 1, 'point': 100, 'type': '적립', 'description': '출금 시간 등록 적립', 'createdDate': 날짜, 'lastModifiedDate': 날짜}
-    const alltext = [{id:1,point:100,type:'적립',description:'출차 시간 등록 적립', createDate:'2023.08.02 09:56'},
-                     {id:2,point:-100,type:'사용',description:'교환', createDate:'2023.08.03 09:56'},
-                     {id:3,point:30,type:'적립',description:'출차 시간 등록 적립', createDate:'2023.08.03 19:56'},
-                     {id:4,point:40,type:'적립',description:'차량 키 보관 적립', createDate:'2023.08.03 20:00'},
-                     {id:5,point:30,type:'적립',description:'출차 시간 준수', createDate:'2023.08.04 07:35'},]
+
     // type이 '적립'인 것만 filtering하여 savingtext 배열로 생성
     const savingtext = alltext.filter((item) => item.type === '적립');
 
@@ -150,7 +154,7 @@ function Account() {
                         </Stack>
                         <br/>
                         <Box sx={{display:'flex', flexDirection: 'row-reverse'}}>
-                            <p className='pointtext1' >{item.createDate}</p>
+                            <p className='pointtext1' >{item.createDate.split('T')[0] + ' ' + item.createDate.split('T')[1].split('.')[0].slice(0,-3)}</p>
                         </Box>
                         <hr />
                     </div>
