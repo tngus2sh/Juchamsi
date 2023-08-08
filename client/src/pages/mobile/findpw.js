@@ -1,21 +1,21 @@
-import './findpw.css';
-import React, { useState, useEffect } from 'react';
-import TextField from '@mui/material/TextField';
-import { Box } from '@mui/system';
-import { useNavigate } from 'react-router';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
+import "./findpw.css";
+import React, { useState, useEffect } from "react";
+import TextField from "@mui/material/TextField";
+import { Box } from "@mui/system";
+import { useNavigate } from "react-router";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
 
 function Findpw() {
   const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
     width: 220,
-    bgcolor: 'white',
-    border: '2px solid #000',
+    bgcolor: "white",
+    border: "2px solid #000",
     boxShadow: 24,
     p: 4,
   };
@@ -25,8 +25,8 @@ function Findpw() {
   const handleOpenfailure = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const navigate = useNavigate();
-  const [id, setID] = useState('');
-  const [phonenumber, setPhoneNumber] = useState('');
+  const [id, setID] = useState("");
+  const [phonenumber, setPhoneNumber] = useState("");
   const [isFindUserid, setIsFindUserid] = useState(false);
   // 모달창(비밀번호 찾기 성공or실패 판별)
   const [backresult, setBackResult] = useState(false);
@@ -52,7 +52,7 @@ function Findpw() {
   // 아이디 입력값이 변경될 때 호출되는 이벤트 핸들러
   const handleIDChange = (e) => {
     // 영어 대소문자, 숫자만 입력 가능하도록 정규식을 이용하여 유효성 검사
-    const onlyID = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
+    const onlyID = e.target.value.replace(/[^a-zA-Z0-9]/g, "");
 
     // 최대 15자까지만 입력 가능하도록 제한
     const IDmaxLength = 15;
@@ -64,7 +64,7 @@ function Findpw() {
   // 핸드폰 번호 입력값이 변경될 때 호출되는 이벤트 핸들러
   const handlePhoneNumberChange = (e) => {
     // 숫자만 입력 가능하도록 정규식을 이용하여 유효성 검사
-    const onlyNumbers = e.target.value.replace(/[^\d]/g, '');
+    const onlyNumbers = e.target.value.replace(/[^\d]/g, "");
 
     // 최대 11자까지만 입력 가능하도록 제한
     const maxLength = 11;
@@ -90,41 +90,45 @@ function Findpw() {
 
   const handleOpenLogin = () => {
     // 로그인 페이지로 이동
-    navigate('/Mobile/Login');
+    navigate("/Mobile/Login");
   };
 
   const handleOpenID = () => {
     // 로그인 페이지로 이동
-    navigate('/Mobile/Findid');
+    navigate("/Mobile/Findid");
   };
 
   return (
-    <div className='find-pw-main'>
+    <div className="find-pw-main">
       <div className="header">
         <img className="mobile-logo" src={process.env.PUBLIC_URL + "/img/kiosk/logo.png"} alt={"title"}></img>
       </div>
-        
+
       <div className="find-pw-page-container">
         <div className="id-container">
-          <input required className="login-input" placeholder="아이디" label="아이디" name="id" value={id} onChange={handleIDChange} ></input>
+          <input required className="login-input" placeholder="아이디" label="아이디" name="id" value={id} onChange={handleIDChange}></input>
         </div>
 
         <div className="phone-number-container">
-          <input required className="login-input" placeholder="핸드폰 번호" label="" name="phonenumber" value={phonenumber} onChange={handlePhoneNumberChange} ></input>
+          <input required className="login-input" placeholder="핸드폰 번호" label="" name="phonenumber" value={phonenumber} onChange={handlePhoneNumberChange}></input>
         </div>
 
         <div className="find-pw-button-container">
-        <button className={`find-pw-box ${isFindUserid ? 'find-box-active' : 'find-box-deactive'}`} onClick={handleOpenFindPW}>확인</button>
+          <button className={`find-pw-box ${isFindUserid ? "find-box-active" : "find-box-deactive"}`} onClick={handleOpenFindPW}>
+            확인
+          </button>
         </div>
 
         <div className="find-login-container">
           <div className="find-login-flex-container">
-            <div className='signin-info'>
+            <div className="signin-info">
               <p>이미 회원가입 하셨나요?</p>
             </div>
 
             <div className="signin-btn">
-              <Button  onClick={handleOpenLogin} style={{ fontSize: '0.87rem' }}>로그인</Button>
+              <Button onClick={handleOpenLogin} style={{ fontSize: "0.87rem" }}>
+                로그인
+              </Button>
             </div>
           </div>
         </div>
@@ -172,28 +176,28 @@ function Findpw() {
       {/* 성공 결과를 보여주는 모달 */}
       <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2" sx={{textAlign:'center'}}>
+          <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ textAlign: "center" }}>
             비밀번호 찾기 성공
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          핸드폰 번호로 임시비밀번호를 발급해드렸습니다.
-          <br />
-          <br />
-          해당 임시비밀번호로 로그인을 진행해주시기바랍니다.
+            핸드폰 번호로 임시비밀번호를 발급해드렸습니다.
+            <br />
+            <br />
+            해당 임시비밀번호로 로그인을 진행해주시기바랍니다.
           </Typography>
         </Box>
       </Modal>
       {/* 실패 결과를 보여주는 모달 */}
       <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2" sx={{textAlign:'center'}}>
+          <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ textAlign: "center" }}>
             비밀번호 찾기 실패
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          입력하신 아이디 및 핸드폰 번호와 일치한 회원정보를 찾지 못했습니다.
-          <br />
-          <br />
-          입력현황을 다시확인하시고 재시도하시거나 회원가입을 진행해주시기 바랍니다.
+            입력하신 아이디 및 핸드폰 번호와 일치한 회원정보를 찾지 못했습니다.
+            <br />
+            <br />
+            입력현황을 다시확인하시고 재시도하시거나 회원가입을 진행해주시기 바랍니다.
           </Typography>
         </Box>
       </Modal>
