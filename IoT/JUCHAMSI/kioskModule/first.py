@@ -26,7 +26,7 @@ def open():
 def close():
     return 'close'
 if __name__ == '__main__':
-    groundModule = ['','','','']
+    groundModule = ['b0:a7:32:db:c8:46','cc:db:a7:69:74:4a','cc:db:a7:69:19:7a','b0:a7:32:db:c3:52']
     app.debug = True
     myIP = get_ip_address()
     print("IP: ", myIP)
