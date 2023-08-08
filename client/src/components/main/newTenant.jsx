@@ -11,6 +11,7 @@ import http from "../../axios/http";
 import { useSelector, useDispatch } from "react-redux";
 import { Button, Typography } from "@mui/material";
 import Toolbar from "@mui/material/Toolbar";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -77,7 +78,7 @@ const NewTenant = () => {
     });
   };
   if (loading) {
-    return <div>Loading...</div>;
+    return <CircularProgress color="inherit" />;
   }
   return (
     <TableContainer sx={{ width: "80%" }} component={Paper}>

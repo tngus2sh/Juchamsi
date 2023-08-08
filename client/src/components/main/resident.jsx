@@ -44,6 +44,7 @@ import HistoryIcon from "@mui/icons-material/History";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import http from "../../axios/http";
 import { useSelector, useDispatch } from "react-redux";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const CurrentDate = () => {
   const currentDate = new Date();
@@ -362,7 +363,7 @@ const Resident = () => {
     [order, orderBy, page, rowsPerPage, rows]
   );
   if (loading) {
-    return <div>Loading...</div>;
+    return <CircularProgress color="inherit" />;
   }
   return (
     <React.Fragment>
