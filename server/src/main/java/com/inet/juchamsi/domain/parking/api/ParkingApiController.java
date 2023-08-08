@@ -16,7 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +26,7 @@ import static com.inet.juchamsi.global.api.ApiResult.ERROR;
 import static com.inet.juchamsi.global.api.ApiResult.OK;
 
 @RestController
-@Log4j2
+@Slf4j
 @RequiredArgsConstructor
 @Api(tags = {"주차장"})
 @RequestMapping("/parking")
@@ -62,6 +62,7 @@ public class ParkingApiController {
     ) {
         try {
             ParkingNowResponse parkingNowResponse = parkingService.isParkingNow(userId);
+            log.info("parkingNowResponse={}", parkingNowResponse.toString());
             return OK(parkingNowResponse);
         } catch (NotFoundException e) {
             return ERROR("존재하지 않는 정보입니다.", HttpStatus.NO_CONTENT);
@@ -75,13 +76,14 @@ public class ParkingApiController {
             @RequestBody EntranceOutTimeRequest request
     ) {
         log.debug("createOutTime={}", request);
+        log.info("createOuTime={}", request);
         try {
-            // test =======================================================
-            parkingService.createEntrance(EntranceRequest.builder()
-                            .groundAddress("B0:A7:32:DB:C8:46")
-                            .macAddress("dc:a6:32:70:b7:ca")
-                            .build());
-            // =============================================================
+//            // test =======================================================
+//            parkingService.createEntrance(EntranceRequest.builder()
+//                            .groundAddress("B0:A7:32:DB:C8:46")
+//                            .macAddress("dc:a6:32:70:b7:ca")
+//                            .build());
+//            // =============================================================
             parkingService.createOutTime(request);
         } catch (NotFoundException e) {
             return ERROR("존재하지 않는 정보입니다.", HttpStatus.NO_CONTENT);
@@ -96,7 +98,6 @@ public class ParkingApiController {
             EntranceOutTimeRequest request
     ) {
         log.debug("modifyOutTime={}", request);
-        System.out.println("request = " + request);
         try {
             parkingService.modifyOutTime(request);
         } catch (NotFoundException e) {
