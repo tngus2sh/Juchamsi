@@ -1,204 +1,43 @@
-
-
-
-.updateidstyle {
-    font-size: 20px;
-    position: absolute;
-    top:37%;
-    left:120%;
+.main-info-text {
+  color: white;
 }
 
-.Loginoutbtn {
-    position: absolute;
-    width: 100px;
-    height: 20px;
-    left: 38%;
-    top: 73%;
-    background:#33907C;
-    opacity: 0.8;
-    border-radius: 32px;
+.user-profile-container {
+  margin-top: 5.3rem;
+  text-align: center;
 }
 
-.Loginoutbtntext{
-position: absolute;
-top:20%;
-left:20%;
-color: aliceblue;
-font-size: 15px;
+.user-img-container {
+  display: inline-block;
+  width: 5rem;
 }
 
-.Signoutbtn {
-    position: absolute;
-    width: 100px;
-    height: 20px;
-    left: 64%;
-    top: 11%;
-    background:red;
-    opacity: 0.6;
-    border-radius: 32px;
+.user-text-container {
+  margin-top: 0.7rem;
+  margin-bottom: 1rem;
 }
 
-.Signoutbtntext{
-position: absolute;
-top:20%;
-left:20%;
-color: aliceblue;
-font-size: 15px;
+.user-update-container {
+  display: inline-block;
+  width: 20rem;
+  text-align: left;
 }
 
-.updatemodaltext1 {
-    position: absolute;
-    top:6%;
-    left:30%;
+.update-header-container {
+  font-size: 1.1rem;
 }
 
-
-.updatepw {
-    position: absolute;
-    top:30%;
-    left:8%
+.update-text-container {
+  margin-top: 1.3rem;
+  margin-bottom: 1.2rem;
+  padding: 1rem;
+  border-radius: 0.7rem;
+  background-color: #f7f7f7;
 }
 
-.updatepw1 {
-    position: absolute;
-    top:30%;
-    left:48%
-}
-
-.updatephonenumber {
-    position: absolute;
-    top:37%;
-    left:8%
-}
-
-.updatephonenumber1 {
-    position: absolute;
-    top:37%;
-    left:48%
-}
-
-.updatecarnumber {
-    position: absolute;
-    top:45%;
-    left:8%
-}
-
-.updatecarnumber1 {
-    position: absolute;
-    top:45%;
-    left:48%
-}
-
-.updatehousenumber {
-    position: absolute;
-    top:51%;
-    left:8%
-}
-
-.updatehousenumber1 {
-    position: absolute;
-    top:51%;
-    left:48%
-}
-
-.updateeasypwnumber {
-    position: absolute;
-    top:58%;
-    left:8%
-}
-
-.updateeasypwnumber1 {
-    position: absolute;
-    top:58%;
-    left:48%
-}
-
-.editnote1 {
-    position: absolute;
-    top:30%;
-    left:84%;
-}
-.editnote2 {
-    position: absolute;
-    top:37%;
-    left:84%;
-}
-.editnote3 {
-    position: absolute;
-    top:44%;
-    left:84%;
-}
-.editnote4 {
-    position: absolute;
-    top:51%;
-    left:84%;
-}
-.editnote5 {
-    position: absolute;
-    top:58%;
-    left:84%;
-}
-
-.userinfobox {
-    position: absolute;
-    border: 1px solid gray;
-    width: 92%;
-    height: 50%;
-    opacity: 0.2;
-    border-radius: 1rem;
-    top:27%;
-    left:4%
-}
-
-.userinfobox0 {
-    position: absolute;
-    background-color: gray;
-    width: 92%;
-    height: 13%;
-    border-radius: 1rem;
-    top:11%;
-    left:4%
-}
-
-.myinfoupdatetext {
-    color: white;
-}
-
-.updatemodal1 {
-    z-index: 1;
-}
-
-.updatephonenumbermodal {
-    position: absolute;
-}
-
-.updatephonetext1 {
-    margin-top: 3%;
-    margin-left: 1%;
-    font-size: 10px;
-}
-
-.updatephonenumberbtn1 {
-    width: 80px;
-    height: 30px;
-    margin-top: 3%;
-    background-color: #33907C;
-    opacity: 1;
-    border-radius: 32px;
-}
-
-.updatephonenumberbtn1text {
-    color: aliceblue;
-    font-size: 18px;
-}
-
-.updatephonecheckingbtn {
-    position: absolute;
-    width: 100px;
-    height: 40px;
-    left: 30%;
-    top: 70%;
-    background: #33907C;
-    opacity: 1;
-    border-radius: 32px;
+.update-phone-number-container,
+.update-car-number-container,
+.update-villa-number-container,
+.update-easy-pw-container {
+  margin-top: 0.85rem;
 }
