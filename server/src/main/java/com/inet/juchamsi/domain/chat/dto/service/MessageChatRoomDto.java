@@ -1,4 +1,4 @@
-package com.inet.juchamsi.domain.chat.dto.request;
+package com.inet.juchamsi.domain.chat.dto.service;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -15,6 +15,7 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import 'dayjs/locale/ko'
 import Modal from '@mui/material/Modal';
+import { Container } from '@mui/material';
 import axiosInstance from '../../axios/axios';
 import Alert from '@mui/material/Alert';
 
@@ -182,7 +183,8 @@ function MycarParking() {
     const defaultall = defaultday + ' ' + defaulttime
     
     return (
-        <div>
+      <React.Fragment>
+        <Container>
             <TextField
             id="outlined-read-only-input"
             label="출차 예정시간"
@@ -236,11 +238,13 @@ function MycarParking() {
               </LocalizationProvider>
             </Box>
           </Modal>
+
           {showAlert && (
             <Alert severity="error">주차를 먼저 실시해주시기 바랍니다.</Alert>
           )}
-            <Footer MycariconColor="#33907C"/>
-        </div>
+          </Container>
+          <Footer MycariconColor="#B7C4CF" />
+        </React.Fragment>
     )
 }
 

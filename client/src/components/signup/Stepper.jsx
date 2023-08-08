@@ -14,7 +14,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import http from "../../axios/http";
 import CustomModal from "./customModal";
-
+import "./Stepper.css";
 const step = [<Step1 />, <Step2 />, <Step3 />];
 
 const theme = createTheme({
@@ -54,9 +54,9 @@ export default function HorizontalLinearStepper() {
       } else if (phoneNumber.trim() === "") {
         setModalMessage("휴대폰번호를 입력하세요");
         setOpen(true);
-      } else if (!certification) {
-        setModalMessage("휴대폰번호 인증해주세요");
-        setOpen(true);
+        // } else if (!certification) {
+        //   setModalMessage("휴대폰번호 인증해주세요");
+        //   setOpen(true);
       } else {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
       }

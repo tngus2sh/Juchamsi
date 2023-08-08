@@ -163,7 +163,7 @@ function Parkinglot() {
         </Box>
       <InCar open={open} />
         </Container>
-      <Footer HomeiconColor="#33907C" />
+      <Footer HomeiconColor="#B7C4CF"/>
     </React.Fragment>
   );
 }

@@ -65,13 +65,13 @@ function App() {
               <Route path="/Mobile/Signup" element={<MobileSignupPage />}/>
               <Route path="/Mobile/Parkinglot" element={<MobileParkinglogPage />}/>
               <Route path="/Mobile/Mycar" element={<MobileMycarparkingPage />}/>
-          <Route path="/Mobile/Termessage" element={<MobileTermessagePage />} />
-          <Route path="/Mobile/Termessage/:id" element={<MobileTermessageChatPage />} />
+              <Route path="/Mobile/Termessage" element={<MobileTermessagePage />} />
+              <Route path="/Mobile/Termessage/:id" element={<MobileTermessageChatPage />} />
               <Route path="/Mobile/Account" element={<MobileAccountPage />}/>
               <Route path="/Mobile/Account/Update" element={<MobileUpdateAccountPage />}/>
               <Route path="/Mobile/Mileage/Change" element={<MobileMileageChangePage />}/>
               <Route path="/Mobile/Acoount/Update/PasswordChange" element={<MobilePasswordUpdatePage />}/>
-               <Route path="/mainPage" element={ <WebMainPage/>} />
+              <Route path="/mainPage" element={ <WebMainPage/>} />
           </Routes>
           </BrowserRouter>
     </div>

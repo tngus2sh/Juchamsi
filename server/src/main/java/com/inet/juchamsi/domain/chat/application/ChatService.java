@@ -5,6 +5,7 @@ import com.inet.juchamsi.domain.chat.dto.request.ChatRoomRequest;
 import com.inet.juchamsi.domain.chat.dto.request.SystemChatRoomRequest;
 import com.inet.juchamsi.domain.chat.dto.request.SystemMessageRequest;
 import com.inet.juchamsi.domain.chat.dto.response.ChatRoomResponse;
+import com.inet.juchamsi.domain.chat.dto.service.SystemMessageDto;
 
 import java.util.List;
 
@@ -29,5 +30,5 @@ public interface ChatService {
     public ChatRoomResponse createSystemRoom(SystemChatRoomRequest request);
 
     // 시스템 메세지 저장
-    public void createSystemChat(String roomId, SystemMessageRequest request);
+    public void createSystemChat(SystemMessageDto messageDto);
 }
