@@ -73,13 +73,16 @@ public class User extends TimeBaseEntity implements UserDetails {
     @Column(name = "refresh_token")
     private String refreshToken;
 
+    @Column(name = "keep_key_pin")
+    private String keepKeyPin;
+
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
 
     public User() {}
 
     @Builder
-    public User(Long id, Villa villa, String phoneNumber, String loginId, String loginPassword, String name, int totalMileage, Grade grade, String macAddress, String carNumber, int villaNumber, Approve approve, Active active, String refreshToken, List<String> roles) {
+    public User(Long id, Villa villa, String phoneNumber, String loginId, String loginPassword, String name, int totalMileage, Grade grade, String macAddress, String carNumber, int villaNumber, Approve approve, Active active, String refreshToken, List<String> roles, String keepKeyPin) {
         this.id = id;
         this.villa = villa;
         this.phoneNumber = phoneNumber;
@@ -95,12 +98,13 @@ public class User extends TimeBaseEntity implements UserDetails {
         this.active = active;
         this.refreshToken = refreshToken;
         this.roles = roles;
+        this.keepKeyPin = keepKeyPin;
     }
 
     /*
         연관관계 편의 메서드
      */
-    public static User createUserTenant(Villa villa, String phoneNumber, String loginId, String loginPassword, String name, int totalMileage, Grade grade, String macAddress, String carNumber, int villaNumber, Approve approve, Active active, String role) {
+    public static User createUserTenant(Villa villa, String phoneNumber, String loginId, String loginPassword, String name, int totalMileage, Grade grade, String macAddress, String carNumber, int villaNumber, Approve approve, Active active, String role, String keepKeyPin) {
         return User.builder()
                 .villa(villa)
                 .phoneNumber(phoneNumber)
@@ -115,6 +119,7 @@ public class User extends TimeBaseEntity implements UserDetails {
                 .approve(approve)
                 .active(active)
                 .roles(Collections.singletonList(role))
+                .keepKeyPin(keepKeyPin)
                 .build();
     }
 
