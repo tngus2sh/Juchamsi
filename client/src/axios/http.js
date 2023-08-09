@@ -6,6 +6,6 @@ export default axios.create({
   headers: {
     "Content-Type": "application/json;charset=utf-8",
     "ngrok-skip-browser-warning": "69420",
-    "withCredentials": "true"
+    "withCredentials": true
   },
 });

@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import DescriptionIcon from "@mui/icons-material/Description";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
-import axiosInstance from "../../axios/axios";
+import http from "../../axios/http";
 import {setMileageList} from '../../redux/mobileUserinfo'
 import { Button, Container, Grid, Typography } from "@mui/material";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
@@ -43,7 +43,7 @@ function Account() {
   }, []);
 
   useEffect(() => {
-    axiosInstance({
+    http({
         method:'get',
         url:`/mileage/${loginId}`,
       })

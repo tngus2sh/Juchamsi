@@ -9,7 +9,7 @@ import Button from '@mui/material/Button';
 import InCar from '../../components/mobile/incar';
 import { Container } from '@mui/material';
 import { setWhenEnteringCar } from '../../redux/mobileUserinfo'; 
-import axiosInstance from '../../axios/axios';
+import http from "../../axios/http";
 import { setBoxItem, setOuttime, setmycar, setParkingnow } from '../../redux/mobileparking'; 
 
 
@@ -30,7 +30,7 @@ function Parkinglot() {
     const fetchData = async () => {
       try {
         // 내 주차현황 입력여부 확인
-        axiosInstance({
+        http({
           method:'get',
           url:`/parking/entrance/${userid}`
         })
@@ -47,7 +47,7 @@ function Parkinglot() {
         })
 
         // 주차현황 가지고오기
-        axiosInstance({
+        http({
           method:'get',
           url:`/parking/lot/${villanumber}`
         })

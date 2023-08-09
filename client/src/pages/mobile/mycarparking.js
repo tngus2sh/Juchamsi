@@ -16,7 +16,7 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import 'dayjs/locale/ko'
 import Modal from '@mui/material/Modal';
 import { Container } from '@mui/material';
-import axiosInstance from '../../axios/axios';
+import http from "../../axios/http";
 import Alert from '@mui/material/Alert';
 
 
@@ -153,7 +153,7 @@ function MycarParking() {
       "userId": userid,
       "villaIdNumber": vilanumber,
     };
-    axiosInstance({
+    http({
       method:'put',
       url:'/parking/out_time',
       data: requestData,

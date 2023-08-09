@@ -13,7 +13,7 @@ import { Container } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setWhenEnteringCar } from "../../redux/mobileUserinfo";
 import { setOuttime } from '../../redux/mobileparking'
-import axiosInstance from '../../axios/axios';
+import http from "../../axios/http";
 
 const InCar = (props) => {
   const style = {
@@ -74,7 +74,7 @@ const InCar = (props) => {
       let updatetime = [...allouttime]
       updatetime[mycarnumb] = newOuttime
       dispatch(setOuttime(updatetime))
-      axiosInstance({
+      http({
         method:'post',
         url:'/parking/out_time',
         data: {
