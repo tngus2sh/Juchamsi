@@ -83,7 +83,6 @@ function Parkinglot() {
   const BoxColumn = useSelector((state) => state.mycar.BoxColumn);
   const allbox = Boxrow * BoxColumn
   const Outtime = () => {
-    console.log(BoxItem)
     let timelist = [];
     for (let j = 0; j <= allbox; j++) {
       timelist.push('');

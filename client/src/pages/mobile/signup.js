@@ -497,8 +497,6 @@ const handlePhoneModalConfirmClick = () => {
             </div>
           </div>
         </div>
-
-        <div className="empty-box"></div>
       </div>
 
       {/* 아이디 중복 검사 결과 사용가능할 경우 보여주는 모달 */}
