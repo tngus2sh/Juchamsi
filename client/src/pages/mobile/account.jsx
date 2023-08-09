@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./account.css";
 import Footer from "./footer";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
 import EditIcon from "@mui/icons-material/Edit";
@@ -11,7 +11,7 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import http from "../../axios/http";
-import {setMileageList} from '../../redux/mobileUserinfo'
+import { setMileageList } from "../../redux/mobileUserinfo";
 import { Button, Container, Grid, Typography } from "@mui/material";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 
@@ -20,7 +20,7 @@ function Account() {
   const dispatch = useDispatch();
   const loginId = useSelector((state) => state.mobileInfo.loginId);
   const name = useSelector((state) => state.mobileInfo.name);
-  let totalmileage = useSelector((state) => state.mobileInfo.totalMileage)
+  let totalmileage = useSelector((state) => state.mobileInfo.totalMileage);
   const [MileageOpen, setMileageOpen] = React.useState(false);
   const ID = useSelector((state) => state.mobileInfo.id);
   const imageUrl = useSelector((state) => state.mobileInfo.imageUrl); // 이미지 URL 가져오기
@@ -44,20 +44,20 @@ function Account() {
 
   useEffect(() => {
     http({
-        method:'get',
-        url:`/mileage/${loginId}`,
-      })
+      method: "get",
+      url: `/mileage/${loginId}`,
+    })
       .then((res) => {
-        let milelist = []
-        for (let i=0; i<res.data.response.length; i++) {
-            milelist.push(res.data.response[i])
+        let milelist = [];
+        for (let i = 0; i < res.data.response.length; i++) {
+          milelist.push(res.data.response[i]);
         }
-        dispatch(setMileageList(milelist))
+        dispatch(setMileageList(milelist));
       })
       .catch((err) => {
-        console.log(err)
-      })
-}, [])
+        console.log(err);
+      });
+  }, []);
 
   const handleOpenupdateAccount = () => {
     navigate("/Mobile/Account/Update");
@@ -71,13 +71,12 @@ function Account() {
     }
   };
   const handleOpenMileage = () => {
-    handleTagClick('전체')
+    handleTagClick("전체");
     setMileageOpen(true); // 모달 열기
-}
-const handleCloseMileage = () => {
+  };
+  const handleCloseMileage = () => {
     setMileageOpen(false); // 모달 닫기
-}
-
+  };
 
   // type이 '적립'인 것만 filtering하여 savingtext 배열로 생성
   const savingtext = alltext.filter((item) => item.type === "적립");
@@ -129,7 +128,9 @@ const handleCloseMileage = () => {
           }}
         >
           <Grid container sx={{ justifyContent: "center", height: "3.3rem", alignContent: "center" }}>
-            <Typography className="main-info-text">마이 페이지</Typography>
+            <Typography className="main-info-text" sx={{ fontWeight: "bold" }}>
+              마이 페이지
+            </Typography>
           </Grid>
         </Box>
 
@@ -220,7 +221,7 @@ const handleCloseMileage = () => {
         </Box>
       </Modal>
 
-      <Footer AccounticonColor="#B7C4CF" />
+      <Footer AccounticonColor="#006DD1" />
     </React.Fragment>
   );
 }

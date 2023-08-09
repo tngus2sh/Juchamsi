@@ -381,7 +381,9 @@ function Account() {
             }}
             onClick={handleopenmypage}
           />
-          <Typography className="main-info-text">회원 정보 수정</Typography>
+          <Typography className="main-info-text" sx={{ fontWeight: "bold" }}>
+            회원 정보 수정
+          </Typography>
         </Grid>
       </Box>
 
@@ -616,7 +618,7 @@ function Account() {
         </Box>
       </Modal>
 
-      <Footer AccounticonColor="#B7C4CF" />
+      <Footer AccounticonColor="#006DD1" />
     </React.Fragment>
   );
 }

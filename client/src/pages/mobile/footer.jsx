@@ -40,54 +40,36 @@ function Footer(props) {
       <Box
         sx={{
           width: "100%",
-          height: "5rem",
+          height: "4.5rem",
           position: "fixed",
           bottom: 0,
-          backgroundColor: "#112D4E",
+          boxShadow: "0 -2px 5px #cccccc",
+          border: "none",
+          // borderTop: "1px solid black",
+          // backgroundColor: "#112D4E",
         }}
       >
         <div className="footer-container">
-          <div className="home-container">
-            <HomeRoundedIcon sx={{ fontSize: "2.5rem", color: props.HomeiconColor }} onClick={handleOpenParkinglotPage} />
-            <Typography sx={{ fontSize: "0.9rem", color: props.HomeiconColor }}>home</Typography>
+          <div className="home-container" style={{ width: "3.6rem" }}>
+            <HomeRoundedIcon sx={{ fontSize: "2.3rem", color: props.HomeiconColor ? props.HomeiconColor : "#c0c0c0" }} onClick={handleOpenParkinglotPage} />
+            <Typography sx={{ fontSize: "0.9rem", color: props.HomeiconColor ? props.HomeiconColor : "#c0c0c0" }}>home</Typography>
           </div>
 
-          <div className="car-container">
-            <DirectionsCarFilledRoundedIcon sx={{ fontSize: "2.6rem", color: props.MycariconColor }} onClick={handleOpenMycarPage} />
-            <Typography sx={{ fontSize: "0.9rem", color: props.MycariconColor }}>car</Typography>
+          <div className="car-container" style={{ width: "3.6rem" }}>
+            <DirectionsCarFilledRoundedIcon sx={{ fontSize: "2.3rem", color: props.MycariconColor ? props.MycariconColor : "#c0c0c0" }} onClick={handleOpenMycarPage} />
+            <Typography sx={{ fontSize: "0.9rem", color: props.MycariconColor ? props.MycariconColor : "#c0c0c0" }}>car</Typography>
           </div>
 
-          <div className="message-container">
-            <LocalPostOfficeRoundedIcon sx={{ fontSize: "2.4rem", color: props.TermessageiconColor }} onClick={handleOpenTermessagePage} />
-            <Typography sx={{ fontSize: "0.9rem", color: props.TermessageiconColor }}>message</Typography>
+          <div className="message-container" style={{ width: "3.6rem" }}>
+            <LocalPostOfficeRoundedIcon sx={{ fontSize: "2.3rem", color: props.TermessageiconColor ? props.TermessageiconColor : "#c0c0c0" }} onClick={handleOpenTermessagePage} />
+            <Typography sx={{ fontSize: "0.9rem", color: props.TermessageiconColor ? props.TermessageiconColor : "#c0c0c0" }}>message</Typography>
           </div>
 
-          <div className="mypage-container">
-            <ManageAccountsRoundedIcon sx={{ fontSize: "2.5rem", color: props.AccounticonColor }} onClick={handleOpenAccountPage} />
-            <Typography sx={{ fontSize: "0.8rem", color: props.AccounticonColor }}>my page</Typography>
+          <div className="mypage-container" style={{ width: "3.6rem" }}>
+            <ManageAccountsRoundedIcon sx={{ fontSize: "2.3rem", color: props.AccounticonColor ? props.AccounticonColor : "#c0c0c0" }} onClick={handleOpenAccountPage} />
+            <Typography sx={{ fontSize: "0.8rem", color: props.AccounticonColor ? props.AccounticonColor : "#c0c0c0" }}>my page</Typography>
           </div>
         </div>
-        {/* <Grid container sx={{ color: "white", pt: "10px", pl: "15px", pr: "15px", pb: "4px" }}>
-          <Grid item xs={2.25}>
-            <HomeIcon sx={{ fontSize: "2.6rem", color: props.HomeiconColor }} onClick={handleOpenParkinglotPage} />
-            <Typography sx={{ fontSize: "0.9rem", color: props.HomeiconColor }}>home</Typography>
-          </Grid>
-          <Grid item xs={1} />
-          <Grid item xs={2.25}>
-            <DirectionsCarIcon sx={{ fontSize: "2.6rem", color: props.MycariconColor }} onClick={handleOpenMycarPage} />
-            <Typography sx={{ fontSize: "0.9rem", color: props.MycariconColor }}>car</Typography>
-          </Grid>
-          <Grid item xs={1} />
-          <Grid item xs={2.25}>
-            <TextsmsIcon sx={{ fontSize: "2.3rem", color: props.TermessageiconColor, mt: "4px" }} onClick={handleOpenTermessagePage} />
-            <Typography sx={{ fontSize: "0.9rem", color: props.TermessageiconColor }}>chat</Typography>
-          </Grid>
-          <Grid item xs={1} />
-          <Grid item xs={2.25}>
-            <ManageAccountsIcon sx={{ fontSize: "2.6rem", color: props.AccounticonColor }} onClick={handleOpenAccountPage} />
-            <Typography sx={{ fontSize: "0.9rem", color: props.AccounticonColor }}>my</Typography>
-          </Grid>
-        </Grid> */}
       </Box>
       {/* <img className="footerlogo" src={process.env.PUBLIC_URL + "/img/kiosk/logo1.png"} alt={"title"}></img> */}
     </React.Fragment>
