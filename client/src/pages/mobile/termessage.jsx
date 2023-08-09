@@ -21,6 +21,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import { Typography } from "@mui/material";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import Fab from "@mui/material/Fab";
+import Box from "@mui/material/Box";
 
 function Termessage() {
   const navigate = useNavigate();
@@ -81,14 +82,38 @@ function Termessage() {
 
   return (
     <React.Fragment>
-      <Typography variant={"h6"}>대화중인 목록</Typography>
+      <Box sx={{ p: "0.8rem" }}>
+        <Typography variant={"h5"} sx={{ textAlign: "start", fontWeight: "bold" }}>
+          Messages
+        </Typography>
+      </Box>
       <Divider />
       <div
         style={{
-          height: "340px",
+          height: "60vh",
         }}
       >
-        <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
+        <List sx={{ width: "100%", p: "0" }}>
+          {/* 시스템 대화방 */}
+          <React.Fragment>
+            <ListItem
+              sx={{
+                "&:active": {
+                  backgroundColor: "#CACACA",
+                },
+              }}
+            >
+              <ListItemAvatar>
+                <Avatar>
+                  <Fab size="small" color="#">
+                    <MailOutlineIcon />
+                  </Fab>
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText primary="시스템" secondary="최근 댓글 넣을꺼임" />
+            </ListItem>
+            <Divider />
+          </React.Fragment>
           {chatRooms.map((item) => (
             <React.Fragment key={item.roomId}>
               <ListItem
