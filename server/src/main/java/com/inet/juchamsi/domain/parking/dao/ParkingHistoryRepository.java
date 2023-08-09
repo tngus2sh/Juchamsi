@@ -53,12 +53,12 @@ public interface ParkingHistoryRepository extends JpaRepository<ParkingHistory, 
     Optional<ParkingHistory> findAllBySeatNumberAndLoginId(@Param("seatNumber") int seatNumber, @Param("loginId") String loginId, @Param("active") Active active);
 
     // 빌라 식별번호로 주차내역 제일 최신으로 그룹화해서 보여주기
-    @Query("select new com.inet.juchamsi.domain.parking.dto.service.ParkingHistoryDetailDto(u.loginId, pl.seatNumber, ph.outTime, pl.frontNumber,pl.backNumber, ph.active) from ParkingHistory ph left join ph.parkingLot pl left join pl.villa v left join ph.user u where v.idNumber=:villaIdNumber and ph.createdDate in (select max(ph.createdDate) from ParkingHistory ph left join ph.parkingLot pl group by pl.seatNumber)")
+    @Query("select new com.inet.juchamsi.domain.parking.dto.service.ParkingHistoryDetailDto(u.loginId, pl.seatNumber, ph.outTime, u.carNumber, pl.frontNumber,pl.backNumber, ph.active) from ParkingHistory ph left join ph.parkingLot pl left join pl.villa v left join ph.user u where v.idNumber=:villaIdNumber and ph.createdDate in (select max(ph.createdDate) from ParkingHistory ph left join ph.parkingLot pl group by pl.seatNumber)")
     List<ParkingHistoryDetailDto> findAllParkingLotByVillaIdAndLotId(@Param("villaIdNumber") String villaIdNumber);
 
     // 빌라 식별번호로 주차장 자리번호로 주차내역 가져오기
-    @Query("select new com.inet.juchamsi.domain.parking.dto.service.ParkingHistoryDetailDto(u.loginId, pl.seatNumber, ph.outTime, pl.frontNumber, pl.backNumber, ph.active) from ParkingHistory ph left join ph.parkingLot pl left join ph.user u left join pl.villa v where v.idNumber=:villaIdNumber and pl.seatNumber=:seatNumber and ph.createdDate in (select max(ph.createdDate) from ParkingHistory ph left join ph.parkingLot pl group by pl.seatNumber)")
-    Optional<ParkingHistoryDetailDto> findParkingLotBySeatNumberAndLoginId(@Param("villaIdNumber") String villaIdNumber, @Param("seatNumber") int seatNumber);
+    @Query("select new com.inet.juchamsi.domain.parking.dto.service.ParkingHistoryDetailDto(u.loginId, pl.seatNumber, ph.outTime, u.carNumber, pl.frontNumber, pl.backNumber, ph.active) from ParkingHistory ph left join ph.parkingLot pl left join ph.user u left join pl.villa v where v.idNumber=:villaIdNumber and u.loginId=:loginId and ph.createdDate in (select max(ph.createdDate) from ParkingHistory ph left join ph.user u where u.loginId=:loginId group by u.loginId)")
+    Optional<ParkingHistoryDetailDto> findParkingLotBySeatNumberAndLoginId(@Param("villaIdNumber") String villaIdNumber, @Param("loginId") String loginId);
 
     /* 수정 */
 
