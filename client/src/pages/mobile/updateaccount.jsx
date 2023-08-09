@@ -18,6 +18,7 @@ import UpdateModal from "../../components/mobile/updateModal";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import http from "../../axios/http";
+import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 
 function Account() {
   const dispatch = useDispatch();
@@ -58,20 +59,18 @@ function Account() {
   }));
 
   const style3 = {
-    position: "absolute",
-    top: "40%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: "60%",
-    height: "10rem",
+    position: "fixed",
+    top: "0",
+    left: "0",
+    rigiht: "0",
+    width: "100%",
+    height: "18rem",
     bgcolor: "white",
-    border: "1px solid c5c5c5",
-    borderRadius: "0.4rem",
-    boxShadow: 24,
-    padding: "2rem",
+    borderRadius: "0 0 1rem 1rem",
+    boxShadow: 20,
     textAlign: "center",
-    // maxHeight: "50vh", // 최대 높이 설정
     overflowY: "auto", // 스크롤바 추가
+    outline: "none",
   };
 
   const editnoteclick1 = () => {
@@ -359,123 +358,103 @@ function Account() {
 
   return (
     <React.Fragment>
-      <Box
-        sx={{
-          width: "100%",
-          height: "3.3rem",
-          backgroundColor: "#112D4E",
-          position: "fixed",
-          top: 0,
-        }}
-      >
-        <Grid container sx={{ justifyContent: "center", height: "3.3rem", alignContent: "center" }}>
-          <KeyboardBackspaceIcon
-            sx={{
-              position: "fixed",
-              left: 0,
-              color: "white",
-              width: "2.1rem",
-              height: "2.8rem",
-              ml: ".5rem",
-              mt: ".2rem",
-            }}
-            onClick={handleopenmypage}
-          />
-          <Typography className="main-info-text" sx={{ fontWeight: "bold" }}>
-            회원 정보 수정
-          </Typography>
-        </Grid>
-      </Box>
-
-      <div className="user-profile-container">
-        <div className="user-img-container">
-          <Avatar
-            alt="Remy Sharp"
-            src={imageUrl}
-            sx={{ width: "5rem", height: "5rem" }}
-            onClick={() => fileInput.current.click()} // 파일 입력(input) 요소를 클릭하도록 설정
-          />
-        </div>
-        <div className="user-text-container">
-          <Typography>{loginId}</Typography>
-          <Typography style={{ fontSize: "0.95rem" }}>{name}</Typography>
-        </div>
-      </div>
-
-      <div className="user-update-container">
-        <div className="update-header-container">
-          <p>회원 정보</p>
+      <div className="update-account-main-container">
+        <div className="update-account-header-container" style={{ color: "white" }}>
+          <div className="account-padding-container">
+            <div className="update-account-warning-container" style={{ textAlign: "center", paddingTop: "1.5rem" }}>
+              <span style={{ fontSize: "0.9rem" }}>※ 수정 후 관리자의 승인을 받아야 서비스 이용이 가능합니다</span>
+            </div>
+            <div className="update-account-title-container" style={{ marginTop: "1.5rem", textAlign: "right" }}>
+              <span className="bold-text" style={{ fontSize: "1.3rem" }}>
+                정보 수정
+              </span>
+            </div>
+          </div>
         </div>
 
-        <div className="update-text-container">
-          <div className="update-pw-container" onClick={editnoteclick1}>
-            <Grid container spacing={1}>
-              <Grid item xs={4}>
-                <p>비밀번호</p>
-              </Grid>
-              <Grid item xs={7}>
-                <p>{pw}</p>
-              </Grid>
-              <Grid item xs={1}>
-                <EditNoteIcon />
-              </Grid>
-            </Grid>
-          </div>
+        <div className="update-account-input-container" style={{ marginTop: "2.5rem" }}>
+          <div className="account-padding-container">
+            <div className="update-account-name-container">
+              <div className="update-account-flex-container">
+                <div className="update-account-info-container">
+                  <span className="bold-text">이름</span>
+                </div>
+                <div className="update-account-content-container">
+                  <span>{name}</span>
+                </div>
+              </div>
+            </div>
 
-          <div className="update-phone-number-container" onClick={handleOpenupdatephonenumber}>
-            <Grid id container spacing={1}>
-              <Grid item xs={4}>
-                <p>핸드폰 번호</p>
-              </Grid>
-              <Grid item xs={7}>
-                <p>{phoneNumber}</p>
-              </Grid>
-              <Grid item xs={1}>
-                <EditNoteIcon />
-              </Grid>
-            </Grid>
-          </div>
+            <div className="update-account-id-container input-container">
+              <div className="update-account-flex-container">
+                <div className="update-account-info-container">
+                  <span className="bold-text">아이디</span>
+                </div>
+                <div className="update-account-content-container">
+                  <span>{loginId}</span>
+                </div>
+              </div>
+            </div>
 
-          <div className="update-car-number-container" onClick={editnoteclick3}>
-            <Grid id container spacing={1}>
-              <Grid item xs={4}>
-                <p>차량 번호</p>
-              </Grid>
-              <Grid item xs={7}>
-                <p>{carNumber}</p>
-              </Grid>
-              <Grid item xs={1}>
-                <EditNoteIcon />
-              </Grid>
-            </Grid>
-          </div>
+            <div onClick={editnoteclick1} className="update-account-pw-container input-container">
+              <div className="update-account-flex-container">
+                <div className="update-account-info-container">
+                  <span className="bold-text">비밀번호</span>
+                </div>
+                <div className="update-account-content-container">
+                  <span>{pw}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                  <ArrowForwardIosRoundedIcon sx={{ fontSize: "1rem" }} />
+                </div>
+              </div>
+            </div>
 
-          <div className="update-villa-number-container" onClick={editnoteclick4}>
-            <Grid id container spacing={1}>
-              <Grid item xs={4}>
-                <p>호수</p>
-              </Grid>
-              <Grid item xs={7}>
-                <p>{villarnumber}호</p>
-              </Grid>
-              <Grid item xs={1}>
-                <EditNoteIcon />
-              </Grid>
-            </Grid>
-          </div>
+            <div onClick={handleOpenupdatephonenumber} className="update-account-phone-number-container input-container">
+              <div className="update-account-flex-container">
+                <div className="update-account-info-container">
+                  <span className="bold-text">핸드폰 번호</span>
+                </div>
+                <div className="update-account-content-container">
+                  <span>{phoneNumber.substr(0, 3) + "-" + phoneNumber.substr(3, 4) + "-" + phoneNumber.substr(7)}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                  <ArrowForwardIosRoundedIcon sx={{ fontSize: "1rem" }} />
+                </div>
+              </div>
+            </div>
 
-          <div className="update-easy-pw-container" onClick={editnoteclick5}>
-            <Grid id container spacing={1}>
-              <Grid item xs={4}>
-                <p>간편 비밀번호</p>
-              </Grid>
-              <Grid item xs={7}>
-                <p>******</p>
-              </Grid>
-              <Grid item xs={1}>
-                <EditNoteIcon />
-              </Grid>
-            </Grid>
+            <div onClick={editnoteclick3} className="update-account-car-number-container input-container">
+              <div className="update-account-flex-container">
+                <div className="update-account-info-container">
+                  <span className="bold-text">차량 번호</span>
+                </div>
+                <div className="update-account-content-container">
+                  <span>{carNumber}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                  <ArrowForwardIosRoundedIcon sx={{ fontSize: "1rem" }} />
+                </div>
+              </div>
+            </div>
+
+            <div onClick={editnoteclick4} className="update-account-villa-number-container input-container">
+              <div className="update-account-flex-container">
+                <div className="update-account-info-container">
+                  <span className="bold-text">빌라 호수</span>
+                </div>
+                <div className="update-account-content-container">
+                  <span>{villarnumber}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                  <ArrowForwardIosRoundedIcon sx={{ fontSize: "1rem" }} />
+                </div>
+              </div>
+            </div>
+
+            <div onClick={editnoteclick5} className="update-account-easy-pw-container input-container">
+              <div className="update-account-flex-container">
+                <div className="update-account-info-container">
+                  <span className="bold-text">간편 비밀번호</span>
+                </div>
+                <div className="update-account-content-container">
+                  <span>{}******&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                  <ArrowForwardIosRoundedIcon sx={{ fontSize: "1rem" }} />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -495,6 +474,7 @@ function Account() {
         open={updatephonenumber}
         onClose={handleCloseupdatephonenumber}
         style={style3}
+        title="핸드폰 번호 변경"
         name="phonenumber"
         label="핸드폰 번호"
         value={phonenumber}
@@ -507,6 +487,7 @@ function Account() {
         open={updatephonenumberupdate}
         onClose={handleCloseupdatephonenumberupdate}
         style={style3}
+        title="인증 번호"
         name="phonenumber"
         label="인증 번호"
         value={phonechecknumber}
@@ -517,50 +498,56 @@ function Account() {
       {/* 핸드폰 인증 성공 */}
       <Modal open={phoneModalTrueOpen} onClose={handleClosePhoneTrueCheck} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style3}>
-          <div className="modal-flex-container" style={{ display: "flex", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
-            <div className="modal-content-container">
-              <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ textAlign: "center" }}>
+          <div className="modal-flex-container" style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%" }}>
+            <div className="modal-title-container" style={{ marginTop: "2rem" }}>
+              <span className="bold-text" style={{ fontSize: "1.3rem" }}>
                 인증 성공
-              </Typography>
-              <Typography id="modal-modal-description" sx={{ marginTop: "0.8rem", fontSize: "0.9rem" }}>
-                인증을 성공했습니다
-                <br />
-                관리자 승인을 기다려 주세요
-              </Typography>
-              <button className="login-box" onClick={handleChangPhonnumberResult} style={{ marginTop: "1rem", backgroundColor: "#2d4356", color: "white" }}>
-                확인
-              </button>
+              </span>
+            </div>
+
+            <div className="modal-content-container" style={{ flex: "1" }}>
+              <div className="modal-content-flex-container" style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
+                <div className="model-content-info-container" style={{ width: "70%" }}>
+                  <div style={{ fontSize: "1.1rem" }}>
+                    인증을 성공했습니다
+                    <br />
+                    관리자 승인을 기다려 주세요
+                  </div>
+                  <button className="login-box" onClick={handleChangPhonnumberResult} style={{ marginTop: "1.7rem", backgroundColor: "#006DD1", color: "white" }}>
+                    확인
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-
-          {/* <Box component="span" className="Checkidresult2" onClick={handleChangPhonnumberResult}>
-            <p className="Checkidresult1text">확인</p>
-          </Box> */}
         </Box>
       </Modal>
 
       {/* 핸드폰 인증 실패 */}
       <Modal open={phoneModalFalseOpen} onClose={handleClosePhoneFalseCheck} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style3}>
-          <div className="modal-flex-container" style={{ display: "flex", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
-            <div className="modal-content-container">
-              <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ textAlign: "center" }}>
+          <div className="modal-flex-container" style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%" }}>
+            <div className="modal-title-container" style={{ marginTop: "2rem" }}>
+              <span className="bold-text" style={{ fontSize: "1.3rem" }}>
                 인증 실패
-              </Typography>
-              <Typography id="modal-modal-description" sx={{ marginTop: "0.8rem", fontSize: "0.9rem" }}>
-                인증을 실패했습니다
-                <br />
-                바른 인증 번호를 입력해 주세요
-              </Typography>
-              <button className="login-box" onClick={handleClosePhoneFalseCheck} style={{ marginTop: "1rem", backgroundColor: "#2d4356", color: "white" }}>
-                확인
-              </button>
+              </span>
+            </div>
+
+            <div className="modal-content-container" style={{ flex: "1" }}>
+              <div className="modal-content-flex-container" style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
+                <div className="model-content-info-container" style={{ width: "70%" }}>
+                  <div style={{ fontSize: "1.1rem" }}>
+                    인증을 실패했습니다
+                    <br />
+                    바른 인증 번호를 입력해 주세요
+                  </div>
+                  <button className="login-box" onClick={handleClosePhoneFalseCheck} style={{ marginTop: "1.7rem", backgroundColor: "#006DD1", color: "white" }}>
+                    확인
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-
-          {/* <Box component="span" className="Checkidresult2" onClick={handleClosePhoneFalseCheck}>
-            <p className="Checkidresult1text">확인</p>
-          </Box> */}
         </Box>
       </Modal>
 
@@ -568,7 +555,8 @@ function Account() {
         open={updatecarnumberModal}
         onClose={handlecloseupdatecarnumber}
         style={style3}
-        label="자동차 번호"
+        title="차량 번호 변경"
+        label="차량 번호"
         name="newcarnumber"
         value={newcarnumber}
         onChange={handleCarNumberChange}
@@ -576,16 +564,26 @@ function Account() {
       />
       <Modal open={newcarResult} onClose={handleCloseCarTrueCheck} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style3}>
-          <div className="modal-flex-container" style={{ display: "flex", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
-            <div className="modal-content-container">
-              <Typography id="modal-modal-description">
-                요청을 처리하였습니다
-                <br />
-                관리자 승인을 기다려 주세요
-              </Typography>
-              <button className="login-box" onClick={handleChangCarnumberResult} style={{ marginTop: "1rem", backgroundColor: "#2d4356", color: "white" }}>
-                확인
-              </button>
+          <div className="modal-flex-container" style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%" }}>
+            <div className="modal-title-container" style={{ marginTop: "2rem" }}>
+              <span className="bold-text" style={{ fontSize: "1.3rem" }}>
+                수정 요청
+              </span>
+            </div>
+
+            <div className="modal-content-container" style={{ flex: "1" }}>
+              <div className="modal-content-flex-container" style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
+                <div className="model-content-info-container" style={{ width: "70%" }}>
+                  <div style={{ fontSize: "1.1rem" }}>
+                    요청을 처리하였습니다
+                    <br />
+                    관리자 승인을 기다려 주세요
+                  </div>
+                  <button className="login-box" onClick={handleChangCarnumberResult} style={{ marginTop: "2rem", backgroundColor: "#006DD1", color: "white" }}>
+                    확인
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </Box>
@@ -595,6 +593,7 @@ function Account() {
         open={updatehousenumberModal}
         onClose={handlecloseupdatehousenumber}
         style={style3}
+        title="빌라 호수 변경"
         label="호수"
         name="newhousenumber"
         value={newhousenumber}
@@ -603,16 +602,26 @@ function Account() {
       />
       <Modal open={newhouseResult} onClose={handleCloseHouseTrueCheck} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style3}>
-          <div className="modal-flex-container" style={{ display: "flex", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
-            <div className="modal-content-container">
-              <Typography id="modal-modal-description">
-                요청을 처리하였습니다
-                <br />
-                관리자 승인을 기다려 주세요
-              </Typography>
-              <button className="login-box" onClick={handleChangHousenumberResult} style={{ marginTop: "1rem", backgroundColor: "#2d4356", color: "white" }}>
-                확인
-              </button>
+          <div className="modal-flex-container" style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%" }}>
+            <div className="modal-title-container" style={{ marginTop: "2rem" }}>
+              <span className="bold-text" style={{ fontSize: "1.3rem" }}>
+                수정 요청
+              </span>
+            </div>
+
+            <div className="modal-content-container" style={{ flex: "1" }}>
+              <div className="modal-content-flex-container" style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
+                <div className="model-content-info-container" style={{ width: "70%" }}>
+                  <div style={{ fontSize: "1.1rem" }}>
+                    요청을 처리하였습니다
+                    <br />
+                    관리자 승인을 기다려 주세요
+                  </div>
+                  <button className="login-box" onClick={handleChangHousenumberResult} style={{ marginTop: "2rem", backgroundColor: "#006DD1", color: "white" }}>
+                    확인
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </Box>

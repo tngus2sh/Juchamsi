@@ -11,9 +11,10 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import http from "../../axios/http";
-import { setMileageList } from "../../redux/mobileUserinfo";
+import { setMileageList, setLogout } from "../../redux/mobileUserinfo";
 import { Button, Container, Grid, Typography } from "@mui/material";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
+import LocalParkingRoundedIcon from "@mui/icons-material/LocalParkingRounded";
 
 function Account() {
   const navigate = useNavigate();
@@ -29,6 +30,8 @@ function Account() {
   const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
   // { 'id': 1, 'point': 100, 'type': '적립', 'description': '출금 시간 등록 적립', 'createdDate': 날짜, 'lastModifiedDate': 날짜}
   const alltext = useSelector((state) => state.mobileInfo.mileagelist);
+
+  const carNumber = useSelector((state) => state.mobileInfo.carNumber);
 
   useEffect(() => {
     const handleResize = () => {
@@ -58,6 +61,33 @@ function Account() {
         console.log(err);
       });
   }, []);
+
+  const handleSignoutOpen = () => {
+    http({
+      method: "delete",
+      url: `/tenant/${loginId}`,
+    })
+      .then((res) => {
+        navigate("/Mobile/Login");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleLoginoutOpen = () => {
+    http({
+      method: "get",
+      url: `/tenant/logout/${loginId}`,
+    })
+      .then(() => {
+        dispatch(setLogout());
+        navigate("/Mobile/Login");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const handleOpenupdateAccount = () => {
     navigate("/Mobile/Account/Update");
@@ -118,78 +148,157 @@ function Account() {
   return (
     <React.Fragment>
       <div className="account-main-container">
-        <Box
-          sx={{
-            width: "100%",
-            height: "3.3rem",
-            backgroundColor: "#112D4E",
-            position: "fixed",
-            top: 0,
-          }}
-        >
-          <Grid container sx={{ justifyContent: "center", height: "3.3rem", alignContent: "center" }}>
-            <Typography className="main-info-text" sx={{ fontWeight: "bold" }}>
-              마이 페이지
-            </Typography>
-          </Grid>
-        </Box>
-
-        <div className="account-container">
-          <div className="account-flex-container">
-            <div className="account-img-container">
-              <Avatar alt="Remy Sharp" src={imageUrl} sx={{ width: "4rem", height: "4rem" }} />
+        <div className="account-header-container" style={{ color: "white" }}>
+          <div className="account-padding-container">
+            <div className="account-header-info-container" style={{ paddingTop: "1.5rem", textAlign: "left" }}>
+              <span className="bold-text" style={{ fontSize: "1.3rem" }}>
+                마이 페이지
+              </span>
             </div>
-            <div className="account-text-container">
-              <Typography style={{ fontSize: "0.95rem" }}>{name} 님</Typography>
-              <Typography style={{ fontSize: "0.5rem" }}>&nbsp;</Typography>
-              {/* <Typography>{loginId}</Typography> */}
-            </div>
-            <div className="update-info-button-container">
-              <button onClick={handleOpenupdateAccount} className="account-btn">
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <div style={{ fontSize: "0.9rem" }}>&nbsp;회원 정보</div>
-                  <ArrowForwardIosRoundedIcon sx={{ fontSize: "0.8rem" }} />
+            <div className="account-header-content-container" style={{ marginTop: "2.5rem", textAlign: "left" }}>
+              <div className="account-header-content-flex-container" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div className="account-header-info-container">
+                  <div className="account-header-name-container">
+                    <span>
+                      <span className="bold-text" style={{ fontSize: "1.3rem" }}>
+                        {name}
+                      </span>
+                      &nbsp;님, 환영합니다!
+                    </span>
+                  </div>
+                  <div className="account-header-car-number-container" style={{ marginTop: "1.2rem" }}>
+                    <span className="bold-text" style={{ fontSize: "1.3rem" }}>
+                      {carNumber}
+                    </span>
+                  </div>
                 </div>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div className="mileage-container">
-          <div style={{ textAlign: "left", fontSize: "1.1rem", fontWeight: "bold" }}>
-            <span>마일리지</span>
-          </div>
-
-          <div className="mileage-total-container">
-            <div className="mileage-number-container">
-              <Grid container spacing={1.6} className="mileage-grid-container" sx={{ alignItems: "center", paddingLeft: "0.3rem", marginTop: "0.1rem", alignItems: "center" }}>
-                <Grid item xs={6} sx={{ textAlign: "left" }}>
-                  <div>사용 가능 마일리지</div>
-                </Grid>
-                <Grid item xs={6}>
-                  <div className="mileage-number-container">
-                    <div className="total-mileage-container">{totalmileage}</div>
-                    <div className="point-icon-container">
-                      <p>P</p>
+                <div className="account-header-icon-container">
+                  <div className="account-header-icon-box-container">
+                    <div className="account-header-icon-box-flex-container">
+                      <LocalParkingRoundedIcon sx={{ fontSize: "2.5rem" }} />
                     </div>
                   </div>
-                </Grid>
-              </Grid>
-            </div>
-
-            <div onClick={handleOpenMileage} className="mileage-button-container">
-              <div className="mileage-history-btn-container" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span>마일리지 내역</span>
-                <ArrowForwardIosRoundedIcon sx={{ fontSize: "1.2rem" }} />
-              </div>
-
-              <div onClick={handleOpenMileageChange} className="mileage-exchange-btn-container" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span>마일리지 교환</span>
-                <ArrowForwardIosRoundedIcon sx={{ fontSize: "1.2rem" }} />
+                </div>
               </div>
             </div>
           </div>
         </div>
+
+        <div className="account-mileage-container" style={{ marginTop: "2.5rem" }}>
+          <div className="account-padding-container">
+            <div className="account-mileage-title-container" style={{ color: "#006DD1" }}>
+              <span className="bold-text" style={{ fontSize: "1.3rem" }}>
+                마일리지
+              </span>
+            </div>
+
+            <div className="account-mileage-total-container" style={{ marginTop: "2rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div className="account-mileage-total-info-container">
+                  <span className="bold-text" style={{ fontSize: "1.1rem" }}>
+                    총 마일리지
+                  </span>
+                </div>
+                <div className="account-mileage-total-number-container">
+                  <div className="bold-text" style={{ fontSize: "2rem", paddingRight: "1rem" }}>
+                    <span style={{ color: "#EE1D4F" }}>{totalmileage}</span>
+                    <span>&nbsp;P</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div onClick={handleOpenMileage} className="account-mileage-history-container" style={{ marginTop: "1.9rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div className="account-mileage-history-info-container">
+                  <span className="bold-text" style={{ fontSize: "1.1rem" }}>
+                    마일리지 내역
+                  </span>
+                </div>
+                <div className="account-mileage-history-icon-container">
+                  <ArrowForwardIosRoundedIcon sx={{ fontSize: "1.3rem" }} />
+                </div>
+              </div>
+            </div>
+
+            <div onClick={handleOpenMileageChange} className="account-mileage-exchange-container" style={{ marginTop: "1.5rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div className="account-mileage-history-info-container">
+                  <span className="bold-text" style={{ fontSize: "1.1rem" }}>
+                    마일리지 교환
+                  </span>
+                </div>
+                <div className="account-mileage-history-icon-container">
+                  <ArrowForwardIosRoundedIcon sx={{ fontSize: "1.3rem" }} />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="account-privacy-container" style={{ marginTop: "2.5rem" }}>
+          <div className="account-padding-container">
+            <div className="account-privacy-title-container" style={{ color: "#006DD1" }}>
+              <span className="bold-text" style={{ fontSize: "1.3rem" }}>
+                개인정보
+              </span>
+            </div>
+
+            <div className="account-privacy-detail-container" style={{ marginTop: "1.5rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div className="account-mileage-history-info-container">
+                  <span className="bold-text" style={{ fontSize: "1.1rem" }}>
+                    개인정보 상세
+                  </span>
+                </div>
+                <div className="account-mileage-history-icon-container">
+                  <ArrowForwardIosRoundedIcon sx={{ fontSize: "1.3rem" }} />
+                </div>
+              </div>
+            </div>
+
+            <div onClick={handleOpenupdateAccount} className="account-privacy-update-container" style={{ marginTop: "1.5rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div className="account-mileage-history-info-container">
+                  <span className="bold-text" style={{ fontSize: "1.1rem" }}>
+                    개인정보 수정
+                  </span>
+                </div>
+                <div className="account-mileage-history-icon-container">
+                  <ArrowForwardIosRoundedIcon sx={{ fontSize: "1.3rem" }} />
+                </div>
+              </div>
+            </div>
+
+            <div onClick={handleSignoutOpen} className="account-delete-user-container" style={{ marginTop: "1.5rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div className="account-mileage-history-info-container">
+                  <span className="bold-text" style={{ fontSize: "1.1rem" }}>
+                    회원 탈퇴
+                  </span>
+                </div>
+                <div className="account-mileage-history-icon-container">
+                  <ArrowForwardIosRoundedIcon sx={{ fontSize: "1.3rem" }} />
+                </div>
+              </div>
+            </div>
+
+            <div onClick={handleLoginoutOpen} className="account-logout-container" style={{ marginTop: "1.5rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div className="account-mileage-history-info-container">
+                  <span className="bold-text" style={{ fontSize: "1.1rem" }}>
+                    로그아웃
+                  </span>
+                </div>
+                <div className="account-mileage-history-icon-container">
+                  <ArrowForwardIosRoundedIcon sx={{ fontSize: "1.3rem" }} />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="empty-container" style={{ display: "inline-block", height: "7rem" }}></div>
       </div>
 
       <Modal open={MileageOpen} onClose={handleCloseMileage} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
