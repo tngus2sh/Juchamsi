@@ -218,7 +218,6 @@ public class ParkingServiceImpl implements ParkingService {
             }
         }
         
-        
         // 주차 내역 정보 업데이트
         parkingHistoryRepository.updateParkingHistory(DISABLED, parkingHistoryOptional.get().getId());
     }
@@ -234,6 +233,7 @@ public class ParkingServiceImpl implements ParkingService {
             list.add(ParkingHistoryResponse.builder()
                             .userId(parkingHistoryDetailDto.getUserId())
                             .seatNumber(parkingHistoryDetailDto.getSeatNumber())
+                            .carNumber(parkingHistoryDetailDto.getCarNumber())
                             .outTime(outTime)
                             .active(parkingHistoryDetailDto.getActive().name())
                             .build());
@@ -243,11 +243,11 @@ public class ParkingServiceImpl implements ParkingService {
 
     // 각 주차장 자리마다 세부 정보 출력
     @Override
-    public ParkingHistoryDetailResponse showDetailParkingLot(String villaIdNumber, int seatNumber) {
+    public ParkingHistoryDetailResponse showDetailParkingLot(String villaIdNumber, String userId) {
         // 빌라와 주차장 아이디로 자리 번호마다 비어있는지 안 비어있는지 출력
-        Optional<ParkingHistoryDetailDto> parkingHistoryDetailDtoOptional =  parkingHistoryRepository.findParkingLotBySeatNumberAndLoginId(villaIdNumber, seatNumber);
+        Optional<ParkingHistoryDetailDto> parkingHistoryDetailDtoOptional =  parkingHistoryRepository.findParkingLotBySeatNumberAndLoginId(villaIdNumber, userId);
         if (parkingHistoryDetailDtoOptional.isEmpty())
-            throw new NotFoundException(ParkingHistoryDetailDto.class, seatNumber);
+            throw new NotFoundException(ParkingHistoryDetailDto.class, userId);
 
         String frontUserId = null;
         String backUserId = null;
@@ -281,6 +281,7 @@ public class ParkingServiceImpl implements ParkingService {
         return ParkingHistoryDetailResponse.builder()
                 .userId(parkingHistoryDetailDtoOptional.get().getUserId())
                 .outTime(parkingHistoryDetailDtoOptional.get().getOutTime().toString())
+                .carNumber(parkingHistoryDetailDtoOptional.get().getCarNumber())
                 .frontUserId(frontUserId)
                 .backUserId(backUserId)
                 .frontParkingFlag(frontParkingFlag)
