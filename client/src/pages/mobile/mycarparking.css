@@ -1,65 +1,132 @@
+.my-car-main {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.my-car-main::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera*/
+}
+
+.my-car-parking-container {
+  margin-top: 3.3rem;
+  padding: 1.5rem 0;
+  /* border: 1px solid black; */
+}
+
+.my-car-container {
+  display: inline-block;
+  width: 85%;
+  /* border: 1px solid black; */
+}
+
+.bold-text {
+  font-weight: bold;
+}
+
+.highlight {
+  background: linear-gradient(to top, #80b6e8, 40%, transparent 40%);
+}
+
+.my-car-timer-container {
+  display: inline-block;
+  width: 100%;
+  /* height: 8rem; */
+  margin-top: 0.7rem;
+  border-radius: 0.5rem;
+  background-color: #f7f7f7;
+  box-shadow: 3px 3px 3px #cecece;
+}
+
+.my-car-date-container {
+  margin-top: 0.7rem;
+  margin-left: 0.7rem;
+  text-align: left;
+  color: #575757;
+  font-size: 1.3rem;
+}
+
+.my-car-time-container {
+  margin-top: 0.7rem;
+  font-size: 4rem;
+  margin-bottom: 2rem;
+}
+
+.my-car-update-container {
+  margin-top: 1rem;
+}
+
+.double-car-parking-container {
+  margin-top: 1rem;
+  background-color: #f7f7f7;
+}
+
+.double-parking-container {
+  display: inline-block;
+  width: 85%;
+  padding-top: 1.5rem;
+}
+
 .mycarparkingbox {
-    position: absolute;
-    top:28%;
-    left:10%;
+  position: absolute;
+  top: 28%;
+  left: 10%;
 }
 
 .mycarparkingbox1 {
-    position: absolute;
-    top:25%;
-    left:10%;
-    border-radius: 8px 0 0 8px; /* 왼쪽 위, 왼쪽 아래를 둥글게 */
+  position: absolute;
+  top: 25%;
+  left: 10%;
+  border-radius: 8px 0 0 8px; /* 왼쪽 위, 왼쪽 아래를 둥글게 */
 }
 
 .mycarparkingbox2 {
-    position: absolute;
-    top:25%;
-    left:10%;
-    border-radius: 8px 0 0 8px; /* 왼쪽 위, 왼쪽 아래를 둥글게 */
-    background-color: #33907C;
+  position: absolute;
+  top: 25%;
+  left: 10%;
+  border-radius: 8px 0 0 8px; /* 왼쪽 위, 왼쪽 아래를 둥글게 */
+  background-color: #33907c;
 }
 
 .mycarparkingbox3 {
-    position: absolute;
-    top:25%;
-    left:50%;
-    border-radius: 0 8px 8px 0; /* 오른쪽 위, 오른쪽 아래를 둥글게 */
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  border-radius: 0 8px 8px 0; /* 오른쪽 위, 오른쪽 아래를 둥글게 */
 }
 
 .mycarparkingbox4 {
-    position: absolute;
-    top:25%;
-    left:50%;
-    border-radius: 0 8px 8px 0; /* 오른쪽 위, 오른쪽 아래를 둥글게 */
-    background-color: #33907C;
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  border-radius: 0 8px 8px 0; /* 오른쪽 위, 오른쪽 아래를 둥글게 */
+  background-color: #33907c;
 }
 
 .othercarouttimebox {
-    position: absolute;
-    top:40%;
-    left:50%;
-    border-radius: 8px; /* 오른쪽 위, 오른쪽 아래를 둥글게 */
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  border-radius: 8px; /* 오른쪽 위, 오른쪽 아래를 둥글게 */
 }
 
-.datetiembtn{
-    position: absolute;
-    width: 100px;
-    height: 30px;
-    top:80%;
-    left:38%;
-    background: #33907C;
-    opacity: 0.8;
-    border-radius: 32px;
+.datetiembtn {
+  position: absolute;
+  width: 100px;
+  height: 30px;
+  top: 80%;
+  left: 38%;
+  background: #33907c;
+  opacity: 0.8;
+  border-radius: 32px;
 }
 
 .datetimebtntext {
-    position: absolute;
-    top:25%;
-    left:30%;
-    color: aliceblue;
-    font-size: 18px;
+  position: absolute;
+  top: 25%;
+  left: 30%;
+  color: aliceblue;
+  font-size: 18px;
 }
 
 .outdaystyle1 {
-    width: 100%;
+  width: 100%;
 }
