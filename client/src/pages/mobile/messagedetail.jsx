@@ -275,6 +275,7 @@ const Messagedetail = () => {
               sx={{
                 width: "95%",
                 borderRadius: "100px",
+                ml: ".9rem",
               }}
               id="outlined-basic"
               value={message}

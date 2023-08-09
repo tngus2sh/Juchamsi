@@ -43,11 +43,15 @@ const Login = () => {
   const loginId = useSelector((state) => state.loginform.loginId);
   const loginPassword = useSelector((state) => state.loginform.loginPassword);
 
-  const isStoreLoginChecked = useSelector((state) => state.loginform.isStoreLoginChecked);
+  // const isStoreLoginChecked = useSelector((state) => state.loginform.isStoreLoginChecked);
 
   useEffect(() => {
-    console.log(isStoreLoginChecked);
-  }, [isStoreLoginChecked]);
+    const loadedId = localStorage.getItem("savedId");
+    if (loadedId) {
+      setSaveId(true);
+      setSavedId(loadedId);
+    }
+  }, []);
   const loginMove = (e) => {
     // 로그인 실행
     loginSubmit();
@@ -67,6 +71,12 @@ const Login = () => {
         if (response.data && response.data.success) {
           // 로그인 성공한 경우
           console.log(response.data);
+          // 아이디저장체크시
+          if (saveId) {
+            localStorage.setItem("saveId", loginId);
+          } else {
+            localStorage.removeItem("saveId");
+          }
           // 로그인데이터저장
           dispatch(setId(response.data.response.loginId));
           dispatch(setName(response.data.response.name));
@@ -90,10 +100,18 @@ const Login = () => {
 
   const handleLoginChange = (e) => {
     dispatch(setLoginId(e.target.value));
+    setSavedId(e.target.value);
   };
 
   const handlePasswordChange = (e) => {
     dispatch(setLoginPassword(e.target.value));
+  };
+
+  const [saveId, setSaveId] = useState(false); // 아이디 저장 여부 상태
+  const [savedId, setSavedId] = useState("");
+
+  const handleSaveIdChange = (e) => {
+    setSaveId(e.target.checked); // 체크박스의 상태 업데이트
   };
 
   return (
@@ -147,6 +165,7 @@ const Login = () => {
                       autoFocus
                       size="small"
                       onChange={handleLoginChange}
+                      value={savedId}
                     />
 
                     <TextField
@@ -162,7 +181,13 @@ const Login = () => {
                       onChange={handlePasswordChange}
                     />
                     <FormControlLabel
-                      control={<Checkbox color="mainColor" />}
+                      control={
+                        <Checkbox
+                          color="mainColor"
+                          checked={saveId}
+                          onChange={handleSaveIdChange}
+                        />
+                      }
                       label={<Typography style={{ fontSize: 13 }}>아이디 저장</Typography>}
                       style={{ display: "flex", justifyContent: "start" }}
                     />
