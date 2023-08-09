@@ -24,6 +24,7 @@ function Home() {
     return () => clearTimeout(timer);
   }, [handleOpenLoginPage]);
 
+  
   return (
     <div className="home">
       <CSSTransition

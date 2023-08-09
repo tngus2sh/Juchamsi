@@ -21,7 +21,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
-import axiosInstance from '../../axios/axios'
+import http from "../../axios/http";
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 
@@ -84,7 +84,7 @@ function Login() {
       if (firstlogin === true) {
         handleOpenFirstLoginCheck()
       } else {
-        axiosInstance({
+        http({
           method:'post',
           url:'/tenant/login',
           data:{

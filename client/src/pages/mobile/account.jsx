@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./account.css";
 import Footer from "./footer";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
 import EditIcon from "@mui/icons-material/Edit";
@@ -10,20 +10,25 @@ import { useNavigate } from "react-router-dom";
 import DescriptionIcon from "@mui/icons-material/Description";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
-import axiosInstance from "../../axios/axios";
+import http from "../../axios/http";
+import { setMileageList } from "../../redux/mobileUserinfo";
 import { Button, Container, Grid, Typography } from "@mui/material";
+import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 
 function Account() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const loginId = useSelector((state) => state.mobileInfo.loginId);
   const name = useSelector((state) => state.mobileInfo.name);
-  const totalmileage = useSelector((state) => state.mobileInfo.totalMileage);
+  let totalmileage = useSelector((state) => state.mobileInfo.totalMileage);
   const [MileageOpen, setMileageOpen] = React.useState(false);
   const ID = useSelector((state) => state.mobileInfo.id);
   const imageUrl = useSelector((state) => state.mobileInfo.imageUrl); // 이미지 URL 가져오기
 
   const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
   const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
+  // { 'id': 1, 'point': 100, 'type': '적립', 'description': '출금 시간 등록 적립', 'createdDate': 날짜, 'lastModifiedDate': 날짜}
+  const alltext = useSelector((state) => state.mobileInfo.mileagelist);
 
   useEffect(() => {
     const handleResize = () => {
@@ -35,6 +40,23 @@ function Account() {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
+  }, []);
+
+  useEffect(() => {
+    http({
+      method: "get",
+      url: `/mileage/${loginId}`,
+    })
+      .then((res) => {
+        let milelist = [];
+        for (let i = 0; i < res.data.response.length; i++) {
+          milelist.push(res.data.response[i]);
+        }
+        dispatch(setMileageList(milelist));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   const handleOpenupdateAccount = () => {
@@ -49,55 +71,13 @@ function Account() {
     }
   };
   const handleOpenMileage = () => {
-    axiosInstance({
-      method: "get",
-      url: `/mileage/${loginId}`,
-    })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    handleTagClick("전체");
     setMileageOpen(true); // 모달 열기
   };
   const handleCloseMileage = () => {
     setMileageOpen(false); // 모달 닫기
   };
 
-  // axios결과 res.data.response 리스트 안에 딕셔너리 형태인듯?
-  // { 'id': 1, 'point': 100, 'type': '적립', 'description': '출금 시간 등록 적립', 'createdDate': 날짜, 'lastModifiedDate': 날짜}
-  const alltext = [
-    {
-      id: 1,
-      point: 100,
-      type: "적립",
-      description: "출차 시간 등록 적립",
-      createDate: "2023.08.02 09:56",
-    },
-    { id: 2, point: -100, type: "사용", description: "교환", createDate: "2023.08.03 09:56" },
-    {
-      id: 3,
-      point: 30,
-      type: "적립",
-      description: "출차 시간 등록 적립",
-      createDate: "2023.08.03 19:56",
-    },
-    {
-      id: 4,
-      point: 40,
-      type: "적립",
-      description: "차량 키 보관 적립",
-      createDate: "2023.08.03 20:00",
-    },
-    {
-      id: 5,
-      point: 30,
-      type: "적립",
-      description: "출차 시간 준수",
-      createDate: "2023.08.04 07:35",
-    },
-  ];
   // type이 '적립'인 것만 filtering하여 savingtext 배열로 생성
   const savingtext = alltext.filter((item) => item.type === "적립");
 
@@ -137,106 +117,91 @@ function Account() {
 
   return (
     <React.Fragment>
-      <Box
-        sx={{
-          backgroundColor: "gray",
-          m: "20px",
-          borderRadius: "0.8rem",
-          p: "10px",
-        }}
-      >
-        <Grid container sx={{ height: "10vh", alignItems: "center" }}>
-          <Stack direction="row" spacing={2} sx={{ ml: "1rem" }}>
-            <Avatar alt="Remy Sharp" src={imageUrl} sx={{ width: 50, height: 50 }} />
-            <Stack direction="column" sx={{ alignItems: "start" }}>
-              <Typography>{loginId}</Typography>
-              <Typography className="namestyle">
-                {name} <span className="namestyle2">님 환영합니다.</span>
-              </Typography>
-            </Stack>
-          </Stack>
-        </Grid>
-        <Grid container sx={{ justifyContent: "end" }}>
-          <Fab
-            sx={{ width: "2rem", height: "1.8rem" }}
-            aria-label="edit"
-            onClick={handleOpenupdateAccount}
-          >
-            <EditIcon sx={{ width: "1.5rem", height: "1.4rem" }} />
-          </Fab>
-        </Grid>
-      </Box>
-      <Box
-        sx={{
-          backgroundColor: "gray",
-          m: "20px",
-          borderRadius: "0.8rem",
-          p: "10px",
-        }}
-      >
-        <Typography sx={{ fontSize: "1.0rem" }}>현재 마일리지</Typography>
-        <Grid container sx={{ height: "7vh" }}>
-          <Grid item xs={5}>
-            <Stack
-              direction="row"
-              sx={{ width: "100%", height: "7vh", alignItems: "center", ml: "1rem" }}
-            >
-              <img
-                src={process.env.PUBLIC_URL + "/img/mobile/2.png"}
-                className="mileimg"
-                alt="moneylogo"
-              ></img>
-              <Typography sx={{ fontSize: "1.6rem", ml: "1rem" }}>{totalmileage}</Typography>
-            </Stack>
-          </Grid>
-          <Grid item xs={5} />
-          <Grid item xs={2}></Grid>
-        </Grid>
-        <Grid container sx={{ justifyContent: "end" }}>
-          <DescriptionIcon sx={{}} onClick={handleOpenMileage} />
-        </Grid>
-      </Box>
-      <Box sx={{ backgroundColor: "gray", m: "20px", borderRadius: "0.8rem", p: "10px" }}>
-        <Typography sx={{ fontSize: "1.0rem" }}>마일리지 교환</Typography>
-        <Typography sx={{ fontSize: "0.7rem" }}>
-          (보유 마일리지 3000이상시 1000포인트 단위 교환가능)
-        </Typography>
-        <Button
+      <div className="account-main-container">
+        <Box
           sx={{
-            backgroundColor: "black",
-            mt: "1rem",
-            boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.16)",
-            borderRadius: "10px",
+            width: "100%",
+            height: "3.3rem",
+            backgroundColor: "#112D4E",
+            position: "fixed",
+            top: 0,
           }}
-          onClick={handleOpenMileageChange}
         >
-          <Typography className="mileagebtntext">교환</Typography>
-        </Button>
-      </Box>
-      <Modal
-        open={MileageOpen}
-        onClose={handleCloseMileage}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+          <Grid container sx={{ justifyContent: "center", height: "3.3rem", alignContent: "center" }}>
+            <Typography className="main-info-text" sx={{ fontWeight: "bold" }}>
+              마이 페이지
+            </Typography>
+          </Grid>
+        </Box>
+
+        <div className="account-container">
+          <div className="account-flex-container">
+            <div className="account-img-container">
+              <Avatar alt="Remy Sharp" src={imageUrl} sx={{ width: "4rem", height: "4rem" }} />
+            </div>
+            <div className="account-text-container">
+              <Typography style={{ fontSize: "0.95rem" }}>{name} 님</Typography>
+              <Typography style={{ fontSize: "0.5rem" }}>&nbsp;</Typography>
+              {/* <Typography>{loginId}</Typography> */}
+            </div>
+            <div className="update-info-button-container">
+              <button onClick={handleOpenupdateAccount} className="account-btn">
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div style={{ fontSize: "0.9rem" }}>&nbsp;회원 정보</div>
+                  <ArrowForwardIosRoundedIcon sx={{ fontSize: "0.8rem" }} />
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="mileage-container">
+          <div style={{ textAlign: "left", fontSize: "1.1rem", fontWeight: "bold" }}>
+            <span>마일리지</span>
+          </div>
+
+          <div className="mileage-total-container">
+            <div className="mileage-number-container">
+              <Grid container spacing={1.6} className="mileage-grid-container" sx={{ alignItems: "center", paddingLeft: "0.3rem", marginTop: "0.1rem", alignItems: "center" }}>
+                <Grid item xs={6} sx={{ textAlign: "left" }}>
+                  <div>사용 가능 마일리지</div>
+                </Grid>
+                <Grid item xs={6}>
+                  <div className="mileage-number-container">
+                    <div className="total-mileage-container">{totalmileage}</div>
+                    <div className="point-icon-container">
+                      <p>P</p>
+                    </div>
+                  </div>
+                </Grid>
+              </Grid>
+            </div>
+
+            <div onClick={handleOpenMileage} className="mileage-button-container">
+              <div className="mileage-history-btn-container" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span>마일리지 내역</span>
+                <ArrowForwardIosRoundedIcon sx={{ fontSize: "1.2rem" }} />
+              </div>
+
+              <div onClick={handleOpenMileageChange} className="mileage-exchange-btn-container" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span>마일리지 교환</span>
+                <ArrowForwardIosRoundedIcon sx={{ fontSize: "1.2rem" }} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <Modal open={MileageOpen} onClose={handleCloseMileage} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style1}>
           <p className="modaltext1">마일리지 이용내역</p>
-          <p
-            className={`modaltext2 ${selectedTag === "전체" ? "selected" : ""}`}
-            onClick={() => handleTagClick("전체")}
-          >
+          <p className={`modaltext2 ${selectedTag === "전체" ? "selected" : ""}`} onClick={() => handleTagClick("전체")}>
             전체
           </p>
-          <p
-            className={`modaltext3 ${selectedTag === "적립" ? "selected" : ""}`}
-            onClick={() => handleTagClick("적립")}
-          >
+          <p className={`modaltext3 ${selectedTag === "적립" ? "selected" : ""}`} onClick={() => handleTagClick("적립")}>
             적립
           </p>
-          <p
-            className={`modaltext4 ${selectedTag === "사용" ? "selected" : ""}`}
-            onClick={() => handleTagClick("사용")}
-          >
+          <p className={`modaltext4 ${selectedTag === "사용" ? "selected" : ""}`} onClick={() => handleTagClick("사용")}>
             사용
           </p>
           {/* 보여질 내용을 상태에 따라 렌더링 */}
@@ -255,7 +220,8 @@ function Account() {
           ))}
         </Box>
       </Modal>
-      <Footer AccounticonColor="#B7C4CF" />
+
+      <Footer AccounticonColor="#006DD1" />
     </React.Fragment>
   );
 }

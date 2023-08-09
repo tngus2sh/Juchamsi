@@ -280,8 +280,11 @@ const Resident = () => {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [rows, setRows] = React.useState([]);
+  const [originalRows, setOriginalRows] = React.useState([]);
 
   const villaIdNumber = useSelector((state) => state.webInfo.villaIdNumber);
+
+  const [searchText, setSearchText] = React.useState("");
 
   useEffect(() => {
     TenantList();
@@ -293,6 +296,7 @@ const Resident = () => {
       .then((response) => {
         console.log(response.data.response);
         setRows(response.data.response);
+        setOriginalRows(response.data.response);
         setLoading(false);
       })
       .catch((error) => {
@@ -300,6 +304,18 @@ const Resident = () => {
         setLoading(false);
       });
   }
+
+  const handleSearchChange = (e) => {
+    setSearchText(e.target.value);
+  };
+
+  const handleSearchSubmit = () => {
+    console.log("Search:", searchText);
+    setRows(originalRows);
+    if (searchText !== "") {
+      setRows(originalRows.filter((row) => row.name.includes(searchText)));
+    }
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -380,7 +396,12 @@ const Resident = () => {
                   <SearchIconWrapper>
                     <SearchIcon />
                   </SearchIconWrapper>
-                  <StyledInputBase placeholder="Search…" inputProps={{ "aria-label": "search" }} />
+                  <StyledInputBase
+                    placeholder="name…"
+                    inputProps={{ "aria-label": "search" }}
+                    value={searchText}
+                    onChange={handleSearchChange}
+                  />
                 </Search>
               </Grid>
               <Grid item xs={1}>
@@ -392,6 +413,7 @@ const Resident = () => {
                     borderRadius: 10,
                     fontWeight: "bold",
                   }}
+                  onClick={handleSearchSubmit}
                 >
                   <Typography color="white" fontSize={"15px"}>
                     검색

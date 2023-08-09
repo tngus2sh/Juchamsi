@@ -3,9 +3,14 @@ import { createSlice } from '@reduxjs/toolkit';
 const MycarstatusSlice = createSlice({
   name: 'parking status',
   initialState: {
-    BoxItem: [true, false, true, false, false, true],
-    mycar: 2,
-    Outtime: ['23.08.01 09:00', '', '23.08.01 06:00', '', '', '23.08.01 05:00'],
+    // 전체 주차 현황
+    BoxItem: [],
+    // 내차 위치
+    mycar: null,
+    // 출차 시간(주차한 차량들만 들어가있음)
+    Outtime: [],
+    // 주차 위치
+    parkingnow: [],
     Boxrow:3,
     BoxColumn:2,
   },
@@ -25,8 +30,11 @@ const MycarstatusSlice = createSlice({
     setBoxColumn: (state, action) => {
       state.BoxColumn = action.payload;
     },
+    setParkingnow: (state, action) => {
+      state.parkingnow = action.payload;
+    },
   },
 });
 
-export const { setBoxItem, setmycar, setOuttime, setBoxColumn, setBoxrow} = MycarstatusSlice.actions;
+export const { setBoxItem, setmycar, setOuttime, setBoxColumn, setBoxrow, setParkingnow} = MycarstatusSlice.actions;
 export default MycarstatusSlice.reducer;
