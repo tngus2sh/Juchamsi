@@ -78,12 +78,6 @@ public class ParkingApiController {
         log.debug("createOutTime={}", request);
         log.info("createOuTime={}", request);
         try {
-//            // test =======================================================
-//            parkingService.createEntrance(EntranceRequest.builder()
-//                            .groundAddress("B0:A7:32:DB:C8:46")
-//                            .macAddress("dc:a6:32:70:b7:ca")
-//                            .build());
-//            // =============================================================
             parkingService.createOutTime(request);
         } catch (NotFoundException e) {
             return ERROR("존재하지 않는 정보입니다.", HttpStatus.NO_CONTENT);
@@ -115,7 +109,7 @@ public class ParkingApiController {
     ) {
         log.info("createExit={}", request);
         try {
-            parkingService.createExit(request);
+            parkingService.createExit(request); 
             chatService.removeChatRoom(request.getMacAddress()); // 채팅방 없애기
             return OK(null);
         } catch (NotFoundException e) {
@@ -148,16 +142,16 @@ public class ParkingApiController {
     }
 
     @ApiOperation(value = "주차장 실시간 현황 상세 조회", notes = "사용자는 각 주차 칸마다 실시간 현황을 확인합니다")
-    @GetMapping("/lot/{villa_id_number}/{seat_number}")
+    @GetMapping("/lot/{villa_id_number}/{user_id}")
     public ApiResult<ParkingHistoryDetailResponse> showDetailParkingLot(
             @ApiParam(value = "villa-id-number")
             @PathVariable("villa_id_number") String villaIdNumber,
-            @ApiParam(value = "seat-number")
-            @PathVariable("seat_number") int seatNumber
+            @ApiParam(value = "user_id")
+            @PathVariable("user_id") String userId
     ) { 
         log.debug("showDetailParkingL={}", villaIdNumber);
         try {
-            ParkingHistoryDetailResponse parkingHistoryResponse = parkingService.showDetailParkingLot(villaIdNumber, seatNumber);
+            ParkingHistoryDetailResponse parkingHistoryResponse = parkingService.showDetailParkingLot(villaIdNumber, userId);
             return OK(parkingHistoryResponse);
         } catch (NotFoundException e) {
             return ERROR("해당하는 정보가 존재하지 않습니다.", HttpStatus.NO_CONTENT);
