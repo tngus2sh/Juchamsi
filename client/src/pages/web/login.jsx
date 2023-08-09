@@ -46,7 +46,8 @@ const Login = () => {
   // const isStoreLoginChecked = useSelector((state) => state.loginform.isStoreLoginChecked);
 
   useEffect(() => {
-    const loadedId = localStorage.getItem("savedId");
+    const loadedId = localStorage.getItem("saveId");
+    console.log(loadedId);
     if (loadedId) {
       setSaveId(true);
       setSavedId(loadedId);
@@ -73,7 +74,7 @@ const Login = () => {
           console.log(response.data);
           // 아이디저장체크시
           if (saveId) {
-            localStorage.setItem("saveId", loginId);
+            localStorage.setItem("saveId", response.data.response.loginId);
           } else {
             localStorage.removeItem("saveId");
           }
