@@ -38,15 +38,15 @@ function App() {
             <Route
             path="/"
             element={
-              <Navigate
-                to={
-                  window.matchMedia('(max-width: 600px)').matches
-                    ? '/Mobile/Login'
-                    : window.matchMedia('(max-width: 1000px)').matches
-                    ? '/Kiosk/Main'
-                    : '/Web/Main'
-                }
-              />
+            <Navigate
+              to={
+                window.matchMedia('(max-width: 600px)').matches
+                  ? '/Mobile/Login'
+                  : window.matchMedia('(max-width: 1000px)').matches
+                  ? '/Kiosk/Main'
+                  : '/Web/Main'
+              }
+            />
             }
           />
               <Route path="/Web/Main" element={<LoginPage />} />

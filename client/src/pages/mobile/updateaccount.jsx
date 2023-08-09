@@ -9,7 +9,6 @@ import Box from "@mui/material/Box";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import { useNavigate } from "react-router-dom";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
-import axiosInstance from "../../axios/axios";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { setCarNumber, setphoneNumber, setVillaNumber, setImageUrl, setLogout } from "../../redux/mobileUserinfo";
@@ -18,6 +17,7 @@ import Button from "@mui/material/Button";
 import UpdateModal from "../../components/mobile/updateModal";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
+import http from "../../axios/http";
 
 function Account() {
   const dispatch = useDispatch();
@@ -111,7 +111,7 @@ function Account() {
   };
 
   const handleLoginoutOpen = () => {
-    axiosInstance({
+    http({
       method: "get",
       url: `/tenant/logout/${loginId}`,
     })
@@ -125,7 +125,7 @@ function Account() {
   };
 
   const handleSignoutOpen = () => {
-    axiosInstance({
+    http({
       method: "delete",
       url: `/tenant/${loginId}`,
     })
@@ -146,7 +146,7 @@ function Account() {
 
   const handleOpenupdatephonenumberupdate = () => {
     setupdatephonenumberupdate(true); // 모달 열기
-    axiosInstance({
+    http({
       method: "post",
       url: "/sms/check",
       data: {
@@ -265,7 +265,7 @@ function Account() {
 
   const handleChangPhonnumberResult = () => {
     // 핸드폰 번호 정보변경요청
-    axiosInstance({
+    http({
       method: "put",
       url: "/tenant",
       data: {
@@ -291,7 +291,7 @@ function Account() {
 
   const handleChangCarnumberResult = () => {
     // 자동차 번호 정보변경요청
-    axiosInstance({
+    http({
       method: "put",
       url: "/tenant",
       data: {
@@ -318,7 +318,7 @@ function Account() {
 
   const handleChangHousenumberResult = () => {
     // 호수 번호 정보변경요청
-    axiosInstance({
+    http({
       method: "put",
       url: "/tenant",
       data: {

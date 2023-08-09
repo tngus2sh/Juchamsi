@@ -1,5 +1,5 @@
 import './signup.css'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
@@ -14,7 +14,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Checkbox from '@mui/material/Checkbox';
-import axiosInstance from '../../axios/axios'
+import http from "../../axios/http";
 import PrivacyAgreement from '../../components/signup/privacyagreement';
 
 function Signup() {
@@ -159,7 +159,7 @@ function Signup() {
       if (isLoginButtonClickable === true) {
         // idcheckresult에 따라서 '사용가능or중복' 여부 판별해서 보여주는 모달창 결정
         // true는 중복, false는 사용가능
-        axiosInstance({
+        http({
           method:'get',
           url:`/user/id/${id}`,
           data:{
@@ -186,7 +186,7 @@ function Signup() {
     // 핸드폰번호 인증버튼 사용가능여부 판별
     const handleOpenCheckPhonenumber = () => {
       if (isPhonenumberButtonClickable === true) {
-          axiosInstance({
+        http({
             method:'post',
             url:'/sms/check',
             data:{
@@ -237,7 +237,7 @@ const handlePhoneModalConfirmClick = () => {
         // phonenumbecheck === true &&
         isPrivacyAgreed === true
       ) {
-        axiosInstance({
+        http({
           method:'post',
           url:'/tenant',
 
