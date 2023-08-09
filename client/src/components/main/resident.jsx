@@ -283,6 +283,8 @@ const Resident = () => {
 
   const villaIdNumber = useSelector((state) => state.webInfo.villaIdNumber);
 
+  const [searchText, setSearchText] = React.useState("");
+
   useEffect(() => {
     TenantList();
   }, []);
@@ -300,6 +302,18 @@ const Resident = () => {
         setLoading(false);
       });
   }
+
+  const handleSearchChange = (e) => {
+    setSearchText(e.target.value);
+  };
+
+  const handleSearchSubmit = () => {
+    console.log("Search:", searchText);
+    if (searchText === "") {
+    } else {
+      rows.filter((row) => row.name === searchText);
+    }
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -380,7 +394,12 @@ const Resident = () => {
                   <SearchIconWrapper>
                     <SearchIcon />
                   </SearchIconWrapper>
-                  <StyledInputBase placeholder="Search…" inputProps={{ "aria-label": "search" }} />
+                  <StyledInputBase
+                    placeholder="name…"
+                    inputProps={{ "aria-label": "search" }}
+                    value={searchText}
+                    onChange={handleSearchChange}
+                  />
                 </Search>
               </Grid>
               <Grid item xs={1}>
@@ -392,6 +411,7 @@ const Resident = () => {
                     borderRadius: 10,
                     fontWeight: "bold",
                   }}
+                  onClick={handleSearchSubmit}
                 >
                   <Typography color="white" fontSize={"15px"}>
                     검색

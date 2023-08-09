@@ -82,6 +82,7 @@ const Step1 = () => {
   const [modalMessage, setModalMessage] = React.useState("");
 
   const [boxOpen, setBoxOpen] = React.useState(false);
+  const [disable, setdisable] = React.useState(true);
   const phoneNumber = useSelector((state) => state.form.step1Data.phoneNumber);
 
   const handleOpen = () => {
@@ -99,6 +100,12 @@ const Step1 = () => {
   };
 
   const handlePhoneNumberChange = (e) => {
+    const isValidPhoneNumber = /^\d{11}$/.test(e.target.value);
+    if (isValidPhoneNumber) {
+      setdisable(false);
+    } else {
+      setdisable(true);
+    }
     dispatch(setStep1Data({ phoneNumber: e.target.value }));
   };
 
@@ -139,6 +146,7 @@ const Step1 = () => {
             <Button
               variant="contained"
               color="mainColor"
+              disabled={disable}
               sx={{
                 height: "30px",
                 borderRadius: 10,

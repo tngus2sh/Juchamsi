@@ -11,7 +11,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import IconButton from "@mui/material/IconButton";
-import axiosInstance from "../../axios/axios";
+import http from "../../axios/http";
 import { setPassword } from "../../redux/mobileauthlogin";
 import { useSelector, useDispatch } from "react-redux";
 import { Grid } from "@mui/material";
@@ -108,7 +108,7 @@ function Passwordchange() {
   const handleOpenChangePasswordResultPage = () => {
     if (isChangePasswordClickable) {
       console.log(carNumber);
-      axiosInstance({
+      http({
         method: "put",
         url: "/tenant",
         data: {

@@ -4,9 +4,12 @@ import * as React from "react";
 import "./savepage.css";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
+import http from "../../axios/http"
+import { useDispatch, useSelector } from "react-redux";
 
 function Savepage() {
   const navigate = useNavigate();
+  const villaId = useSelector((state) => state.kioskInfo.kioskVillaId);
   const [idValue, setIdValue] = React.useState("");
   const [pwValue, setPwValue] = React.useState("");
   const [activeField, setActiveField] = React.useState("id");
@@ -48,13 +51,27 @@ function Savepage() {
   };
 
   const handleOkClick = () => {
-    inputid = idValue;
-    inputpw = pwValue;
-    // You can now use inputid and inputpw variables as needed
-    console.log("ID:", inputid);
-    console.log("Password:", inputpw);
+    responseCheck();
     navigate("/Kiosk/savingpage");
   };
+
+  async function responseCheck() {
+    //HTTP POST 요청 보내기
+    await http
+      .post(`//`, {
+        villaId : villaId,
+        villaNumber : idValue,
+        passward : pwValue,
+      })
+      .then((response) => {
+        console.log(response.data);
+        // 받은 정보들로 IoT와 통신하여 열쇠보관함 open
+
+      }).catch((error) => {
+        // 요청 실패 시 에러 처리
+        console.error("Error while submitting:", error);
+      });
+    }
 
   const buttonSX = {
     fontSize: "1.3rem",

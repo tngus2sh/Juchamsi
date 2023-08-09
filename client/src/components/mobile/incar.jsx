@@ -12,6 +12,8 @@ import dayjs from "dayjs";
 import { Container } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setWhenEnteringCar } from "../../redux/mobileUserinfo";
+import { setOuttime } from '../../redux/mobileparking'
+import http from "../../axios/http";
 
 const InCar = (props) => {
   const style = {
@@ -27,6 +29,11 @@ const InCar = (props) => {
     textAlign: "center",
   };
   const dispatch = useDispatch();
+
+  const mycarnumb = useSelector((state) => state.mycar.mycar);
+  let allouttime = useSelector((state) => state.mycar.Outtime);
+  const userid = useSelector((state) => state.mobileInfo.loginId);
+  const vilanumber = useSelector((state) => state.mobileInfo.villaIdNumber);
 
   const currentTime = dayjs();
   const currentDateTimeString = currentTime.format("YY.MM.DD HH:mm");
@@ -56,15 +63,33 @@ const InCar = (props) => {
   };
 
   const handleOk = () => {
-    const selectedTimeParsed = dayjs(selectedTime, "HH:mm");
+    const selectedTimeParsed = dayjs(selectedTime, "HH:mm:ss");
     const timeDifferenceInMinutes = selectedTimeParsed.diff(currentTime, "minutes");
     // 최소 30분 이상 설정해야함!
     if (timeDifferenceInMinutes >= 30) {
       // 이때 출차시간을 Redux에 넣어서 해당자리에 출차 시간 반영!!@!!!
-      const formattedDate = selectedDate.format("YY.MM.DD");
+      const formattedDate = selectedDate.format("YYYY-MM-DD");
       const formattedTime = selectedTime.format("HH:mm");
       const newOuttime = `${formattedDate} ${formattedTime}`;
-
+      let updatetime = [...allouttime]
+      updatetime[mycarnumb] = newOuttime
+      dispatch(setOuttime(updatetime))
+      http({
+        method:'post',
+        url:'/parking/out_time',
+        data: {
+          "outTime": updatetime[mycarnumb],
+          "seatNumber": mycarnumb,
+          "userId": userid,
+          "villaIdNumber": vilanumber,
+        }
+      })
+      .then(() => {
+        dispatch(setWhenEnteringCar(false));
+      })
+      .catch((err) => {
+        console.log(err)
+      })
       handleClose();
     } else {
       console.log(timeDifferenceInMinutes);
@@ -81,7 +106,7 @@ const InCar = (props) => {
       <Box sx={style}>
         <Container sx={{ width: "100%" }}>
           <Typography sx={{ mt: "10%" }} variant="h6" component="h2">
-            주차를 정삭적으로 완료하였습니다
+            주차를 완료하였습니다
           </Typography>
           <Typography sx={{ mt: "10%" }} variant="h6" component="h2">
             출차시간을 입력해주세요 (최소 30분 이상)

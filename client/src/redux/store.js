@@ -6,6 +6,7 @@ import mobileauthlogin from './mobileauthlogin';
 import mobileMycarstatus from './mobileparking';
 import webLoginInfo from './webLoginInfo';
 import mobielUserinfo from './mobileUserinfo';
+import kioskInfo from './kioskInfo';
 import chatInfo from './chatInfo';
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import storage from 'redux-persist/lib/storage';
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   chatInfo: persistReducer(persistConfig, chatInfo),
   webInfo: persistReducer(persistConfig, webLoginInfo),
   mobileInfo: persistReducer(persistConfig, mobielUserinfo),
+  kioskInfo: persistReducer(persistConfig, kioskInfo),
 });
 
 export const store = configureStore({
