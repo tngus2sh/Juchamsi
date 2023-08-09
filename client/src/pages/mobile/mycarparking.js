@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import "./mycarparking.css";
 import Footer from "./footer";
 import { useSelector, useDispatch } from "react-redux";
@@ -19,11 +19,45 @@ import { Container, Grid, Typography } from "@mui/material";
 import http from "../../axios/http";
 import Alert from "@mui/material/Alert";
 
-import { setOuttime } from "../../redux/mobileparking";
+import { setBoxItem, setOuttime, setmycar, setParkingnow } from "../../redux/mobileparking";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import MinorCrashRoundedIcon from "@mui/icons-material/MinorCrashRounded";
 
 function MycarParking() {
+  const villanumber = useSelector((state) => state.mobileInfo.villaIdNumber);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // 주차현황 가지고오기
+        http({
+          method:'get',
+          url:`/parking/lot/${villanumber}`
+        })
+        .then((res) => {
+          let resultbox = []
+            for (let i=0; i<res.data.response.length; i++) {
+              if (res.data.response[i].active === 'ACTIVE') {
+                resultbox.push(res.data.response[i])
+                if (res.data.response[i].userId === userid) {
+                  dispatch(setmycar(res.data.response[i].seatNumber))
+                }
+                }
+              }
+            dispatch(setBoxItem(resultbox))
+          })
+        .catch((err) => {
+          console.log(err)
+        })
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    // fetchData 함수를 호출하여 데이터를 받아옴
+    fetchData();
+  }, []); // 빈 배열을 넣어서 페이지 로드 시에만 useEffect 내부 코드가 실행되도록 설정
+
+
   const navigate = useNavigate();
   dayjs.locale("ko");
   const dispatch = useDispatch();
@@ -49,28 +83,46 @@ function MycarParking() {
   };
   const outTimeArray = Outtime(); // Outtime 함수를 호출하여 반환된 배열을 저장
 
-  // 앞(뒤)차 위치 확인
-  const othercar = () => {
-    let othercarnum = Mycar;
-    if (Mycar > Boxrow - 1) {
-      othercarnum -= Boxrow;
-    } else {
-      othercarnum += Boxrow;
-    }
+  // 앞차 위치 확인
+  const frontothercar = () => {
+    let othercarnum = null;
     let othercarouttime = null;
-    if (BoxItem[othercarnum]) {
-      othercarouttime = Outtime[othercarnum];
+    if (Mycar > Boxrow) {
+      othercarnum -= Boxrow;
+      if (outTimeArray[othercarnum] !== '') {
+        othercarouttime = outTimeArray[othercarnum];
+      }
     }
     return othercarouttime;
   };
 
-  // 앞(뒤)차 출차시간
-  const othercarouttime = othercar();
+  // 뒤차 위치 확인
+  const backothercar = () => {
+    let othercarnum = null;
+    let othercarouttime = null;
+    if (Mycar <= Boxrow) {
+      othercarnum -= Boxrow;
+      if (othercarnum <0) {
+        othercarnum = 0
+      }
+      if (outTimeArray[othercarnum] !== '') {
+        othercarouttime = outTimeArray[othercarnum];
+      }
+    }
+    return othercarouttime;
+  };
+  // 앞차 출차시간
+  const frontothercarouttime = frontothercar();
+  // 뒤차 출차시간
+  const backothercarouttime = backothercar()
 
   const userid = useSelector((state) => state.mobileInfo.loginId);
   const vilanumber = useSelector((state) => state.mobileInfo.villaIdNumber);
-  // 앞(뒤)차 존재 여부
-  const isothercar = othercarouttime !== null;
+  // 앞차 존재 여부
+  const isfrontothercar = frontothercarouttime !== null;
+
+  // 뒤차 존재 여부
+  const isbackothercar = backothercarouttime !== null;
 
   const style = {
     position: "absolute",
@@ -212,43 +264,108 @@ function MycarParking() {
               </div>
 
               <div className="my-car-timer-container">
-                <div className="my-car-date-container">{defaultday}</div>
+                <div className="my-car-date-container">{defaultday.substring(2, 10).replace(/-/g, '.')}</div>
                 <div className="my-car-time-container">{defaulttime}</div>
               </div>
 
               <div className="my-car-update-container">
                 <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", color: "#006DD1" }}>
-                  <div className="bold-text">시간 변경하기</div>
+                  <div className="bold-text" onClick={handleOpen}>시간 변경하기</div>
                   <ArrowForwardIosRoundedIcon sx={{ fontSize: "1rem" }} />
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="double-car-parking-container">
-            <div className="double-parking-container" style={{ textAlign: "left" }}>
-              <div className="bold-text" style={{ fontSize: "1.2rem" }}>
-                겹주차 현황
-              </div>
-
-              <div className="double-parking-info-container" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "1.5rem" }}>
-                <div className="double-parking-text-container">
-                  현재 {}에<br />
-                  차가 주차되어 있어요!
-                </div>
-                <div className="doubl-parking-icon-container">
-                  <MinorCrashRoundedIcon sx={{ color: "#006DD1", fontSize: "4rem" }} />
-                </div>
-              </div>
-
-              <div className="double-parking-content-container" style={{ marginTop: "2rem" }}>
+          {/* 겹주차(앞에 차량)이 있을 경우 */}
+          {!isbackothercar && !isfrontothercar && (
+            <div className="double-car-parking-container">
+              <div className="double-parking-container" style={{ textAlign: "left" }}>
                 <div className="bold-text" style={{ fontSize: "1.2rem" }}>
-                  겹주차 출차 예상 시간
+                  겹주차 현황
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "0.3rem" }}>
+                  <div>
+                    <p style={{display:'inline'}}>
+                    현재
+                    </p>
+                    <p style={{fontWeight:'bolder', display:'inline', fontSize:'2rem', color:'#006DD1', marginLeft:'0.3rem'}}>
+                    앞
+                    </p>
+                    에
+                    <p style={{marginTop:'0.3rem'}}>
+                    차가 주차되어 있어요!
+                    </p>
+                  </div>
+                  <div className="doubl-parking-icon-container">
+                    <MinorCrashRoundedIcon sx={{ color: "#006DD1", fontSize: "4rem" }} />
+                  </div>
+                </div>
+  
+                <div className="double-parking-content-container" style={{ marginTop: "2rem" }}>
+                  <div className="bold-text" style={{ fontSize: "1.2rem" }}>
+                    겹주차 출차 예상 시간
+                  </div>
+                </div>
+                <div className="my-car-timer-container">
+                  <div className="my-car-date-container">{defaultday.substring(2, 10).replace(/-/g, '.')}</div>
+                  <div className="my-car-time-container">{defaulttime}</div>
                 </div>
               </div>
             </div>
+          )}
+
+          {/* 겹주차(뒤에 차량)이 있을 경우 */}
+          {isbackothercar && (
+            <div className="double-car-parking-container">
+              <div className="double-parking-container" style={{ textAlign: "left" }}>
+                <div className="bold-text" style={{ fontSize: "1.2rem" }}>
+                  겹주차 현황
+                </div>
+  
+                <div className="double-parking-info-container" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "1.5rem" }}>
+                  <div className="double-parking-text-container">
+                    현재 뒤에<br />
+                    차가 주차되어 있어요!
+                  </div>
+                  <div className="doubl-parking-icon-container">
+                    <MinorCrashRoundedIcon sx={{ color: "#006DD1", fontSize: "4rem" }} />
+                  </div>
+                </div>
+  
+                <div className="double-parking-content-container" style={{ marginTop: "2rem" }}>
+                  <div className="bold-text" style={{ fontSize: "1.2rem" }}>
+                    겹주차 출차 예상 시간
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 겹주차 없을때 보여줄 내용 */}
+          {isfrontothercar && (
+            <div className="double-car-parking-container" style={{height:'12rem'}}>
+              <div className="double-parking-container" style={{ textAlign: "left" }}>
+                <div className="bold-text" style={{ fontSize: "1.2rem" }}>
+                  겹주차 현황
+                </div>
+  
+                <div className="double-parking-info-container" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "1.5rem" }}>
+                  <div className="double-parking-text-container">
+                    현재 앞뒤에<br />
+                    <div className="no-front-back-text-style">
+                    <p style={{display:'inline'}}>차가 </p>
+                    <p style={{fontWeight:'bolder', display:'inline', fontSize:'2rem'}}>없어요</p>
+                    </div>
+                  </div>
+                  <div className="doubl-parking-icon-container">
+                  <img src={process.env.PUBLIC_URL + "/img/mobile/front,backnocar.png"} alt={"nocar"}></img>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
           </div>
-        </div>
 
         <Container>
           {/* <TextField

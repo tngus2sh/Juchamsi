@@ -130,3 +130,8 @@
 .outdaystyle1 {
   width: 100%;
 }
+
+.no-front-back-text-style {
+  position: relative;
+  margin-top: 1rem;
+}
