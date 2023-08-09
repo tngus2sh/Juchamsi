@@ -280,6 +280,7 @@ const Resident = () => {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [rows, setRows] = React.useState([]);
+  const [originalRows, setOriginalRows] = React.useState([]);
 
   const villaIdNumber = useSelector((state) => state.webInfo.villaIdNumber);
 
@@ -295,6 +296,7 @@ const Resident = () => {
       .then((response) => {
         console.log(response.data.response);
         setRows(response.data.response);
+        setOriginalRows(response.data.response);
         setLoading(false);
       })
       .catch((error) => {
@@ -309,9 +311,9 @@ const Resident = () => {
 
   const handleSearchSubmit = () => {
     console.log("Search:", searchText);
-    if (searchText === "") {
-    } else {
-      rows.filter((row) => row.name === searchText);
+    setRows(originalRows);
+    if (searchText !== "") {
+      setRows(originalRows.filter((row) => row.name.includes(searchText)));
     }
   };
 

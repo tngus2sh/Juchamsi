@@ -66,12 +66,13 @@ function Savepage() {
       .then((response) => {
         console.log(response.data);
         // 받은 정보들로 IoT와 통신하여 열쇠보관함 open
+        
 
       }).catch((error) => {
         // 요청 실패 시 에러 처리
         console.error("Error while submitting:", error);
       });
-    }
+  }
 
   const buttonSX = {
     fontSize: "1.3rem",

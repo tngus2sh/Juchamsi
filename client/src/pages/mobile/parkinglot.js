@@ -11,6 +11,7 @@ import { Container } from '@mui/material';
 import { setWhenEnteringCar } from '../../redux/mobileUserinfo'; 
 import http from "../../axios/http";
 import { setBoxItem, setOuttime, setmycar, setParkingnow } from '../../redux/mobileparking'; 
+import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 
 
 function Parkinglot() {
@@ -24,7 +25,7 @@ function Parkinglot() {
   };
 
   const userid = useSelector((state) => state.mobileInfo.loginId)
-
+  const name = useSelector((state) => state.mobileInfo.name)
   const villanumber = useSelector((state) => state.mobileInfo.villaIdNumber);
   useEffect(() => {
     const fetchData = async () => {
@@ -82,8 +83,9 @@ function Parkinglot() {
   const BoxColumn = useSelector((state) => state.mycar.BoxColumn);
   const allbox = Boxrow * BoxColumn
   const Outtime = () => {
+    console.log(BoxItem)
     let timelist = [];
-    for (let j = 0; j < allbox; j++) {
+    for (let j = 0; j <= allbox; j++) {
       timelist.push('');
     }
     for (let k = 0; k < BoxItem.length; k++) {
@@ -114,7 +116,7 @@ function Parkinglot() {
   }, []);
 
 
-  const boxWidth = (viewportWidth * 0.6 - (Boxrow * 10)) / Boxrow;
+  const boxWidth = (viewportWidth * 0.7 - (Boxrow * 10)) / Boxrow;
   const boxHeight = (viewportHeight * 0.3 - (BoxColumn * 10)) / BoxColumn;
 
   // Box 그리드를 생성하는 함수
@@ -123,29 +125,40 @@ function Parkinglot() {
     for (let i = 0; i < Boxrow; i++) {
       for (let j = 0; j < BoxColumn; j++) {
         const index = i * BoxColumn + j;
-        const showIcon = outTimeArray[index] !== '';
-        const MycarIcon = i * BoxColumn + j === mycar;
+        const MycarIcon = i * BoxColumn + j === mycar-1;
         boxes.push(
           <button key={`${i}-${j}`} onClick={MycarIcon ? handleOpenMycarPage : null} style={{ border: 'none', backgroundColor: 'transparent', padding: 0 }}>
             <Box key={`${i}-${j}`} sx={{
               width: boxWidth,
               height: boxHeight,
-              border: '1px solid',
-              marginBottom: '3px',
-              marginRight: '10px',
-              marginLeft: '10px',
-              marginTop: '20px',
+              marginRight: '1rem',
+              marginLeft: '1rem',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: MycarIcon ? '#33907C' : 'transparent',
+              backgroundColor: MycarIcon ? '#006DD1' : outTimeArray[index+1] !== '' ? '#EA6868' : '#FFFFFF',
               flexDirection: 'column', // 수직 방향으로 아이콘과 텍스트 정렬
             }}>
-              {showIcon && <DriveEtaIcon sx={{ fontSize: 50 }} />}
+              {MycarIcon && (
+                <>
+                  <img src={process.env.PUBLIC_URL + "/img/mobile/mycaricon2.png"} alt={"mycarimg2"} style={{display:'flex',position:'relative',top:'-1rem'}}></img>
+                  <img src={process.env.PUBLIC_URL + "/img/mobile/mycar.png"} alt={"carimg"} style={{position:'relative',top:'-1rem'}}></img>
+                </>
+              )}
+              {!MycarIcon && outTimeArray[index+1] && (
+                <>
+                <p style={{ color: '#B3B3B3', fontSize: '11px', textAlign: 'center', display: 'flex', position:'relative', top:'-1.3rem'}}>
+                  {outTimeArray[index+1].length > 10 ? `${outTimeArray[index+1].substring(2, 10).replace(/-/g, '.')}` : outTimeArray[index+1]}
+                </p>
+                <p style={{ color: '#FFFFFF', fontSize: '16px', textAlign: 'center', display: 'flex'}}>
+                  {BoxItem[index].carNumber}
+                </p>
+                <p style={{ color: '#000000', fontSize: '15px', textAlign: 'center', display: 'flex', position:'relative', top:'1.5rem', fontWeight:'bolder' }}>
+                  {outTimeArray[index+1].length > 10 ? `~${outTimeArray[index+1].substring(11, 16)}` : outTimeArray[index+1]}
+                </p>
+                </>
+              )}
             </Box>
-            <p style={{ color: '#33907C', fontSize: '16px', textAlign: 'center', display: 'inline-block' }}>
-              {outTimeArray[index] && (outTimeArray[index].length > 10 ? `~${outTimeArray[index].substring(11, 16)}` : outTimeArray[index])}
-            </p>
           </button>
         );
       }
@@ -155,14 +168,25 @@ function Parkinglot() {
 
   return (
     <React.Fragment>
-      <Container sx={{height:"100vh", weight:"100%"}}>
-      <Box className='ParkinglotBox' sx={{ width: viewportWidth*0.8, height: viewportHeight*0.5, border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: '10px'}}>
-        <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', width:viewportWidth*0.8, height:viewportHeight*0.5, justifyContent:'center'}}>
+      <Container sx={{height:"90%", width:"100%"}}>
+      <div className='parkinglot-main-text'>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <p style={{ display: "inline", fontWeight:'bolder', fontSize:'1.5rem'}}>{name}</p>
+        <p style={{ display: "inline", fontSize:'1.5rem' }}>님을 위한</p>
+      </div>
+        <div style={{borderBottom: "8px solid rgba(0, 109, 209, 0.55)", width: `${name.length+1}rem`,display:'flex',position:'relative', top:'-0.5rem' }}></div>
+        <p style={{fontSize:'1.5rem'}}>오늘의 주차 정보!</p>
+      <p style={{height:'1rem', position:'relative', top:'3.5rem', left:'0.5rem', fontWeight:'bolder'}}>현재 주차 현황</p>
+      </div>
+      <Box className='ParkinglotBox' sx={{width:viewportWidth, height: viewportHeight * 0.68, backgroundColor:'#F2F2F2', borderRadius: '10px'}}>
+      <KeyboardDoubleArrowUpIcon sx={{position:'relative', top:'4rem'}}/>
+      <p style={{position:'relative',top:'4rem', fontWeight:'bolder'}}>출구</p>
+        <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', width:viewportWidth, height: viewportHeight * 0.4, justifyContent:'center', marginTop:'7rem'}}>
           {renderBoxGrid()}
         </Box>
         </Box>
       <InCar open={open} />
-        </Container>
+      </Container>
       <Footer HomeiconColor="#B7C4CF"/>
     </React.Fragment>
   );
