@@ -212,8 +212,8 @@ function MycarParking() {
               </div>
 
               <div className="my-car-timer-container">
-                <div className="my-car-date-container">{Outtime[Mycar].substr(0, 8)}</div>
-                <div className="my-car-time-container">{Outtime[Mycar].substr(9)}</div>
+                <div className="my-car-date-container">{outTimeArray[Mycar].substr(0,10)}</div>
+                <div className="my-car-time-container">{outTimeArray[Mycar].substr(11,15)}</div>
               </div>
 
               <div className="my-car-update-container">
