@@ -2,12 +2,9 @@ package com.inet.juchamsi.domain.user.application.impl;
 
 import com.inet.juchamsi.domain.chat.application.ChatService;
 import com.inet.juchamsi.domain.chat.dto.request.SystemChatRoomRequest;
-import com.inet.juchamsi.domain.chat.dto.response.ChatRoomResponse;
-import com.inet.juchamsi.domain.chat.dto.service.SystemMessageDto;
 import com.inet.juchamsi.domain.user.application.TenantService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
-import com.inet.juchamsi.domain.user.dto.request.KeyPinUserRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.dto.request.ModifyTenantRequest;
 import com.inet.juchamsi.domain.user.dto.response.TenantLoginResponse;
@@ -22,7 +19,6 @@ import com.inet.juchamsi.global.error.NotFoundException;
 import com.inet.juchamsi.global.jwt.JwtTokenProvider;
 import com.inet.juchamsi.global.jwt.TokenInfo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -37,7 +33,6 @@ import java.util.Optional;
 import static com.inet.juchamsi.domain.user.entity.Approve.*;
 import static com.inet.juchamsi.domain.user.entity.Grade.USER;
 import static com.inet.juchamsi.global.api.ApiResult.ERROR;
-import static com.inet.juchamsi.global.api.ApiResult.OK;
 import static com.inet.juchamsi.global.common.Active.ACTIVE;
 
 @Service
@@ -56,17 +51,27 @@ public class TenantServiceImpl implements TenantService {
     public Long createUser(CreateTenantRequest request) {
         Optional<Long> existedLoginId = userRepository.existLoginId(request.getLoginId());
         if (existedLoginId.isPresent()) {
-            throw new AlreadyExistException(User.class, existedLoginId.get());
+            throw new AlreadyExistException(User.class, "동일한 아이디를 사용하는 회원이 존재합니다.");
         }
 
         Optional<Long> existedPhoneNumber = userRepository.existPhoneNumber(request.getPhoneNumber());
         if(existedPhoneNumber.isPresent()) {
-            throw new AlreadyExistException(User.class, existedPhoneNumber.get());
+            throw new AlreadyExistException(User.class, "동일한 핸드폰 번호를 사용하는 회원이 존재합니다.");
         }
 
         Optional<Long> connectedVillaId = villaRepository.existIdNumber(request.getVillaIdNumber());
         if (connectedVillaId.isEmpty()) {
             throw new NotFoundException(Villa.class, connectedVillaId.get());
+        }
+
+        Optional<Long> existedVillaNumber = userRepository.existVillaNumber(request.getVillaNumber());
+        if(existedVillaNumber.isPresent()) {
+            throw new AlreadyExistException(User.class, "동일한 빌라 호수를 사용하는 회원이 존재합니다.");
+        }
+
+        Optional<Long> existedCarNumber = userRepository.existCarNumber(request.getCarNumber());
+        if(existedCarNumber.isPresent()) {
+            throw new AlreadyExistException(User.class, "동일한 차량 번호를 사용하는 회원이 존재합니다.");
         }
 
         Optional<Villa> findVilla = villaRepository.findById(connectedVillaId.get());
@@ -145,14 +150,29 @@ public class TenantServiceImpl implements TenantService {
         String password = request.getLoginPassword();
 
         // 현재 활성화 되어있는 사용자인지 판단
-        Optional<Long> userIdOp = userRepository.existLoginIdAndActive(loginId, ACTIVE);
-        if (userIdOp.isEmpty()) {
+//        Optional<Long> userIdOp = userRepository.existLoginIdAndActive(loginId, ACTIVE);
+//        if (userIdOp.isEmpty()) {
+//            throw new NotFoundException(User.class, loginId);
+//        }
+        Optional<User> targetUser = userRepository.existLoginIdAndActiveAndGrade(loginId, ACTIVE, USER);
+        if (targetUser.isEmpty()) {
             throw new NotFoundException(User.class, loginId);
         }
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginId, password);
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        Approve approve = targetUser.get().getApprove();
+        if(approve == WAIT) {
+            throw new NotFoundException(User.class, "WAIT");
+        }
+        else if(approve == MODIFY) {
+            throw new NotFoundException(User.class, "MODIFY");
+        }
+        else if(approve == DECLINE) {
+            throw new NotFoundException(User.class, "DECLINE");
+        }
 
         TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
 
@@ -163,14 +183,14 @@ public class TenantServiceImpl implements TenantService {
             throw new NotFoundException(User.class, loginId);
         }
         User user = userOptional.get();
-        String isKeyPinRegist = null;
-        
-        // 간편 비밀번호 등록 되어있는지 확인
-        if (user.getKeepKeyPin() == null) {
-            isKeyPinRegist = "FALSE";
-        } else {
-            isKeyPinRegist = "TRUE";
-        } 
+//        String isKeyPinRegist = null;
+//
+//        // 간편 비밀번호 등록 되어있는지 확인
+//        if (user.getKeepKeyPin() == null) {
+//            isKeyPinRegist = "FALSE";
+//        } else {
+//            isKeyPinRegist = "TRUE";
+//        }
         
         Villa targetVilla = user.getVilla();
         Villa villa = Villa.builder()
@@ -192,7 +212,6 @@ public class TenantServiceImpl implements TenantService {
                 .villaNumber(user.getVillaNumber())
                 .approved(user.getApprove().name())
                 .villa(villa)
-                .keyPinFlag(isKeyPinRegist)
                 .build();
     }
 
@@ -205,19 +224,6 @@ public class TenantServiceImpl implements TenantService {
 
         userRepository.updateRefreshToken(tenantId, "");
 
-    }
-
-    @Override
-    public void createKeyPin(KeyPinUserRequest request) {
-        String userId = request.getUserId();
-        String keyPin = request.getKeyPin();
-
-        Optional<User> userOptional = userRepository.findByLoginId(userId);
-        if (userOptional.isEmpty()) {
-            throw new NotFoundException(User.class, userId);
-        }
-
-        userRepository.updateKeyPin(userId, keyPin);
     }
 
     @Override
@@ -236,6 +242,11 @@ public class TenantServiceImpl implements TenantService {
         Optional<Long> connectedVillaId = villaRepository.existIdNumber(request.getVillaIdNumber());
         if (connectedVillaId.isEmpty()) {
             throw new NotFoundException(Villa.class, request.getVillaNumber());
+        }
+
+        Optional<Long> existedVillaNumber = userRepository.existVillaNumber(request.getVillaNumber());
+        if(existedVillaNumber.isPresent()) {
+            throw new AlreadyExistException(User.class, request.getVillaNumber());
         }
 
         userRepository.updateTenant(request.getLoginId(), request.getPhoneNumber(), request.getCarNumber(), request.getVillaNumber());
