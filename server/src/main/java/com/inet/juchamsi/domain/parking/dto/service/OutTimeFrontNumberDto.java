@@ -11,12 +11,12 @@ public class OutTimeFrontNumberDto {
 
     private LocalDateTime outTime;
     private int frontNumber;
-    private Villa villa;
+    private String idNumber;
 
     @Builder
-    public OutTimeFrontNumberDto(LocalDateTime outTime, int frontNumber, Villa villa) {
+    public OutTimeFrontNumberDto(LocalDateTime outTime, int frontNumber, String idNumber) {
         this.outTime = outTime;
         this.frontNumber = frontNumber;
-        this.villa = villa;
+        this.idNumber = idNumber;
     }
 }

@@ -9,9 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.security.core.parameters.P;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -80,6 +78,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying(clearAutomatically = true)
     @Query("update User u set u.active=:active where u.loginId=:loginId")
     Optional<Void> updateActive(@Param("loginId") String loginId, @Param("active") Active active);
+
+    @Modifying(clearAutomatically = true)
+    @Query("update User u set u.keepKeyPin=:keepKeyPin where u.loginId=:loginId")
+    Optional<Void> updateKeyPin(@Param("keepKeyPin") String keepKeyPin, @Param("loginId") String loginId);
 
     Long countByLoginId(String loginId);
 

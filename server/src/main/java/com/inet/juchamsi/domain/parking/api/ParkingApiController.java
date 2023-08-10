@@ -16,7 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +26,7 @@ import static com.inet.juchamsi.global.api.ApiResult.ERROR;
 import static com.inet.juchamsi.global.api.ApiResult.OK;
 
 @RestController
-@Log4j2
+@Slf4j
 @RequiredArgsConstructor
 @Api(tags = {"주차장"})
 @RequestMapping("/parking")
@@ -62,6 +62,7 @@ public class ParkingApiController {
     ) {
         try {
             ParkingNowResponse parkingNowResponse = parkingService.isParkingNow(userId);
+            log.info("parkingNowResponse={}", parkingNowResponse.toString());
             return OK(parkingNowResponse);
         } catch (NotFoundException e) {
             return ERROR("존재하지 않는 정보입니다.", HttpStatus.NO_CONTENT);
@@ -75,13 +76,8 @@ public class ParkingApiController {
             @RequestBody EntranceOutTimeRequest request
     ) {
         log.debug("createOutTime={}", request);
+        log.info("createOuTime={}", request);
         try {
-            // test =======================================================
-            parkingService.createEntrance(EntranceRequest.builder()
-                            .groundAddress("B0:A7:32:DB:C8:46")
-                            .macAddress("dc:a6:32:70:b7:ca")
-                            .build());
-            // =============================================================
             parkingService.createOutTime(request);
         } catch (NotFoundException e) {
             return ERROR("존재하지 않는 정보입니다.", HttpStatus.NO_CONTENT);
@@ -93,10 +89,10 @@ public class ParkingApiController {
     @PutMapping("/out_time")
     public ApiResult<Void> modifyOutTime(
             @ApiParam(value = "user-out-time-dto")
-            EntranceOutTimeRequest request
+            @RequestBody EntranceOutTimeRequest request
     ) {
         log.debug("modifyOutTime={}", request);
-        System.out.println("request = " + request);
+        log.info("modifyOutTime={}", request);
         try {
             parkingService.modifyOutTime(request);
         } catch (NotFoundException e) {
@@ -109,12 +105,11 @@ public class ParkingApiController {
     @PostMapping("/exit")
     public ApiResult<Void> createExit(
             @ApiParam(value = "user-parking-dto")
-            ExitRequest request
+            @RequestBody ExitRequest request
     ) {
-        log.debug("createExit={}", request);
-        System.out.println("request = " + request);
+        log.info("createExit={}", request);
         try {
-            parkingService.createExit(request);
+            parkingService.createExit(request); 
             chatService.removeChatRoom(request.getMacAddress()); // 채팅방 없애기
             return OK(null);
         } catch (NotFoundException e) {
@@ -147,16 +142,16 @@ public class ParkingApiController {
     }
 
     @ApiOperation(value = "주차장 실시간 현황 상세 조회", notes = "사용자는 각 주차 칸마다 실시간 현황을 확인합니다")
-    @GetMapping("/lot/{villa_id_number}/{seat_number}")
+    @GetMapping("/lot/{villa_id_number}/{user_id}")
     public ApiResult<ParkingHistoryDetailResponse> showDetailParkingLot(
             @ApiParam(value = "villa-id-number")
             @PathVariable("villa_id_number") String villaIdNumber,
-            @ApiParam(value = "seat-number")
-            @PathVariable("seat_number") int seatNumber
+            @ApiParam(value = "user_id")
+            @PathVariable("user_id") String userId
     ) { 
         log.debug("showDetailParkingL={}", villaIdNumber);
         try {
-            ParkingHistoryDetailResponse parkingHistoryResponse = parkingService.showDetailParkingLot(villaIdNumber, seatNumber);
+            ParkingHistoryDetailResponse parkingHistoryResponse = parkingService.showDetailParkingLot(villaIdNumber, userId);
             return OK(parkingHistoryResponse);
         } catch (NotFoundException e) {
             return ERROR("해당하는 정보가 존재하지 않습니다.", HttpStatus.NO_CONTENT);

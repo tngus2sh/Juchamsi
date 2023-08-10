@@ -72,7 +72,7 @@ public class User extends TimeBaseEntity implements UserDetails {
 
     @Column(name = "refresh_token")
     private String refreshToken;
-
+    
     @Column(name = "keep_key_pin")
     private String keepKeyPin;
 
@@ -82,7 +82,7 @@ public class User extends TimeBaseEntity implements UserDetails {
     public User() {}
 
     @Builder
-    public User(Long id, Villa villa, String phoneNumber, String loginId, String loginPassword, String name, int totalMileage, Grade grade, String macAddress, String carNumber, int villaNumber, Approve approve, Active active, String refreshToken, List<String> roles, String keepKeyPin) {
+    public User(Long id, Villa villa, String phoneNumber, String loginId, String loginPassword, String name, int totalMileage, Grade grade, String macAddress, String carNumber, int villaNumber, Approve approve, Active active, String refreshToken, String keepKeyPin, List<String> roles) {
         this.id = id;
         this.villa = villa;
         this.phoneNumber = phoneNumber;
@@ -97,14 +97,14 @@ public class User extends TimeBaseEntity implements UserDetails {
         this.approve = approve;
         this.active = active;
         this.refreshToken = refreshToken;
-        this.roles = roles;
         this.keepKeyPin = keepKeyPin;
+        this.roles = roles;
     }
-
+    
     /*
         연관관계 편의 메서드
      */
-    public static User createUserTenant(Villa villa, String phoneNumber, String loginId, String loginPassword, String name, int totalMileage, Grade grade, String macAddress, String carNumber, int villaNumber, Approve approve, Active active, String role, String keepKeyPin) {
+    public static User createUserTenant(Villa villa, String phoneNumber, String loginId, String loginPassword, String name, int totalMileage, Grade grade, String macAddress, String carNumber, int villaNumber, Approve approve, Active active, String role) {
         return User.builder()
                 .villa(villa)
                 .phoneNumber(phoneNumber)
@@ -119,7 +119,6 @@ public class User extends TimeBaseEntity implements UserDetails {
                 .approve(approve)
                 .active(active)
                 .roles(Collections.singletonList(role))
-                .keepKeyPin(keepKeyPin)
                 .build();
     }
 

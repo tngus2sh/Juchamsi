@@ -1,0 +1,11 @@
+.MuiTypography-root.MuiListItemText-primary {
+  font-size: 1.1rem;
+  font-weight: bold;
+
+}
+
+.MuiTypography-root.MuiListItemText-secondary{
+  font-size: .5rem;
+  margin-top: .3rem;
+  margin-left: .1rem;
+}

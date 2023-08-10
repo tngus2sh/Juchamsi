@@ -6,6 +6,7 @@ import com.inet.juchamsi.global.common.TimeBaseEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ import static javax.persistence.EnumType.STRING;
 
 @Entity
 @Getter
+@ToString
 @NoArgsConstructor
 public class ParkingHistory extends TimeBaseEntity {
 

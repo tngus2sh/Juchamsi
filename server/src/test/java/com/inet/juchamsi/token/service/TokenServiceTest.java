@@ -1,6 +1,8 @@
 package com.inet.juchamsi.token.service;
 
+import com.inet.juchamsi.domain.token.application.TokenService;
 import com.inet.juchamsi.domain.token.dao.TokenRepository;
+import com.inet.juchamsi.domain.token.dto.SaveTokenRequest;
 import com.inet.juchamsi.domain.token.entity.Token;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.entity.User;
@@ -15,15 +17,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static com.inet.juchamsi.domain.user.entity.Approve.APPROVE;
 import static com.inet.juchamsi.domain.user.entity.Grade.USER;
 import static com.inet.juchamsi.global.common.Active.ACTIVE;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
 @Transactional
 public class TokenServiceTest {
 
+    @Autowired
+    TokenService tokenService;
     @Autowired
     FirebaseCloudMessageService FCMService;
     @Autowired
@@ -35,6 +41,25 @@ public class TokenServiceTest {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+
+    @Test
+    @DisplayName("토큰 등록")
+    void saveToken() {
+        // given
+        User targetUSer = insertUser();
+
+        SaveTokenRequest request = SaveTokenRequest.builder()
+                .loginId(targetUSer.getLoginId())
+                .FCMToken("enVZRhGY3rfN8BhsUd0OR5:APA91bETGqKvYFwp01S2aSZTBm4ignS9aAaQmvfXFItzi2NiK4uVeO4qKcuh4LChlIVTd4ClxoSUK5O3vTdvWpUhIltqift0K6Y9bC9op29PWzuhf0bGnRHOoDBCF2rO5ufN0lkQiR-2")
+                .build();
+
+        // when
+        Long id = tokenService.saveToken(request);
+
+        // then
+        Optional<Token> findToken = tokenRepository.findById(id);
+        assertThat(findToken).isPresent();
+    }
 
     @Test
     @DisplayName("푸시 알림 전송")

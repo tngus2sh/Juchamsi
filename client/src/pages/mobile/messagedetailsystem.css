@@ -25,3 +25,15 @@
   background-color: #F7F7F7;
   font-family: 'Nanum';
 }
+
+.cs-message-separator::before{
+  background-color:gray;
+}
+.cs-message-separator::after{
+  background-color:gray;
+}
+.cs-message-separator{
+  color:gray;
+  font-size: .65rem;
+}
+
