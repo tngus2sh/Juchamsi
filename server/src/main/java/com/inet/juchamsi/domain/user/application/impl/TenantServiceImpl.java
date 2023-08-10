@@ -69,6 +69,11 @@ public class TenantServiceImpl implements TenantService {
             throw new NotFoundException(Villa.class, connectedVillaId.get());
         }
 
+        Optional<Long> existedVillaNumber = userRepository.existVillaNumber(request.getVillaNumber());
+        if(existedVillaNumber.isPresent()) {
+            throw new AlreadyExistException(User.class, request.getVillaNumber());
+        }
+
         Optional<Villa> findVilla = villaRepository.findById(connectedVillaId.get());
         User user = User.createUserTenant(findVilla.get(), request.getPhoneNumber(), request.getLoginId(), passwordEncoder.encode(request.getLoginPassword()), request.getName(), 0, USER, null, request.getCarNumber(), request.getVillaNumber(), WAIT, ACTIVE, "USER");
         User saveUser = userRepository.save(user);
@@ -208,19 +213,6 @@ public class TenantServiceImpl implements TenantService {
     }
 
     @Override
-    public void createKeyPin(KeyPinUserRequest request) {
-        String userId = request.getUserId();
-        String keyPin = request.getKeyPin();
-
-        Optional<User> userOptional = userRepository.findByLoginId(userId);
-        if (userOptional.isEmpty()) {
-            throw new NotFoundException(User.class, userId);
-        }
-
-        userRepository.updateKeyPin(userId, keyPin);
-    }
-
-    @Override
     public void modifyUser(ModifyTenantRequest request) {
         Optional<User> oUser = userRepository.findByLoginIdAndActive(request.getLoginId(), Active.ACTIVE);
         System.out.println("oUser = " + oUser);
@@ -236,6 +228,11 @@ public class TenantServiceImpl implements TenantService {
         Optional<Long> connectedVillaId = villaRepository.existIdNumber(request.getVillaIdNumber());
         if (connectedVillaId.isEmpty()) {
             throw new NotFoundException(Villa.class, request.getVillaNumber());
+        }
+
+        Optional<Long> existedVillaNumber = userRepository.existVillaNumber(request.getVillaNumber());
+        if(existedVillaNumber.isPresent()) {
+            throw new AlreadyExistException(User.class, request.getVillaNumber());
         }
 
         userRepository.updateTenant(request.getLoginId(), request.getPhoneNumber(), request.getCarNumber(), request.getVillaNumber());
