@@ -90,7 +90,10 @@ public class OwnerApiController {
         try {
             AdminOwnerLoginResponse response = ownerService.loginUser(request);
             return OK(response);
-        } catch (NotFoundException e) {
+        } catch (BadCredentialsException e) {
+            return ERROR("아이디 또는 비밀번호를 잘못 입력했습니다", HttpStatus.UNAUTHORIZED);
+        }
+        catch (NotFoundException e) {
             String value = e.getValue();
 
             if(value.equals("WAIT") || value.equals("MODIFY")) {
@@ -101,8 +104,6 @@ public class OwnerApiController {
             }
 
             return ERROR("존재하지 않는 사용자입니다.", HttpStatus.BAD_REQUEST);
-        } catch (BadCredentialsException e) {
-            return ERROR("아이디 또는 비밀번호를 잘못 입력했습니다", HttpStatus.UNAUTHORIZED);
         }
     }
 
