@@ -87,12 +87,17 @@ public class OwnerServiceImpl implements OwnerService {
         // 중복 예외 처리
         Optional<Long> loginId = userRepository.existLoginId(dto.getLoginId());
         if (loginId.isPresent()) {
-            throw new AlreadyExistException(User.class, loginId.get());
+            throw new AlreadyExistException(User.class, "동일한 아이디를 사용하는 회원이 존재합니다.");
         }
 
         Optional<Long> phoneNumber = userRepository.existPhoneNumber(dto.getPhoneNumber());
         if (phoneNumber.isPresent()) {
-            throw new AlreadyExistException(User.class, loginId.get());
+            throw new AlreadyExistException(User.class, "동일한 핸드폰 번호를 사용하는 회원이 존재합니다.");
+        }
+
+        Optional<Long> villaAddress = villaRepository.findByAddress(dto.getRoadAddress());
+        if(villaAddress.isPresent()) {
+            throw new AlreadyExistException(Villa.class, "동일한 빌라 주소를 사용하는 관리자가 존재합니다.");
         }
 
         // 빌라 등록
