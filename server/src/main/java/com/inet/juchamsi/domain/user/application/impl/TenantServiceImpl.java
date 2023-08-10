@@ -159,6 +159,10 @@ public class TenantServiceImpl implements TenantService {
             throw new NotFoundException(User.class, loginId);
         }
 
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginId, password);
+
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
         Approve approve = targetUser.get().getApprove();
         if(approve == WAIT) {
             throw new NotFoundException(User.class, "WAIT");
@@ -169,10 +173,6 @@ public class TenantServiceImpl implements TenantService {
         else if(approve == DECLINE) {
             throw new NotFoundException(User.class, "DECLINE");
         }
-
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginId, password);
-
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
 

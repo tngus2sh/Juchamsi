@@ -142,6 +142,9 @@ public class OwnerServiceImpl implements OwnerService {
             throw new NotFoundException(User.class, ownerId);
         }
 
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(ownerId, password);
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
         Approve approve = targetUser.get().getApprove();
         if(approve == WAIT) {
             throw new NotFoundException(User.class, "WAIT");
@@ -153,8 +156,6 @@ public class OwnerServiceImpl implements OwnerService {
             throw new NotFoundException(User.class, "DECLINE");
         }
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(ownerId, password);
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
         userRepository.updateRefreshToken(ownerId, password);
 
