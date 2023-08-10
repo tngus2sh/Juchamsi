@@ -179,7 +179,7 @@ public class TenantServiceImpl implements TenantService {
 
         TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
 
-        userRepository.updateRefreshToken(loginId, password);
+        userRepository.updateRefreshToken(loginId, tokenInfo.getRefreshToken());
 
         Optional<User> userOptional = userRepository.findByLoginId(loginId);
         if (userOptional.isEmpty()) {
