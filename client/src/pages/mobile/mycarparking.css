@@ -34,6 +34,7 @@
   border-radius: 0.5rem;
   background-color: #f7f7f7;
   box-shadow: 3px 3px 3px #cecece;
+  min-height:6rem;
 }
 
 .my-car-date-container {
@@ -56,6 +57,7 @@
 
 .double-car-parking-container {
   margin-top: 1rem;
+  margin-bottom:4.5rem;
   background-color: #f7f7f7;
 }
 
@@ -134,4 +136,24 @@
 .no-front-back-text-style {
   position: relative;
   margin-top: 1rem;
+}
+
+
+.other-phonenumber-main {
+  position: relative;
+  top:2rem;
+}
+
+.other-phonenumber-text {
+  position: relative;
+  top:1em;
+  left:8rem;
+  width: 8rem;
+  color:gray
+}
+
+.mycar-alert-outtime {
+  position: relative;
+  top:-100rem;
+  left:1rem;
 }
