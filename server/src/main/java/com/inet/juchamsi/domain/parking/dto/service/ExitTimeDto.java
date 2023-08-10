@@ -1,11 +1,9 @@
 package com.inet.juchamsi.domain.parking.dto.service;
 
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
-import java.time.LocalDateTime;
-
-@Getter
+@Data
 public class ExitTimeDto {
 
     // 빌라식별번호

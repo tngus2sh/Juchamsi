@@ -2,6 +2,7 @@ package com.inet.juchamsi.domain.user.api;
 
 import com.inet.juchamsi.domain.user.application.TenantService;
 import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
+import com.inet.juchamsi.domain.user.dto.request.KeyPinUserRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.dto.request.ModifyTenantRequest;
 import com.inet.juchamsi.domain.user.dto.response.TenantLoginResponse;
@@ -157,6 +158,22 @@ public class TenantApiController {
             return ERROR("해당 회원을 찾을 수가 없습니다.", HttpStatus.NO_CONTENT);
         }
     }
+
+    @ApiOperation(value = "간편 비밀번호 등록", notes = "회원 아이디로 사용자 조회후 간편 비밀번호를 등록합니다.")
+    @PostMapping("/key-pin")
+    public ApiResult<Void> createKeyPin(
+            @ApiParam(value = "user-id")
+            @RequestBody KeyPinUserRequest request
+    ) {
+        log.info("createKeyPin={}", request);
+        try {
+            tenantService.createKeyPin(request);
+        } catch (NotFoundException e) {
+            return ERROR("해당 회원을 찾을 수가 없습니다.", HttpStatus.NO_CONTENT);
+        }
+        return OK(null);
+    }
+    
 
 
     @ApiOperation(value = "세입자 회원 정보 수정", notes = "세입자가 회원 정보를 수정합니다")

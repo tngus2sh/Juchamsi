@@ -1,6 +1,7 @@
 package com.inet.juchamsi.domain.user.application;
 
 import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
+import com.inet.juchamsi.domain.user.dto.request.KeyPinUserRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.dto.request.ModifyTenantRequest;
 import com.inet.juchamsi.domain.user.dto.response.TenantLoginResponse;
@@ -29,6 +30,9 @@ public interface TenantService {
 
     // 로그아웃
     void logoutUser(String tenantId);
+
+    // 간편 비밀번호 등록
+    void createKeyPin(KeyPinUserRequest request);
 
     // 회원정보 수정
     void modifyUser(ModifyTenantRequest request);
