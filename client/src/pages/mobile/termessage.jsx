@@ -16,9 +16,11 @@ import { ConversationList, Conversation, Avatar } from "@chatscope/chat-ui-kit-r
 import http from "../../axios/http";
 import Button from "@mui/material/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser1, setUser2, setRoomNumber } from "../../redux/chatInfo";
+// import { setUser1, setUser2, setRoomNumber } from "../../redux/chatInfo";
 import PersonIcon from "@mui/icons-material/Person";
 import { Typography } from "@mui/material";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import Fab from "@mui/material/Fab";
 
 function Termessage() {
   const navigate = useNavigate();
@@ -51,12 +53,12 @@ function Termessage() {
     //   return;
 
     http
-      .post("/chat/room", { userIdOne: loginId, userIdTwo: "userid2" })
+      .post("/chat/room", { userIdOne: loginId, userIdTwo: "user2" })
       .then((response) => {
         console.log(response.data.response.roomId);
-        // redux에 담음
-        dispatch(setRoomNumber(response.data.response.roomId)); // 룸 넘버
-        dispatch(setUser1(loginId)); // 로그인 한 유저
+        // // redux에 담음
+        // dispatch(setRoomNumber(response.data.response.roomId)); // 룸 넘버
+        // dispatch(setUser1(loginId)); // 로그인 한 유저
 
         alert(`${response.data.response.roomName} 방 개설에 성공하였습니다.`);
 
@@ -79,7 +81,7 @@ function Termessage() {
 
   return (
     <React.Fragment>
-      <Typography>대화중인 목록</Typography>
+      <Typography variant={"h6"}>대화중인 목록</Typography>
       <Divider />
       <div
         style={{
@@ -99,10 +101,12 @@ function Termessage() {
               >
                 <ListItemAvatar>
                   <Avatar>
-                    <ImageIcon />
+                    <Fab size="small" color="#">
+                      <MailOutlineIcon />
+                    </Fab>
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary={item.roomName} secondary="Jan 9, 2014" />
+                <ListItemText primary={item.roomName} secondary=";" />
               </ListItem>
               <Divider />
             </React.Fragment>
@@ -125,7 +129,7 @@ function Termessage() {
       <Button className="btn btn-primary" type="button" onClick={createRoom}>
         채팅방 개설
       </Button>
-      <Footer TermessageiconColor="#33907C" />
+      <Footer TermessageiconColor="#B7C4CF" />
     </React.Fragment>
   );
 }

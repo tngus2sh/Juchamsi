@@ -1,14 +1,28 @@
-.footericon {
-    position: absolute;
-    left: 2.15%;
-    top: 83%;
-    bottom: 3%;
+.footer-container {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-family: "KorailFont";
 }
 
-.footernumber {
-    position: absolute;
-    left: 79%;
-    top: 96%;
-    font-family: "KorailFont";
-    font-size: 18px;
+.footer-home-button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer-icon {
+  font-size: 3.8rem;
+}
+
+.footer-home-text {
+  margin-left: 1rem;
+}
+
+.footer-number-container {
+  text-align: right;
+}
+
+.footer-number {
+  margin-right: 3rem;
 }

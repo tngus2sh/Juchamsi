@@ -27,6 +27,8 @@ import ParkingLotHistory from "../../components/main/parkingLotHistory";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setLogout } from "../../redux/webLoginInfo";
+import http from "../../axios/http";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 const theme = createTheme({
   palette: {
@@ -48,6 +50,7 @@ const MainPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isLogin = useSelector((state) => state.webInfo.isLogin);
+  const loginId = useSelector((state) => state.webInfo.id);
   const ownerName = useSelector((state) => state.webInfo.name);
   const roadAddress = useSelector((state) => state.webInfo.roadAddress);
   const villaName = useSelector((state) => state.webInfo.villaName);
@@ -83,15 +86,25 @@ const MainPage = () => {
 
   const handleLogout = () => {
     // 로그아웃 처리
-    //store에 있는 데이터 삭제해야 함!
-    dispatch(setLogout());
-    // http.get("/owner/logout/{id}");
+    // 토큰도 없애야댐
+    http
+      .get(`/owner/logout/${loginId}`)
+      .then((response) => {
+        alert("로그아웃 되었습니다.");
+        //store에 있는 데이터 삭제해야 함!
+        dispatch(setLogout());
+        // console.log(response.data);
+      })
+      .catch((error) => {
+        // 요청 실패 시 에러 처리
+        console.error("Error while submitting:", error);
+      });
     navigate("/");
   };
   useEffect(() => {
-    if (!isLogin) {
-      navigate("/"); // 리다이렉트
-    }
+    // if (!isLogin) {
+    //   navigate("/"); // 리다이렉트
+    // }
   });
 
   return (
@@ -134,7 +147,10 @@ const MainPage = () => {
             </Grid>
           </Grid>
           <Box>
-            <Button onClick={handleLogout}>로그아웃</Button>
+            <Button sx={{ color: "white", fontSize: ".9rem", mt: ".2rem" }} onClick={handleLogout}>
+              로그아웃
+              <LogoutIcon sx={{ ml: ".5rem", mb: ".2rem", height: "1.4rem" }} />
+            </Button>
           </Box>
 
           <Grid container>
@@ -193,7 +209,13 @@ const MainPage = () => {
             </ListItemButton>
             <Collapse in={open1} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-                <ListItemButton sx={{ pl: 4 }} onClick={handleClick1_1}>
+                <ListItemButton
+                  sx={{
+                    pl: 4,
+                    ...(activeIndex === 0 && { backgroundColor: "rgba(0, 0, 0, 0.15)" }),
+                  }}
+                  onClick={handleClick1_1}
+                >
                   <ListItemIcon>
                     <PersonIcon sx={{ color: "white", fontSize: 25 }} />
                   </ListItemIcon>
@@ -202,7 +224,13 @@ const MainPage = () => {
                     primaryTypographyProps={{ style: { fontSize: "13px" } }}
                   />
                 </ListItemButton>
-                <ListItemButton sx={{ pl: 4 }} onClick={handleClick1_2}>
+                <ListItemButton
+                  sx={{
+                    pl: 4,
+                    ...(activeIndex === 1 && { backgroundColor: "rgba(0, 0, 0, 0.15)" }),
+                  }}
+                  onClick={handleClick1_2}
+                >
                   <ListItemIcon>
                     <DriveFileRenameOutlineIcon sx={{ color: "white", fontSize: 25 }} />
                   </ListItemIcon>
@@ -211,7 +239,13 @@ const MainPage = () => {
                     primaryTypographyProps={{ style: { fontSize: "13px" } }}
                   />
                 </ListItemButton>
-                <ListItemButton sx={{ pl: 4 }} onClick={handleClick1_3}>
+                <ListItemButton
+                  sx={{
+                    pl: 4,
+                    ...(activeIndex === 2 && { backgroundColor: "rgba(0, 0, 0, 0.15)" }),
+                  }}
+                  onClick={handleClick1_3}
+                >
                   <ListItemIcon>
                     <DriveFileRenameOutlineIcon sx={{ color: "white", fontSize: 25 }} />
                   </ListItemIcon>
@@ -254,7 +288,13 @@ const MainPage = () => {
             </ListItemButton>
             <Collapse in={open2} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-                <ListItemButton sx={{ pl: 4 }} onClick={handleClick2_1}>
+                <ListItemButton
+                  sx={{
+                    pl: 4,
+                    ...(activeIndex === 3 && { backgroundColor: "rgba(0, 0, 0, 0.15)" }),
+                  }}
+                  onClick={handleClick2_1}
+                >
                   <ListItemIcon>
                     <DriveEtaIcon sx={{ color: "white", fontSize: 25 }} />
                   </ListItemIcon>
@@ -263,7 +303,13 @@ const MainPage = () => {
                     primaryTypographyProps={{ style: { fontSize: "13px" } }}
                   />
                 </ListItemButton>
-                <ListItemButton sx={{ pl: 4 }} onClick={handleClick2_2}>
+                <ListItemButton
+                  sx={{
+                    pl: 4,
+                    ...(activeIndex === 4 && { backgroundColor: "rgba(0, 0, 0, 0.15)" }),
+                  }}
+                  onClick={handleClick2_2}
+                >
                   <ListItemIcon>
                     <HistoryIcon sx={{ color: "white", fontSize: 25 }} />
                   </ListItemIcon>

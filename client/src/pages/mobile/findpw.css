@@ -1,4 +1,51 @@
-.pwtoinputid {
+.find-pw-main {
+  text-align: center;
+}
+
+.find-pw-page-container {
+  display: inline-block;
+  margin-top: 2.5rem;
+  width: 16rem;
+}
+
+.phone-number-container {
+  margin-top: 1.5rem;
+}
+
+.find-pw-button-container {
+  margin-top: 1rem;
+}
+
+.find-pw-box {
+  width: 100%;
+  height: 2.4rem;
+  border-radius: 1.2rem;
+  border: 0px solid white;
+}
+
+.find-box-deactive {
+  background-color: #cfcfcf;
+}
+
+.find-box-active {
+  background-color: #2d4356;
+  color: white;
+}
+
+.find-login-container {
+  margin-top: 1.3rem;
+  display: inline-block;
+  width: 16rem;
+  font-size: 0.9rem;
+}
+
+.find-login-flex-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* .pwtoinputid {
     position: absolute;
     top:160px;
     left:45px;
@@ -19,6 +66,7 @@
 
 .findpwloginbtn {
     position: absolute;
-    top:370px;
-    left:120px;
+    top:59%;
+    left:70%;
 }
+ */

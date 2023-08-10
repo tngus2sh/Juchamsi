@@ -1,18 +1,23 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+const initialState = {
+  id: '',
+  name: '',
+  roadAddress : '',
+  villaName: '',
+  parkingLotCol: '',
+  identification: '',
+  villaIdNumber: '',
+  isLogin: false
+}
+
 const webLoginInfo = createSlice({
   name: 'webInfo',
-  initialState: {
-    name: '',
-    roadAddress : '',
-    villaName: '',
-    parkingLotCol: '',
-    identification: '',
-    villaIdNumber: '',
-    isLogin: false
-    
-  },
+  initialState,
   reducers: {
+    setId: (state, action) => {
+      state.id = action.payload;
+    },
     setName: (state, action) => {
       state.name = action.payload;
     },
@@ -34,17 +39,9 @@ const webLoginInfo = createSlice({
     setIsLogin: (state, action) => {
       state.isLogin = action.payload;
     },
-    setLogout: (state) => {
-      state.name = '';
-      state.roadAddress = '';
-      state.villaName = '';
-      state.parkingLotCol = '';
-      state.identification = '';
-      state.villaIdNumber = '';
-      state.isLogin = false;
-    },
+    setLogout: () => initialState,
   },
 });
 
-export const { setName, setRoadAddress, setVillaName, setParkingLotCol, setIdentification, setVillaIdNumber, setIsLogin, setLogout } = webLoginInfo.actions;
+export const { setId, setName, setRoadAddress, setVillaName, setParkingLotCol, setIdentification, setVillaIdNumber, setIsLogin, setLogout } = webLoginInfo.actions;
 export default webLoginInfo.reducer;

@@ -1,5 +1,15 @@
 .ParkinglotBox {
     position: absolute;
-    top:10%;
-    left:10%;
+    top:8rem;
+    left:0rem;
+    margin: 0;
+}
+
+.parkinglot-main-text {
+    text-align:start;
+    margin-top: 2rem;
+}
+
+.parkinglot-main-username {
+    display: inline-flex;
 }

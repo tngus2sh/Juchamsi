@@ -1,5 +1,5 @@
 import './signup.css'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
@@ -14,7 +14,8 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Checkbox from '@mui/material/Checkbox';
-import axiosInstance from '../../axios/axios'
+import http from "../../axios/http";
+import PrivacyAgreement from '../../components/signup/privacyagreement';
 
 function Signup() {
 
@@ -38,6 +39,21 @@ function Signup() {
         transform: 'translate(-50%, -50%)',
         width: 220,
         height:'150px',
+        bgcolor: 'white',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+      };
+
+ 
+
+    const style3 = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 220,
+        height:'170px',
         bgcolor: 'white',
         border: '2px solid #000',
         boxShadow: 24,
@@ -89,6 +105,7 @@ function Signup() {
     const [privacyCheck, setPrivacyCheck] =  React.useState(false)
     const handleOpenPrivacyOpen = () => setPrivacyCheck(true)
     const handleClosePrivacyClose = () => setPrivacyCheck(false)
+  
     const [phoneCheckingNumber, setPhoneCheckingNumber] = useState(null);
 
     // 개인정보 이용약관 체크 여부를 저장하는 상태
@@ -138,11 +155,11 @@ function Signup() {
     };
 
     // 아이디 중복체크 버튼 클릭 이벤트 핸들러
-    const handleOpenCheckID = () => {
+  const handleOpenCheckID = () => {
       if (isLoginButtonClickable === true) {
         // idcheckresult에 따라서 '사용가능or중복' 여부 판별해서 보여주는 모달창 결정
         // true는 중복, false는 사용가능
-        axiosInstance({
+        http({
           method:'get',
           url:`/user/id/${id}`,
           data:{
@@ -168,8 +185,8 @@ function Signup() {
 
     // 핸드폰번호 인증버튼 사용가능여부 판별
     const handleOpenCheckPhonenumber = () => {
-        if (isPhonenumberButtonClickable === true) {
-          axiosInstance({
+      if (isPhonenumberButtonClickable === true) {
+        http({
             method:'post',
             url:'/sms/check',
             data:{
@@ -220,7 +237,7 @@ const handlePhoneModalConfirmClick = () => {
         // phonenumbecheck === true &&
         isPrivacyAgreed === true
       ) {
-        axiosInstance({
+        http({
           method:'post',
           url:'/tenant',
 
@@ -230,7 +247,7 @@ const handlePhoneModalConfirmClick = () => {
             "loginPassword": password1,
             "name": username,
             "phoneNumber": phonenumber,
-            "villaIdNumber": Number(villranumber),
+            "villaIdNumber": villranumber,
             "villaNumber": Number(housenumber)
           },
         })
@@ -256,7 +273,7 @@ const handlePhoneModalConfirmClick = () => {
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         if (name === 'username') {
-            const onlyKorean = value.replace(/[^ㄱ-ㅎㅏ-ㅣ가-힣]/g, '');
+            const onlyKorean = value.replace(/[a-zA-Z0-9]/g, '');
             const namemaxLength = 4;
             const nametruncatedValue = onlyKorean.slice(0,namemaxLength)
             setUsernameLocal(nametruncatedValue);
@@ -333,7 +350,7 @@ const handlePhoneModalConfirmClick = () => {
     // 자동차 번호가  변경될 때 호출되는 이벤트 핸들러
     const handleCarnumberChange = (e) => {
     // 숫자,한글만 입력가능하도록 규칙 설정
-    const onlyCarnumber = e.target.value.replace(/[^ㄱ-ㅎㅏ-ㅣ가-힣/0-9/ ]/g, '');
+    const onlyCarnumber = e.target.value.replace(/[a-zA-Z]/g, '');
 
     // 최대 9자까지만 입력 가능하도록 제한
     const carnumbermaxLength = 9;
@@ -343,7 +360,7 @@ const handlePhoneModalConfirmClick = () => {
     };
 
     // 호수가 변경될 때 호출되는 이벤트 핸들러
-    const handlehousenumberChange = (e) => {
+  const handlehousenumberChange = (e) => {
     // 숫자,한글만 입력가능하도록 규칙 설정
     const onlyhousenumber = e.target.value.replace(/[^0-9/ ]/g, '');
 
@@ -375,167 +392,112 @@ const handlePhoneModalConfirmClick = () => {
 
 
   return (
-    <div>
-      <img
-        className="signuplogo"
-        src={process.env.PUBLIC_URL + '/img/kiosk/logo1.png'}
-        alt={'title'}
-      ></img>
-      <TextField
-        required
-        className="signupid"
-        id="outlined-id-input"
-        label="아이디"
-        name="ID"
-        value={id}
-        onChange={handleIDChange}
-      />
-      {idcheck ? (
-        <Box component="span" className="idcheckbox1">
-          <p className="idchecktext">사용가능</p>
-        </Box>
-      ) : (
-        <Box
-          component="span"
-          className={`idcheckbox ${isLoginButtonClickable ? 'idcheckbox2' : 'idcheckbox1'}`}
-          onClick={handleOpenCheckID}
-        >
-          <p className="idchecktext">중복체크</p>
-        </Box>
-      )}
-      <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined" className="signuppw1" required>
-        <InputLabel htmlFor="outlined-adornment-password1">비밀번호</InputLabel>
-        <OutlinedInput
-          id="outlined-adornment-password1"
-          type={showPassword ? 'text' : 'password'}
-          endAdornment={
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={handleClickShowPassword}
-                onMouseDown={handleMouseDownPassword}
-                edge="end"
-              >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          }
-          label="비밀번호"
-          name="password1"
-          value={password1}
-          onChange={handleInputChange}
-        />
-      </FormControl>
-      {passwordChecking && <p className="password-check-text">비밀번호에는 숫자,문자,특수문자가 최소 1개이상씩 포함되어야 합니다.</p>}
-      <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined" className="signuppw2" required>
-        <InputLabel htmlFor="outlined-adornment-password2">비밀번호 확인</InputLabel>
-        <OutlinedInput
-          id="outlined-adornment-password2"
-          type={showCheckPassword ? 'text' : 'password'}
-          endAdornment={
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={handleClickShowCheckPassword}
-                onMouseDown={handleMouseDownPassword}
-                edge="end"
-              >
-                {showCheckPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          }
-          label="비밀번호 확인"
-          name="password2"
-          value={password2}
-          onChange={handleInputChange}
-        />
-      </FormControl>
-      {passwordMismatch && <p className="password-mismatch-text">비밀번호가 다릅니다. 다시 확인바랍니다.</p>}
-      <TextField
-        required
-        className="signupname"
-        id="outlined-name-input"
-        label="이름"
-        name="username"
-        value={username}
-        onChange={handleInputChange}
-        sx={{ '& input': { textAlign: 'center' } }}
-      />
-      <TextField
-        required
-        className="signupphonenumber"
-        id="outlined-phonenumber-input"
-        label="핸드폰 번호"
-        name="phonenumber"
-        value={phonenumber}
-        onChange={handlePhoneNumberChange}
-        sx={{ '& input': { textAlign: 'center' } }}
-      />
-        {phonenumbecheck ? (
-          <Box component="span" className="phonenumbercheck3">
-            <p className="phonechecktext">인증완료</p>
-          </Box>
-        ) : (
-          <Box
-            component="span"
-            className={`phonenumbercheck ${isPhonenumberButtonClickable ? 'phonenumbercheck2' : 'phonenumbercheck1'}`}
-            onClick={handleOpenCheckPhonenumber}
-          >
-            <p className="phonechecktext">핸드폰 인증</p>
-          </Box>
-        )}
-      <TextField
-        required
-        className="carnumber"
-        id="outlined-carnumber-input"
-        label="자동차 번호"
-        name="carnumber"
-        value={carnumber}
-        onChange={handleCarnumberChange}
-        sx={{ '& input': { textAlign: 'center' } }}
-      />
-      <p className='carnumbertext'>서울 12가 1234 = 12가 1234 로 입력</p>
-      <TextField
-        required
-        className="villranumber"
-        id="outlined-villranumber-input"
-        label="빌라 식별번호"
-        name="villranumber"
-        value={villranumber}
-        onChange={handlevillranumberChange}
-        sx={{ '& input': { textAlign: 'center' } }}
-      />
-      <TextField
-        required
-        className="housenumber"
-        id="outlined-housenumber-input"
-        label="호수"
-        name="housenumber"
-        value={housenumber}
-        onChange={handlehousenumberChange}
-        sx={{ '& input': { textAlign: 'center' } }}
-      />
-      <Button className='Privacybtnstyle' onClick={PrivacyBtnClick}>
-        개인정보 이용약관
-      </Button>
-      <div className='checkboxstyle'>
-        {/* 개인정보 이용약관 체크박스 */}
-        <Checkbox
-          checked={isPrivacyAgreed}
-          onChange={handlePrivacyAgreeChange}
-        />
+    <div className='signup-main'>
+      <div className="header">
+        <img className="mobile-logo" src={process.env.PUBLIC_URL + "/img/kiosk/logo.png"} alt={"title"}></img>
       </div>
-      <Box
-        component="span"
-        className={`signupbox1 ${isSignupButtonClickable ? 'signupbox2' : 'signupbox1'}`}
-        onClick={handleOpenfindPage}
-      >
-        <p className="signuptext1">회원가입</p>
-      </Box>
-      <p className="signuptext">이미 가입된 회원이신가요?</p>
-      <Button className="signuptologin" onClick={handleOpenLogin}>
-        로그인
-      </Button>
+
+      <div className="signup-container">
+        <div className="signup-id-container">
+          <div className="signup-id-flex-container">
+            <div className="signup-id-input-container">
+              <input required className="id-input" placeholder="아이디" label="아이디" name="ID" value={id} onChange={handleIDChange} ></input>
+            </div>
+            <div className="signup-id-btn-container">
+              <button className={`signup-id-btn-container ${isLoginButtonClickable ? 'id-active' : 'id-deactive'}`} onClick={handleOpenCheckID}>중복 체크</button>
+            </div>
+          </div>
+          {/* <input required className="login-input" placeholder="아이디" label="아이디" name="ID" value={id} onChange={(e) => { handleIDChange(e); handleOpenCheckID(); } } ></input> */}
+          <div className='id-info'>{!setIsIdChecked && <p className="id-check-text">사용 가능한 아이디입니다</p>}</div>
+        </div>
+
+        <div className="signup-pw-container">
+          <input type={showPassword ? 'text' : 'password'} required className="login-input" placeholder="비밀번호" label="비밀번호" name="password1" value={password1} onChange={handleInputChange}></input>
+          <span className="pw-show-button">
+            <IconButton
+              aria-label="toggle password visibility"
+              onClick={handleClickShowPassword}
+              onMouseDown={handleMouseDownPassword}
+            >
+              {showPassword ? <VisibilityOff /> : <Visibility />}
+            </IconButton>
+          </span>
+          <div className='pw-info'>{passwordChecking && <p className="password-check-text">비밀번호는 숫자, 문자, 특수문자를 최소<br/>1개 이상씩 포함해야 합니다</p>}</div>
+        </div>
+
+        <div className="signup-pw-container">
+          <input type={showCheckPassword ? 'text' : 'password'} required className="login-input" placeholder="비밀번호 확인" label="비밀번호 확인" name="password2" value={password2} onChange={handleInputChange}></input>
+          <span className="pw-show-button">
+            <IconButton
+              aria-label="toggle password visibility"
+              onClick={handleClickShowCheckPassword}
+              onMouseDown={handleMouseDownPassword}
+            >
+              {showCheckPassword ? <VisibilityOff /> : <Visibility />}
+            </IconButton>
+          </span>
+          <div className="pw-info">{passwordMismatch && <p className="password-mismatch-text">비밀번호가 일치하지 않습니다</p>}</div>
+        </div>
+
+        <div className="signup-name-container">
+          <input required className="login-input" placeholder="이름" label="이름" name="username" value={username} onChange={handleInputChange} ></input>
+        </div>
+
+        <div className="signup-phone-number-container">
+          <div className="signup-phone-number-flex-container">
+            <div className="signup-phone-number-input-container">
+              <input required className="phone-number-input" placeholder="핸드폰 번호" label="핸드폰 번호" name="phonenumber" value={phonenumber} onChange={handlePhoneNumberChange} ></input>
+            </div>
+            <div className="signup-phone-number-btn-container">
+              <button className={`signup-phone-number-btn-container ${isPhonenumberButtonClickable ? 'phone-number-active' : 'phone-number-deactive'}`} onClick={handleOpenCheckPhonenumber}>번호 인증</button>
+            </div>
+          </div>
+          
+        </div>
+
+        <div className="signup-car-number-container">
+          <input required className="login-input" placeholder="자동차 번호" label="자동차 번호" name="carnumber" value={carnumber} onChange={handleCarnumberChange} ></input>
+          <div className='car-number-info'>
+            <p>ex) 서울 12가 1234 → 12가 1234</p>
+          </div>
+        </div>
+
+        <div className="signup-villa-id-number-container">
+          <input required className="login-input" placeholder="빌라 식별 번호" label="빌라 식별 번호" name="villranumber" value={villranumber} onChange={handlevillranumberChange} ></input>
+        </div>
+
+        <div className="signup-villa-number-container">
+          <input required className="login-input" placeholder="호수" label="호수" name="housenumber" value={housenumber} onChange={handlehousenumberChange} ></input>
+        </div>
+
+        <div className="privacy-container" style={{ textAlign: 'left' }}>
+          {/* 개인정보 이용약관 체크박스 */}
+          <Checkbox
+            checked={isPrivacyAgreed}
+            onChange={handlePrivacyAgreeChange}
+            sx={{ '& .MuiSvgIcon-root': { fontSize: '1.1rem' } }}
+          />
+          <Button onClick={PrivacyBtnClick} style={{ fontSize: '0.9rem', paddingLeft: '0' }}>
+            개인정보 이용약관
+          </Button>
+        </div>
+
+        <div className="signup-button-container">
+          <button className={ `login-box ${isSignupButtonClickable ? 'login-box-active' : 'login-box-deactive'}` } onClick={handleOpenfindPage}>회원가입</button>
+        </div>
+
+        <div className="login-info-container">
+          <div className="login-info-flex-container">
+            <div className='login-info'>
+              <p>이미 가입된 회원이신가요?</p>
+            </div>
+
+            <div className="login-btn">
+              <Button onClick={handleOpenLogin} style={{ fontSize: '0.87rem' }}>로그인</Button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* 아이디 중복 검사 결과 사용가능할 경우 보여주는 모달 */}
       <Modal open={IDModalFalseopen} onClose={handleCloseIDCheckFalse} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
@@ -558,7 +520,7 @@ const handlePhoneModalConfirmClick = () => {
 
       {/* 아이디 중복 검사 결과 중복될 경우 보여주는 모달 */}
       <Modal open={IDModalTrueopen} onClose={handleCloseIDCheckTrue} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
-        <Box sx={style1}>
+        <Box sx={style3}>
           <Typography id="modal-modal-title" variant="h6" component="h2" sx={{textAlign:'center'}}>
             아이디 중복검사 결과
           </Typography>
@@ -623,12 +585,13 @@ const handlePhoneModalConfirmClick = () => {
           </Box>
         </Box>
       </Modal>
+      <PrivacyAgreement open={privacyCheck} onClose={handleClosePrivacyClose}/>
 
       {/* 이용약관 */}
       <Modal open={privacyCheck} onClose={handleClosePrivacyClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style2}>
           <Typography id="modal-modal-title" variant="h6" component="h2" className='Privacymodalstyle'>
-            <span style={{fontSize:'24px', fontWeight:'bolder'}}>이용약관</span>
+            <span style={{fontSize:'24px', fontWeight:'bolder', color:'white', margin:20}}>이용약관</span>
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2, ml:2, mr:2}}>
           <span style={{fontSize:'20px', fontWeight:'bold'}}>[제 1 장 총칙]</span>
@@ -776,23 +739,19 @@ const handlePhoneModalConfirmClick = () => {
           ⑵ 이용계약 신청서의 내용을 허위로 기재한 경우
           </span>
           <br/>
-          <span style={{marginLeft:'15px', fontSize:'10px'}}>
-          ⑶ 사회의 안녕과 질서, 미풍양속을 저해할 목적으로
-          </span>
-          <br/>
-          <span style={{fontSize:'10px', marginLeft:'28px'}}>
-          신청한 경우
+          <span style={{marginLeft:'15px', fontSize:'9px'}}>
+          ⑶ 사회의 안녕과 질서, 미풍양속을 저해할 목적으로신청한 경우
           </span>
           <br/>
           <span style={{marginLeft:'15px', fontSize:'10px'}}>
           ⑷ 부정한 용도로 본 서비스를 이용하고자 하는 경우
           </span>
           <br/>
-          <span style={{marginLeft:'15px', fontSize:'10px'}}>
-          ⑸ 영리를 추구할 목적으로 본 서비스를 이용하고자
+          <span style={{marginLeft:'15px', fontSize:'9px'}}>
+          ⑸ 영리를 추구할 목적으로 본 서비스를 이용하고자 하는 경우
           </span>
           <span style={{fontSize:'10px', marginLeft:'28px'}}>
-          하는 경우
+          
           </span>
           <br/>
           <span style={{marginLeft:'15px', fontSize:'10px'}}>
@@ -800,10 +759,7 @@ const handlePhoneModalConfirmClick = () => {
           </span>
           <br/>
           <span style={{marginLeft:'15px', fontSize:'10px'}}>
-          ⑺ 본 서비스와 경쟁관계가 있는 이용자가 신청하는
-          </span>
-          <span style={{fontSize:'10px', marginLeft:'28px'}}>
-          경우
+          ⑺ 본 서비스와 경쟁관계가 있는 이용자가 신청하는 경우
           </span>
           <br/>
           <span style={{marginLeft:'15px', fontSize:'10px'}}>
@@ -828,10 +784,10 @@ const handlePhoneModalConfirmClick = () => {
           3. 회원 ID는 다음 각 호에 해당하는 경우에는 회원 또는 회사의 요청으로 변경할 수 있습니다.
           <br/>
           <span style={{marginLeft:'15px', fontSize:'10px'}}>
-          ⑴ 회원 ID가 회원의 전화번호 또는 생년월일 등으로
+          ⑴ 회원 ID가 회원의 전화번호 또는 생년월일 등으로 등록되어 
           </span>
           <span style={{fontSize:'10px', marginLeft:'28px'}}>
-          등록되어 사생활 침해가 우려되는 경우
+          사생활 침해가 우려되는 경우
           </span>
           <br/>
           <span style={{marginLeft:'15px', fontSize:'10px'}}>
@@ -866,17 +822,17 @@ const handlePhoneModalConfirmClick = () => {
           </span>
           <br/>
           <span style={{marginLeft:'15px', fontSize:'10px'}}>
-          ② 다른 사람의 "회사"의 서비스이용을 방해하거나 그 
+          ② 다른 사람의 "회사"의 서비스이용을 방해하거나 그 정보를 
           </span>
           <span style={{fontSize:'10px', marginLeft:'28px'}}>
-          정보를 도용하는 경우
+          도용하는 경우
           </span>
           <br/>
           <span style={{marginLeft:'15px', fontSize:'10px'}}>
-          ③ "회사"를 이용하여 법령 또는 본 약관이 금지하거나 
+          ③ "회사"를 이용하여 법령 또는 본 약관이 금지하거나 공서양
           </span>
           <span style={{fontSize:'10px', marginLeft:'28px'}}>
-          공서양속에 반하는 행위를 하는 경우
+          속에 반하는 행위를 하는 경우
           </span>
           <br/>
           <br/>
@@ -955,10 +911,10 @@ const handlePhoneModalConfirmClick = () => {
           8. 회원은 다음 각 호에 해당하는 행위를 하여서는 안되며, 해당 행위를 하는 경우에 회사는 회원의 서비스 이용제한 및 적법조치를 포함한 제재를 가할 수 있습니다.
           <br/>
           <span style={{marginLeft:'15px', fontSize:'10px'}}>
-          ⑴ 회원가입 신청 또는 회원정보 변경 시 허위내용을 
+          ⑴ 회원가입 신청 또는 회원정보 변경 시 허위내용을 등록하는 
           </span>
           <span style={{fontSize:'10px', marginLeft:'28px'}}>
-          등록하는 행위 
+          행위
           </span>
           <br/>
           <span style={{marginLeft:'15px', fontSize:'10px'}}>
@@ -977,16 +933,16 @@ const handlePhoneModalConfirmClick = () => {
           </span>
           <br/>
           <span style={{marginLeft:'15px', fontSize:'10px'}}>
-          ⑸ 회사로부터 특별한 권리를 부여받지 않고 회사의  
+          ⑸ 회사로부터 특별한 권리를 부여받지 않고 회사의  클라이언트
           </span>
           <span style={{fontSize:'10px', marginLeft:'28px'}}>
-          클라이언트 프로그램을 변경하거나, 회사의 서버를
+          프로그램을 변경하거나, 회사의 서버를 해킹하거나, 웹사이
           </span>
           <span style={{fontSize:'10px', marginLeft:'28px'}}>
-          해킹하거나, 웹사이트 또는 게시된 정보의 일부분
+          트 또는 게시된 정보의 일부분 또는 전체를 임의로 변경
           </span>
           <span style={{fontSize:'10px', marginLeft:'28px'}}>
-          또는 전체를 임의로 변경하는 행위
+          하는 행위
           </span>
           <br/>
           <span style={{marginLeft:'15px', fontSize:'10px'}}>
@@ -1030,10 +986,7 @@ const handlePhoneModalConfirmClick = () => {
           예나 프라이버시를 침해할 수 있는 내용을 전송, 게시,
           </span>
           <span style={{fontSize:'10px', marginLeft:'28px'}}>
-          전자우편 또는 기타의 방법으로 타인에게 유포하는
-          </span>
-          <span style={{fontSize:'10px', marginLeft:'28px'}}>
-          행위
+          전자우편 또는 기타의 방법으로 타인에게 유포하는 행위
           </span>
           <br/>
           <span style={{marginLeft:'15px', fontSize:'10px'}}>
@@ -1166,10 +1119,10 @@ const handlePhoneModalConfirmClick = () => {
           1. 회사는 다음 각 호의 내용에 해당하는 경우 서비스 제공의 일부 혹은 전부를 제한하거나 중단할 수 있습니다.
           <br/>
           <span style={{marginLeft:'15px', fontSize:'10px'}}>
-          ⑴ 정보통신설비의 보수 점검, 교체 및 고장 등 공사로 
+          ⑴ 정보통신설비의 보수 점검, 교체 및 고장 등 공사로 인한 부
           </span>
           <span style={{fontSize:'10px', marginLeft:'28px'}}>
-          인한 부득이 한 경우
+          득이 한 경우
           </span>
           <br/>
           <span style={{marginLeft:'15px', fontSize:'10px'}}>
@@ -1184,10 +1137,7 @@ const handlePhoneModalConfirmClick = () => {
           </span>
           <br/>
           <span style={{marginLeft:'15px', fontSize:'10px'}}>
-          ⑷ 국가비상사태 등 기타 불가항력적인 사유가 있는
-          </span>
-          <span style={{fontSize:'10px', marginLeft:'28px'}}>
-          경우
+          ⑷ 국가비상사태 등 기타 불가항력적인 사유가 있는 경우
           </span>
           <br/>
           <br/>
@@ -1329,13 +1279,10 @@ const handlePhoneModalConfirmClick = () => {
           </span>
           <br/>
           <span style={{marginLeft:'15px', fontSize:'10px'}}>
-          ⑦ 외설 또는 폭력적인 말이나 글, 화상, 음향, 기타 공서
+          ⑦ 외설 또는 폭력적인 말이나 글, 화상, 음향, 기타 공서양속에
           </span>
           <span style={{fontSize:'10px', marginLeft:'28px'}}>
-          양속에 반하는 정보를 "회사"의 사이트에 공개 또는
-          </span>
-          <span style={{fontSize:'10px', marginLeft:'28px'}}>
-          게시하는 행위
+          반하는 정보를 "회사"의 사이트에 공개 또는 게시하는 행위
           </span>
           <br/>
           <span style={{marginLeft:'15px', fontSize:'10px'}}>
@@ -1444,17 +1391,17 @@ const handlePhoneModalConfirmClick = () => {
           </span>
           <br/>
           <span style={{marginLeft:'15px', fontSize:'10px'}}>
-          ⑵ 타 이용자에게 심한 모욕을 주거나, 서비스 이용을 
+          ⑵ 타 이용자에게 심한 모욕을 주거나, 서비스 이용을 방해한 
           </span>
           <span style={{fontSize:'10px', marginLeft:'28px'}}>
-          방해한 경우
+          경우
           </span>
           <br/>
           <span style={{marginLeft:'15px', fontSize:'10px'}}>
-          ⑶ 정보통신 윤리위원회 등 관련 공공기관의 시정 요구
+          ⑶ 정보통신 윤리위원회 등 관련 공공기관의 시정 요구가 
           </span>
           <span style={{fontSize:'10px', marginLeft:'28px'}}>
-          가 있는 경우
+          있는 경우
           </span>
           <br/>
           <span style={{marginLeft:'15px', fontSize:'10px'}}>

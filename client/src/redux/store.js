@@ -2,11 +2,12 @@
 import loginform from './loginform';
 import formSlice from './formslice';
 import addressOpen from './addressOpen';
-import mobileauthlogin from './mobileauthlogin'
-import mobileMycarstatus from './mobileparking'
+import mobileauthlogin from './mobileauthlogin';
+import mobileMycarstatus from './mobileparking';
 import webLoginInfo from './webLoginInfo';
-import chatInfo from './chatInfo'
-import mobielUserinfo from './mobileUserinfo'
+import mobielUserinfo from './mobileUserinfo';
+import kioskInfo from './kioskInfo';
+import chatInfo from './chatInfo';
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import storage from 'redux-persist/lib/storage';
 import { persistReducer, persistStore } from 'redux-persist';
@@ -22,10 +23,10 @@ const rootReducer = combineReducers({
   loginform: loginform,
   addressOpen: addressOpen,
   auth: mobileauthlogin,
-  mycar: mobileMycarstatus,
   chatInfo: persistReducer(persistConfig, chatInfo),
   webInfo: persistReducer(persistConfig, webLoginInfo),
   mobileInfo: persistReducer(persistConfig, mobielUserinfo),
+  kioskInfo: persistReducer(persistConfig, kioskInfo),
 });
 
 export const store = configureStore({

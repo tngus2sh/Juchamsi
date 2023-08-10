@@ -3,7 +3,6 @@ import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
-import StepIcon from "@mui/material/StepIcon";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -15,7 +14,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import http from "../../axios/http";
 import CustomModal from "./customModal";
-
+import "./Stepper.css";
 const step = [<Step1 />, <Step2 />, <Step3 />];
 
 const theme = createTheme({
@@ -46,21 +45,6 @@ export default function HorizontalLinearStepper() {
   const idConfirmation = useSelector((state) => state.form.step2Data.idConfirmation);
   const passwordMatching = useSelector((state) => state.form.step2Data.passwordMatching);
   const privacyAgreement = useSelector((state) => state.form.step3Data.privacyAgreement);
-
-  // const CustomStepIcon = (props) => {
-  //   const { active, completed, icon } = props;
-
-  //   return (
-  //     <StepIcon
-  //       classes={{
-  //         root: {
-  //           color: "mainColor",
-  //         },
-  //       }}
-  //       icon={icon}
-  //     />
-  //   );
-  // };
 
   const handleNext = () => {
     if (activeStep === 0) {
@@ -130,7 +114,6 @@ export default function HorizontalLinearStepper() {
     try {
       // HTTP POST 요청 보내기
       await http.post(`/owner`, formData);
-      alert("ㅎㅇ");
       console.log("ㅎㅇ");
       // 회원가입 완료 후 메인 페이지로 이동
       navigate("/");

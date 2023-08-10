@@ -1,44 +1,59 @@
-.kiosklogo {
-    position: absolute;
-    width: 150px;
-    height: 150px;
-    left: 40%;
-    top: 10px;
-    }
-
-.centerpage {
-    position: absolute;
-    top: 220px;
-    font-family: "KorailFont";
-    font-size: 35px;
+.home {
+  text-align: center;
 }
 
-.kioskmainbox1 {
-    position: absolute;
-    border-radius: 10%;;
-    top: 360px;
-    left: 20%;
-    border: 1px grey;
-    width:200px;
-    height:200px;
-    background-color: #33907C;
+.kiosklogo {
+  margin-top: 1rem;
+  width: 150px;
+  height: 150px;
+}
+
+.centerpage {
+  margin-top: 1.5rem;
+  font-family: "KorailFont";
+  font-size: 35px;
+}
+
+.button-container {
+  margin-top: 5rem;
+}
+
+.kiosk-main-box {
+  display: inline-block;
+  margin: 0 5rem;
+  width: 17rem;
+  height: 17rem;
+  border-radius: 2rem;
+  /* background-color: #7eaa92; */
+  background-color: #112d4e;
+  /* background-color: #99a799; */
+}
+
+/* .kioskmainbox1 {
+  position: absolute;
+  border-radius: 10%;
+  top: 360px;
+  left: 20%;
+  border: 1px grey;
+  width: 200px;
+  height: 200px;
+  background-color: #33907c;
 }
 
 .kioskmainbox2 {
-    position: absolute;
-    border-radius: 10%;;
-    top: 360px;
-    left: 50%;
-    border: 1px grey;
-    width:200px;
-    height:200px;
-    background-color: #33907C;
-}
+  position: absolute;
+  border-radius: 10%;
+  top: 360px;
+  left: 50%;
+  border: 1px grey;
+  width: 200px;
+  height: 200px;
+  background-color: #33907c;
+} */
 
-.kioskmaintext {
-    position: absolute;
-    font-family: "KorailFont";
-    font-size: 30px;
-    top: 80px;
-    left:36%;
+.kiosk-main-text {
+  line-height: 17rem;
+  font-family: "KorailFont";
+  font-size: 30px;
+  color: white;
 }

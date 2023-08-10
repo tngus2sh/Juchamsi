@@ -1,5 +1,5 @@
 import { Button, Container, Divider, Tab } from "@mui/material";
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
@@ -44,6 +44,7 @@ import HistoryIcon from "@mui/icons-material/History";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import http from "../../axios/http";
 import { useSelector, useDispatch } from "react-redux";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const CurrentDate = () => {
   const currentDate = new Date();
@@ -279,8 +280,11 @@ const Resident = () => {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [rows, setRows] = React.useState([]);
+  const [originalRows, setOriginalRows] = React.useState([]);
 
   const villaIdNumber = useSelector((state) => state.webInfo.villaIdNumber);
+
+  const [searchText, setSearchText] = React.useState("");
 
   useEffect(() => {
     TenantList();
@@ -292,6 +296,7 @@ const Resident = () => {
       .then((response) => {
         console.log(response.data.response);
         setRows(response.data.response);
+        setOriginalRows(response.data.response);
         setLoading(false);
       })
       .catch((error) => {
@@ -299,6 +304,18 @@ const Resident = () => {
         setLoading(false);
       });
   }
+
+  const handleSearchChange = (e) => {
+    setSearchText(e.target.value);
+  };
+
+  const handleSearchSubmit = () => {
+    console.log("Search:", searchText);
+    setRows(originalRows);
+    if (searchText !== "") {
+      setRows(originalRows.filter((row) => row.name.includes(searchText)));
+    }
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -353,7 +370,7 @@ const Resident = () => {
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
-  const visibleRows = useMemo(
+  const visibleRows = React.useMemo(
     () =>
       stableSort(rows, getComparator(order, orderBy)).slice(
         page * rowsPerPage,
@@ -362,7 +379,7 @@ const Resident = () => {
     [order, orderBy, page, rowsPerPage, rows]
   );
   if (loading) {
-    return <div>Loading...</div>;
+    return <CircularProgress color="inherit" />;
   }
   return (
     <React.Fragment>
@@ -379,7 +396,12 @@ const Resident = () => {
                   <SearchIconWrapper>
                     <SearchIcon />
                   </SearchIconWrapper>
-                  <StyledInputBase placeholder="Search…" inputProps={{ "aria-label": "search" }} />
+                  <StyledInputBase
+                    placeholder="name…"
+                    inputProps={{ "aria-label": "search" }}
+                    value={searchText}
+                    onChange={handleSearchChange}
+                  />
                 </Search>
               </Grid>
               <Grid item xs={1}>
@@ -391,6 +413,7 @@ const Resident = () => {
                     borderRadius: 10,
                     fontWeight: "bold",
                   }}
+                  onClick={handleSearchSubmit}
                 >
                   <Typography color="white" fontSize={"15px"}>
                     검색
