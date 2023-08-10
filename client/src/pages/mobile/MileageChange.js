@@ -16,7 +16,6 @@ import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import CallIcon from '@mui/icons-material/Call';
 import { useSelector } from 'react-redux';
 
 function MileageChange() {
@@ -34,7 +33,7 @@ function MileageChange() {
     const logincheck = useSelector((state) => state.auth.isAutoLoginChecked)
 
     useEffect(() => {
-        if (logincheck === false) {
+        if (logincheck !== true) {
             navigate('/Mobile/Login')
           }
         })
@@ -427,7 +426,7 @@ function MileageChange() {
                         <p className='mileagetext2'>{getAccountHolder()}</p>
                     </div>
                     <FormControl sx={{width: '25ch' }} variant="outlined" className="easypw1" required>
-                        <InputLabel htmlFor="outlined-adornment-password1">간편 비밀번호</InputLabel>
+                        <InputLabel htmlFor="outlined-adornment-password1">비밀번호</InputLabel>
                         <OutlinedInput
                         id="outlined-adornment-password1"
                         type={showPassword ? 'text' : 'password'}
@@ -443,7 +442,7 @@ function MileageChange() {
                             </IconButton>
                             </InputAdornment>
                         }
-                        label="간편 비밀번호"
+                        label="비밀번호"
                         name="password1"
                         value={password1}
                         onChange={handleInputChange}
