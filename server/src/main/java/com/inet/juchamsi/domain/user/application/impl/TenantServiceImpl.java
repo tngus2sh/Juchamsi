@@ -51,12 +51,12 @@ public class TenantServiceImpl implements TenantService {
     public Long createUser(CreateTenantRequest request) {
         Optional<Long> existedLoginId = userRepository.existLoginId(request.getLoginId());
         if (existedLoginId.isPresent()) {
-            throw new AlreadyExistException(User.class, existedLoginId.get());
+            throw new AlreadyExistException(User.class, "동일한 아이디를 사용하는 회원이 존재합니다.");
         }
 
         Optional<Long> existedPhoneNumber = userRepository.existPhoneNumber(request.getPhoneNumber());
         if(existedPhoneNumber.isPresent()) {
-            throw new AlreadyExistException(User.class, existedPhoneNumber.get());
+            throw new AlreadyExistException(User.class, "동일한 핸드폰 번호를 사용하는 회원이 존재합니다.");
         }
 
         Optional<Long> connectedVillaId = villaRepository.existIdNumber(request.getVillaIdNumber());
@@ -66,7 +66,12 @@ public class TenantServiceImpl implements TenantService {
 
         Optional<Long> existedVillaNumber = userRepository.existVillaNumber(request.getVillaNumber());
         if(existedVillaNumber.isPresent()) {
-            throw new AlreadyExistException(User.class, request.getVillaNumber());
+            throw new AlreadyExistException(User.class, "동일한 빌라 호수를 사용하는 회원이 존재합니다.");
+        }
+
+        Optional<Long> existedCarNumber = userRepository.existCarNumber(request.getCarNumber());
+        if(existedCarNumber.isPresent()) {
+            throw new AlreadyExistException(User.class, "동일한 차량 번호를 사용하는 회원이 존재합니다.");
         }
 
         Optional<Villa> findVilla = villaRepository.findById(connectedVillaId.get());

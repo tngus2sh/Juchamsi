@@ -45,7 +45,7 @@ public class TenantApiController {
             Long userId = tenantService.createUser(request);
         }
         catch(AlreadyExistException e) {
-            return ERROR("동일한 회원 정보가 존재합니다.", HttpStatus.CONFLICT);
+            return ERROR(e.getValue(), HttpStatus.CONFLICT);
         }
         catch(NotFoundException e) {
             return ERROR("해당하는 빌라가 존재하지 않습니다.", HttpStatus.NO_CONTENT);
