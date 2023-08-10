@@ -17,12 +17,10 @@ public class TenantLoginResponse {
     private int villaNumber;
     private String approved;
     private Villa villa;
-
-
-    public TenantLoginResponse() {}
+    private String keyPinFlag; // 간편 비밀번호 등록여부: TRUE-간편비밀번호 등록됨, FALSE-간편 비밀번호 등록 안됨
 
     @Builder
-    public TenantLoginResponse(TokenInfo tokenInfo, Long id, String phoneNumber, String loginId, String name, int totalMileage, String carNumber, int villaNumber, String approved, Villa villa) {
+    public TenantLoginResponse(TokenInfo tokenInfo, Long id, String phoneNumber, String loginId, String name, int totalMileage, String carNumber, int villaNumber, String approved, Villa villa, String keyPinFlag) {
         this.tokenInfo = tokenInfo;
         this.id = id;
         this.phoneNumber = phoneNumber;
@@ -33,5 +31,6 @@ public class TenantLoginResponse {
         this.villaNumber = villaNumber;
         this.approved = approved;
         this.villa = villa;
+        this.keyPinFlag = keyPinFlag;
     }
 }

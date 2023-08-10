@@ -11,7 +11,6 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Data
-@NoArgsConstructor
 public class CreateAdminRequest {
     @NotBlank
     @Size(min = 13, max = 13)

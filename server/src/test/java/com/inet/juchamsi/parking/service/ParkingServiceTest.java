@@ -1,8 +1,15 @@
 package com.inet.juchamsi.parking.service;
 
+import com.inet.juchamsi.domain.chat.application.ChatService;
+import com.inet.juchamsi.domain.chat.dao.ChatRoomRepository;
+import com.inet.juchamsi.domain.chat.dao.MessageRepository;
+import com.inet.juchamsi.domain.chat.dto.request.SystemChatRoomRequest;
+import com.inet.juchamsi.domain.chat.entity.Message;
 import com.inet.juchamsi.domain.parking.application.ParkingLotService;
 import com.inet.juchamsi.domain.parking.application.ParkingService;
+import com.inet.juchamsi.domain.parking.application.impl.ParkingServiceImpl;
 import com.inet.juchamsi.domain.parking.dao.ParkingHistoryRepository;
+import com.inet.juchamsi.domain.parking.dto.request.EntranceOutTimeRequest;
 import com.inet.juchamsi.domain.parking.dto.request.EntranceRequest;
 import com.inet.juchamsi.domain.parking.dto.response.ParkingHistoryResponse;
 import com.inet.juchamsi.domain.parking.dao.ParkingLotRepository;
@@ -22,6 +29,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 
@@ -43,7 +52,13 @@ public class ParkingServiceTest {
     @Autowired
     ParkingService parkingService;
     @Autowired
+    ParkingServiceImpl parkingServiceImpl;
+    @Autowired
     ParkingHistoryRepository parkingHistoryRepository;
+    @Autowired
+    ChatService chatService;
+    @Autowired
+    MessageRepository messageRepository;
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -123,11 +138,65 @@ public class ParkingServiceTest {
         List<ParkingHistory> parkingHistories = parkingHistoryRepository.findAll();
         assertNotNull(parkingHistories);
     }
+    
+    
+    @Test
+    @DisplayName("출차 시간 형식 확인")
+    void checkOutTime() {
+        // given
+        parkingService.createEntrance(EntranceRequest.builder()
+                        .macAddress("dc:a6:32:b0:f6:8d")
+                        .groundAddress("b0:a7:32:db:c8:46")
+                        .build());
+        parkingService.createOutTime(EntranceOutTimeRequest.builder()
+                .villaIdNumber("041111-3")
+                .userId("testuser2")
+                .seatNumber(1)
+                .outTime("2023-08-10 09:26")
+                .build());
+        
+        // when
+        int seatNumber = 1;
+        String userId = "testuser2";
+        
+        // then
+        LocalDateTime outTime = parkingHistoryRepository.findAllBySeatNumberAndLoginId(seatNumber, userId, ACTIVE).get().getOutTime();
+        LocalDateTime now = LocalDateTime.now();
+        System.out.println("out-time check : " + outTime);
+        System.out.println("LocalDateTime.now() = " + now);
+        if (now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")).equals(outTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))) {
+            System.out.println("outTime = " + outTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+        }
+    }
 
     @Test
-    @DisplayName("사용자 주차 상태 확인")
-    void isParkingNow() {
+    @DisplayName("출차 시간 시스템 메시지 전송 확인")
+    void checkSystemByOutTime() {
+        // given
+        chatService.createSystemRoom(SystemChatRoomRequest.builder()
+                .userId("testuser2")
+                .build());
+        parkingService.createEntrance(EntranceRequest.builder()
+                .macAddress("dc:a6:32:b0:f6:8d")
+                .groundAddress("b0:a7:32:db:c8:46")
+                .build());
+        parkingService.createOutTime(EntranceOutTimeRequest.builder()
+                .villaIdNumber("041111-3")
+                .userId("testuser2")
+                .seatNumber(1)
+                .outTime("2023-08-10 10:47")
+                .build());
 
+        // when
+        String userId = "testuser2";
+        parkingServiceImpl.notifyOutTimeToUser();
+        
+        // then
+        List<Message> messages = messageRepository.findAll();
+        for (Message message : messages) {
+            System.out.println(message.getContent());
+        }
+        
     }
 
 
