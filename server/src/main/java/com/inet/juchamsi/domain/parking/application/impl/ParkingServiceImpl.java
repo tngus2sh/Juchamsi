@@ -2,6 +2,7 @@ package com.inet.juchamsi.domain.parking.application.impl;
 
 import com.inet.juchamsi.domain.chat.application.ChatService;
 import com.inet.juchamsi.domain.chat.dao.ChatRoomRepository;
+import com.inet.juchamsi.domain.chat.dto.request.SystemChatRoomRequest;
 import com.inet.juchamsi.domain.chat.dto.service.SystemMessageDto;
 import com.inet.juchamsi.domain.chat.entity.ChatRoom;
 import com.inet.juchamsi.domain.mileage.application.MileageService;
@@ -302,8 +303,6 @@ public class ParkingServiceImpl implements ParkingService {
         // 자리번호와 사용자 아이디로 해당 주차내역 식별키 가져오기
         Optional<ParkingHistory> parkingHistoryOptional = parkingHistoryRepository.findAllBySeatNumberAndLoginId(seatNumber, userId, ACTIVE);
 
-        System.out.println("parkingHistoryOptional.get().toString() = " + parkingHistoryOptional.get().toString());
-
         if (parkingHistoryOptional.isEmpty()) {
             throw new NotFoundException(ParkingHistory.class, seatNumber);
         }
@@ -313,7 +312,7 @@ public class ParkingServiceImpl implements ParkingService {
         LocalDateTime dateTime = LocalDateTime.parse(outTime, formatter);
 
         parkingHistoryRepository.updateOutTime(dateTime, parkingHistoryOptional.get().getId());
-
+        
         notifyToCarOwner(ExitTimeDto.builder()
                 .villaIdNumber(villaIdNumber)
                 .seatNumber(seatNumber)
@@ -352,7 +351,6 @@ public class ParkingServiceImpl implements ParkingService {
     }
 
     public void notifyToBackNumber(ExitTimeDto exitTimeDto) {
-        System.out.println("exitTimeDto.toString() = " + exitTimeDto.toString());
         String villaIdNumber = exitTimeDto.getVillaIdNumber();
         int seatNumber = exitTimeDto.getSeatNumber();
         String outTimeStr = exitTimeDto.getOutTime();
@@ -404,36 +402,52 @@ public class ParkingServiceImpl implements ParkingService {
             }
         }
     }
-
+    
     // 유저에게 출차시간 알림 주기(15분전, 출차시간이 됐을 때)
     @Scheduled(cron = "0 0/1 * * * ?")
     public void notifyOutTimeToUser() {
+
+//        // ======================test==============================
+//        chatService.createSystemRoom(SystemChatRoomRequest.builder().userId("testuser2").build());
+//        String outTimeStr = "2023-08-10 12:02";
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+//        LocalDateTime outTime = LocalDateTime.parse(outTimeStr, formatter);
+//        notificationService.createNotification(CreateNotificationRequest.builder()
+//                .loginId("testuser2")
+//                .notiTime(outTime)
+//                .message(EXIT_TIME_REMINDER)
+//                .build());
+//        // ======================test==============================
+
+        
         LocalDateTime localDateTime = LocalDateTime.now();
-        String notiTime = localDateTime.format(DateTimeFormatter.ofPattern("yyyy:MM:dd HH:mm"));
+        String notiTime = localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 
         Map<String, String> entries = redisUtils.getRedisHash(notiTime);
 
-        for (String field : entries.keySet()) {
-            String value = (String) entries.get(field);
-            if (value.equals(notiTime)) {
-                // 알람 보내기
-                firebaseCloudMessageService.sendNotification(FCMNotificationRequest.builder()
-                                .loginId(field)
-                                .title(EXIT_TITLE)
-                                .body(value)
-                        .build());
+        System.out.println("entries = " + entries);
 
-                // 시스템 메시지 저장
-                Optional<String> chatRoomOptional = chatRoomRepository.findRoomIdByLoginIdAndType(field, SYSTEM, ALIVE);
-                if (chatRoomOptional.isEmpty()) {
-                    throw new NotFoundException(ChatRoom.class, field);
-                }
-                chatService.createSystemChat(SystemMessageDto.builder()
-                        .senderId(SYSTEM_ID)
-                        .message(value)
-                        .roomId(chatRoomOptional.get())
-                        .build());
+        for (String field : entries.keySet()) {
+            System.out.println("field = " + field);
+            String value = entries.get(field);
+            // 알람 보내기
+            firebaseCloudMessageService.sendNotification(FCMNotificationRequest.builder()
+                            .loginId(field)
+                            .title(EXIT_TITLE)
+                            .body(value)
+                    .build());
+
+            // 시스템 메시지 저장
+            System.out.println("value = " + value);
+            Optional<String> chatRoomOptional = chatRoomRepository.findRoomIdByLoginIdAndType(field, SYSTEM, ALIVE);
+            if (chatRoomOptional.isEmpty()) {
+                throw new NotFoundException(ChatRoom.class, field);
             }
+            chatService.createSystemChat(SystemMessageDto.builder()
+                    .senderId(SYSTEM_ID)
+                    .message(value)
+                    .roomId(chatRoomOptional.get())
+                    .build());
         }
     }
 }
