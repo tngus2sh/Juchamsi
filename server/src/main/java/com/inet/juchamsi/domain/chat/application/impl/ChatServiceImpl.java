@@ -26,6 +26,7 @@ import static com.inet.juchamsi.domain.chat.entity.Status.ALIVE;
 import static com.inet.juchamsi.domain.chat.entity.Type.GENERAL;
 import static com.inet.juchamsi.domain.chat.entity.Type.SYSTEM;
 import static com.inet.juchamsi.global.common.Active.ACTIVE;
+import static com.inet.juchamsi.global.common.ChatMessage.*;
 
 @Service
 @Slf4j
@@ -171,6 +172,12 @@ public class ChatServiceImpl implements ChatService {
                         .chatRoom(room)
                         .user(user.get())
                         .build());
+
+        Optional<User> system = userRepository.findByLoginId(SYSTEM_ID);
+        chatPeopleRepository.save(ChatPeople.builder()
+                .chatRoom(room)
+                .user(system.get())
+                .build());
 
         return ChatRoomResponse.builder()
                 .roomId(room.getRoomId())

@@ -32,6 +32,6 @@ public interface ParkingService {
     List<ParkingHistoryResponse> showParkingLot(String villaIdNumber);
 
     // 각 주차장 자리마다 세부 정보 출력
-    ParkingHistoryDetailResponse showDetailParkingLot(String villaIdNumber, int seatNumber);
+    ParkingHistoryDetailResponse showDetailParkingLot(String villaIdNumber, String userId);
 
 }

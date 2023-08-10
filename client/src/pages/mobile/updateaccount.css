@@ -1,43 +1,20 @@
-.main-info-text {
-  color: white;
+.update-account-header-container {
+  width: 100%;
+  height: 9rem;
+  background-color: #006DD1;
+  border-radius: 0 0 0 2.5rem;
 }
 
-.user-profile-container {
-  margin-top: 5.3rem;
-  text-align: center;
+.update-account-flex-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.user-img-container {
-  display: inline-block;
-  width: 5rem;
-}
-
-.user-text-container {
-  margin-top: 0.7rem;
-  margin-bottom: 1rem;
-}
-
-.user-update-container {
-  display: inline-block;
-  width: 20rem;
-  text-align: left;
-}
-
-.update-header-container {
+.update-account-info-container {
   font-size: 1.1rem;
 }
 
-.update-text-container {
-  margin-top: 1.3rem;
-  margin-bottom: 1.2rem;
-  padding: 1rem;
-  border-radius: 0.7rem;
-  background-color: #f7f7f7;
-}
-
-.update-phone-number-container,
-.update-car-number-container,
-.update-villa-number-container,
-.update-easy-pw-container {
-  margin-top: 0.85rem;
+.input-container {
+  margin-top: 1.8rem;
 }

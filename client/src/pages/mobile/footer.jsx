@@ -45,8 +45,9 @@ function Footer(props) {
           bottom: 0,
           boxShadow: "0 -2px 5px #cccccc",
           border: "none",
+          backgroundColor: "white",
           // borderTop: "1px solid black",
-          // backgroundColor: "#112D4E",
+          backgroundColor: "#FFFFFF",
         }}
       >
         <div className="footer-container">

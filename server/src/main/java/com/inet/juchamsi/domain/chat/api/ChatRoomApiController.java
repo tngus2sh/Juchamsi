@@ -76,21 +76,4 @@ public class ChatRoomApiController {
             return ERROR("이미 존재하는 채팅방 입니다.", HttpStatus.ALREADY_REPORTED);
         }
     }
-
-    /* 시스템 채팅방 */
-    // 시스템 채팅방 생성
-    @ApiOperation(value = "시스템 채팅방 생성", notes = "request에 담겨진 userId에 해당하는 회원의 채팅방을 개설한다.")
-    @PostMapping("/system/room")
-    public ApiResult<ChatRoomResponse> createSystemChatRoom(
-            @ApiParam(value = "userId")
-            @RequestBody SystemChatRoomRequest request
-    ) {
-        log.debug("# post createSystemChatRoom");
-        try {
-            ChatRoomResponse systemRoom = chatService.createSystemRoom(request);
-            return OK(systemRoom);
-        } catch (NotFoundException e) {
-            return ERROR("해당하는 회원이 없습니다.", HttpStatus.NO_CONTENT);
-        }
-    }
 }

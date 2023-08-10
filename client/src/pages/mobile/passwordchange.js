@@ -16,6 +16,7 @@ import { setPassword } from "../../redux/mobileauthlogin";
 import { useSelector, useDispatch } from "react-redux";
 import { Grid } from "@mui/material";
 import Typography from "@mui/material/Typography";
+import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
 
 function Passwordchange() {
   const navigate = useNavigate();
@@ -139,25 +140,24 @@ function Passwordchange() {
         sx={{
           width: "100%",
           height: "3.3rem",
-          backgroundColor: "#112D4E",
           position: "fixed",
           top: 0,
         }}
       >
         <Grid container sx={{ justifyContent: "center", height: "3.3rem", alignContent: "center" }}>
-          <KeyboardBackspaceIcon
+          <ArrowBackIosRoundedIcon
             sx={{
               position: "fixed",
-              left: 0,
-              color: "white",
-              width: "2.1rem",
-              height: "2.8rem",
-              ml: ".5rem",
-              mt: ".2rem",
+              top: "1.5rem",
+              left: "1.2rem",
+              width: "1.5rem",
+              height: "1.5rem",
             }}
             onClick={handleopenmyupdatepage}
           />
-          <Typography className="main-info-text">비밀번호 변경</Typography>
+          <Typography className="main-info-text" sx={{ marginTop: "1rem", fontSize: "1.3rem", fontWeight: "bold" }}>
+            비밀번호 변경
+          </Typography>
         </Grid>
       </Box>
 
@@ -227,7 +227,7 @@ function Passwordchange() {
         </div>
       </div>
 
-      <Footer AccounticonColor="#B7C4CF" />
+      <Footer AccounticonColor="#006DD1" />
     </div>
   );
 }
