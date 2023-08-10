@@ -2,16 +2,10 @@ import React from "react";
 import "./footer.css";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
-import HomeIcon from "@mui/icons-material/Home";
-import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
-import TextsmsIcon from "@mui/icons-material/Textsms";
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
-import { useState, useEffect } from "react";
-import { Grid, Typography } from "@mui/material";
+import {  Typography } from "@mui/material";
 
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import DirectionsCarFilledRoundedIcon from "@mui/icons-material/DirectionsCarFilledRounded";
-import ChatRoundedIcon from "@mui/icons-material/ChatRounded";
 import LocalPostOfficeRoundedIcon from "@mui/icons-material/LocalPostOfficeRounded";
 import ManageAccountsRoundedIcon from "@mui/icons-material/ManageAccountsRounded";
 
@@ -47,7 +41,6 @@ function Footer(props) {
           border: "none",
           backgroundColor: "white",
           // borderTop: "1px solid black",
-          backgroundColor: "#FFFFFF",
         }}
       >
         <div className="footer-container">

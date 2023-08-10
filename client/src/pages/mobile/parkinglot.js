@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './parkinglot.css';
 import Footer from './footer';
 import Box from '@mui/material/Box';
-import DriveEtaIcon from '@mui/icons-material/DriveEta';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import Button from '@mui/material/Button';
 import InCar from '../../components/mobile/incar';
 import { Container } from '@mui/material';
 import { setWhenEnteringCar } from '../../redux/mobileUserinfo'; 
 import http from "../../axios/http";
-import { setBoxItem, setOuttime, setmycar, setParkingnow } from '../../redux/mobileparking'; 
+import { setBoxItem, setmycar } from '../../redux/mobileparking'; 
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 
 
 function Parkinglot() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const handleOpen = () => dispatch(setWhenEnteringCar(true));
+  const handleOpen = useCallback(() => {
+    dispatch(setWhenEnteringCar(true));
+  }, [dispatch]);
 
   const handleOpenMycarPage = () => {
     // 내 주차현황 페이지로 이동
@@ -27,10 +27,11 @@ function Parkinglot() {
   const userid = useSelector((state) => state.mobileInfo.loginId)
   const name = useSelector((state) => state.mobileInfo.name)
   const villanumber = useSelector((state) => state.mobileInfo.villaIdNumber);
-  const logincheck = useSelector((state) => state.auth.isAutoLoginChecked)
+  const logincheck = useSelector((state) => state.auth.setloginchecked)
   useEffect(() => {
+    console.log(logincheck)
     const fetchData = async () => {
-      if (logincheck === false) {
+      if (logincheck !== true) {
         navigate('/Mobile/Login')
       }
       try {
@@ -78,7 +79,7 @@ function Parkinglot() {
 
     // fetchData 함수를 호출하여 데이터를 받아옴
     fetchData();
-  }, [villanumber]); // 빈 배열을 넣어서 페이지 로드 시에만 useEffect 내부 코드가 실행되도록 설정
+  }, [logincheck, navigate, userid, villanumber, dispatch, handleOpen]); // 빈 배열을 넣어서 페이지 로드 시에만 useEffect 내부 코드가 실행되도록 설정
 
   // Redux 상태에서 정보 가져오기
   const BoxItem = useSelector((state) => state.mycar.BoxItem);
@@ -119,8 +120,6 @@ function Parkinglot() {
   }, []);
 
 
-  const boxWidth = (viewportWidth * 0.7 - (Boxrow * 10)) / Boxrow;
-  const boxHeight = (viewportHeight * 0.3 - (BoxColumn * 10)) / BoxColumn;
 
   // Box 그리드를 생성하는 함수
   const renderBoxGrid = () => {
@@ -132,8 +131,8 @@ function Parkinglot() {
         boxes.push(
           <button key={`${i}-${j}`} onClick={MycarIcon ? handleOpenMycarPage : null} style={{ border: 'none', backgroundColor: 'transparent', padding: 0 }}>
             <Box key={`${i}-${j}`} sx={{
-              width: boxWidth,
-              height: boxHeight,
+              width: '4rem',
+              height: '5rem',
               marginRight: '1rem',
               marginLeft: '1rem',
               display: 'flex',
@@ -184,7 +183,7 @@ function Parkinglot() {
       <Box className='ParkinglotBox' sx={{width:viewportWidth, height: viewportHeight * 0.68, backgroundColor:'#F2F2F2', borderRadius: '10px'}}>
       <KeyboardDoubleArrowUpIcon sx={{position:'relative', top:'4rem'}}/>
       <p style={{position:'relative',top:'4rem', fontWeight:'bolder'}}>출구</p>
-        <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', width:viewportWidth, height: viewportHeight * 0.4, justifyContent:'center', marginTop:'7rem'}}>
+        <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', width:viewportWidth, height: viewportHeight * 0.4, justifyContent:'center', marginTop:'5rem'}}>
           {renderBoxGrid()}
         </Box>
         </Box>

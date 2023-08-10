@@ -1,48 +1,26 @@
 // Login.js
 
-import "./login.css";
-import * as React from "react";
-import TextField from "@mui/material/TextField";
-import FormControl from "@mui/material/FormControl";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import IconButton from "@mui/material/IconButton";
-import InputAdornment from "@mui/material/InputAdornment";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import FormGroup from "@mui/material/FormGroup";
-import Box from "@mui/material/Box";
-import { useSelector, useDispatch } from "react-redux";
-import { setAutoLoginChecked, setUsername, setPassword } from "../../redux/mobileauthlogin";
-import { setCarNumber, setid, setloginId, setname, setphoneNumber, setaccessToken, setrefreshToken, setVillaNumber, setvillaIdNumber, setTotalMileage, setUserMacAdress, setWhenEnteringCar } from "../../redux/mobileUserinfo";
-import { useNavigate } from "react-router-dom";
-import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
-import Typography from "@mui/material/Typography";
+import './login.css';
+import * as React from 'react';
+import IconButton from '@mui/material/IconButton';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import FormGroup from '@mui/material/FormGroup';
+import { useSelector, useDispatch } from 'react-redux';
+import { setAutoLoginChecked, setUsername, setPassword, setloginchecked } from '../../redux/mobileauthlogin';
+import { setCarNumber, setid, setloginId, setname, setphoneNumber, setaccessToken, setrefreshToken, setVillaNumber, setvillaIdNumber, setTotalMileage, setUserMacAdress, setWhenEnteringCar} from '../../redux/mobileUserinfo'
+import { useNavigate } from 'react-router-dom';
+import Button from '@mui/material/Button';
 import http from "../../axios/http";
-import Alert from "@mui/material/Alert";
-import Stack from "@mui/material/Stack";
+import Alert from '@mui/material/Alert';
+
 
 function Login() {
   const [showPassword, setShowPassword] = React.useState(false);
-  const [username, setUsernameLocal] = React.useState("");
-  const [password, setPasswordLocal] = React.useState("");
-  const [password1, setPasswordLocal1] = React.useState("");
-  // 최초 로그인여부 판별
-  const [FirstLogin, setFirstLoginOpen] = React.useState(false);
-  // 최초 로그인시 모달 창 오픈
-  const handleOpenFirstLoginCheck = () => setFirstLoginOpen(true);
-  const handleCloseFirstLoginCheck = () => {
-    setFirstLoginOpen(false);
-  };
-
-  // 간편비밀번호 등록 여부 확인
-  const [FirstPasswordCheck, setFirstPasswordCheck] = React.useState(false);
-  // 간편비밀번호 등록완료시 모달 창 오픈
-  const handleOpenFirstPasswordCheck = () => setFirstPasswordCheck(true);
-  const handleCloseFirstPasswordCheck = () => setFirstPasswordCheck(false);
+  const [username, setUsernameLocal] = React.useState('');
+  const [password, setPasswordLocal] = React.useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -67,27 +45,18 @@ function Login() {
     navigate("/Mobile/Signup");
   };
 
-  // 가입승인대기 상태
+  // 승인대기(가입,수정) 상태
   const [showAlert, setShowAlert] = React.useState(false);
-
-  // 수정사항대기 상태
-  const [showAlert1, setShowAlert1] = React.useState(false);
 
   // 거절 상태
   const [showAlert2, setShowAlert2] = React.useState(false);
 
-  // 없는 사용자
-  const [showAlert3, setShowAlert3] = React.useState(false);
-
-  // 최초 로그인여부 판별할 함수(추후 서버와 연결시 서버에서 true,flase값 받아와야할듯)
-  let firstlogin = false;
+  // 존재하지 않는 사용자
+  const [showNoUserAlert, setshowNoUserAlert] = React.useState(false)
 
   const handleOpenLoginResultPage = () => {
     // 아이디와 비밀번호가 입력되어 있을 때만 이동
-    if (username.trim() !== "" && password.trim() !== "") {
-      if (firstlogin === true) {
-        handleOpenFirstLoginCheck();
-      } else {
+    if (username.trim() !== '' && password.trim() !== '') {
         http({
           method: "post",
           url: "/tenant/login",
@@ -96,71 +65,52 @@ function Login() {
             loginPassword: password,
           },
         })
-          .then((res) => {
-            if (res.data.success) {
-              if (res.data.response.approved === "APPROVE") {
-                // setCarNumber, setid, setloginId, setname, setphoneNumber, setaccessToken, setrefreshToken
-                dispatch(setCarNumber(res.data.response.carNumber));
-                dispatch(setid(res.data.response.id));
-                dispatch(setloginId(res.data.response.loginId));
-                dispatch(setname(res.data.response.name));
-                dispatch(setphoneNumber(res.data.response.phoneNumber));
-                dispatch(setaccessToken(res.data.response.tokenInfo.accessToken));
-                dispatch(setrefreshToken(res.data.response.tokenInfo.accessToken));
-                dispatch(setVillaNumber(res.data.response.villaNumber));
-                dispatch(setvillaIdNumber(res.data.response.villa.idNumber));
-                dispatch(setTotalMileage(res.data.response.totalMileage));
-                dispatch(setPassword(password));
-                dispatch(setUserMacAdress("ed:dd:dd:dd"));
-                dispatch(setWhenEnteringCar(false));
-                navigate("/Mobile/Parkinglot");
-              } else if (res.data.response.approved === "WAIT") {
-                setShowAlert(true); // Alert을 표시
-                setTimeout(() => {
-                  setShowAlert(false); // 5초 후에 Alert을 숨김
-                }, 5000);
-              } else if (res.data.response.approved === "MODIFY") {
-                setShowAlert1(true); // Alert을 표시
-                setTimeout(() => {
-                  setShowAlert1(false); // 5초 후에 Alert을 숨김
-                }, 5000);
-              } else {
-                setShowAlert2(true); // Alert을 표시
-                setTimeout(() => {
-                  setShowAlert2(false); // 5초 후에 Alert을 숨김
-                }, 5000);
-              }
-            }
-            // fix: 예외 처리!!
-            else {
-              setShowAlert3(true); // Alert을 표시
-              setTimeout(() => {
-                setShowAlert3(false); // 5초 후에 Alert을 숨김
-              }, 5000);
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
+        .then((res) => {
+          console.log(res)
+          if (res.data.success === true) {
+            console.log(123)
+            // setCarNumber, setid, setloginId, setname, setphoneNumber, setaccessToken, setrefreshToken
+            dispatch(setCarNumber(res.data.response.carNumber));
+            dispatch(setid(res.data.response.id));
+            dispatch(setloginId(res.data.response.loginId));
+            dispatch(setname(res.data.response.name));
+            dispatch(setphoneNumber(res.data.response.phoneNumber));
+            dispatch(setaccessToken(res.data.response.tokenInfo.accessToken));
+            dispatch(setrefreshToken(res.data.response.tokenInfo.accessToken));
+            dispatch(setVillaNumber(res.data.response.villaNumber));
+            dispatch(setvillaIdNumber(res.data.response.villa.idNumber));
+            dispatch(setTotalMileage(res.data.response.totalMileage))
+            dispatch(setPassword(password))
+            dispatch(setUserMacAdress("ed:dd:dd:dd"));
+            dispatch(setWhenEnteringCar(false));
+            dispatch(setloginchecked(true))
+            navigate('/Mobile/Parkinglot')
+          } else if (res.data.error.message === '승인 대기 중입니다.') {
+            setShowAlert(true); // Alert을 표시
+            setTimeout(() => {
+              setShowAlert(false); // 5초 후에 Alert을 숨김
+            }, 5000);
+          } else if (res.data.error.message === '승인이 거절되었습니다.'){
+            setShowAlert2(true); // Alert을 표시
+            setTimeout(() => {
+              console.log(123)
+              setShowAlert2(false); // 5초 후에 Alert을 숨김
+            }, 5000);
+          } else if (res.data.error.message === '존재하지 않는 사용자입니다.') {
+            setshowNoUserAlert(true);
+            setTimeout(() => {
+              setshowNoUserAlert(false)
+            }, 5000)
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     }
   };
 
-  const handleOpenFirstLoginResult = () => {
-    if (password1.trim() !== "") {
-      if (password1.length === 6) {
-        handleCloseFirstLoginCheck();
-        handleOpenFirstPasswordCheck();
-      } else {
-        alert("간편비밀번호는 6개의 숫자로 등록해주시기 바랍니다.");
-      }
-    }
-  };
 
-  const handleOpenFirstPasswordResult = () => {
-    handleCloseFirstPasswordCheck();
-    navigate("/Mobile/Parkinglot");
-  };
+
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -168,11 +118,6 @@ function Login() {
       setUsernameLocal(value);
     } else if (name === "password") {
       setPasswordLocal(value);
-    } else if (name === "password1") {
-      // 비밀번호 입력 길이를 6글자로 제한
-      const onlynumb = value.replace(/[^0-9/ ]/g, "");
-      const checkpasswordvalue = onlynumb.slice(0, 6);
-      setPasswordLocal1(checkpasswordvalue);
     }
   };
 
@@ -180,6 +125,7 @@ function Login() {
   const handleAutoLoginCheckboxChange = (event) => {
     const { checked } = event.target;
     dispatch(setAutoLoginChecked(checked));
+    dispatch(setloginchecked(checked));
 
     if (!checked) {
       // "자동로그인" 체크를 해제했을 때 로그인 정보를 제거
@@ -257,33 +203,6 @@ function Login() {
     };
   }, []);
 
-  // modal 스타일
-  const style1 = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 230,
-    height: "260px",
-    bgcolor: "white",
-    border: "2px solid #000",
-    boxShadow: 24,
-    p: 4,
-  };
-
-  // modal 스타일
-  const style2 = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 230,
-    height: "130px",
-    bgcolor: "white",
-    border: "2px solid #000",
-    boxShadow: 24,
-    p: 4,
-  };
 
   return (
     <div className="login-main">
@@ -345,48 +264,6 @@ function Login() {
           </div>
         </div>
       </div>
-
-      {/* 최초 로그인시 간편비밀번호 입력 모달창 */}
-      <Modal open={FirstLogin} onClose={handleCloseFirstLoginCheck} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
-        <Box sx={style1}>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            차키 찾기 및 마일리지 현금화등을 위해 사용할 간편비밀번호를 입력해 주시기 바랍니다.
-          </Typography>
-          <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined" className="signuppw1" required>
-            <InputLabel htmlFor="outlined-adornment-password1">비밀번호</InputLabel>
-            <OutlinedInput
-              id="outlined-adornment-password1"
-              type={showPassword ? "text" : "password"}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton aria-label="toggle password visibility" onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword} edge="end">
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              }
-              label="비밀번호"
-              name="password1"
-              value={password1}
-              onChange={handleInputChange}
-            />
-          </FormControl>
-          <Box component="span" className="password2btn" onClick={handleOpenFirstLoginResult}>
-            <p className="Checkidresult1text">확인</p>
-          </Box>
-        </Box>
-      </Modal>
-
-      {/* 간편 비밀번호 등록완료시 모달창 */}
-      <Modal open={FirstPasswordCheck} onClose={handleCloseFirstPasswordCheck} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
-        <Box sx={style2}>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            입력하신 번호로 간편비밀번호 등록이 완료되었습니다.
-          </Typography>
-          <Box component="span" className="password3btn" onClick={handleOpenFirstPasswordResult}>
-            <p className="Checkidresult1text">확인</p>
-          </Box>
-        </Box>
-      </Modal>
       {/* "홈 화면에 추가" 버튼 */}
       {showAddToHomeScreen && (
         <div className="addToHomeScreenButton" onClick={handleAddToHomeScreen}>
@@ -394,24 +271,16 @@ function Login() {
         </div>
       )}
       {showAlert && (
-        <Alert severity="error" className="login-alert">
-          가입 승인대기 상태입니다. 관리자가 승인해야 서비스 이용이 가능합니다.
-        </Alert>
-      )}
-      {showAlert1 && (
-        <Alert severity="warning" className="login-alert">
-          수정사항 반영대기 상태입니다. 관리자가 승인해야 서비스 이용이 가능합니다.
-        </Alert>
+        <Alert severity="error" className='login-alert' sx={{width:'18rem'}}>
+          <p>승인대기 상태입니다. 관리자 승인시</p>
+          <p>서비스 이용이 가능합니다.</p>
+          </Alert>
       )}
       {showAlert2 && (
-        <Alert severity="warning" className="login-alert">
-          회원가입이 거절되었습니다. 빌라식별번호 및 회원가입시 정보입력을 다시 확인하고 회원가입 바랍니다.
-        </Alert>
+        <Alert severity="warning" className='login-alert' sx={{width:'18rem'}}>회원가입이 거절되었습니다.</Alert>
       )}
-      {showAlert3 && (
-        <Alert severity="warning" className="login-alert">
-          존재하지 않는 사용자입니다. 회원가입 후 로그인해 주세요.
-        </Alert>
+      {showNoUserAlert && (
+        <Alert severity="warning" className='login-alert' sx={{width:'18rem'}}>회원가입을 먼저 해주시기 바랍니다.</Alert>
       )}
     </div>
   );
