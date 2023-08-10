@@ -22,6 +22,7 @@ import Alert from "@mui/material/Alert";
 import { setBoxItem, setOuttime, setmycar, setParkingnow } from "../../redux/mobileparking";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import MinorCrashRoundedIcon from "@mui/icons-material/MinorCrashRounded";
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
 function MycarParking() {
   const villanumber = useSelector((state) => state.mobileInfo.villaIdNumber);
@@ -193,7 +194,6 @@ function MycarParking() {
 
   // 모달 창에서 OK 버튼을 눌렀을 때 호출되는 콜백 함수
   const handleOk = () => {
-    // 변경된 출차 예정 시간을 Redux 상태에 반영합니다.
     const formattedDate = selectedDate.format("YY-MM-DD");
     const formattedTime = selectedTime.format("HH:mm");
     const newOuttime = `20${formattedDate} ${formattedTime}`;
@@ -217,7 +217,6 @@ function MycarParking() {
       .catch((err) => {
         console.log("Error:", err);
       });
-
     // 모달을 닫습니다.
     handleClose();
   };
@@ -232,7 +231,7 @@ function MycarParking() {
       return ["", ""];
     }
   };
-  const [defaultday, defaulttime] = date();
+  let [defaultday, defaulttime] = date();
   const defaultall = defaultday + " " + defaulttime;
 
   return (
@@ -242,14 +241,11 @@ function MycarParking() {
           sx={{
             width: "100%",
             height: "3.3rem",
-            backgroundColor: "#112D4E",
             position: "fixed",
             top: 0,
           }}
         >
-          <Grid container sx={{ justifyContent: "center", height: "3.3rem", alignContent: "center" }}>
-            <Typography className="main-info-text">주차 정보</Typography>
-          </Grid>
+          {showAlert && <Alert severity="error">주차를 먼저 실시해주시기 바랍니다.</Alert>}
         </Box>
 
         <div className="my-parking-main-container">
@@ -279,7 +275,7 @@ function MycarParking() {
 
           {/* 겹주차(앞에 차량)이 있을 경우 */}
           {!isbackothercar && !isfrontothercar && (
-            <div className="double-car-parking-container">
+            <div className="double-car-parking-container" style={{height:'25rem'}}>
               <div className="double-parking-container" style={{ textAlign: "left" }}>
                 <div className="bold-text" style={{ fontSize: "1.2rem" }}>
                   겹주차 현황
@@ -304,12 +300,23 @@ function MycarParking() {
   
                 <div className="double-parking-content-container" style={{ marginTop: "2rem" }}>
                   <div className="bold-text" style={{ fontSize: "1.2rem" }}>
-                    겹주차 출차 예상 시간
+                    겹주차 
+                    <p>출차 예상 시간</p>
                   </div>
                 </div>
                 <div className="my-car-timer-container">
                   <div className="my-car-date-container">{defaultday.substring(2, 10).replace(/-/g, '.')}</div>
                   <div className="my-car-time-container">{defaulttime}</div>
+                </div>
+                <Button variant="contained" onClick={handleOpenChat} sx={{ position: "relative", top: "1rem", left: "0rem", borderRadius:'0.5rem' }}>
+                  대화방 생성하기
+                  <KeyboardArrowRightIcon/>
+                </Button>
+                <div className="other-phonenumber-main" style={{fontWeight:'bolder', fontSize:'1.2rem'}}>
+                  핸드폰 번호
+                </div>
+                <div className="other-phonenumber-text">
+                  010-1234-5678
                 </div>
               </div>
             </div>
@@ -317,7 +324,7 @@ function MycarParking() {
 
           {/* 겹주차(뒤에 차량)이 있을 경우 */}
           {isbackothercar && (
-            <div className="double-car-parking-container">
+            <div className="double-car-parking-container" style={{height:'25rem'}}>
               <div className="double-parking-container" style={{ textAlign: "left" }}>
                 <div className="bold-text" style={{ fontSize: "1.2rem" }}>
                   겹주차 현황
@@ -335,8 +342,22 @@ function MycarParking() {
   
                 <div className="double-parking-content-container" style={{ marginTop: "2rem" }}>
                   <div className="bold-text" style={{ fontSize: "1.2rem" }}>
-                    겹주차 출차 예상 시간
+                  <p>출차 예상 시간</p>
                   </div>
+                </div>
+                <div className="my-car-timer-container">
+                  <div className="my-car-date-container">{defaultday.substring(2, 10).replace(/-/g, '.')}</div>
+                  <div className="my-car-time-container">{defaulttime}</div>
+                </div>
+                <Button variant="contained" onClick={handleOpenChat} sx={{ position: "relative", top: "1rem", left: "0rem", borderRadius:'0.5rem' }}>
+                  대화방 생성하기
+                  <KeyboardArrowRightIcon/>
+                </Button>
+                <div className="other-phonenumber-main" style={{fontWeight:'bolder', fontSize:'1.2rem'}}>
+                  핸드폰 번호
+                </div>
+                <div className="other-phonenumber-text">
+                  010-1234-5678
                 </div>
               </div>
             </div>
@@ -344,8 +365,8 @@ function MycarParking() {
 
           {/* 겹주차 없을때 보여줄 내용 */}
           {isfrontothercar && (
-            <div className="double-car-parking-container" style={{height:'12rem'}}>
-              <div className="double-parking-container" style={{ textAlign: "left" }}>
+            <div className="double-car-parking-container" style={{height:'14.5rem'}}>
+              <div className="double-parking-container" style={{ textAlign: "left", marginTop:'2rem' }}>
                 <div className="bold-text" style={{ fontSize: "1.2rem" }}>
                   겹주차 현황
                 </div>
@@ -429,7 +450,6 @@ function MycarParking() {
             </Box>
           </Modal>
 
-          {showAlert && <Alert severity="error">주차를 먼저 실시해주시기 바랍니다.</Alert>}
         </Container>
         <Footer MycariconColor="#B7C4CF" />
       </div>
