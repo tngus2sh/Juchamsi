@@ -66,9 +66,11 @@ public class ChatServiceImpl implements ChatService {
         }
         String nickName = null;
         for (ChatRoomUserDto result : results) {
+            if (result.getRoomName().equals("주참시")) continue;
             if (result.getCarNumber().equals(userOp.get().getCarNumber())) continue;
             nickName = result.getCarNumber();
         }
+        
         // 이전 채팅방 글 불러오기
         List<MessageChatRoomDto> messageUserDtos = messageRepository.findAllByChatRoomIdAndStatus(roomId, ALIVE);
         
@@ -155,7 +157,7 @@ public class ChatServiceImpl implements ChatService {
     /* 시스템 채팅방 */
     // 시스템 채팅방 생성
     @Override
-    public ChatRoomResponse createSystemRoom(SystemChatRoomRequest request) {
+    public void createSystemRoom(SystemChatRoomRequest request) {
         String userId = request.getUserId();
         String name = "주참시";
         // chatRoom 생성
@@ -179,7 +181,7 @@ public class ChatServiceImpl implements ChatService {
                 .user(system.get())
                 .build());
 
-        return ChatRoomResponse.builder()
+        ChatRoomResponse.builder()
                 .roomId(room.getRoomId())
                 .roomName(room.getRoomName())
                 .build();
