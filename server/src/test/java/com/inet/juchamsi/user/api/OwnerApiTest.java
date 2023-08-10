@@ -85,6 +85,20 @@ public class OwnerApiTest {
                 .roles(Collections.singletonList("OWNER"))
                 .build());
 
+        userRepository.save(User.builder()
+                .villa(villa)
+                .loginId("owner2")
+                .loginPassword(passwordEncoder.encode("userPw123!"))
+                .phoneNumber("01012345678")
+                .name("김주참")
+                .grade(Grade.OWNER)
+                .approve(Approve.WAIT)
+                .active(Active.ACTIVE)
+                .carNumber("12가 3456")
+                .villaNumber(205)
+                .roles(Collections.singletonList("OWNER"))
+                .build());
+
     }
 
     @Test
@@ -152,6 +166,26 @@ public class OwnerApiTest {
         // given
         String object = objectMapper.writeValueAsString(CreateOwnerRequest.builder()
                 .loginId("ownerId212")
+                .loginPassword("userPw123!")
+                .build());
+
+        // when
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post("/owner/login")
+                .content(object)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        // then
+        actions.andDo(print())
+                .andExpect(jsonPath("$.success").value(false));
+    }
+
+    @Test
+    @DisplayName("집주인 로그인 ## 승인 대기")
+    void loginUserWait() throws Exception {
+        // given
+        String object = objectMapper.writeValueAsString(CreateOwnerRequest.builder()
+                .loginId("owner2")
                 .loginPassword("userPw123!")
                 .build());
 

@@ -8,6 +8,7 @@ import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.dto.request.ModifyOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminOwnerLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
+import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.domain.villa.application.VillaService;
 import com.inet.juchamsi.domain.villa.dao.VillaRepository;
@@ -30,8 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.inet.juchamsi.domain.user.entity.Approve.MODIFY;
-import static com.inet.juchamsi.domain.user.entity.Approve.WAIT;
+import static com.inet.juchamsi.domain.user.entity.Approve.*;
 import static com.inet.juchamsi.domain.user.entity.Grade.OWNER;
 import static com.inet.juchamsi.global.common.Active.ACTIVE;
 
@@ -132,9 +132,20 @@ public class OwnerServiceImpl implements OwnerService {
         String ownerId = request.getLoginId();
         String password = request.getLoginPassword();
 
-        Optional<Long> userIdOp = userRepository.existLoginIdAndActive(ownerId, ACTIVE);
-        if (userIdOp.isEmpty()) {
+        Optional<User> targetUser = userRepository.existLoginIdAndActiveAndGrade(ownerId, ACTIVE, OWNER);
+        if (targetUser.isEmpty()) {
             throw new NotFoundException(User.class, ownerId);
+        }
+
+        Approve approve = targetUser.get().getApprove();
+        if(approve == WAIT) {
+            throw new NotFoundException(User.class, "WAIT");
+        }
+        else if(approve == MODIFY) {
+            throw new NotFoundException(User.class, "MODIFY");
+        }
+        else if(approve == DECLINE) {
+            throw new NotFoundException(User.class, "DECLINE");
         }
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(ownerId, password);
