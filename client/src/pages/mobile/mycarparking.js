@@ -25,9 +25,13 @@ import MinorCrashRoundedIcon from "@mui/icons-material/MinorCrashRounded";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
 function MycarParking() {
+  const logincheck = useSelector((state) => state.auth.isAutoLoginChecked)
   const villanumber = useSelector((state) => state.mobileInfo.villaIdNumber);
   useEffect(() => {
     const fetchData = async () => {
+      if (logincheck === false) {
+        navigate('/Mobile/Login')
+      }
       try {
         // 주차현황 가지고오기
         http({
@@ -260,9 +264,16 @@ function MycarParking() {
               </div>
 
               <div className="my-car-timer-container">
-                <div className="my-car-date-container">{defaultday.substring(2, 10).replace(/-/g, '.')}</div>
-                <div className="my-car-time-container">{defaulttime}</div>
+                {isfrontothercar ? (
+                  <React.Fragment>
+                    <div className="my-car-date-container">{defaultday.substring(2, 10).replace(/-/g, '.')}</div>
+                    <div className="my-car-time-container">{defaulttime}</div>
+                  </React.Fragment>
+                ) : (
+                  <div className="my-car-date-container-empty">미주차 상태입니다.</div>
+                )}
               </div>
+
 
               <div className="my-car-update-container">
                 <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", color: "#006DD1" }}>
@@ -274,7 +285,7 @@ function MycarParking() {
           </div>
 
           {/* 겹주차(앞에 차량)이 있을 경우 */}
-          {!isbackothercar && !isfrontothercar && (
+          {isfrontothercar && (
             <div className="double-car-parking-container" style={{height:'25rem'}}>
               <div className="double-parking-container" style={{ textAlign: "left" }}>
                 <div className="bold-text" style={{ fontSize: "1.2rem" }}>
@@ -316,6 +327,7 @@ function MycarParking() {
                   핸드폰 번호
                 </div>
                 <div className="other-phonenumber-text">
+                  {/* 핸드폰 번호는 별도로 api요청해서 받아와야함 */}
                   010-1234-5678
                 </div>
               </div>
@@ -364,7 +376,7 @@ function MycarParking() {
           )}
 
           {/* 겹주차 없을때 보여줄 내용 */}
-          {isfrontothercar && (
+          {!isbackothercar && !isfrontothercar && (
             <div className="double-car-parking-container" style={{height:'14.5rem'}}>
               <div className="double-parking-container" style={{ textAlign: "left", marginTop:'2rem' }}>
                 <div className="bold-text" style={{ fontSize: "1.2rem" }}>
@@ -389,41 +401,6 @@ function MycarParking() {
           </div>
 
         <Container>
-          {/* <TextField
-          id="outlined-read-only-input"
-          label="출차 예정시간"
-          value={Outtime[Mycar]}
-          InputProps={{
-            readOnly: true,
-          }}
-          sx={{ position: "absolute", top: "7%", left: "10%", "& input": { textAlign: "center" }, width: "80%" }}
-        />
-        <Button onClick={handleOpen} sx={{ position: "absolute", top: "13%", left: "75%" }}>
-          시간 변경
-        </Button>
-        <p style={{ position: "absolute", top: "22%", left: "11%", fontSize: "13px" }}>앞(뒤)차 여부</p>
-        <Box className={`mycarparkingbox1 ${isothercar ? "mycarparkingbox2" : "mycarparkingbox1"}`} sx={{ width: "39.5%", height: "8%", border: "0.5px solid", display: "inline-block" }}>
-          <p style={{ position: "absolute", top: "40%", left: "45%" }}>O</p>
-        </Box>
-        <Box className={`mycarparkingbox1 ${isothercar ? "mycarparkingbox3" : "mycarparkingbox4"}`} sx={{ width: "39.5%", height: "8%", border: "0.5px solid", display: "inline-block" }}>
-          <p style={{ position: "absolute", top: "40%", left: "45%" }}>X</p>
-        </Box>
-        {isothercar && (
-          <TextField
-            id="outlined-read-only-input1"
-            label="겹주차 차량 출차시간"
-            value={othercarouttime}
-            InputProps={{
-              readOnly: true,
-            }}
-            sx={{ position: "absolute", top: "40%", left: "10%", "& input": { textAlign: "center" }, width: "80%" }}
-          />
-        )} */}
-
-          {/* <Button onClick={handleOpenChat} sx={{ position: "absolute", top: "46%", left: "71%" }}>
-          대화방 생성
-        </Button> */}
-
           <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
             <Box sx={style}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -451,7 +428,7 @@ function MycarParking() {
           </Modal>
 
         </Container>
-        <Footer MycariconColor="#B7C4CF" />
+        <Footer MycariconColor="#006DD1" />
       </div>
     </React.Fragment>
   );

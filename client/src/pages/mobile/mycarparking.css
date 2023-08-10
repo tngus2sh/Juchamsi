@@ -157,3 +157,9 @@
   top:-100rem;
   left:1rem;
 }
+
+.my-car-date-container-empty {
+  position: relative;
+  top:2.5rem;
+  font-weight: bold;
+}

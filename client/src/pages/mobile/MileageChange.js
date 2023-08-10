@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './MileageChange.css';
 import Footer from './footer';
 import Stack from '@mui/material/Stack';
@@ -31,7 +31,13 @@ function MileageChange() {
     const [bankName, setBankName] = React.useState(10); // 기본 값 설정
     const [password1, setPasswordLocal1] = React.useState('');
     const [simplePasswordEntered, setSimplePasswordEntered] = React.useState(false);
-    
+    const logincheck = useSelector((state) => state.auth.isAutoLoginChecked)
+
+    useEffect(() => {
+        if (logincheck === false) {
+            navigate('/Mobile/Login')
+          }
+        })
 
     const handlechangemileageChange = (event) => {
         setchangemileage(event.target.value);
@@ -467,7 +473,7 @@ function MileageChange() {
                     </Box>
                 </Box>
             </Modal>
-            <Footer AccounticonColor="#33907C" />
+            <Footer AccounticonColor="#006DD1" />
         </div>
     );
 }
