@@ -20,7 +20,7 @@ public class TokenServiceImpl implements TokenService {
     private final UserRepository userRepository;
 
     @Override
-    public void saveToken(SaveTokenRequest request) {
+    public Long saveToken(SaveTokenRequest request) {
         Optional<User> findUser = userRepository.findByLoginId(request.getLoginId());
         if(!findUser.isPresent()) {
             throw new NotFoundException(User.class, request.getLoginId());
@@ -29,6 +29,7 @@ public class TokenServiceImpl implements TokenService {
         Optional<Token> findToken = tokenRepository.findByUserLoginId(request.getLoginId());
         if(findToken.isPresent()) {
             tokenRepository.updateToken(request.getLoginId(), request.getFCMToken());
+            return findToken.get().getId();
         }
         else {
             Token token = Token.builder()
@@ -36,7 +37,8 @@ public class TokenServiceImpl implements TokenService {
                     .FCMToken(request.getFCMToken())
                     .build();
 
-            tokenRepository.save(token);
+            Token saveToken = tokenRepository.save(token);
+            return saveToken.getId();
         }
     }
 }
