@@ -3,7 +3,6 @@ package com.inet.juchamsi.domain.chat.application;
 import com.inet.juchamsi.domain.chat.dto.request.ChatMessageRequest;
 import com.inet.juchamsi.domain.chat.dto.request.ChatRoomRequest;
 import com.inet.juchamsi.domain.chat.dto.request.SystemChatRoomRequest;
-import com.inet.juchamsi.domain.chat.dto.request.SystemMessageRequest;
 import com.inet.juchamsi.domain.chat.dto.response.ChatRoomResponse;
 import com.inet.juchamsi.domain.chat.dto.service.SystemMessageDto;
 
@@ -27,7 +26,7 @@ public interface ChatService {
 
     /* 시스템 대화방 */
     // 대화방 생성
-    public ChatRoomResponse createSystemRoom(SystemChatRoomRequest request);
+    public void createSystemRoom(SystemChatRoomRequest request);
 
     // 시스템 메세지 저장
     public void createSystemChat(SystemMessageDto messageDto);
