@@ -41,3 +41,8 @@
   font-family: "KorailFont";
   src: url("../public/font/Korail_Round_Gothic_Medium.ttf");
 }
+
+@font-face {
+  font-family: "Nanum";
+  src: url("../public/font/NanumSquareR.ttf");
+}

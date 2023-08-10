@@ -8,6 +8,7 @@ import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
 import com.inet.juchamsi.domain.user.dto.request.ModifyOwnerRequest;
 import com.inet.juchamsi.domain.user.dto.response.AdminOwnerLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.OwnerResponse;
+import com.inet.juchamsi.domain.user.entity.Approve;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.domain.villa.application.VillaService;
 import com.inet.juchamsi.domain.villa.dao.VillaRepository;
@@ -30,8 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.inet.juchamsi.domain.user.entity.Approve.MODIFY;
-import static com.inet.juchamsi.domain.user.entity.Approve.WAIT;
+import static com.inet.juchamsi.domain.user.entity.Approve.*;
 import static com.inet.juchamsi.domain.user.entity.Grade.OWNER;
 import static com.inet.juchamsi.global.common.Active.ACTIVE;
 
@@ -87,12 +87,17 @@ public class OwnerServiceImpl implements OwnerService {
         // 중복 예외 처리
         Optional<Long> loginId = userRepository.existLoginId(dto.getLoginId());
         if (loginId.isPresent()) {
-            throw new AlreadyExistException(User.class, loginId.get());
+            throw new AlreadyExistException(User.class, "동일한 아이디를 사용하는 회원이 존재합니다.");
         }
 
         Optional<Long> phoneNumber = userRepository.existPhoneNumber(dto.getPhoneNumber());
         if (phoneNumber.isPresent()) {
-            throw new AlreadyExistException(User.class, loginId.get());
+            throw new AlreadyExistException(User.class, "동일한 핸드폰 번호를 사용하는 회원이 존재합니다.");
+        }
+
+        Optional<Long> villaAddress = villaRepository.findByAddress(dto.getRoadAddress());
+        if(villaAddress.isPresent()) {
+            throw new AlreadyExistException(Villa.class, "동일한 빌라 주소를 사용하는 관리자가 존재합니다.");
         }
 
         // 빌라 등록
@@ -132,9 +137,20 @@ public class OwnerServiceImpl implements OwnerService {
         String ownerId = request.getLoginId();
         String password = request.getLoginPassword();
 
-        Optional<Long> userIdOp = userRepository.existLoginIdAndActive(ownerId, ACTIVE);
-        if (userIdOp.isEmpty()) {
+        Optional<User> targetUser = userRepository.existLoginIdAndActiveAndGrade(ownerId, ACTIVE, OWNER);
+        if (targetUser.isEmpty()) {
             throw new NotFoundException(User.class, ownerId);
+        }
+
+        Approve approve = targetUser.get().getApprove();
+        if(approve == WAIT) {
+            throw new NotFoundException(User.class, "WAIT");
+        }
+        else if(approve == MODIFY) {
+            throw new NotFoundException(User.class, "MODIFY");
+        }
+        else if(approve == DECLINE) {
+            throw new NotFoundException(User.class, "DECLINE");
         }
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(ownerId, password);

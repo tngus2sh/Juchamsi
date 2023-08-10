@@ -4,6 +4,7 @@ import * as React from "react";
 import "./savepage.css";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import http from "../../axios/http"
 import { useDispatch, useSelector } from "react-redux";
 
@@ -51,7 +52,8 @@ function Savepage() {
   };
 
   const handleOkClick = () => {
-    responseCheck();
+    // responseCheck();
+    responseOpen();
     navigate("/Kiosk/savingpage");
   };
 
@@ -63,6 +65,21 @@ function Savepage() {
         villaNumber : idValue,
         passward : pwValue,
       })
+      .then((response) => {
+        console.log(response.data);
+        // 받은 정보들로 IoT와 통신하여 열쇠보관함 open
+        
+
+      }).catch((error) => {
+        // 요청 실패 시 에러 처리
+        console.error("Error while submitting:", error);
+      });
+  }
+
+  async function responseOpen() {
+    //HTTP POST 요청 보내기
+    await axios
+      .get(`http://192.168.100.251/open`)
       .then((response) => {
         console.log(response.data);
         // 받은 정보들로 IoT와 통신하여 열쇠보관함 open

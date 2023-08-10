@@ -24,3 +24,20 @@
   justify-content: center;
   align-items: center;
 }
+
+.modaltext2 {
+  font-size: 1rem;
+  color: gray;
+}
+
+.selected {
+  color:black;
+  font-weight: bolder;
+}
+
+.alert-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}

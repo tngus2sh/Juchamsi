@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./updateaccount.css";
 import Footer from "./footer";
 import { useSelector, useDispatch } from "react-redux";
@@ -19,6 +19,7 @@ import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import http from "../../axios/http";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 function Account() {
   const dispatch = useDispatch();
@@ -49,7 +50,14 @@ function Account() {
   const [newhouseResult, setnewhouseResult] = React.useState(false);
   const fileInput = useRef(null);
   const imageUrl = useSelector((state) => state.mobileInfo.imageUrl); // 이미지 URL 가져오기
+  const logincheck = useSelector((state) => state.auth.isAutoLoginChecked)
 
+  useEffect(() => {
+      if (logincheck === false) {
+          navigate('/Mobile/Login')
+        }
+      })
+      
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
     ...theme.typography.body2,
@@ -362,12 +370,15 @@ function Account() {
         <div className="update-account-header-container" style={{ color: "white" }}>
           <div className="account-padding-container">
             <div className="update-account-warning-container" style={{ textAlign: "center", paddingTop: "1.5rem" }}>
-              <span style={{ fontSize: "0.9rem" }}>※ 수정 후 관리자의 승인을 받아야 서비스 이용이 가능합니다</span>
-            </div>
-            <div className="update-account-title-container" style={{ marginTop: "1.5rem", textAlign: "right" }}>
-              <span className="bold-text" style={{ fontSize: "1.3rem" }}>
+              <span className="bold-text" style={{ fontSize: "1.3rem", marginRight:'11rem' }} onClick={handleopenmypage}>
+                <ArrowBackIcon/>
+              </span>
+              <span className="bold-text" style={{ fontSize: "1.3rem", marginLeft:'-3rem' }}>
                 정보 수정
               </span>
+            </div>
+            <div className="update-account-title-container" style={{ marginTop: "1.5rem", textAlign: "right" }}>
+              <span style={{ fontSize: "0.7rem" }}>※ 수정시 관리자 승인 후 서비스 이용이 가능합니다</span>
             </div>
           </div>
         </div>

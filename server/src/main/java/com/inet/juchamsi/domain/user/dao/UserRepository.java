@@ -20,8 +20,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select u.id from User u where u.loginId=:loginId and u.active=:active")
     Optional<Long> existLoginIdAndActive(@Param("loginId") String loginId, @Param("active") Active active);
 
+    @Query("select u from User u where u.loginId=:loginId and u.active=:active and u.grade=:grade")
+    Optional<User> existLoginIdAndActiveAndGrade(@Param("loginId") String loginId, @Param("active") Active active, @Param("grade") Grade grade);
+
     @Query("select u.id from User u where u.phoneNumber=:phoneNumber")
     Optional<Long> existPhoneNumber(@Param("phoneNumber") String phoneNumber);
+
+    @Query("select u.id from User u where u.villaNumber=:villaNumber")
+    Optional<Long> existVillaNumber(@Param("villaNumber") int villaNumber);
 
     @Query("select u.id from User u where u.carNumber=:carNumber")
     Optional<Long> existCarNumber(@Param("carNumber") String carNumber);
@@ -78,10 +84,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying(clearAutomatically = true)
     @Query("update User u set u.active=:active where u.loginId=:loginId")
     Optional<Void> updateActive(@Param("loginId") String loginId, @Param("active") Active active);
-
-    @Modifying(clearAutomatically = true)
-    @Query("update User u set u.keepKeyPin=:keepKeyPin where u.loginId=:loginId")
-    Optional<Void> updateKeyPin(@Param("keepKeyPin") String keepKeyPin, @Param("loginId") String loginId);
 
     Long countByLoginId(String loginId);
 

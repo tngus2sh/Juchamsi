@@ -27,8 +27,12 @@ function Parkinglot() {
   const userid = useSelector((state) => state.mobileInfo.loginId)
   const name = useSelector((state) => state.mobileInfo.name)
   const villanumber = useSelector((state) => state.mobileInfo.villaIdNumber);
+  const logincheck = useSelector((state) => state.auth.isAutoLoginChecked)
   useEffect(() => {
     const fetchData = async () => {
+      if (logincheck === false) {
+        navigate('/Mobile/Login')
+      }
       try {
         // 내 주차현황 입력여부 확인
         http({
@@ -186,7 +190,7 @@ function Parkinglot() {
         </Box>
       <InCar open={open} />
       </Container>
-      <Footer HomeiconColor="#B7C4CF"/>
+      <Footer HomeiconColor="#006DD1"/>
     </React.Fragment>
   );
 }

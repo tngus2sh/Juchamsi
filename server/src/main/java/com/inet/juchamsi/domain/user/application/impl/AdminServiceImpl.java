@@ -26,6 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import static com.inet.juchamsi.domain.user.entity.Approve.*;
+import static com.inet.juchamsi.domain.user.entity.Grade.ADMIN;
 import static com.inet.juchamsi.global.common.Active.ACTIVE;
 
 @Service
@@ -51,7 +53,7 @@ public class AdminServiceImpl implements AdminService {
             throw new AlreadyExistException(User.class, phoneNumber.get());
         }
 
-        User user = User.createUserAdmin(dto.getPhoneNumber(), dto.getLoginId(), passwordEncoder.encode(dto.getLoginPassword()), dto.getName(), Grade.ADMIN, Approve.WAIT, ACTIVE, "ADMIN");
+        User user = User.createUserAdmin(dto.getPhoneNumber(), dto.getLoginId(), passwordEncoder.encode(dto.getLoginPassword()), dto.getName(), ADMIN, Approve.WAIT, ACTIVE, "ADMIN");
         User savedUser = userRepository.save(user);
         return savedUser.getId();
     }
@@ -81,8 +83,12 @@ public class AdminServiceImpl implements AdminService {
         String adminId = request.getLoginId();
         String password  = request.getLoginPassword();
 
-        Optional<Long> userIdOp = userRepository.existLoginIdAndActive(adminId, ACTIVE);
-        if (userIdOp.isEmpty()) {
+//        Optional<Long> userIdOp = userRepository.existLoginIdAndActive(adminId, ACTIVE);
+//        if (userIdOp.isEmpty()) {
+//            throw new NotFoundException(User.class, adminId);
+//        }
+        Optional<User> targetUser = userRepository.existLoginIdAndActiveAndGrade(adminId, ACTIVE, ADMIN);
+        if (targetUser.isEmpty()) {
             throw new NotFoundException(User.class, adminId);
         }
 

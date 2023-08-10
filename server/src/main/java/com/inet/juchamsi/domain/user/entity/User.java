@@ -72,9 +72,6 @@ public class User extends TimeBaseEntity implements UserDetails {
 
     @Column(name = "refresh_token")
     private String refreshToken;
-    
-    @Column(name = "keep_key_pin")
-    private String keepKeyPin;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
@@ -82,7 +79,7 @@ public class User extends TimeBaseEntity implements UserDetails {
     public User() {}
 
     @Builder
-    public User(Long id, Villa villa, String phoneNumber, String loginId, String loginPassword, String name, int totalMileage, Grade grade, String macAddress, String carNumber, int villaNumber, Approve approve, Active active, String refreshToken, String keepKeyPin, List<String> roles) {
+    public User(Long id, Villa villa, String phoneNumber, String loginId, String loginPassword, String name, int totalMileage, Grade grade, String macAddress, String carNumber, int villaNumber, Approve approve, Active active, String refreshToken, List<String> roles) {
         this.id = id;
         this.villa = villa;
         this.phoneNumber = phoneNumber;
@@ -97,7 +94,6 @@ public class User extends TimeBaseEntity implements UserDetails {
         this.approve = approve;
         this.active = active;
         this.refreshToken = refreshToken;
-        this.keepKeyPin = keepKeyPin;
         this.roles = roles;
     }
     

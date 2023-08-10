@@ -21,6 +21,8 @@ import PersonIcon from "@mui/icons-material/Person";
 import { Typography } from "@mui/material";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import Fab from "@mui/material/Fab";
+import Box from "@mui/material/Box";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 function Termessage() {
   const navigate = useNavigate();
@@ -29,6 +31,11 @@ function Termessage() {
   // const targetId; 겹주차 발생 차주에게 보내기!!
 
   const [chatRooms, setChatRooms] = useState([]);
+
+  const [lastMessageInfo, setLastMessageInfo] = useState([]);
+  // const [lastMessageContent, setLastMessageContent] = useState([]);
+  // const [lastMessageTime, setLastMessageTime] = useState([]);
+  // const [toNickName, setToNickName] = useState([]);
 
   useEffect(() => {
     findAllRoom();
@@ -41,17 +48,41 @@ function Termessage() {
         console.log("대화방 리스트");
         console.log(response.data.response);
         setChatRooms(response.data.response);
+        response.data.response.forEach((item) => {
+          fetchMessage(item.roomId);
+        });
       })
       .catch((error) => {
         console.error("Error while fetching chat rooms:", error);
       });
   };
 
-  const createRoom = () => {
-    // if (roomName === "") {
-    //   alert("방 제목을 입력해 주십시오.");
-    //   return;
+  async function fetchMessage(roomId) {
+    await http
+      .get(`/chat/room/${loginId}/${roomId}`)
+      .then((response) => {
+        console.log("채팅방 상세조회");
+        console.log(response.data);
 
+        const messageList = response.data.response.messageList;
+        const lastMessage = messageList[messageList.length - 1];
+
+        setLastMessageInfo((prevChatRoomInfos) => [
+          ...prevChatRoomInfos,
+          {
+            toNickName: response.data.response.nickName,
+            lastMessageContent: lastMessage.message,
+            lastMessageTime: lastMessage.createdDate,
+          },
+        ]);
+      })
+      .catch((error) => {
+        // 요청 실패 시 에러 처리
+        console.error("Error while submitting:", error);
+      });
+  }
+
+  const createRoom = () => {
     http
       .post("/chat/room", { userIdOne: loginId, userIdTwo: "user2" })
       .then((response) => {
@@ -70,47 +101,97 @@ function Termessage() {
       });
   };
 
-  const enterRoom = (roomId) => {
-    // const sender = prompt("대화명을 입력해 주세요.");
-    // if (sender !== "") {
-    // localStorage.setItem("wschat.sender", sender);
-    // localStorage.setItem("wschat.roomId", roomId);
-    navigate(`${roomId}`);
-    // }
+  const formatDateTime = (dateTimeString) => {
+    const dateTime = new Date(dateTimeString);
+    const hours = dateTime.getHours();
+    const minutes = dateTime.getMinutes();
+    const amOrPm = hours >= 12 ? "오후" : "오전";
+    const formattedHours = hours % 12 || 12;
+    const formattedMinutes = minutes < 10 ? "0" + minutes : minutes;
+    return `${amOrPm} ${formattedHours}:${formattedMinutes}`;
+  };
+
+  const enterRoom = (roomId, roomName) => {
+    if (roomName === "주참시") {
+      navigate(`system/${roomId}`);
+    } else {
+      navigate(`${roomId}`);
+    }
   };
 
   return (
     <React.Fragment>
-      <Typography variant={"h6"}>대화중인 목록</Typography>
+      <Box sx={{ p: "0.8rem" }}>
+        <Typography variant={"h5"} sx={{ textAlign: "start", fontWeight: "bold" }}>
+          Messages
+        </Typography>
+      </Box>
       <Divider />
       <div
         style={{
-          height: "340px",
+          height: "60vh",
         }}
       >
-        <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
-          {chatRooms.map((item) => (
-            <React.Fragment key={item.roomId}>
-              <ListItem
-                sx={{
-                  "&:active": {
-                    backgroundColor: "#CACACA",
-                  },
-                }}
-                onClick={() => enterRoom(item.roomId)}
-              >
-                <ListItemAvatar>
-                  <Avatar>
-                    <Fab size="small" color="#">
-                      <MailOutlineIcon />
-                    </Fab>
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={item.roomName} secondary=";" />
-              </ListItem>
-              <Divider />
-            </React.Fragment>
-          ))}
+        <List sx={{ width: "100%", p: "0" }}>
+          {chatRooms.map((item) =>
+            item.roomName === "주참시" ? (
+              <React.Fragment>
+                <ListItem
+                  sx={{
+                    "&:active": {
+                      backgroundColor: "#CACACA",
+                    },
+                    pt: 0,
+                  }}
+                  onClick={() => enterRoom(item.roomId, item.roomName)}
+                >
+                  <ListItemText
+                    primary="시스템"
+                    secondary={lastMessageInfo.lastMessageContent}
+                    sx={{ height: "2.5rem", color: "#EE1D52" }}
+                  />
+                  <ListItemAvatar>
+                    <div style={{ display: "flex", marginBottom: "1.2rem", justifyContent: "end" }}>
+                      <Typography sx={{ fontSize: ".5rem" }}>
+                        {lastMessageInfo.lastMessageTime
+                          ? formatDateTime(lastMessageInfo.lastMessageTime)
+                          : ""}
+                      </Typography>
+                      <ArrowForwardIosIcon sx={{ height: ".8rem" }} />
+                    </div>
+                  </ListItemAvatar>
+                </ListItem>
+                <Divider />
+              </React.Fragment>
+            ) : (
+              <React.Fragment key={item.roomId}>
+                <ListItem
+                  sx={{
+                    "&:active": {
+                      backgroundColor: "#CACACA",
+                    },
+                    pt: 0,
+                  }}
+                  onClick={() => enterRoom(item.roomId, item.roomName)}
+                >
+                  <ListItemText
+                    primary={lastMessageInfo.toNickName}
+                    secondary={lastMessageInfo.lastMessageContent}
+                    sx={{ height: "2.5rem" }}
+                  />
+                  <ListItemAvatar>
+                    <div style={{ display: "flex", marginBottom: "1.2rem" }}>
+                      <Typography sx={{ fontSize: ".5rem" }}>
+                        {formatDateTime(lastMessageInfo.lastMessageTime)}
+                      </Typography>
+                      <ArrowForwardIosIcon sx={{ height: ".8rem" }} />
+                    </div>
+                  </ListItemAvatar>
+                </ListItem>
+                <Divider />
+              </React.Fragment>
+            )
+          )}
         </List>
       </div>
       {/* // <ConversationList key={item.roomId}>
@@ -129,7 +210,7 @@ function Termessage() {
       <Button className="btn btn-primary" type="button" onClick={createRoom}>
         채팅방 개설
       </Button>
-      <Footer TermessageiconColor="#B7C4CF" />
+      <Footer TermessageiconColor="#006DD1" />
     </React.Fragment>
   );
 }
