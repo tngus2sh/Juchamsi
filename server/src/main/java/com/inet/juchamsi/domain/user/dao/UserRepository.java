@@ -44,8 +44,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select u from User u where u.loginId=:loginId and u.active=:active")
     Optional<User> findByLoginIdAndActive(@Param("loginId") String loginId, @Param("active") Active active);
 
-    @Query("select u from User u where u.name=:name and u.phoneNumber=:phoneNumber")
-    Optional<User> findByNameAndPhone(@Param("name") String name, @Param("phoneNumber") String phoneNumber);
+    @Query("select u from User u where u.loginId=:loginId and u.phoneNumber=:phoneNumber")
+    Optional<User> findByLoginIdAndPhone(@Param("loginId") String loginId, @Param("phoneNumber") String phoneNumber);
 
     @Query("select u from User u where u.loginId=:userIdOne or u.loginId=:userIdTwo and u.active=:active")
     List<User> findUsersByLoginId(@Param("userIdOne") String userIdOne, @Param("userIdTwo") String userIdTwo, @Param("active") Active active);
@@ -70,8 +70,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<Void> updateAdmin(@Param("loginId") String loginId, @Param("phoneNumber") String phoneNumber);
 
     @Modifying(clearAutomatically = true)
-    @Query("update User u set u.loginPassword=:loginPassword where u.name=:name and u.phoneNumber=:phoneNumber")
-    Optional<Void> updateLoginPassword(@Param("name") String name, @Param("phoneNumber") String phoneNumber, @Param("loginPassword") String loginPassword);
+    @Query("update User u set u.loginPassword=:loginPassword where u.loginId=:loginId and u.phoneNumber=:phoneNumber")
+    Optional<Void> updateLoginPassword(@Param("loginId") String loginId, @Param("phoneNumber") String phoneNumber, @Param("loginPassword") String loginPassword);
 
     @Modifying(clearAutomatically = true)
     @Query("update User u set u.refreshToken=:refreshToken where u.loginId=:loginId")
