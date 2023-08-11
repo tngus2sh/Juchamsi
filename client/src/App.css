@@ -46,3 +46,8 @@
   font-family: "Nanum";
   src: url("../public/font/NanumSquareR.ttf");
 }
+
+@font-face {
+  font-family: "Poppins-Bold";
+  src: url("../public/font/Poppins-Bold.ttf");
+}
