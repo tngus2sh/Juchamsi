@@ -66,9 +66,7 @@ function Login() {
           },
         })
         .then((res) => {
-          console.log(res)
           if (res.data.success === true) {
-            console.log(123)
             // setCarNumber, setid, setloginId, setname, setphoneNumber, setaccessToken, setrefreshToken
             dispatch(setCarNumber(res.data.response.carNumber));
             dispatch(setid(res.data.response.id));
@@ -93,7 +91,6 @@ function Login() {
           } else if (res.data.error.message === '승인이 거절되었습니다.'){
             setShowAlert2(true); // Alert을 표시
             setTimeout(() => {
-              console.log(123)
               setShowAlert2(false); // 5초 후에 Alert을 숨김
             }, 5000);
           } else if (res.data.error.message === '존재하지 않는 사용자입니다.') {

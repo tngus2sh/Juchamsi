@@ -29,7 +29,6 @@ function Parkinglot() {
   const villanumber = useSelector((state) => state.mobileInfo.villaIdNumber);
   const logincheck = useSelector((state) => state.auth.loginchecked)
   useEffect(() => {
-    console.log(logincheck)
     const fetchData = async () => {
       if (logincheck !== true) {
         navigate('/Mobile/Login')
