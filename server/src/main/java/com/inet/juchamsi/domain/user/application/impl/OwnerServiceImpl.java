@@ -157,7 +157,7 @@ public class OwnerServiceImpl implements OwnerService {
         }
 
         TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
-        userRepository.updateRefreshToken(ownerId, password);
+        userRepository.updateRefreshToken(ownerId, tokenInfo.getRefreshToken());
 
         User user = userRepository.findByLoginId(ownerId).get();
         Villa targetVilla = user.getVilla();

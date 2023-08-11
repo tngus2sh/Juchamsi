@@ -44,8 +44,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select u from User u where u.loginId=:loginId and u.active=:active")
     Optional<User> findByLoginIdAndActive(@Param("loginId") String loginId, @Param("active") Active active);
 
-    @Query("select u from User u where u.name=:name and u.phoneNumber=:phoneNumber")
-    Optional<User> findByNameAndPhone(@Param("name") String name, @Param("phoneNumber") String phoneNumber);
+    @Query("select u from User u where u.loginId=:loginId and u.phoneNumber=:phoneNumber and u.active=:active")
+    Optional<User> findByLoginIdAndPhone(@Param("loginId") String loginId, @Param("phoneNumber") String phoneNumber, @Param("active") Active active);
 
     @Query("select u from User u where u.loginId=:userIdOne or u.loginId=:userIdTwo and u.active=:active")
     List<User> findUsersByLoginId(@Param("userIdOne") String userIdOne, @Param("userIdTwo") String userIdTwo, @Param("active") Active active);
@@ -53,6 +53,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select u from User u where u.macAddress=:macAddress and u.active=:active")
     Optional<User> findUserByMacAddress(@Param("macAddress") String macAddress, @Param("active") Active active);
 
+    // 사용자 비밀번호 변경
+    @Modifying(clearAutomatically = true)
+    @Query("update User u set u.loginPassword=:loginPassword where u.loginId=:loginId")
+    Optional<Void> updatePassword(@Param("loginId") String loginId, @Param("loginPassword") String loginPassword);
+    
     @Modifying(clearAutomatically = true) // 해야되는 이유 : https://frogand.tistory.com/174
     @Query("update User u set u.phoneNumber=:phoneNumber, u.carNumber=:carNumber, u.villaNumber=:villaNumber where u.loginId=:loginId")
     Optional<Void> updateTenant(@Param("loginId") String loginId, @Param("phoneNumber") String phoneNumber, @Param("carNumber") String carNumber, @Param("villaNumber") int villaNumber);
@@ -70,8 +75,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<Void> updateAdmin(@Param("loginId") String loginId, @Param("phoneNumber") String phoneNumber);
 
     @Modifying(clearAutomatically = true)
-    @Query("update User u set u.loginPassword=:loginPassword where u.name=:name and u.phoneNumber=:phoneNumber")
-    Optional<Void> updateLoginPassword(@Param("name") String name, @Param("phoneNumber") String phoneNumber, @Param("loginPassword") String loginPassword);
+    @Query("update User u set u.loginPassword=:loginPassword where u.loginId=:loginId and u.phoneNumber=:phoneNumber")
+    Optional<Void> updateLoginPassword(@Param("loginId") String loginId, @Param("phoneNumber") String phoneNumber, @Param("loginPassword") String loginPassword);
 
     @Modifying(clearAutomatically = true)
     @Query("update User u set u.refreshToken=:refreshToken where u.loginId=:loginId")
