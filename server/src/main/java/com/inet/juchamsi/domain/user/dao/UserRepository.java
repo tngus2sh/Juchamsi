@@ -53,6 +53,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select u from User u where u.macAddress=:macAddress and u.active=:active")
     Optional<User> findUserByMacAddress(@Param("macAddress") String macAddress, @Param("active") Active active);
 
+    // 사용자 비밀번호 변경
+    @Modifying(clearAutomatically = true)
+    @Query("update User u set u.loginPassword=:loginPassword where u.loginId=:loginId")
+    Optional<Void> updatePassword(@Param("loginId") String loginId, @Param("loginPassword") String loginPassword);
+    
     @Modifying(clearAutomatically = true) // 해야되는 이유 : https://frogand.tistory.com/174
     @Query("update User u set u.phoneNumber=:phoneNumber, u.carNumber=:carNumber, u.villaNumber=:villaNumber where u.loginId=:loginId")
     Optional<Void> updateTenant(@Param("loginId") String loginId, @Param("phoneNumber") String phoneNumber, @Param("carNumber") String carNumber, @Param("villaNumber") int villaNumber);

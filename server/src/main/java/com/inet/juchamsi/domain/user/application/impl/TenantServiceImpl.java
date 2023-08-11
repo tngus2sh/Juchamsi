@@ -8,6 +8,7 @@ import com.inet.juchamsi.domain.user.application.TenantService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
+import com.inet.juchamsi.domain.user.dto.request.ModifyTenantPasswordRequest;
 import com.inet.juchamsi.domain.user.dto.request.ModifyTenantRequest;
 import com.inet.juchamsi.domain.user.dto.response.TenantLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.TenantResponse;
@@ -225,6 +226,29 @@ public class TenantServiceImpl implements TenantService {
         }
 
         userRepository.updateRefreshToken(tenantId, "");
+
+    }
+
+    @Override
+    public void modifyPassword(ModifyTenantPasswordRequest request) {
+        String userId = request.getUserId();
+        String presentPwd = request.getPresentPwd();
+        String modifyPwd = passwordEncoder.encode(request.getModifyPwd());
+        
+        // 아이디와 현재 비밀번호로 해당 사용자가 있는지 확인
+        Optional<User> targetUser = userRepository.existLoginIdAndActiveAndGrade(userId, ACTIVE, USER);
+        if (targetUser.isEmpty()) {
+            throw new NotFoundException(User.class, userId);
+        }
+        
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, presentPwd);
+
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        
+        // 맞다면 바꿀 비밀번호로 변경
+        userRepository.updatePassword(userId, modifyPwd);
+        TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
+        userRepository.updateRefreshToken(userId, tokenInfo.getRefreshToken());
 
     }
 

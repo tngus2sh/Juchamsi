@@ -2,10 +2,12 @@ package com.inet.juchamsi.domain.parking.dto.request;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 
 @Data
+@NoArgsConstructor
 public class EntranceOutTimeRequest {
 
     @NotBlank
