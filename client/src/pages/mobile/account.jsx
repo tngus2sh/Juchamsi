@@ -25,7 +25,7 @@ function Account() {
 
   const carNumber = useSelector((state) => state.mobileInfo.carNumber);
   const [showAlert, setShowAlert] = React.useState(false);
-  const logincheck = useSelector((state) => state.auth.isAutoLoginChecked)
+  const logincheck = useSelector((state) => state.auth.loginchecked)
 
   useEffect(() => {
       if (logincheck !== true) {

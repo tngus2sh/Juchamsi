@@ -38,34 +38,7 @@ function Parkinglot() {
   const userid = useSelector((state) => state.mobileInfo.loginId)
   const name = useSelector((state) => state.mobileInfo.name)
   const villanumber = useSelector((state) => state.mobileInfo.villaIdNumber);
-  const logincheck = useSelector((state) => state.auth.setloginchecked);
-  const fcmToken = useSelector((state) => state.mobileInfo.fcmToken);
-
-  // 알림 허용 창
-  function requestPermission() {
-    console.log('푸시 허가 받는 중 ...')
-  
-    void Notification.requestPermission().then((permission) => {
-      if (permission === 'granted') {
-        console.log('푸시 알림이 허용되었습니다.')
-      } else {
-        console.log('푸시 알림이 허용되지 않았습니다')
-      }
-    })
-  
-    const app = initializeApp(config)
-    const messaging = getMessaging(app)
-  
-    void getToken(messaging, { vapidKey: "BOo8VGAO9hTSpToCkrOuA3H_UL5HNke7zP5O19dBHsgtiG2_uk-g4njPKE5D024SAqppKGVuFSERWIbQUXeiJjg" }).then((token) => {
-      if (token.length > 0) {
-        console.log('푸시 토큰 : ', token)
-        dispatch(setFcmToken(token));
-      } else {
-        console.log('푸시 토큰 실패 !')
-      }
-    })
-  }
-
+  const logincheck = useSelector((state) => state.auth.loginchecked)
   useEffect(() => {
     console.log(logincheck)
     const fetchData = async () => {
