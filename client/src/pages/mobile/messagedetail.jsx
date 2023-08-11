@@ -29,6 +29,7 @@ import SendIcon from "@mui/icons-material/Send";
 import Fab from "@mui/material/Fab";
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
 import { isToday, isSameDay, format } from "date-fns";
+import { setReadMessage } from "../../redux/mobileUserinfo";
 
 const Messagedetail = () => {
   const navigate = useNavigate();
@@ -64,10 +65,6 @@ const Messagedetail = () => {
     fetchMessage();
     connect();
   }, [roomId, senderId]);
-
-  useEffect(() => {
-    dispatch();
-  }, []);
 
   async function fetchMessage() {
     await http
