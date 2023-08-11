@@ -1,4 +1,5 @@
-import { React, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import * as React from "react";
 import Container from "@mui/material/Container";
 import styled from "styled-components";
 import Avatar from "@mui/material/Avatar";
@@ -28,6 +29,13 @@ import {
   setId,
 } from "../../redux/webLoginInfo";
 import http from "../../axios/http";
+import Alert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+import { setSignOpen } from "../../redux/formslice";
+const Alerts = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const theme = createTheme({
   palette: {
@@ -42,6 +50,11 @@ const Login = () => {
   const navigate = useNavigate();
   const loginId = useSelector((state) => state.loginform.loginId);
   const loginPassword = useSelector((state) => state.loginform.loginPassword);
+  const [errorBox, setErrorBox] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const signResultOpen = useSelector((state) => state.form.signOpen);
+  const signResultMessage = useSelector((state) => state.form.signMessage);
 
   // const isStoreLoginChecked = useSelector((state) => state.loginform.isStoreLoginChecked);
 
@@ -53,6 +66,7 @@ const Login = () => {
       setSavedId(loadedId);
     }
   }, []);
+
   const loginMove = (e) => {
     // 로그인 실행
     loginSubmit();
@@ -89,8 +103,12 @@ const Login = () => {
           dispatch(setIsLogin(true));
           navigate("/mainPage");
         } else {
-          // 로그인 실패한 경우
-          console.log("로그인 실패");
+          console.log(response.data);
+          setErrorMessage(response.data.error.message);
+          setErrorBox(true);
+          setTimeout(() => {
+            setErrorBox(false);
+          }, 1500);
         }
       })
       .catch((error) => {
@@ -115,37 +133,46 @@ const Login = () => {
     setSaveId(e.target.checked); // 체크박스의 상태 업데이트
   };
 
+  const signHandleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    dispatch(setSignOpen(false));
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Container
-        sx={{ display: "flex", justifyContent: "center", marginTop: "130px" }}
-        style={{ paddingLeft: "150px", paddingRight: "150px" }}
+        sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}
       >
-        <Paper elevation={3} style={{ borderRadius: 20 }}>
-          <Grid container style={{ height: "450px", width: "840px" }}>
+        {errorBox && (
+          <Alert severity="error" sx={{ width: "80%", position: "absolute", top: 0 }}>
+            {errorMessage}
+          </Alert>
+        )}
+        <Paper elevation={3} sx={{ borderRadius: "3rem", height: "27rem", width: "52rem" }}>
+          <Grid container sx={{ alignItems: "center", height: "27rem" }}>
             <Grid
               item
               xs={5}
-              style={{
+              sx={{
                 backgroundColor: "#B7C4CF",
-                borderTopLeftRadius: 20,
-                borderBottomLeftRadius: 20,
+                borderTopLeftRadius: "3rem",
+                borderBottomLeftRadius: "3rem",
+                alignItems: "center",
+                height: "27rem",
               }}
             >
-              <div style={{ marginTop: "50px" }}>
-                <img
-                  src={`${process.env.PUBLIC_URL}/images/logo.png`}
-                  style={{ width: "250px", height: "250px" }}
-                  alt="Logo"
-                />
-              </div>
+              <img
+                src={`${process.env.PUBLIC_URL}/images/logo.png`}
+                style={{ marginTop: "3.5rem", width: "250px", height: "250px" }}
+                alt="Logo"
+              />
             </Grid>
             <Grid item xs={7}>
               <Container component="main">
-                <CssBaseline />
                 <Box
                   sx={{
-                    marginTop: 8,
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
@@ -226,6 +253,15 @@ const Login = () => {
           </Grid>
         </Paper>
       </Container>
+      <Snackbar open={signResultOpen} autoHideDuration={2000} onClose={signHandleClose}>
+        <Alerts
+          onClose={signHandleClose}
+          severity={signResultMessage === "회원가입이 완료되었습니다." ? "success" : "error"}
+          sx={{ width: "100%" }}
+        >
+          {signResultMessage}
+        </Alerts>
+      </Snackbar>
     </ThemeProvider>
   );
 };

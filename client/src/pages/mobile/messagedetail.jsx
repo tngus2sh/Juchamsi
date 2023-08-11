@@ -32,6 +32,7 @@ import { isToday, isSameDay, format } from "date-fns";
 
 const Messagedetail = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const params = useParams();
   const roomId = params.id;
   const [targetNickName, setTargetNickName] = useState("");
@@ -63,6 +64,10 @@ const Messagedetail = () => {
     fetchMessage();
     connect();
   }, [roomId, senderId]);
+
+  useEffect(() => {
+    dispatch();
+  }, []);
 
   async function fetchMessage() {
     await http
@@ -298,6 +303,7 @@ const Messagedetail = () => {
               borderRadius: "200px",
               border: "none",
               backgroundColor: "#f0f0f0",
+              outline: "none",
             }}
             value={message}
             onChange={handleMessageChange}

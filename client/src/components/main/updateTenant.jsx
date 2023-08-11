@@ -44,7 +44,7 @@ const UpdateTenant = () => {
 
   async function newTenantList() {
     await http
-      .get(`/tenant/new/${villaIdNumber}`)
+      .get(`/tenant/modify/${villaIdNumber}`)
       .then((response) => {
         // API 응답 데이터를 rows 배열에 추가
         setRows(response.data.response);

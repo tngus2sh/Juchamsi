@@ -31,6 +31,9 @@ import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
 
 const MessageDetailSystem = () => {
   const navigate = useNavigate();
+  const params = useParams();
+  const roomId = params.id;
+  const senderId = useSelector((state) => state.mobileInfo.loginId);
   const [systemMessageStorage, setSystemMessageStorage] = useState([]);
 
   useEffect(() => {
@@ -38,18 +41,17 @@ const MessageDetailSystem = () => {
   }, []);
 
   async function fetchSystemMessage() {
-    // await http
-    //   .get(`/chat/room/${senderId}/${roomId}`)
-    //   .then((response) => {
-    //     console.log("채팅방 상세조회");
-    //     console.log(response.data);
-    //     setTargetNickName(response.data.response.nickName);
-    //     setSystemMessageStorage(response.data.response.messageList);
-    //   })
-    //   .catch((error) => {
-    //     // 요청 실패 시 에러 처리
-    //     console.error("Error while submitting:", error);
-    //   });
+    await http
+      .get(`/chat/room/${senderId}/${roomId}`)
+      .then((response) => {
+        console.log("채팅방 상세조회");
+        console.log(response.data);
+        setSystemMessageStorage(response.data.response.messageList);
+      })
+      .catch((error) => {
+        // 요청 실패 시 에러 처리
+        console.error("Error while submitting:", error);
+      });
   }
 
   // message.createdDate를 원하는 형식으로 변환하는 함수
@@ -154,6 +156,7 @@ const MessageDetailSystem = () => {
               border: "none",
               backgroundColor: "#f0f0f0",
               fontSize: ".8rem",
+              outline: "none",
             }}
             value="메시지를 보낼 수 없는 채팅방입니다."
             disabled

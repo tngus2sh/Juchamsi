@@ -14,7 +14,9 @@ const initialState = {
   imageUrl: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png", // 기본 이미지 URL
   userMacAdress: "",
   whenEnteringCar: false,
-  mileagelist:[],
+  mileagelist: [],
+  fcmToken: "",
+  readMessage:""
 };
 
 const mobileUserinfo = createSlice({
@@ -64,7 +66,14 @@ const mobileUserinfo = createSlice({
     setLogout: () => initialState,
     setMileageList : (state, action) => {
       state.mileagelist = action.payload
+    },
+    setFcmToken : (state, action) => {
+      state.fcmToken = action.payload
+    },
+    setReadMessage: (state, action) => {
+      state.readMessage = action.payload
     }
+
   },
     
   
@@ -72,5 +81,5 @@ const mobileUserinfo = createSlice({
 
 export const { setCarNumber, setid, setloginId, setname, setphoneNumber, setaccessToken, 
                setrefreshToken, setVillaNumber, setvillaIdNumber, setTotalMileage, setImageUrl, 
-               setUserMacAdress, setWhenEnteringCar, setLogout, setMileageList} = mobileUserinfo.actions;
+               setUserMacAdress, setWhenEnteringCar, setLogout, setMileageList, setFcmToken, setReadMessage} = mobileUserinfo.actions;
 export default mobileUserinfo.reducer;

@@ -8,11 +8,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import Button from '@mui/material/Button';
 import InCar from '../../components/mobile/incar';
 import { Container } from '@mui/material';
-import { setWhenEnteringCar } from '../../redux/mobileUserinfo'; 
+import { setWhenEnteringCar, setFcmToken } from '../../redux/mobileUserinfo'; 
 import http from "../../axios/http";
 import { setBoxItem, setOuttime, setmycar, setParkingnow } from '../../redux/mobileparking'; 
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
+import { initializeApp } from "firebase/app";
+import { getMessaging, getToken } from "firebase/messaging";
 
+const config = {
+  apiKey: "AIzaSyAP0IeVXonU6Z5LjfuCHU-V256A0IW13B0",
+  authDomain: "juchamsi-test.firebaseapp.com",
+  projectId: "juchamsi-test",
+  storageBucket: "juchamsi-test.appspot.com",
+  messagingSenderId: "201343183627",
+  appId: "1:201343183627:web:3859dafd9261a780df100e",
+  measurementId: "G-PDSL7LXQJG"
+};
 
 function Parkinglot() {
   const navigate = useNavigate();
@@ -27,6 +38,33 @@ function Parkinglot() {
   const userid = useSelector((state) => state.mobileInfo.loginId)
   const name = useSelector((state) => state.mobileInfo.name)
   const villanumber = useSelector((state) => state.mobileInfo.villaIdNumber);
+  const fcmToken = useSelector((state) => state.mobileInfo.fcmToken);
+
+  // 알림 허용 창
+  function requestPermission() {
+    console.log('푸시 허가 받는 중 ...')
+  
+    void Notification.requestPermission().then((permission) => {
+      if (permission === 'granted') {
+        console.log('푸시 알림이 허용되었습니다.')
+      } else {
+        console.log('푸시 알림이 허용되지 않았습니다')
+      }
+    })
+  
+    const app = initializeApp(config)
+    const messaging = getMessaging(app)
+  
+    void getToken(messaging, { vapidKey: "BOo8VGAO9hTSpToCkrOuA3H_UL5HNke7zP5O19dBHsgtiG2_uk-g4njPKE5D024SAqppKGVuFSERWIbQUXeiJjg" }).then((token) => {
+      if (token.length > 0) {
+        console.log('푸시 토큰 : ', token)
+        dispatch(setFcmToken(token));
+      } else {
+        console.log('푸시 토큰 실패 !')
+      }
+    })
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -75,6 +113,30 @@ function Parkinglot() {
     // fetchData 함수를 호출하여 데이터를 받아옴
     fetchData();
   }, [villanumber]); // 빈 배열을 넣어서 페이지 로드 시에만 useEffect 내부 코드가 실행되도록 설정
+
+  // 로그인한 유저
+  useEffect(() => { 
+    if (fcmToken === "") {
+      requestPermission();
+      storeToken();
+    } 
+  }, []);
+
+  async function storeToken() {
+    await http
+      .post(`/token`, {
+        loginId: userid,
+        FCMToken: fcmToken,
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        // 요청 실패 시 에러 처리
+        console.error("Error while submitting:", error);
+      });
+  }
+  
 
   // Redux 상태에서 정보 가져오기
   const BoxItem = useSelector((state) => state.mycar.BoxItem);
