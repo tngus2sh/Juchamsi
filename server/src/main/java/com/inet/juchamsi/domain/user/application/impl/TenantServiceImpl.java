@@ -190,7 +190,7 @@ public class TenantServiceImpl implements TenantService {
 
         String FCMToken = "";
         Optional<Token> findToken = tokenRepository.findByUserLoginId(user.getLoginId());
-        if(!findToken.isPresent()) {
+        if( findToken.isPresent()) {
             FCMToken = findToken.get().getFCMToken();
         }
         
