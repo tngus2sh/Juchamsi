@@ -21,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -34,9 +35,12 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.inet.juchamsi.global.common.Active.ACTIVE;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class SmsServiceImpl implements SmsService {
 
     @Value("${naver-cloud-sms.accessKey}")
@@ -124,7 +128,7 @@ public class SmsServiceImpl implements SmsService {
         String userId = messageRequest.getUserId();
         String phoneNumber = messageRequest.getTo();
 
-        userRepository.findByLoginIdAndPhone(userId, phoneNumber)
+        userRepository.findByLoginIdAndPhone(userId, phoneNumber, ACTIVE)
                 .orElseThrow(() ->
                         new NotFoundException("회원이 존재하지 않습니다.", userId));
 
