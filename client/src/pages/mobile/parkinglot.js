@@ -23,29 +23,6 @@ const config = {
   measurementId: "G-PDSL7LXQJG"
 };
 
-function requestPermission() {
-  console.log('푸시 허가 받는 중 ...')
-
-  void Notification.requestPermission().then((permission) => {
-    if (permission === 'granted') {
-      console.log('푸시 알림이 허용되었습니다.')
-    } else {
-      console.log('푸시 알림이 허용되지 않았습니다')
-    }
-  })
-
-  const app = initializeApp(config)
-  const messaging = getMessaging(app)
-
-  void getToken(messaging, { vapidKey: "BOo8VGAO9hTSpToCkrOuA3H_UL5HNke7zP5O19dBHsgtiG2_uk-g4njPKE5D024SAqppKGVuFSERWIbQUXeiJjg" }).then((token) => {
-    if (token.length > 0) {
-      console.log('푸시 토큰 : ', token)
-    } else {
-      console.log('푸시 토큰 실패 !')
-    }
-  })
-}
-
 function Parkinglot() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -63,6 +40,40 @@ function Parkinglot() {
   const villanumber = useSelector((state) => state.mobileInfo.villaIdNumber);
   const logincheck = useSelector((state) => state.auth.loginchecked);
   const fcmToken = useSelector((state) => state.mobileInfo.fcmToken);
+
+  const requestNotificationPermission = async () => {
+    console.log('푸시 허가 받는 중 ...');
+  
+    const permission = await Notification.requestPermission();
+  
+    if (permission === 'granted') {
+      console.log('푸시 알림이 허용되었습니다.');
+      fetchFcmToken();
+    } else {
+      console.log('푸시 알림이 허용되지 않았습니다');
+    }
+  };
+  
+  const fetchFcmToken = async () => {
+    const app = initializeApp(config);
+    const messaging = getMessaging(app);
+  
+    try {
+      const token = await getToken(messaging, { vapidKey: "BOo8VGAO9hTSpToCkrOuA3H_UL5HNke7zP5O19dBHsgtiG2_uk-g4njPKE5D024SAqppKGVuFSERWIbQUXeiJjg" });
+  
+      if (token.length > 0) {
+        console.log('푸시 토큰 : ', token);
+        if (fcmToken !== token) {
+          dispatch(setFcmToken(token));
+          storeToken();
+        }
+      } else {
+        console.log('푸시 토큰 실패 !');
+      }
+    } catch (error) {
+      console.error('Error while fetching FCM token:', error);
+    }
+  };
 
   useEffect(() => {
     console.log(logincheck)
@@ -119,11 +130,12 @@ function Parkinglot() {
 
 
   // 로그인한 유저
-  useEffect(() => { 
+  useEffect(() => {
     if (fcmToken === "") {
-      requestPermission();
-      storeToken();
-    } 
+      requestNotificationPermission();
+    } else {
+      fetchFcmToken();
+    }
   }, []);
 
   async function storeToken() {

@@ -135,7 +135,7 @@ function Termessage() {
         <List sx={{ width: "100%", p: "0" }}>
           {chatRooms.map((item, index) =>
             item.roomName === "주참시" ? (
-              <React.Fragment key={index}>
+              <React.Fragment key={item.roomId}>
                 <ListItem
                   sx={{
                     "&:active": {

@@ -42,6 +42,7 @@ const Messagedetail = () => {
   const [messageStorage, setMessageStorage] = useState([]);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [messageLength, setMessageLength] = useState("");
   const wsRef = useRef(null);
   let prevDate = null;
 
@@ -89,7 +90,8 @@ const Messagedetail = () => {
       function (frame) {
         ws.subscribe("/topic/chat/room/" + roomId, function (message) {
           console.log("message 리스트??");
-          // console.log(message);
+          console.log(messageStorage.length);
+          console.log(messages.length);
           const recv = JSON.parse(message.body);
           recvMessage(recv);
         });
@@ -165,7 +167,11 @@ const Messagedetail = () => {
     if (!isSameDay(createDate, prevDate)) {
       prevDate = createDate;
 
-      return <MessageSeparator content={format(createDate, "yyyy년 MM월 dd일")} />;
+      return (
+        <React.Fragment>
+          <MessageSeparator content={format(createDate, "yyyy년 MM월 dd일")} />
+        </React.Fragment>
+      );
     }
   };
 
@@ -246,7 +252,7 @@ const Messagedetail = () => {
 
             {messages.map((message, index) =>
               message.type === "ENTER" ? null : ( // <MessageSeparator key={index} content={message.message} as="h2" />
-                <React.Fragment>
+                <React.Fragment key={index}>
                   <CurrentDate createdDate={new Date()} />
                   <Message
                     key={index}
