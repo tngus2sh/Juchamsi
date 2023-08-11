@@ -76,7 +76,6 @@ function Parkinglot() {
   };
 
   useEffect(() => {
-    console.log(logincheck)
     const fetchData = async () => {
       if (logincheck !== true) {
         navigate('/Mobile/Login')

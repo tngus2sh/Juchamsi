@@ -2,6 +2,8 @@ package com.inet.juchamsi.domain.user.application.impl;
 
 import com.inet.juchamsi.domain.chat.application.ChatService;
 import com.inet.juchamsi.domain.chat.dto.request.SystemChatRoomRequest;
+import com.inet.juchamsi.domain.token.dao.TokenRepository;
+import com.inet.juchamsi.domain.token.entity.Token;
 import com.inet.juchamsi.domain.user.application.TenantService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
@@ -46,6 +48,7 @@ public class TenantServiceImpl implements TenantService {
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
     private final ChatService chatService;
+    private final TokenRepository tokenRepository;
 
     @Override
     public Long createUser(CreateTenantRequest request) {
@@ -183,14 +186,12 @@ public class TenantServiceImpl implements TenantService {
             throw new NotFoundException(User.class, loginId);
         }
         User user = userOptional.get();
-//        String isKeyPinRegist = null;
-//
-//        // 간편 비밀번호 등록 되어있는지 확인
-//        if (user.getKeepKeyPin() == null) {
-//            isKeyPinRegist = "FALSE";
-//        } else {
-//            isKeyPinRegist = "TRUE";
-//        }
+
+        String FCMToken = "";
+        Optional<Token> findToken = tokenRepository.findByUserLoginId(user.getLoginId());
+        if(!findToken.isPresent()) {
+            FCMToken = findToken.get().getFCMToken();
+        }
         
         Villa targetVilla = user.getVilla();
         Villa villa = Villa.builder()
@@ -212,6 +213,7 @@ public class TenantServiceImpl implements TenantService {
                 .villaNumber(user.getVillaNumber())
                 .approved(user.getApprove().name())
                 .villa(villa)
+                .FCMToken(FCMToken)
                 .build();
     }
 
