@@ -65,7 +65,6 @@ function Parkinglot() {
   const fcmToken = useSelector((state) => state.mobileInfo.fcmToken);
 
   useEffect(() => {
-    console.log(logincheck)
     const fetchData = async () => {
       if (logincheck !== true) {
         navigate('/Mobile/Login')

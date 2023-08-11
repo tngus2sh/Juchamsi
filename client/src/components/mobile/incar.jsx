@@ -107,11 +107,11 @@ const InCar = (props) => {
         <div style={{ color: "white" }}>
           <div style={{width:'20rem', backgroundColor:'#006DD1', marginLeft:'-1rem',marginTop:'-2.2rem', borderRadius:'1rem', height:'11rem'}}>
             <div className="account-header-info-container" style={{ paddingTop: "3rem", textAlign: "left" }}>
-              <span style={{ fontSize: "1.2rem", marginLeft:'1rem', fontWeight:'0.2rem' }}>
+              <span style={{ fontSize: "1.2rem", marginLeft:'1rem', fontWeight:'bold' }}>
                 출차 시간을
               </span>
               <br/>
-              <span className="bold-text" style={{ fontSize: "1.2rem", marginLeft:'1rem' }}>
+              <span style={{ fontSize: "1.2rem", marginLeft:'1rem' }}>
                 등록해주세요!
               </span>
             </div>
