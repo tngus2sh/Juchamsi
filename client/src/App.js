@@ -27,43 +27,6 @@ import MobileMileageChangePage from './pages/mobile/MileageChange'
 import MobilePasswordUpdatePage from './pages/mobile/passwordchange'
 import MobileTermessageSystemPage from './pages/mobile/messagedetailsystem'
 import './App.css';
-// import { initializeApp } from "firebase/app";
-// import { getMessaging, getToken } from "firebase/messaging";
-
-// const config = {
-//   apiKey: "AIzaSyAP0IeVXonU6Z5LjfuCHU-V256A0IW13B0",
-//   authDomain: "juchamsi-test.firebaseapp.com",
-//   projectId: "juchamsi-test",
-//   storageBucket: "juchamsi-test.appspot.com",
-//   messagingSenderId: "201343183627",
-//   appId: "1:201343183627:web:3859dafd9261a780df100e",
-//   measurementId: "G-PDSL7LXQJG"
-// };
-
-// function requestPermission() {
-//   console.log('푸시 허가 받는 중 ...')
-
-//   void Notification.requestPermission().then((permission) => {
-//     if (permission === 'granted') {
-//       console.log('푸시 알림이 허용되었습니다.')
-//     } else {
-//       console.log('푸시 알림이 허용되지 않았습니다')
-//     }
-//   })
-
-//   const app = initializeApp(config)
-//   const messaging = getMessaging(app)
-
-//   void getToken(messaging, { vapidKey: "BOo8VGAO9hTSpToCkrOuA3H_UL5HNke7zP5O19dBHsgtiG2_uk-g4njPKE5D024SAqppKGVuFSERWIbQUXeiJjg" }).then((token) => {
-//     if (token.length > 0) {
-//       console.log('푸시 토큰 : ', token)
-//     } else {
-//       console.log('푸시 토큰 실패 !')
-//     }
-//   })
-// }
-
-// requestPermission()
 
 function App() {
 

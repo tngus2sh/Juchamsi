@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import http from "../../axios/http";
 import CustomModal from "./customModal";
 import "./Stepper.css";
+import { setSignOpen, setSignMessage } from "../../redux/formslice";
 const step = [<Step1 />, <Step2 />, <Step3 />];
 
 const theme = createTheme({
@@ -27,6 +28,7 @@ const theme = createTheme({
 
 export default function HorizontalLinearStepper() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [activeStep, setActiveStep] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [modalMessage, setModalMessage] = React.useState("");
@@ -113,10 +115,18 @@ export default function HorizontalLinearStepper() {
 
     try {
       // HTTP POST 요청 보내기
-      await http.post(`/owner`, formData);
-      console.log("ㅎㅇ");
+      await http.post(`/owner`, formData).then((response) => {
+        if (response.data && response.data.success) {
+          dispatch(setSignMessage("회원가입이 완료되었습니다."));
+          // alert("회원가입 되었습니다.");
+        } else {
+          dispatch(setSignMessage(response.data.error.message));
+          // alert(response.data.error.message);
+        }
+        dispatch(setSignOpen(true));
+      });
+
       // 회원가입 완료 후 메인 페이지로 이동
-      navigate("/");
     } catch (error) {
       // 요청 실패 시 에러 처리
       console.error("Error while submitting:", error);
@@ -137,9 +147,9 @@ export default function HorizontalLinearStepper() {
         </Stepper>
 
         <React.Fragment>
-          <Box component="form" noValidate sx={{ mt: 4, pl: 6, pr: 6 }}>
-            <Box sx={{ height: "280px" }}>{step[activeStep]}</Box>
-            <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+          <Box component="form" noValidate sx={{ mt: "2.1rem", pl: "2.4rem", pr: "2.4rem" }}>
+            <Box sx={{ height: "18rem" }}>{step[activeStep]}</Box>
+            <Box sx={{ display: "flex", flexDirection: "row" }}>
               <Box sx={{ flex: "1 1 auto" }} />
               <Button variant="outlined" onClick={handleNext}>
                 {activeStep === step.length - 1 ? "가입" : "다음"}
