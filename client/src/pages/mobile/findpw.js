@@ -134,45 +134,6 @@ function Findpw() {
         </div>
       </div>
 
-      {/* <TextField
-        required
-        className="pwtoinputid"
-        id="outlined-id-input"
-        label="아이디"
-        name="id"
-        value={id}
-        onChange={handleIDChange}
-        sx={{ '& input': { textAlign: 'center' } }}
-      /> */}
-      {/* <Button className="pwtoid" onClick={handleOpenID}>
-        아이디 찾기
-      </Button> */}
-      {/* <TextField
-        required
-        className="pwtoinputphonenumber"
-        id="outlined-phonenumber-input"
-        label="핸드폰 번호"
-        name="phonenumber"
-        value={phonenumber}
-        onChange={handlePhoneNumberChange}
-        sx={{ '& input': { textAlign: 'center' } }}
-      /> */}
-      {/* <Box
-        component="span"
-        className={`findbox1 ${isFindUserid ? 'findbox2' : 'findbox1'}`}
-        onClick={handleOpenFindPW}
-      >
-        <p className="findidtext1">확인</p>
-      </Box> */}
-      {/* <div style={{ display: 'flex', alignItems: 'center' }}>
-        <p className="loginbtntext">비밀번호를 찾을 필요가 없으신가요? </p>
-        <div className="findpwloginbtn">
-        <Button  onClick={handleOpenLogin}>
-          로그인
-        </Button>
-        </div>
-      </div> */}
-
       {/* 성공 결과를 보여주는 모달 */}
       <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style}>

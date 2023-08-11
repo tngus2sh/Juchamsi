@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './MileageChange.css';
 import Footer from './footer';
 import Stack from '@mui/material/Stack';
@@ -16,7 +16,6 @@ import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import CallIcon from '@mui/icons-material/Call';
 import { useSelector } from 'react-redux';
 
 function MileageChange() {
@@ -31,7 +30,13 @@ function MileageChange() {
     const [bankName, setBankName] = React.useState(10); // 기본 값 설정
     const [password1, setPasswordLocal1] = React.useState('');
     const [simplePasswordEntered, setSimplePasswordEntered] = React.useState(false);
-    
+    const logincheck = useSelector((state) => state.auth.isAutoLoginChecked)
+
+    useEffect(() => {
+        if (logincheck !== true) {
+            navigate('/Mobile/Login')
+          }
+        })
 
     const handlechangemileageChange = (event) => {
         setchangemileage(event.target.value);
@@ -421,7 +426,7 @@ function MileageChange() {
                         <p className='mileagetext2'>{getAccountHolder()}</p>
                     </div>
                     <FormControl sx={{width: '25ch' }} variant="outlined" className="easypw1" required>
-                        <InputLabel htmlFor="outlined-adornment-password1">간편 비밀번호</InputLabel>
+                        <InputLabel htmlFor="outlined-adornment-password1">비밀번호</InputLabel>
                         <OutlinedInput
                         id="outlined-adornment-password1"
                         type={showPassword ? 'text' : 'password'}
@@ -437,7 +442,7 @@ function MileageChange() {
                             </IconButton>
                             </InputAdornment>
                         }
-                        label="간편 비밀번호"
+                        label="비밀번호"
                         name="password1"
                         value={password1}
                         onChange={handleInputChange}
@@ -467,7 +472,7 @@ function MileageChange() {
                     </Box>
                 </Box>
             </Modal>
-            <Footer AccounticonColor="#33907C" />
+            <Footer AccounticonColor="#006DD1" />
         </div>
     );
 }

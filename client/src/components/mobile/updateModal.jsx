@@ -29,15 +29,6 @@ const UpdateModal = (props) => {
             </div>
           </div>
         </div>
-
-        {/* <Typography sx={{ fontSize: ".1rem", mt: ".3rem", ml: ".2rem" }}>
-          관리자의 승인 이후 서비스 이용이 가능합니다.
-        </Typography> */}
-        {/* <Grid container sx={{ justifyContent: "center", mt: "1.4rem" }}>
-          <Button sx={{ backgroundColor: "#112D4E" }} onClick={props.onClick}>
-            <Typography sx={{ color: "white" }}>확인</Typography>
-          </Button>
-        </Grid> */}
       </Box>
     </Modal>
   );

@@ -1,13 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./passwordchange.css";
 import Footer from "./footer";
-import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
-import FormControl from "@mui/material/FormControl";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import IconButton from "@mui/material/IconButton";
@@ -39,6 +34,7 @@ function Passwordchange() {
   const [NewpasswordChecking, setNewPasswordChecking] = useState(false);
   const [NowAndNewpasswordChecking, setNowAndNewpasswordChecking] = useState(false);
   const [passwordMismatch, setPasswordMismatch] = useState(false);
+  const logincheck = useSelector((state) => state.auth.isAutoLoginChecked)
 
   // 비밀번호 보기 / 숨기기 토글
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -52,6 +48,12 @@ function Passwordchange() {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+
+  useEffect(() => {
+    if (logincheck !== true) {
+        navigate('/Mobile/Login')
+      }
+    })
 
   const handleopenmyupdatepage = () => {
     navigate("/Mobile/Account/Update");

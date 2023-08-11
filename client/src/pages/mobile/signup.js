@@ -1,11 +1,6 @@
 import './signup.css'
-import React, { useState, useEffect } from 'react';
-import TextField from '@mui/material/TextField';
-import FormControl from '@mui/material/FormControl';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
+import React, { useState } from 'react';
 import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Box from '@mui/material/Box';
@@ -16,48 +11,37 @@ import Modal from '@mui/material/Modal';
 import Checkbox from '@mui/material/Checkbox';
 import http from "../../axios/http";
 import PrivacyAgreement from '../../components/signup/privacyagreement';
+import Alert from '@mui/material/Alert';
 
 function Signup() {
+  // 아이디 중복체크 미실시
+  const [showIDAlert, setShowIDAlert] = React.useState(false);
 
-    const style = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 220,
-        height: '260px',
-        bgcolor: 'white',
-        border: '2px solid #000',
-        boxShadow: 24,
-        p: 4,
-      };
+  // 핸드폰 인증 미실시
+  const [showPhonCheckAlert, setshowPhonCheckAlert] = React.useState(false);
+
+  // 차량번호 중복 오류
+  const [ShowCarCheckAlert, setShowCarCheckAlert] = React.useState(false);
+
+  // 호수번호 중복 오류
+  const [showHouseNumCheckAlert, setShowHouseNumCheckAlert] = React.useState(false);
+
+  // 빌라식별번호 오류
+  const [showvillanumberCheckAlert,setshowvillanumberCheckAlert] = React.useState(false);
 
     const style1 = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 220,
-        height:'150px',
-        bgcolor: 'white',
-        border: '2px solid #000',
-        boxShadow: 24,
-        p: 4,
-      };
-
- 
-
-    const style3 = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 220,
-        height:'170px',
-        bgcolor: 'white',
-        border: '2px solid #000',
-        boxShadow: 24,
-        p: 4,
+      position: "fixed",
+      top: "0",
+      left: "0",
+      rigiht: "0",
+      width: "100%",
+      height: "18rem",
+      bgcolor: "white",
+      borderRadius: "0 0 1rem 1rem",
+      boxShadow: 20,
+      textAlign: "center",
+      overflowY: "auto", // 스크롤바 추가
+      outline: "none",
       };
 
     const style2 = {
@@ -65,15 +49,15 @@ function Signup() {
         top: '40%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: 300,
+        width: '100%',
         maxHeight: '80vh', // 최대 높이 설정
         height:'400px',
         bgcolor: 'white',
         border: '2px solid #000',
+        borderRadius:'1rem',
         boxShadow: 24,
         overflowY: 'auto', // 스크롤바 추가
       };
-      
     const [phonenumber, setPhoneNumber] = useState('');
     const [showPassword, setShowPassword] = React.useState(false);
     const [showCheckPassword, setShowCheckPassword] = React.useState(false);
@@ -92,8 +76,7 @@ function Signup() {
     const [IDModalFalseopen, setIDModalFalseOpen] = React.useState(false);
     const [IDModalTrueopen, setIDModalTrueOpen] = React.useState(false);
     const [PhoneModalopen, setPhoneModalOpen] = React.useState(false);
-    const [idcheck, setIDcheck] = React.useState(false)
-    const handleCloseIDCheckFalse = () => {setIDModalFalseOpen(false); setIDcheck(true);}
+    const handleCloseIDCheckFalse = () => {setIDModalFalseOpen(false); }
     const handleCloseIDCheckTrue = () => setIDModalTrueOpen(false);
     const handleClosePhoneCheck = () => setPhoneModalOpen(false);
     const [phoneModalTrueOpen, setPhoneModalTrueOpen] = React.useState(false);
@@ -251,20 +234,44 @@ const handlePhoneModalConfirmClick = () => {
             "villaNumber": Number(housenumber)
           },
         })
-        .then(() => {
-          navigate('/Mobile/Login')
+        .then((res) => {
+          if (res.data.success === false) {
+            setShowCarCheckAlert(true)
+            setTimeout(() => {
+              setShowCarCheckAlert(false); // 5초 후에 Alert을 숨김
+            }, 5000);
+          } else {
+            navigate('/Mobile/Login')
+          }
         })
         .catch((err) => {
           console.log(err)
+          if (err.response.data.message === "query did not return a unique result: 2; nested exception is javax.persistence.NonUniqueResultException: query did not return a unique result: 2") {
+            setShowHouseNumCheckAlert(true)
+            setTimeout(() => {
+              setShowHouseNumCheckAlert(false); // 5초 후에 Alert을 숨김
+            }, 5000);
+          } else if (err.response.data.message === "No value present") {
+            setshowvillanumberCheckAlert(true)
+            setTimeout(() => {
+              setshowvillanumberCheckAlert(false); // 5초 후에 Alert을 숨김
+            }, 5000);
+          }
         })
       } else {
         if (password1.trim() !== password2.trim()) {
           setPasswordChecking(true);
           setPasswordMismatch(true);
         } else if (isIdChecked === false) {
-          alert('아이디 중복체크를 실시해주시기 바랍니다.');
+          setShowIDAlert(true); // Alert을 표시
+          setTimeout(() => {
+            setShowIDAlert(false); // 5초 후에 Alert을 숨김
+          }, 5000);
         } else if (phonenumbecheck === false) {
-          // alert('핸드폰 인증을 진행해 주시기 바랍니다.')
+          setshowPhonCheckAlert(true)
+          setTimeout(() => {
+            setshowPhonCheckAlert(false); // 5초 후에 Alert을 숨김
+          }, 5000);
         }
       }
     };
@@ -393,6 +400,22 @@ const handlePhoneModalConfirmClick = () => {
 
   return (
     <div className='signup-main'>
+      {showIDAlert && (
+        <Alert severity="error" className='signup-alert'>아이디 중복검사를 실시해주시기 바랍니다.</Alert>
+      )}
+      {showPhonCheckAlert && (
+        <Alert severity="error" className='signup-alert'>핸드폰 인증을 실시해주시기 바랍니다.</Alert>
+      )}
+      {ShowCarCheckAlert && (
+        <Alert severity="error" className='signup-alert'>차량번호가 중복입니다. 확인 바랍니다.</Alert>
+      )}
+      {showHouseNumCheckAlert && (
+        <Alert severity="error" className='signup-alert'>호수 번호가 중복입니다. 확인 바랍니다.</Alert>
+      )}
+      {showvillanumberCheckAlert && (
+        <Alert severity="error" className='signup-alert'>빌라번호가 올바르지 않습니다.</Alert>
+      )}
+
       <div className="header">
         <img className="mobile-logo" src={process.env.PUBLIC_URL + "/img/kiosk/logo.png"} alt={"title"}></img>
       </div>
@@ -404,11 +427,14 @@ const handlePhoneModalConfirmClick = () => {
               <input required className="id-input" placeholder="아이디" label="아이디" name="ID" value={id} onChange={handleIDChange} ></input>
             </div>
             <div className="signup-id-btn-container">
-              <button className={`signup-id-btn-container ${isLoginButtonClickable ? 'id-active' : 'id-deactive'}`} onClick={handleOpenCheckID}>중복 체크</button>
+              {!isIdChecked && (
+                <button className={`signup-id-btn-container ${isLoginButtonClickable ? 'id-active' : 'id-deactive'}`} onClick={handleOpenCheckID}>중복 체크</button>
+              )}
+              {isIdChecked && (
+                <button className={'signup-id-btn-container'}>사용 가능</button>
+              )}
             </div>
           </div>
-          {/* <input required className="login-input" placeholder="아이디" label="아이디" name="ID" value={id} onChange={(e) => { handleIDChange(e); handleOpenCheckID(); } } ></input> */}
-          <div className='id-info'>{!setIsIdChecked && <p className="id-check-text">사용 가능한 아이디입니다</p>}</div>
         </div>
 
         <div className="signup-pw-container">
@@ -449,7 +475,12 @@ const handlePhoneModalConfirmClick = () => {
               <input required className="phone-number-input" placeholder="핸드폰 번호" label="핸드폰 번호" name="phonenumber" value={phonenumber} onChange={handlePhoneNumberChange} ></input>
             </div>
             <div className="signup-phone-number-btn-container">
+            {!phonenumbecheck && (
               <button className={`signup-phone-number-btn-container ${isPhonenumberButtonClickable ? 'phone-number-active' : 'phone-number-deactive'}`} onClick={handleOpenCheckPhonenumber}>번호 인증</button>
+              )}
+              {phonenumbecheck && (
+                <button className={'signup-id-btn-container'}>인증 완료</button>
+              )}
             </div>
           </div>
           
@@ -502,87 +533,119 @@ const handlePhoneModalConfirmClick = () => {
       {/* 아이디 중복 검사 결과 사용가능할 경우 보여주는 모달 */}
       <Modal open={IDModalFalseopen} onClose={handleCloseIDCheckFalse} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style1}>
-          <Typography id="modal-modal-title" variant="h6" component="h2" sx={{textAlign:'center'}}>
+        <div className="modal-flex-container" style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%" }}>
+          <div className="modal-title-container" style={{ marginTop: "2rem" }}>
+            <span className="bold-text" style={{ fontSize: "1.3rem" }}>
             아이디 중복검사 결과
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          {id}는 사용이 가능합니다.사용하시겠습니까?
-          </Typography>
-          <Box
-            component="span"
-            className='Checkidresult1'
-            onClick={handleCloseIDCheckFalse}
-          >
-            <p className="Checkidresult2text">확인</p>
-          </Box>
+            </span>
+          </div>
+          <div className="modal-content-container" style={{ flex: "1" }}>
+            <div className="modal-content-flex-container" style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
+              <div className="modal-content-input-container" style={{ width: "70%" }}>
+                <Typography sx={{ marginTop: "0.4rem", fontSize: "0.8rem" }}>{id}는 사용이 가능합니다.</Typography>
+                <Typography sx={{ marginTop: "0.4rem",marginLeft:'-4.5rem', fontSize: "0.8rem" }}>사용하시겠습니까?</Typography>
+                <button className="login-box" onClick={handleCloseIDCheckFalse} style={{ marginTop: "1.7rem", backgroundColor: "#006DD1", color: "white" }}>
+                  확인
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
         </Box>
       </Modal>
 
       {/* 아이디 중복 검사 결과 중복될 경우 보여주는 모달 */}
       <Modal open={IDModalTrueopen} onClose={handleCloseIDCheckTrue} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
-        <Box sx={style3}>
-          <Typography id="modal-modal-title" variant="h6" component="h2" sx={{textAlign:'center'}}>
+        <Box sx={style1}>
+        <div className="modal-flex-container" style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%" }}>
+          <div className="modal-title-container" style={{ marginTop: "2rem" }}>
+            <span className="bold-text" style={{ fontSize: "1.3rem" }}>
             아이디 중복검사 결과
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          {id}는 현재 사용중인 상태입니다.
-          <br/>
-          다른 아이디를 사용해주시기 바랍니다.
-          </Typography>
-          <Box
-            component="span"
-            className='Checkidresult1'
-            onClick={handleCloseIDCheckTrue}
-        >
-            <p className="Checkidresult2text">확인</p>
-        </Box>
+            </span>
+          </div>
+          <div className="modal-content-container" style={{ flex: "1" }}>
+            <div className="modal-content-flex-container" style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
+              <div className="modal-content-input-container" style={{ width: "70%" }}>
+                <Typography sx={{ marginTop: "0.4rem", fontSize: "0.8rem" }}>{id}는 현재 사용중인 상태입니다.</Typography>
+                <Typography sx={{ marginTop: "0.4rem",marginLeft:'-0.5rem', fontSize: "0.8rem" }}>다른 아이디를 사용해주시기 바랍니다.</Typography>
+                <button className="login-box" onClick={handleCloseIDCheckTrue} style={{ marginTop: "1.7rem", backgroundColor: "#006DD1", color: "white" }}>
+                  확인
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
         </Box>
       </Modal>
+      
       {/* 핸드폰 인증 클릭시 보여주는 모달창 */}
-      <Modal open={PhoneModalopen} onClose={handleClosePhoneCheck} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description" >
-        <Box sx={style}>
-          <Typography id="modal-modal-description" sx={{ mt: 1 }} >
-            입력된 핸드폰 번호로 인증문자가 발송되었습니다.
-            <br />
-            인증번호를 입력해 주시기 바랍니다.
-          </Typography>
-          <br />
-          <br />
-          <TextField required id="outlined-basic" label="인증문자" variant="outlined" sx={{ '& input': { textAlign: 'center'}}} 
-          value={phonechecknumber} onChange={handlephonechecknumberChange}/>
-          <Box component="span" className="Checkidresult3" onClick={handlePhoneModalConfirmClick}>
-            <p className="Checkidresult1text">확인</p>
-          </Box>
+      {/* 핸드폰 인증 */}
+      <Modal open={PhoneModalopen} onClose={handleClosePhoneCheck} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+        <Box sx={style1}>
+          <div className="modal-flex-container" style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%" }}>
+            <div className="modal-title-container" style={{ marginTop: "2rem" }}>
+              <span className="bold-text" style={{ fontSize: "1.3rem" }}>
+                핸드폰 번호 인증
+              </span>
+            </div>
+            <div className="modal-content-container" style={{ flex: "1" }}>
+              <div className="modal-content-flex-container" style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
+                <div className="modal-content-input-container" style={{ width: "70%" }}>
+                  <input required className="login-input" label="인증번호" placeholder="인증번호" name="phonenumber" value={phonechecknumber} onChange={handlephonechecknumberChange}></input>
+                  <button className="login-box" onClick={handlePhoneModalConfirmClick} style={{ marginTop: "1.7rem", backgroundColor: "#006DD1", color: "white" }}>
+                    확인
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </Box>
       </Modal>
 
       {/* 핸드폰 인증 성공 */}
       <Modal open={phoneModalTrueOpen} onClose={handleClosePhoneTrueCheck} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style1}>
-          <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ textAlign: 'center' }}>
-            인증 성공
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            인증이 성공적으로 완료되었습니다.
-          </Typography>
-          <Box component="span" className="Checkidresult2" onClick={handleClosePhoneTrueCheck}>
-            <p className="Checkidresult1text">확인</p>
-          </Box>
+        <div className="modal-flex-container" style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%" }}>
+          <div className="modal-title-container" style={{ marginTop: "2rem" }}>
+            <span className="bold-text" style={{ fontSize: "1.3rem" }}>
+            핸드폰 인증검사 결과
+            </span>
+          </div>
+          <div className="modal-content-container" style={{ flex: "1" }}>
+            <div className="modal-content-flex-container" style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
+              <div className="modal-content-input-container" style={{ width: "70%" }}>
+                <Typography sx={{ marginTop: "0.4rem", fontSize: "0.8rem" }}>인증 성공</Typography>
+                <button className="login-box" onClick={handleClosePhoneTrueCheck} style={{ marginTop: "1.7rem", backgroundColor: "#006DD1", color: "white" }}>
+                  확인
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
         </Box>
       </Modal>
 
       {/* 핸드폰 인증 실패 */}
       <Modal open={phoneModalFalseOpen} onClose={handleClosePhoneFalseCheck} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style1}>
-          <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ textAlign: 'center' }}>
-            인증 실패
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            인증이 실패하였습니다. 올바른 인증번호를 입력해주세요.
-          </Typography>
-          <Box component="span" className="Checkidresult2" onClick={handleClosePhoneFalseCheck}>
-            <p className="Checkidresult1text">확인</p>
-          </Box>
+        <div className="modal-flex-container" style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%" }}>
+          <div className="modal-title-container" style={{ marginTop: "2rem" }}>
+            <span className="bold-text" style={{ fontSize: "1.3rem" }}>
+            핸드폰 인증검사 결과
+            </span>
+          </div>
+          <div className="modal-content-container" style={{ flex: "1" }}>
+            <div className="modal-content-flex-container" style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
+              <div className="modal-content-input-container" style={{ width: "70%" }}>
+                <Typography sx={{ marginTop: "0.4rem", fontSize: "0.8rem"}}>인증이 실패하였습니다.</Typography>
+                <Typography sx={{ marginTop: "0.4rem", fontSize: "0.8rem" }}>올바른 인증번호를 입력해주세요.</Typography>
+                <button className="login-box" onClick={handleClosePhoneFalseCheck} style={{ marginTop: "1.7rem", backgroundColor: "#006DD1", color: "white" }}>
+                  확인
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
         </Box>
       </Modal>
       <PrivacyAgreement open={privacyCheck} onClose={handleClosePrivacyClose}/>
@@ -591,7 +654,7 @@ const handlePhoneModalConfirmClick = () => {
       <Modal open={privacyCheck} onClose={handleClosePrivacyClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style2}>
           <Typography id="modal-modal-title" variant="h6" component="h2" className='Privacymodalstyle'>
-            <span style={{fontSize:'24px', fontWeight:'bolder', color:'white', margin:20}}>이용약관</span>
+            <span style={{fontSize:'1.2rem', fontWeight:'bolder', color:'balck', margin:20}}>개인정보 이용약관</span>
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2, ml:2, mr:2}}>
           <span style={{fontSize:'20px', fontWeight:'bold'}}>[제 1 장 총칙]</span>
@@ -634,7 +697,7 @@ const handlePhoneModalConfirmClick = () => {
           <br />
           <br />
           <span style={{fontSize:'12px'}}>
-          1. 회사는 본 약관의 내용을 이용자가 쉽게 알 수 있도록 "회원가입"시 및 "홈페이지" 서비스의 초기 화면에 게시합니다.
+          1. 회사는 본 약관의 내용을 이용자가 쉽게 알 수 있도록 "회원가입"시 게시합니다.
           <br />
           <br />
           2. 본 약관에서 안내하고 있는 개인정보보호에 관한 정책은 회원가입 후 홈페이지의 정보를 활용하는 모든 경우에 해당됩니다.
@@ -739,7 +802,7 @@ const handlePhoneModalConfirmClick = () => {
           ⑵ 이용계약 신청서의 내용을 허위로 기재한 경우
           </span>
           <br/>
-          <span style={{marginLeft:'15px', fontSize:'9px'}}>
+          <span style={{marginLeft:'15px', fontSize:'9px', width:'80%'}}>
           ⑶ 사회의 안녕과 질서, 미풍양속을 저해할 목적으로신청한 경우
           </span>
           <br/>

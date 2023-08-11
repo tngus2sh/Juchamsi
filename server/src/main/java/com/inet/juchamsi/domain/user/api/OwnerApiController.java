@@ -46,7 +46,7 @@ public class OwnerApiController {
             Long ownerId = ownerService.createUser(request);
         }
         catch(AlreadyExistException e) {
-            return ERROR("동일한 회원 정보가 존재합니다.", HttpStatus.CONFLICT);
+            return ERROR(e.getValue(), HttpStatus.CONFLICT);
         }
         catch(NotFoundException e) {
             return ERROR("해당하는 빌라가 존재하지 않습니다.", HttpStatus.NO_CONTENT);
@@ -90,10 +90,20 @@ public class OwnerApiController {
         try {
             AdminOwnerLoginResponse response = ownerService.loginUser(request);
             return OK(response);
-        } catch (NotFoundException e) {
-            return ERROR("존재하지 않는 사용자입니다.", HttpStatus.BAD_REQUEST);
         } catch (BadCredentialsException e) {
             return ERROR("아이디 또는 비밀번호를 잘못 입력했습니다", HttpStatus.UNAUTHORIZED);
+        }
+        catch (NotFoundException e) {
+            String value = e.getValue();
+
+            if(value.equals("WAIT") || value.equals("MODIFY")) {
+                return ERROR("승인 대기 중입니다.", HttpStatus.UNAUTHORIZED);
+            }
+            else if(value.equals("DECLINE")) {
+                return ERROR("승인이 거절되었습니다.", HttpStatus.UNAUTHORIZED);
+            }
+
+            return ERROR("존재하지 않는 사용자입니다.", HttpStatus.BAD_REQUEST);
         }
     }
 

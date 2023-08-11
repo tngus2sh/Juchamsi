@@ -16,4 +16,7 @@ public interface VillaRepository extends JpaRepository<Villa, Long> {
 
     @Query("select v.id from Villa v where v.idNumber=:idNumber and v.active=:active")
     Optional<Long> existIdNumberandActive(@Param("idNumber") String idNumber, @Param("active") Active active);
+
+    @Query("select v.id from Villa v where v.address=:address")
+    Optional<Long> findByAddress(@Param("address") String address);
 }

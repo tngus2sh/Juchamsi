@@ -1,20 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import "./account.css";
 import Footer from "./footer";
 import { useSelector, useDispatch } from "react-redux";
-import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
-import EditIcon from "@mui/icons-material/Edit";
-import Fab from "@mui/material/Fab";
 import { useNavigate } from "react-router-dom";
-import DescriptionIcon from "@mui/icons-material/Description";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import http from "../../axios/http";
 import { setMileageList, setLogout } from "../../redux/mobileUserinfo";
-import { Button, Container, Grid, Typography } from "@mui/material";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import LocalParkingRoundedIcon from "@mui/icons-material/LocalParkingRounded";
+import dayjs from "dayjs";
+import Alert from "@mui/material/Alert";
 
 function Account() {
   const navigate = useNavigate();
@@ -23,27 +20,18 @@ function Account() {
   const name = useSelector((state) => state.mobileInfo.name);
   let totalmileage = useSelector((state) => state.mobileInfo.totalMileage);
   const [MileageOpen, setMileageOpen] = React.useState(false);
-  const ID = useSelector((state) => state.mobileInfo.id);
-  const imageUrl = useSelector((state) => state.mobileInfo.imageUrl); // 이미지 URL 가져오기
-
-  const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
-  const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
   // { 'id': 1, 'point': 100, 'type': '적립', 'description': '출금 시간 등록 적립', 'createdDate': 날짜, 'lastModifiedDate': 날짜}
   const alltext = useSelector((state) => state.mobileInfo.mileagelist);
 
   const carNumber = useSelector((state) => state.mobileInfo.carNumber);
+  const [showAlert, setShowAlert] = React.useState(false);
+  const logincheck = useSelector((state) => state.auth.isAutoLoginChecked)
 
   useEffect(() => {
-    const handleResize = () => {
-      setViewportWidth(window.innerWidth);
-      setViewportHeight(window.innerHeight);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+      if (logincheck !== true) {
+          navigate('/Mobile/Login')
+        }
+      }, [logincheck, navigate])
 
   useEffect(() => {
     http({
@@ -60,14 +48,14 @@ function Account() {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [dispatch,loginId]);
 
   const handleSignoutOpen = () => {
     http({
       method: "delete",
       url: `/tenant/${loginId}`,
     })
-      .then((res) => {
+      .then(() => {
         navigate("/Mobile/Login");
       })
       .catch((err) => {
@@ -97,7 +85,10 @@ function Account() {
     if (totalmileage >= 3000) {
       navigate("/Mobile/Mileage/Change");
     } else {
-      alert("3000마일리지 이상 보유시 교환이 가능합니다.");
+      setShowAlert(true); // Alert을 표시
+      setTimeout(() => {
+        setShowAlert(false); // 2초 후에 Alert을 숨김
+      }, 2000);
     }
   };
   const handleOpenMileage = () => {
@@ -131,22 +122,24 @@ function Account() {
   };
 
   const style1 = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: viewportWidth * 0.6,
-    height: viewportHeight * 0.4,
+    position: "fixed",
+    top: "0",
+    left: "0",
+    rigiht: "0",
+    width: "100%",
+    height: "20rem",
     bgcolor: "white",
-    border: "2px solid #000",
-    boxShadow: 24,
-    p: 4,
-    maxHeight: "80vh", // 최대 높이 설정
+    borderRadius: "0 0 1rem 1rem",
+    boxShadow: 20,
+    textAlign: "center",
     overflowY: "auto", // 스크롤바 추가
+    outline: "none",
   };
+  
 
   return (
     <React.Fragment>
+      {showAlert && <Alert severity="error" className="alert-container">3000 마일리지 이상이어야 교환신청이 가능합니다.</Alert>}
       <div className="account-main-container">
         <div className="account-header-container" style={{ color: "white" }}>
           <div className="account-padding-container">
@@ -244,19 +237,6 @@ function Account() {
               </span>
             </div>
 
-            <div className="account-privacy-detail-container" style={{ marginTop: "1.5rem" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div className="account-mileage-history-info-container">
-                  <span className="bold-text" style={{ fontSize: "1.1rem" }}>
-                    개인정보 상세
-                  </span>
-                </div>
-                <div className="account-mileage-history-icon-container">
-                  <ArrowForwardIosRoundedIcon sx={{ fontSize: "1.3rem" }} />
-                </div>
-              </div>
-            </div>
-
             <div onClick={handleOpenupdateAccount} className="account-privacy-update-container" style={{ marginTop: "1.5rem" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <div className="account-mileage-history-info-container">
@@ -300,33 +280,56 @@ function Account() {
 
         <div className="empty-container" style={{ display: "inline-block", height: "7rem" }}></div>
       </div>
-
       <Modal open={MileageOpen} onClose={handleCloseMileage} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style1}>
-          <p className="modaltext1">마일리지 이용내역</p>
-          <p className={`modaltext2 ${selectedTag === "전체" ? "selected" : ""}`} onClick={() => handleTagClick("전체")}>
-            전체
-          </p>
-          <p className={`modaltext3 ${selectedTag === "적립" ? "selected" : ""}`} onClick={() => handleTagClick("적립")}>
-            적립
-          </p>
-          <p className={`modaltext4 ${selectedTag === "사용" ? "selected" : ""}`} onClick={() => handleTagClick("사용")}>
-            사용
-          </p>
-          {/* 보여질 내용을 상태에 따라 렌더링 */}
-          {content.map((item) => (
-            <div className="pointtext" key={item.id}>
-              <Stack direction="row" sx={{ display: "flex", justifyContent: "space-between" }}>
-                <p className="pointtext1">{item.description}</p>
-                <p className="pointtext1">{item.point}</p>
-              </Stack>
-              <br />
-              <Box sx={{ display: "flex", flexDirection: "row-reverse" }}>
-                <p className="pointtext1">{item.createDate}</p>
-              </Box>
-              <hr />
+          <div className="modal-flex-container" style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%" }}>
+            <div className="modal-title-container" style={{ marginTop: "2rem" }}>
+              <span className="bold-text" style={{ fontSize: "1.3rem" }}>
+              마일리지 내역
+              </span>
             </div>
-          ))}
+            <div className="modal-content-container" style={{ flex: "1" }}>
+              <div className="modal-content-flex-container" style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
+                <div className="modal-content-input-container" style={{ width: "70%",  }}>
+                  <div style={{display:'flex', position:'absolute', top:'5rem', width:'80%'}}>
+                    <div style={{display:'flex', justifyContent: "space-between", width:'90%'}}>
+                    <p className={`modaltext2 ${selectedTag === "전체" ? "selected" : ""}`} onClick={() => handleTagClick("전체")}>
+                      전체
+                    </p>
+                    <p className={`modaltext2 ${selectedTag === "적립" ? "selected" : ""}`} onClick={() => handleTagClick("적립")}>
+                      적립
+                    </p>
+                    <p className={`modaltext2 ${selectedTag === "사용" ? "selected" : ""}`} onClick={() => handleTagClick("사용")}>
+                      사용
+                    </p>
+                    </div>
+                  </div>
+                {/* 보여질 내용을 상태에 따라 렌더링 */}
+                <div style={{marginTop:'5rem'}}/>
+                {content.map((item) => (
+                  <div className="pointtext" key={item.id} style={{marginTop:'2rem'}}>
+                    <Stack direction="row" sx={{ display: "flex", justifyContent: "space-between" }}>
+                      <p className="pointtext1">{item.description}</p>
+                      <p className="pointtext1">{item.point}</p>
+                    </Stack>
+                    <br />
+                    <Box sx={{ display: "flex", flexDirection: "row-reverse" }}>
+                      <p className="pointtext1">{dayjs(item.createDate).format("YY.MM.DD HH:mm")}</p>
+                    </Box>
+                    <hr />
+                  </div>
+                ))}
+                  <button
+                      className="login-box"
+                      onClick={handleCloseMileage}
+                      style={{ marginTop: "1.7rem", backgroundColor: "#006DD1", color: "white", marginBottom: "1rem" }}
+                    >
+                      확인
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </Box>
       </Modal>
 
