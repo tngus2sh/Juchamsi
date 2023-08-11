@@ -67,6 +67,11 @@ const Messagedetail = () => {
     connect();
   }, [roomId, senderId]);
 
+  useEffect(() => {
+    setMessageLength(messageStorage.length);
+    dispatch(setReadMessage(messageStorage.length));
+  }, [messageStorage]);
+
   async function fetchMessage() {
     await http
       .get(`/chat/room/${senderId}/${roomId}`)
@@ -90,8 +95,6 @@ const Messagedetail = () => {
       function (frame) {
         ws.subscribe("/topic/chat/room/" + roomId, function (message) {
           console.log("message 리스트??");
-          console.log(messageStorage.length);
-          console.log(messages.length);
           const recv = JSON.parse(message.body);
           recvMessage(recv);
         });
@@ -320,6 +323,7 @@ const Messagedetail = () => {
                 if (message.trim() !== "") {
                   sendMessage();
                   setMessage("");
+                  console.log(messageLength);
                 }
               }}
             />
