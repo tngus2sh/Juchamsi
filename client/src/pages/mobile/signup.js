@@ -29,6 +29,9 @@ function Signup() {
   // 빌라식별번호 오류
   const [showvillanumberCheckAlert,setshowvillanumberCheckAlert] = React.useState(false);
 
+  // 핸드폰 번호 중복 오류
+  const [showphonenumberCheckAlert,setshowphonenumberCheckAlert] = React.useState(false);
+
     const style1 = {
       position: "fixed",
       top: "0",
@@ -235,23 +238,31 @@ const handlePhoneModalConfirmClick = () => {
           },
         })
         .then((res) => {
+          console.log(res)
           if (res.data.success === false) {
-            setShowCarCheckAlert(true)
-            setTimeout(() => {
-              setShowCarCheckAlert(false); // 5초 후에 Alert을 숨김
-            }, 5000);
+            if (res.data.error.message === '동일한 차량 번호를 사용하는 회원이 존재합니다.') {
+              setShowCarCheckAlert(true)
+              setTimeout(() => {
+                setShowCarCheckAlert(false); // 5초 후에 Alert을 숨김
+              }, 5000);
+            } else if (res.data.error.message === '동일한 핸드폰 번호를 사용하는 회원이 존재합니다.') {
+              setshowphonenumberCheckAlert(true)
+              setTimeout(() => {
+                setshowphonenumberCheckAlert(false)
+              }, 5000)
+            } else if(res.data.error.message === '동일한 빌라 호수를 사용하는 회원이 존재합니다.') {
+              setShowHouseNumCheckAlert(true)
+              setTimeout(() => {
+                setShowHouseNumCheckAlert(false); // 5초 후에 Alert을 숨김
+              }, 5000);
+            }
           } else {
             navigate('/Mobile/Login')
           }
         })
         .catch((err) => {
           console.log(err)
-          if (err.response.data.message === "query did not return a unique result: 2; nested exception is javax.persistence.NonUniqueResultException: query did not return a unique result: 2") {
-            setShowHouseNumCheckAlert(true)
-            setTimeout(() => {
-              setShowHouseNumCheckAlert(false); // 5초 후에 Alert을 숨김
-            }, 5000);
-          } else if (err.response.data.message === "No value present") {
+          if (err.response.data.message === "No value present") {
             setshowvillanumberCheckAlert(true)
             setTimeout(() => {
               setshowvillanumberCheckAlert(false); // 5초 후에 Alert을 숨김
@@ -401,19 +412,22 @@ const handlePhoneModalConfirmClick = () => {
   return (
     <div className='signup-main'>
       {showIDAlert && (
-        <Alert severity="error" className='signup-alert'>아이디 중복검사를 실시해주시기 바랍니다.</Alert>
+        <Alert severity="error" className='signup-alert' sx={{justifyContent:'center'}}>아이디 중복검사를 실시해주시기 바랍니다.</Alert>
       )}
       {showPhonCheckAlert && (
-        <Alert severity="error" className='signup-alert'>핸드폰 인증을 실시해주시기 바랍니다.</Alert>
+        <Alert severity="error" className='signup-alert' sx={{justifyContent:'center'}}>핸드폰 인증을 실시해주시기 바랍니다.</Alert>
       )}
       {ShowCarCheckAlert && (
-        <Alert severity="error" className='signup-alert'>차량번호가 중복입니다. 확인 바랍니다.</Alert>
+        <Alert severity="error" className='signup-alert' sx={{justifyContent:'center'}}>차량번호가 중복입니다. 확인 바랍니다.</Alert>
       )}
       {showHouseNumCheckAlert && (
-        <Alert severity="error" className='signup-alert'>호수 번호가 중복입니다. 확인 바랍니다.</Alert>
+        <Alert severity="error" className='signup-alert' sx={{justifyContent:'center'}}>호수 번호가 중복입니다. 확인 바랍니다.</Alert>
       )}
       {showvillanumberCheckAlert && (
         <Alert severity="error" className='signup-alert'>빌라번호가 올바르지 않습니다.</Alert>
+      )}
+      {showphonenumberCheckAlert && (
+        <Alert severity="error" className='signup-alert'>동일한 핸드폰번호로 가입이 되어있습니다.</Alert>
       )}
 
       <div className="header">

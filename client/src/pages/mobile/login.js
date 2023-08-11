@@ -54,6 +54,9 @@ function Login() {
   // 존재하지 않는 사용자
   const [showNoUserAlert, setshowNoUserAlert] = React.useState(false)
 
+  // 아아디or비밀번호가 다를경우
+  const [showCheckIDrAlert, setshowCheckIDrAlert] = React.useState(false)
+
   const handleOpenLoginResultPage = () => {
     // 아이디와 비밀번호가 입력되어 있을 때만 이동
     if (username.trim() !== '' && password.trim() !== '') {
@@ -65,7 +68,7 @@ function Login() {
             loginPassword: password,
           },
         })
-        .then((res) => {
+        .then((res) => {  
           if (res.data.success === true) {
             // setCarNumber, setid, setloginId, setname, setphoneNumber, setaccessToken, setrefreshToken
             dispatch(setCarNumber(res.data.response.carNumber));
@@ -97,6 +100,11 @@ function Login() {
             setshowNoUserAlert(true);
             setTimeout(() => {
               setshowNoUserAlert(false)
+            }, 5000)
+          } else if(res.data.error.message === '아이디 또는 비밀번호를 잘못 입력했습니다') {
+            setshowCheckIDrAlert(true);
+            setTimeout(() => {
+              setshowCheckIDrAlert(false)
             }, 5000)
           }
         })
@@ -268,16 +276,19 @@ function Login() {
         </div>
       )}
       {showAlert && (
-        <Alert severity="error" className='login-alert' sx={{width:'18rem'}}>
+        <Alert severity="error" className='signup-alert' sx={{justifyContent:'center'}}>
           <p>승인대기 상태입니다. 관리자 승인시</p>
           <p>서비스 이용이 가능합니다.</p>
           </Alert>
       )}
       {showAlert2 && (
-        <Alert severity="warning" className='login-alert' sx={{width:'18rem'}}>회원가입이 거절되었습니다.</Alert>
+        <Alert severity="warning" className='signup-alert' sx={{justifyContent:'center'}}>회원가입이 거절되었습니다.</Alert>
       )}
       {showNoUserAlert && (
-        <Alert severity="warning" className='login-alert' sx={{width:'18rem'}}>회원가입을 먼저 해주시기 바랍니다.</Alert>
+        <Alert severity="warning" className='signup-alert' sx={{justifyContent:'center'}}>회원가입을 먼저 해주시기 바랍니다.</Alert>
+      )}
+      {showCheckIDrAlert && (
+        <Alert severity="warning" className='signup-alert' sx={{justifyContent:'center'}}>아이디 또는 비밀번호를 확인바랍니다.</Alert>
       )}
     </div>
   );
