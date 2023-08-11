@@ -3,6 +3,7 @@ package com.inet.juchamsi.domain.chat.api;
 import com.inet.juchamsi.domain.chat.application.ChatService;
 import com.inet.juchamsi.domain.chat.dto.request.ChatMessageRequest;
 import com.inet.juchamsi.domain.chat.dto.request.SystemMessageRequest;
+import com.inet.juchamsi.domain.chat.dto.service.SenderInfoDto;
 import com.inet.juchamsi.global.api.ApiResult;
 import com.inet.juchamsi.global.error.NotFoundException;
 import io.swagger.annotations.Api;
@@ -42,6 +43,14 @@ public class MessageApiController {
                 ERROR("사용자를 찾을 수 없습니다.", HttpStatus.BAD_REQUEST);
             }
         }
+        
+        // 상대방에게 알람 보내기
+        chatService.sendNotification(SenderInfoDto.builder()
+                .senderId(request.getSenderId())
+                .message(request.getMessage())
+                .roomId(request.getRoomId())
+                .build());
+        
         // topic-1대다, queue-1대1
         sendingOperations.convertAndSend("/topic/chat/room/" + roomId, request);
         return OK(null);

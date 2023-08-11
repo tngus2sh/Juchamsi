@@ -10,7 +10,7 @@ import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
 import { useSelector, useDispatch } from 'react-redux';
 import { setAutoLoginChecked, setUsername, setPassword, setloginchecked } from '../../redux/mobileauthlogin';
-import { setCarNumber, setid, setloginId, setname, setphoneNumber, setaccessToken, setrefreshToken, setVillaNumber, setvillaIdNumber, setTotalMileage, setUserMacAdress, setWhenEnteringCar} from '../../redux/mobileUserinfo'
+import { setCarNumber, setid, setloginId, setname, setphoneNumber, setaccessToken, setrefreshToken, setVillaNumber, setvillaIdNumber, setTotalMileage, setUserMacAdress, setWhenEnteringCar, setFcmToken} from '../../redux/mobileUserinfo'
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import http from "../../axios/http";
@@ -85,6 +85,7 @@ function Login() {
             dispatch(setUserMacAdress("ed:dd:dd:dd"));
             dispatch(setWhenEnteringCar(false));
             dispatch(setloginchecked(true))
+            dispatch(setFcmToken(res.data.response.FCMToken));
             navigate('/Mobile/Parkinglot')
           } else if (res.data.error.message === '승인 대기 중입니다.') {
             setShowAlert(true); // Alert을 표시

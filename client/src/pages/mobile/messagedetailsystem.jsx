@@ -105,7 +105,7 @@ const MessageDetailSystem = () => {
         <ChatContainer className="custom-chat-container">
           <MessageList className="cs-message-list">
             {systemMessageStorage.length === 0 ? (
-              <MessageSeparator content="대화를 시작해주세요" />
+              <MessageSeparator content="메시지가 없습니다." />
             ) : (
               systemMessageStorage.map((message, index) => (
                 <Message
