@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import dayjs from "dayjs";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,  } from "react-router-dom";
 
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -33,33 +33,33 @@ function MycarParking() {
   const vilanumber = useSelector((state) => state.mobileInfo.villaIdNumber);
   useEffect(() => {
     const fetchData = async () => {
-      if (logincheck !== true) {
-        navigate('/Mobile/Login')
-      }
-      try {
-        // 주차현황 가지고오기
-        http({
-          method:'get',
-          url:`/parking/lot/${villanumber}`
-        })
-        .then((res) => {
-          let resultbox = []
-            for (let i=0; i<res.data.response.length; i++) {
-              if (res.data.response[i].active === 'ACTIVE') {
-                resultbox.push(res.data.response[i])
-                if (res.data.response[i].userId === userid) {
-                  dispatch(setmycar(res.data.response[i].seatNumber))
-                }
-                }
-              }
-            dispatch(setBoxItem(resultbox))
+        if (logincheck !== true) {
+          navigate('/Mobile/Login')
+        }
+        try {
+          // 주차현황 가지고오기
+          http({
+            method:'get',
+            url:`/parking/lot/${villanumber}`
           })
-        .catch((err) => {
-          console.log(err)
-        })
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
+          .then((res) => {
+            let resultbox = []
+              for (let i=0; i<res.data.response.length; i++) {
+                if (res.data.response[i].active === 'ACTIVE') {
+                  resultbox.push(res.data.response[i])
+                  if (res.data.response[i].userId === userid) {
+                    dispatch(setmycar(res.data.response[i].seatNumber))
+                  }
+                  }
+                }
+              dispatch(setBoxItem(resultbox))
+            })
+          .catch((err) => {
+            console.log(err)
+          })
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
     };
 
     // fetchData 함수를 호출하여 데이터를 받아옴
@@ -108,8 +108,7 @@ function MycarParking() {
         url:`/tenant/${BoxItem[othercarnum]}`
       })
       .then((res) => {
-        console.log(res)
-        // othercarphonenumber = res.data.response('')
+        othercarphonenumber = res.data.response('')
       })
     }
     return othercarouttime;
@@ -134,8 +133,7 @@ function MycarParking() {
         url:`/tenant/${BoxItem[othercarnum]}`
       })
       .then((res) => {
-        console.log(res)
-        // othercarphonenumber = res.data.response('')
+        othercarphonenumber = res.data.response('')
       })
     }
     return othercarouttime;
@@ -151,6 +149,9 @@ function MycarParking() {
 
   // 뒤차 존재 여부
   const isbackothercar = backothercarouttime !== null;
+
+  // 주차시간 설정 여부
+  let ismycarparking = false
 
   const style = {
     position: "absolute",
@@ -219,6 +220,7 @@ function MycarParking() {
     setSelectedTime(time); // 선택된 시간을 상태로 업데이트
   };
 
+  
   // 모달 창에서 OK 버튼을 눌렀을 때 호출되는 콜백 함수
   const handleOk = () => {
     const formattedDate = selectedDate.format("YY-MM-DD");
@@ -238,12 +240,13 @@ function MycarParking() {
       url: "/parking/out_time",
       data: requestData,
     })
-      .then((res) => {
-        console.log("Response:", res);
+      .then(() => {
       })
       .catch((err) => {
         console.log("Error:", err);
       });
+    setDefaultDay(`20${formattedDate}`);
+    setDefaultTime(formattedTime);
     // 모달을 닫습니다.
     handleClose();
   };
@@ -253,13 +256,15 @@ function MycarParking() {
   const [selectedTime, setSelectedTime] = React.useState(defaultTimePickerValue);
   const date = () => {
     if (outTimeArray[Mycar] !== undefined) {
+      ismycarparking = true
       return outTimeArray[Mycar].split("T");
     } else {
       return ["", ""];
     }
   };
-  let [defaultday, defaulttime] = date();
-  const defaultall = defaultday + " " + defaulttime;
+  const [defaultday, setDefaultDay] = React.useState(date()[0]);
+  const [defaulttime, setDefaultTime] = React.useState(date()[1]);
+  let defaultall = defaultday + " " + defaulttime;
 
   return (
     <React.Fragment>
@@ -272,7 +277,7 @@ function MycarParking() {
             top: 0,
           }}
         >
-          {showAlert && <Alert severity="error">주차를 먼저 실시해주시기 바랍니다.</Alert>}
+          {showAlert && <Alert severity="error" className='signup-alert' sx={{justifyContent:'center'}}>주차를 먼저 실시해주시기 바랍니다.</Alert>}
         </Box>
 
         <div className="my-parking-main-container">
@@ -287,7 +292,7 @@ function MycarParking() {
               </div>
 
               <div className="my-car-timer-container">
-                {isfrontothercar ? (
+                {ismycarparking ? (
                   <React.Fragment>
                     <div className="my-car-date-container">{defaultday.substring(2, 10).replace(/-/g, '.')}</div>
                     <div className="my-car-time-container">{defaulttime}</div>
