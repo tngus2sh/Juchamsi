@@ -1,9 +1,11 @@
 package com.inet.juchamsi.domain.chat.dao;
 
 import com.inet.juchamsi.domain.chat.dto.service.ChatRoomUserDto;
+import com.inet.juchamsi.domain.chat.entity.ChatPeople;
 import com.inet.juchamsi.domain.chat.entity.ChatRoom;
 import com.inet.juchamsi.domain.chat.entity.Status;
 import com.inet.juchamsi.domain.chat.entity.Type;
+import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.global.common.Active;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -32,6 +34,10 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
     // 사용자의 loginId와 채팅방 유형으로 roomId 반환
     @Query("select cr.roomId from ChatPeople cp left join cp.user u left  join cp.chatRoom cr where u.loginId=:loginId and cr.type=:type and cr.status=:status")
     Optional<String> findRoomIdByLoginIdAndType(@Param("loginId") String loginId, @Param("type") Type type, @Param("status") Status status);
+
+    // roomId로 채팅방 사용자들 목록 가져오기
+    @Query("select u from ChatPeople cp left join cp.user u left join cp.chatRoom cr where cr.roomId=:roomId and cr.status=:status")
+    List<User> findChatPeopleByRoomIdAndStatus(@Param("roomId") String roomId, @Param("status") Status status);
 
     @Modifying(clearAutomatically = true)
     @Query("update ChatRoom cr set cr.status=:status where cr.id=:id")

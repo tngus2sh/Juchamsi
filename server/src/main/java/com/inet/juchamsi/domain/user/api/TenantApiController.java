@@ -3,6 +3,7 @@ package com.inet.juchamsi.domain.user.api;
 import com.inet.juchamsi.domain.user.application.TenantService;
 import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
+import com.inet.juchamsi.domain.user.dto.request.ModifyTenantPasswordRequest;
 import com.inet.juchamsi.domain.user.dto.request.ModifyTenantRequest;
 import com.inet.juchamsi.domain.user.dto.response.TenantLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.TenantResponse;
@@ -167,6 +168,20 @@ public class TenantApiController {
         }
     }
 
+    @ApiOperation(value = "비밀번호 수정", notes = "세입자가 비밀번호를 변경합니다.")
+    @PutMapping("/password")
+    public ApiResult<Void> modifyPassword(
+            @ApiParam(value = "tenant-password-dto")
+            @RequestBody ModifyTenantPasswordRequest request
+    ) {
+        log.info("modifyPassword={}", request);
+        try {
+            tenantService.modifyPassword(request);
+        } catch (NotFoundException e) {
+            return ERROR("해당 회원을 찾을 수 없습니다.", HttpStatus.NO_CONTENT);
+        }
+        return OK(null);
+    }
 
     @ApiOperation(value = "세입자 회원 정보 수정", notes = "세입자가 회원 정보를 수정합니다")
     @PutMapping("")

@@ -9,11 +9,13 @@ import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.global.error.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class TokenServiceImpl implements TokenService {
 
     private final TokenRepository tokenRepository;

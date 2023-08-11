@@ -139,7 +139,7 @@ function Account() {
 
   return (
     <React.Fragment>
-      {showAlert && <Alert severity="error" className="alert-container">3000 마일리지 이상이어야 교환신청이 가능합니다.</Alert>}
+      {showAlert && <Alert severity="error" className='signup-alert' sx={{justifyContent:'center'}}>3000 마일리지 이상이어야 교환신청이 가능합니다.</Alert>}
       <div className="account-main-container">
         <div className="account-header-container" style={{ color: "white" }}>
           <div className="account-padding-container">

@@ -6,12 +6,13 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import InCar from '../../components/mobile/incar';
 import { Container } from '@mui/material';
-import { setWhenEnteringCar, setFcmToken } from '../../redux/mobileUserinfo'; 
+import { setWhenEnteringCar } from '../../redux/mobileUserinfo'; 
 import http from "../../axios/http";
 import { setBoxItem, setmycar } from '../../redux/mobileparking'; 
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken } from "firebase/messaging";
+import { setFcmToken } from '../../redux/mobileUserinfo';
 
 const config = {
   apiKey: "AIzaSyAP0IeVXonU6Z5LjfuCHU-V256A0IW13B0",
@@ -158,6 +159,16 @@ function Parkinglot() {
   const Boxrow = useSelector((state) => state.mycar.Boxrow);
   const BoxColumn = useSelector((state) => state.mycar.BoxColumn);
   const allbox = Boxrow * BoxColumn
+  const carnum = () => {
+    let carnumlist = [];
+    for (let j = 0; j <= allbox; j++) {
+      carnumlist.push('');
+    }
+    for (let k = 0; k < BoxItem.length; k++) {
+      carnumlist[BoxItem[k].seatNumber] = BoxItem[k].carNumber;
+    }
+    return carnumlist;
+  }
   const Outtime = () => {
     let timelist = [];
     for (let j = 0; j <= allbox; j++) {
@@ -170,7 +181,7 @@ function Parkinglot() {
   }
   
   const outTimeArray = Outtime(); // Outtime 함수를 호출하여 반환된 배열을 저장
-
+  const carnumArray = carnum()
 
   const open = useSelector((state) => state.mobileInfo.whenEnteringCar);
 
@@ -195,46 +206,51 @@ function Parkinglot() {
   // Box 그리드를 생성하는 함수
   const renderBoxGrid = () => {
     const boxes = [];
-    for (let i = 0; i < Boxrow; i++) {
-      for (let j = 0; j < BoxColumn; j++) {
-        const index = i * BoxColumn + j;
-        const MycarIcon = i * BoxColumn + j === mycar-1;
-        boxes.push(
-          <button key={`${i}-${j}`} onClick={MycarIcon ? handleOpenMycarPage : null} style={{ border: 'none', backgroundColor: 'transparent', padding: 0 }}>
-            <Box key={`${i}-${j}`} sx={{
-              width: '4rem',
-              height: '5rem',
-              marginRight: '1rem',
-              marginLeft: '1rem',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: MycarIcon ? '#006DD1' : outTimeArray[index+1] !== '' ? '#EA6868' : '#FFFFFF',
-              flexDirection: 'column', // 수직 방향으로 아이콘과 텍스트 정렬
-            }}>
-              {MycarIcon && (
-                <>
-                  <img src={process.env.PUBLIC_URL + "/img/mobile/mycaricon2.png"} alt={"mycarimg2"} style={{display:'flex',position:'relative',top:'-1rem'}}></img>
-                  <img src={process.env.PUBLIC_URL + "/img/mobile/mycar.png"} alt={"carimg"} style={{position:'relative',top:'-1rem'}}></img>
-                </>
-              )}
-              {!MycarIcon && outTimeArray[index+1] && (
-                <>
-                <p style={{ color: '#B3B3B3', fontSize: '11px', textAlign: 'center', display: 'flex', position:'relative', top:'-1.3rem'}}>
-                  {outTimeArray[index+1].length > 10 ? `${outTimeArray[index+1].substring(2, 10).replace(/-/g, '.')}` : outTimeArray[index+1]}
-                </p>
-                <p style={{ color: '#FFFFFF', fontSize: '16px', textAlign: 'center', display: 'flex'}}>
-                  {BoxItem[index].carNumber}
-                </p>
-                <p style={{ color: '#000000', fontSize: '15px', textAlign: 'center', display: 'flex', position:'relative', top:'1.5rem', fontWeight:'bolder' }}>
-                  {outTimeArray[index+1].length > 10 ? `~${outTimeArray[index+1].substring(11, 16)}` : outTimeArray[index+1]}
-                </p>
-                </>
-              )}
-            </Box>
-          </button>
-        );
+    if (BoxItem.length !== 0) {
+      for (let i = 0; i < Boxrow; i++) {
+        for (let j = 0; j < BoxColumn; j++) {
+          const index = i * BoxColumn + j;
+          const MycarIcon = i * BoxColumn + j === mycar-1;
+          boxes.push(
+            <button key={`${i}-${j}`} onClick={MycarIcon ? handleOpenMycarPage : null} style={{ border: 'none', backgroundColor: 'transparent', padding: 0 }}>
+              <Box key={`${i}-${j}`} sx={{
+                width: '4rem',
+                height: '5rem',
+                marginRight: '1rem',
+                marginLeft: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: MycarIcon ? '#006DD1' : outTimeArray[index+1] !== '' ? '#EA6868' : '#FFFFFF',
+                flexDirection: 'column', // 수직 방향으로 아이콘과 텍스트 정렬
+              }}>
+                {MycarIcon && (
+                  <>
+                    <img src={process.env.PUBLIC_URL + "/img/mobile/mycaricon2.png"} alt={"mycarimg2"} style={{display:'flex',position:'relative',top:'-1rem'}}></img>
+                    <img src={process.env.PUBLIC_URL + "/img/mobile/mycar.png"} alt={"carimg"} style={{position:'relative',top:'-1rem'}}></img>
+                  </>
+                )}
+                {!MycarIcon && outTimeArray[index+1] && (
+                  <>
+                  <p style={{ color: '#B3B3B3', fontSize: '11px', textAlign: 'center', display: 'flex', position:'relative', top:'-1.3rem'}}>
+                    {outTimeArray[index+1].length > 10 ? `${outTimeArray[index+1].substring(2, 10).replace(/-/g, '.')}` : outTimeArray[index+1]}
+                  </p>
+                  {carnumArray[index+1] && (
+                    <p style={{ color: '#FFFFFF', fontSize: '16px', textAlign: 'center', display: 'flex'}}>
+                      {carnumArray[index+1]}
+                    </p>
+                  )}
+                  <p style={{ color: '#000000', fontSize: '15px', textAlign: 'center', display: 'flex', position:'relative', top:'1.5rem', fontWeight:'bolder' }}>
+                    {outTimeArray[index+1].length > 10 ? `~${outTimeArray[index+1].substring(11, 16)}` : outTimeArray[index+1]}
+                  </p>
+                  </>
+                )}
+              </Box>
+            </button>
+          );
+        }
       }
+
     }
     return boxes;
   };
