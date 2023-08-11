@@ -44,8 +44,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select u from User u where u.loginId=:loginId and u.active=:active")
     Optional<User> findByLoginIdAndActive(@Param("loginId") String loginId, @Param("active") Active active);
 
-    @Query("select u from User u where u.loginId=:loginId and u.phoneNumber=:phoneNumber")
-    Optional<User> findByLoginIdAndPhone(@Param("loginId") String loginId, @Param("phoneNumber") String phoneNumber);
+    @Query("select u from User u where u.loginId=:loginId and u.phoneNumber=:phoneNumber and u.active=:active")
+    Optional<User> findByLoginIdAndPhone(@Param("loginId") String loginId, @Param("phoneNumber") String phoneNumber, @Param("active") Active active);
 
     @Query("select u from User u where u.loginId=:userIdOne or u.loginId=:userIdTwo and u.active=:active")
     List<User> findUsersByLoginId(@Param("userIdOne") String userIdOne, @Param("userIdTwo") String userIdTwo, @Param("active") Active active);
