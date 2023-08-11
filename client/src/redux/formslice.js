@@ -25,6 +25,8 @@ const initialState = {
       parkingLotCol: '',
       privacyAgreement: false
   },
+    signOpen: false,
+    signMessage:""
 };
 
 const formSlice = createSlice({
@@ -45,8 +47,14 @@ const formSlice = createSlice({
       state.step2Data = initialState.step2Data;
       state.step3Data = initialState.step3Data;
     },
+    setSignOpen: (state, action) => {
+      state.signOpen = action.payload;
+    },
+    setSignMessage: (state, action) => {
+      state.signMessage = action.payload;
+    },
   },
 });
 
-export const { setStep1Data, setStep2Data, setStep3Data, resetForm} = formSlice.actions;
+export const { setStep1Data, setStep2Data, setStep3Data, resetForm, setSignOpen, setSignMessage} = formSlice.actions;
 export default formSlice.reducer;

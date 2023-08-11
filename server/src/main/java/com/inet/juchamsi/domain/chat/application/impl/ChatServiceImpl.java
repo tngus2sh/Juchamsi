@@ -8,6 +8,7 @@ import com.inet.juchamsi.domain.chat.dto.request.*;
 import com.inet.juchamsi.domain.chat.dto.response.ChatRoomResponse;
 import com.inet.juchamsi.domain.chat.dto.service.ChatRoomUserDto;
 import com.inet.juchamsi.domain.chat.dto.service.MessageChatRoomDto;
+import com.inet.juchamsi.domain.chat.dto.service.SenderInfoDto;
 import com.inet.juchamsi.domain.chat.dto.service.SystemMessageDto;
 import com.inet.juchamsi.domain.chat.entity.ChatPeople;
 import com.inet.juchamsi.domain.chat.entity.ChatRoom;
@@ -16,6 +17,8 @@ import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.global.error.AlreadyExistException;
 import com.inet.juchamsi.global.error.NotFoundException;
+import com.inet.juchamsi.global.notification.application.FirebaseCloudMessageService;
+import com.inet.juchamsi.global.notification.dto.request.FCMNotificationRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -37,6 +40,7 @@ public class ChatServiceImpl implements ChatService {
     private final ChatPeopleRepository chatPeopleRepository;
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
+    private final FirebaseCloudMessageService firebaseCloudMessageService;
     
     // 채팅방 불러오기
     @Override
@@ -133,6 +137,38 @@ public class ChatServiceImpl implements ChatService {
         messageRepository.save(Message.builder()
                 .chatPeople(chatPeople.get())
                 .content(message)
+                .build());
+    }
+
+    /**
+     * 
+     * @param senderInfoDto 채팅방 메시지 dto
+     */
+    @Override
+    public void sendNotification(SenderInfoDto senderInfoDto) {
+        String userId = senderInfoDto.getSenderId();
+        String message = senderInfoDto.getMessage();
+        String roomId = senderInfoDto.getRoomId();
+        
+        // 채팅방 아이디로 채팅방 사용자들 목록 불러오기
+        List<User> userList = chatRoomRepository.findChatPeopleByRoomIdAndStatus(roomId, ALIVE);
+        if (userList.isEmpty()) {
+            throw new NotFoundException(ChatRoom.class, roomId);
+        }
+        
+        // 불러온 목록 중에서 보낸 사람이 아닌 사람을 찾는다.
+        String senderId = "";
+        for (User user : userList) {
+            if (!user.getLoginId().equals(userId)){ 
+                senderId = user.getLoginId();
+            }
+        }
+        
+        // 해당 아이디에게 메시지 알람을 보냄
+        firebaseCloudMessageService.sendNotification(FCMNotificationRequest.builder()
+                .loginId(senderId)
+                .title(userId + "님께서 메시지를 보냈습니다.")
+                .body(message)
                 .build());
     }
 

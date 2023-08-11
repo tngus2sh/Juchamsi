@@ -1,18 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import "./account.css";
 import Footer from "./footer";
 import { useSelector, useDispatch } from "react-redux";
-import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
-import EditIcon from "@mui/icons-material/Edit";
-import Fab from "@mui/material/Fab";
 import { useNavigate } from "react-router-dom";
-import DescriptionIcon from "@mui/icons-material/Description";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import http from "../../axios/http";
 import { setMileageList, setLogout } from "../../redux/mobileUserinfo";
-import { Button, Container, Grid, Typography } from "@mui/material";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import LocalParkingRoundedIcon from "@mui/icons-material/LocalParkingRounded";
 import dayjs from "dayjs";
@@ -25,34 +20,18 @@ function Account() {
   const name = useSelector((state) => state.mobileInfo.name);
   let totalmileage = useSelector((state) => state.mobileInfo.totalMileage);
   const [MileageOpen, setMileageOpen] = React.useState(false);
-  const ID = useSelector((state) => state.mobileInfo.id);
-  const imageUrl = useSelector((state) => state.mobileInfo.imageUrl); // 이미지 URL 가져오기
-
-  const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
-  const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
   // { 'id': 1, 'point': 100, 'type': '적립', 'description': '출금 시간 등록 적립', 'createdDate': 날짜, 'lastModifiedDate': 날짜}
   const alltext = useSelector((state) => state.mobileInfo.mileagelist);
 
   const carNumber = useSelector((state) => state.mobileInfo.carNumber);
   const [showAlert, setShowAlert] = React.useState(false);
-  const logincheck = useSelector((state) => state.auth.isAutoLoginChecked)
+  const logincheck = useSelector((state) => state.auth.loginchecked)
 
   useEffect(() => {
-      if (logincheck === false) {
+      if (logincheck !== true) {
           navigate('/Mobile/Login')
         }
-      })
-  useEffect(() => {
-    const handleResize = () => {
-      setViewportWidth(window.innerWidth);
-      setViewportHeight(window.innerHeight);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+      }, [logincheck, navigate])
 
   useEffect(() => {
     http({
@@ -69,14 +48,14 @@ function Account() {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [dispatch,loginId]);
 
   const handleSignoutOpen = () => {
     http({
       method: "delete",
       url: `/tenant/${loginId}`,
     })
-      .then((res) => {
+      .then(() => {
         navigate("/Mobile/Login");
       })
       .catch((err) => {

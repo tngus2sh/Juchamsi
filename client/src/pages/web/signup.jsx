@@ -32,17 +32,16 @@ const SignUpPage = () => {
   return (
     <ThemeProvider theme={theme}>
       <Container
-        sx={{ display: "flex", justifyContent: "center", marginTop: "130px" }}
-        style={{ paddingLeft: "150px", paddingRight: "150px" }}
+        sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}
       >
-        <Paper elevation={3} style={{ borderRadius: 20 }}>
-          <Grid container style={{ height: "500px", width: "840px" }}>
+        <Paper elevation={3} sx={{ borderRadius: "3rem", height: "30rem", width: "52rem" }}>
+          <Grid container>
             <Grid item xs={7}>
               <Container component="main">
                 <CssBaseline />
                 <Box
                   sx={{
-                    marginTop: 3,
+                    marginTop: "1.3rem",
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
@@ -58,19 +57,18 @@ const SignUpPage = () => {
             <Grid
               item
               xs={5}
-              style={{
+              sx={{
                 backgroundColor: "#B7C4CF",
-                borderTopRightRadius: 20,
-                borderBottomRightRadius: 20,
+                borderTopRightRadius: "3rem",
+                borderBottomRightRadius: "3rem",
+                height: "30rem",
               }}
             >
-              <div style={{ marginTop: "50px" }}>
-                <img
-                  src={`${process.env.PUBLIC_URL}/images/logo.png`}
-                  style={{ width: "250px", height: "250px" }}
-                  alt="Logo"
-                />
-              </div>
+              <img
+                src={`${process.env.PUBLIC_URL}/images/logo.png`}
+                style={{ marginTop: "3.5rem", width: "250px", height: "250px" }}
+                alt="Logo"
+              />
             </Grid>
           </Grid>
         </Paper>

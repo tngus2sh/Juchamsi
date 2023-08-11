@@ -2,7 +2,6 @@ import React, {useEffect} from "react";
 import "./mycarparking.css";
 import Footer from "./footer";
 import { useSelector, useDispatch } from "react-redux";
-import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import dayjs from "dayjs";
@@ -15,21 +14,26 @@ import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import "dayjs/locale/ko";
 import Modal from "@mui/material/Modal";
-import { Container, Grid, Typography } from "@mui/material";
+import { Container } from "@mui/material";
 import http from "../../axios/http";
 import Alert from "@mui/material/Alert";
 
-import { setBoxItem, setOuttime, setmycar, setParkingnow } from "../../redux/mobileparking";
+import { setBoxItem, setmycar } from "../../redux/mobileparking";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import MinorCrashRoundedIcon from "@mui/icons-material/MinorCrashRounded";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
 function MycarParking() {
-  const logincheck = useSelector((state) => state.auth.isAutoLoginChecked)
+  const logincheck = useSelector((state) => state.auth.loginchecked)
   const villanumber = useSelector((state) => state.mobileInfo.villaIdNumber);
+  const othercarphonenumber = null;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const userid = useSelector((state) => state.mobileInfo.loginId);
+  const vilanumber = useSelector((state) => state.mobileInfo.villaIdNumber);
   useEffect(() => {
     const fetchData = async () => {
-      if (logincheck === false) {
+      if (logincheck !== true) {
         navigate('/Mobile/Login')
       }
       try {
@@ -60,12 +64,12 @@ function MycarParking() {
 
     // fetchData 함수를 호출하여 데이터를 받아옴
     fetchData();
-  }, []); // 빈 배열을 넣어서 페이지 로드 시에만 useEffect 내부 코드가 실행되도록 설정
+  }, [dispatch,logincheck,navigate,userid,villanumber]); // 빈 배열을 넣어서 페이지 로드 시에만 useEffect 내부 코드가 실행되도록 설정
 
 
-  const navigate = useNavigate();
+
   dayjs.locale("ko");
-  const dispatch = useDispatch();
+
   // Redux의 상태를 가져와서 사용
   // 주차장 해당위치 주차한 차량 아이디
   const BoxItem = useSelector((state) => state.mycar.BoxItem);
@@ -98,6 +102,16 @@ function MycarParking() {
         othercarouttime = outTimeArray[othercarnum];
       }
     }
+    if (othercarnum !== null && othercarnum < 0) {
+      http({
+        method:'',
+        url:`/tenant/${BoxItem[othercarnum]}`
+      })
+      .then((res) => {
+        console.log(res)
+        // othercarphonenumber = res.data.response('')
+      })
+    }
     return othercarouttime;
   };
 
@@ -114,6 +128,16 @@ function MycarParking() {
         othercarouttime = outTimeArray[othercarnum];
       }
     }
+    if (othercarnum !== null && othercarnum < 0) {
+      http({
+        method:'',
+        url:`/tenant/${BoxItem[othercarnum]}`
+      })
+      .then((res) => {
+        console.log(res)
+        // othercarphonenumber = res.data.response('')
+      })
+    }
     return othercarouttime;
   };
   // 앞차 출차시간
@@ -121,8 +145,7 @@ function MycarParking() {
   // 뒤차 출차시간
   const backothercarouttime = backothercar()
 
-  const userid = useSelector((state) => state.mobileInfo.loginId);
-  const vilanumber = useSelector((state) => state.mobileInfo.villaIdNumber);
+
   // 앞차 존재 여부
   const isfrontothercar = frontothercarouttime !== null;
 
@@ -328,7 +351,7 @@ function MycarParking() {
                 </div>
                 <div className="other-phonenumber-text">
                   {/* 핸드폰 번호는 별도로 api요청해서 받아와야함 */}
-                  010-1234-5678
+                  {othercarphonenumber}
                 </div>
               </div>
             </div>
@@ -377,7 +400,7 @@ function MycarParking() {
 
           {/* 겹주차 없을때 보여줄 내용 */}
           {!isbackothercar && !isfrontothercar && (
-            <div className="double-car-parking-container" style={{height:'14.5rem'}}>
+            <div className="double-car-parking-container" style={{height:'12.2rem', marginTop:'2rem'}}>
               <div className="double-parking-container" style={{ textAlign: "left", marginTop:'2rem' }}>
                 <div className="bold-text" style={{ fontSize: "1.2rem" }}>
                   겹주차 현황

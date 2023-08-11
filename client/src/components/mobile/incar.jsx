@@ -104,13 +104,36 @@ const InCar = (props) => {
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        <Container sx={{ width: "100%" }}>
-          <Typography sx={{ mt: "10%" }} variant="h6" component="h2">
-            주차를 완료하였습니다
-          </Typography>
-          <Typography sx={{ mt: "10%" }} variant="h6" component="h2">
-            출차시간을 입력해주세요 (최소 30분 이상)
-          </Typography>
+        <div style={{ color: "white" }}>
+          <div style={{width:'20rem', backgroundColor:'#006DD1', marginLeft:'-1rem',marginTop:'-2.2rem', borderRadius:'1rem', height:'11rem'}}>
+            <div className="account-header-info-container" style={{ paddingTop: "3rem", textAlign: "left" }}>
+              <span style={{ fontSize: "1.2rem", marginLeft:'1rem', fontWeight:'bold' }}>
+                출차 시간을
+              </span>
+              <br/>
+              <span style={{ fontSize: "1.2rem", marginLeft:'1rem' }}>
+                등록해주세요!
+              </span>
+            </div>
+            <div className="account-header-content-container" style={{ marginTop: "2.5rem", textAlign: "left" }}>
+              <div className="account-header-content-flex-container" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div className="account-header-info-container">
+                  <div className="account-header-name-container">
+                    <span>
+                      <span style={{ fontSize: "0.9rem", marginLeft:'8rem' }}>
+                      ※ 출차시간을 등록해야
+                      </span>
+                      <br/>
+                      <span style={{ fontSize: "0.9rem", marginLeft:'9rem' }}>
+                      서비스 이용이 가능합니다.
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
           <Box sx={{ weight: "100%", mt: "25%" }}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <MobileDatePicker
@@ -134,12 +157,15 @@ const InCar = (props) => {
                   sx={{ "& input": { textAlign: "center" } }}
                 />
               </DemoContainer>
-              <Button sx={{ mt: "30%" }} onClick={handleOk}>
-                등록
-              </Button>
+              <button
+                  className="login-box"
+                  onClick={handleOk}
+                  style={{ marginTop: "1.7rem", backgroundColor: "#006DD1", color: "white", marginBottom: "1rem", width:'10rem', borderRadius:'1rem' }}
+                >
+                  확인
+              </button>
             </LocalizationProvider>
           </Box>
-        </Container>
       </Box>
     </Modal>
   );

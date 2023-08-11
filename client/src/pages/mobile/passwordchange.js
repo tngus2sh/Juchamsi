@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./passwordchange.css";
 import Footer from "./footer";
-import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
-import FormControl from "@mui/material/FormControl";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import IconButton from "@mui/material/IconButton";
@@ -55,7 +50,7 @@ function Passwordchange() {
   };
 
   useEffect(() => {
-    if (logincheck === false) {
+    if (logincheck !== true) {
         navigate('/Mobile/Login')
       }
     })

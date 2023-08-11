@@ -17,12 +17,13 @@ public class TenantLoginResponse {
     private int villaNumber;
     private String approved;
     private Villa villa;
+    private String FCMToken;
 
 
     public TenantLoginResponse() {}
 
     @Builder
-    public TenantLoginResponse(TokenInfo tokenInfo, Long id, String phoneNumber, String loginId, String name, int totalMileage, String carNumber, int villaNumber, String approved, Villa villa) {
+    public TenantLoginResponse(TokenInfo tokenInfo, Long id, String phoneNumber, String loginId, String name, int totalMileage, String carNumber, int villaNumber, String approved, Villa villa, String FCMToken) {
         this.tokenInfo = tokenInfo;
         this.id = id;
         this.phoneNumber = phoneNumber;
@@ -33,5 +34,6 @@ public class TenantLoginResponse {
         this.villaNumber = villaNumber;
         this.approved = approved;
         this.villa = villa;
+        this.FCMToken = FCMToken;
     }
 }

@@ -1,22 +1,12 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./updateaccount.css";
 import Footer from "./footer";
 import { useSelector, useDispatch } from "react-redux";
-import Avatar from "@mui/material/Avatar";
-import Stack from "@mui/material/Stack";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
-import EditNoteIcon from "@mui/icons-material/EditNote";
 import { useNavigate } from "react-router-dom";
-import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
-import { setCarNumber, setphoneNumber, setVillaNumber, setImageUrl, setLogout } from "../../redux/mobileUserinfo";
-import { Grid } from "@mui/material";
-import Button from "@mui/material/Button";
+import { setCarNumber, setphoneNumber, setVillaNumber } from "../../redux/mobileUserinfo";
 import UpdateModal from "../../components/mobile/updateModal";
-import { styled } from "@mui/material/styles";
-import Paper from "@mui/material/Paper";
 import http from "../../axios/http";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -48,23 +38,13 @@ function Account() {
   const handleClosePhoneTrueCheck = () => setPhoneModalTrueOpen(false);
   const [newcarResult, setnewResult] = React.useState(false);
   const [newhouseResult, setnewhouseResult] = React.useState(false);
-  const fileInput = useRef(null);
-  const imageUrl = useSelector((state) => state.mobileInfo.imageUrl); // 이미지 URL 가져오기
-  const logincheck = useSelector((state) => state.auth.isAutoLoginChecked)
+  const logincheck = useSelector((state) => state.auth.loginchecked)
 
   useEffect(() => {
-      if (logincheck === false) {
+      if (logincheck !== true) {
           navigate('/Mobile/Login')
         }
       })
-      
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: "center",
-    color: theme.palette.text.secondary,
-  }));
 
   const style3 = {
     position: "fixed",
@@ -109,39 +89,8 @@ function Account() {
     setnewhouseResult(false); // 모달 닫기
   };
 
-  const editnoteclick5 = () => {
-    console.log("editnoteclick5");
-  };
-
   const handleopenmypage = () => {
     navigate("/Mobile/Account");
-  };
-
-  const handleLoginoutOpen = () => {
-    http({
-      method: "get",
-      url: `/tenant/logout/${loginId}`,
-    })
-      .then(() => {
-        dispatch(setLogout());
-        navigate("/Mobile/Login");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const handleSignoutOpen = () => {
-    http({
-      method: "delete",
-      url: `/tenant/${loginId}`,
-    })
-      .then((res) => {
-        navigate("/Mobile/Login");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   };
 
   const handleOpenupdatephonenumber = () => {
@@ -349,21 +298,6 @@ function Account() {
       });
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-
-    if (file) {
-      const reader = new FileReader();
-
-      reader.onload = (e) => {
-        const imageUrl = e.target.result;
-        dispatch(setImageUrl(imageUrl)); // 이미지 URL을 Redux 상태에 저장
-      };
-
-      reader.readAsDataURL(file);
-    }
-  };
-
   return (
     <React.Fragment>
       <div className="update-account-main-container">
@@ -454,31 +388,9 @@ function Account() {
                 </div>
               </div>
             </div>
-
-            <div onClick={editnoteclick5} className="update-account-easy-pw-container input-container">
-              <div className="update-account-flex-container">
-                <div className="update-account-info-container">
-                  <span className="bold-text">간편 비밀번호</span>
-                </div>
-                <div className="update-account-content-container">
-                  <span>{}******&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                  <ArrowForwardIosRoundedIcon sx={{ fontSize: "1rem" }} />
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
-
-      {/* <input type="file" accept="image/*" style={{ display: "none" }} ref={fileInput} onChange={handleImageChange} /> */}
-
-      {/* <Box component="span" className="Loginoutbtn" onClick={handleLoginoutOpen}>
-        <p className="Loginoutbtntext">로그아웃</p>
-      </Box>
-
-      <Box component="span" className="Signoutbtn" onClick={handleSignoutOpen}>
-        <p className="Signoutbtntext">회원탈퇴</p>
-      </Box> */}
 
       {/* 핸드폰 인증 */}
       <UpdateModal

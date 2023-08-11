@@ -29,9 +29,11 @@ import SendIcon from "@mui/icons-material/Send";
 import Fab from "@mui/material/Fab";
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
 import { isToday, isSameDay, format } from "date-fns";
+import { setReadMessage } from "../../redux/mobileUserinfo";
 
 const Messagedetail = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const params = useParams();
   const roomId = params.id;
   const [targetNickName, setTargetNickName] = useState("");
@@ -298,6 +300,7 @@ const Messagedetail = () => {
               borderRadius: "200px",
               border: "none",
               backgroundColor: "#f0f0f0",
+              outline: "none",
             }}
             value={message}
             onChange={handleMessageChange}

@@ -32,7 +32,6 @@ function Termessage() {
 
   const [chatRooms, setChatRooms] = useState([]);
 
-  const [lastMessageInfo, setLastMessageInfo] = useState([]);
   // const [lastMessageContent, setLastMessageContent] = useState([]);
   // const [lastMessageTime, setLastMessageTime] = useState([]);
   // const [toNickName, setToNickName] = useState([]);
@@ -41,16 +40,15 @@ function Termessage() {
     findAllRoom();
   }, []);
 
-  const findAllRoom = () => {
-    http
+  const findAllRoom = async () => {
+    await http
       .get(`/chat/rooms/${loginId}`)
       .then((response) => {
         console.log("대화방 리스트");
-        console.log(response.data.response);
-        setChatRooms(response.data.response);
-        response.data.response.forEach((item) => {
+
+        for (const item of response.data.response) {
           fetchMessage(item.roomId);
-        });
+        }
       })
       .catch((error) => {
         console.error("Error while fetching chat rooms:", error);
@@ -67,9 +65,11 @@ function Termessage() {
         const messageList = response.data.response.messageList;
         const lastMessage = messageList[messageList.length - 1];
 
-        setLastMessageInfo((prevChatRoomInfos) => [
+        setChatRooms((prevChatRoomInfos) => [
           ...prevChatRoomInfos,
           {
+            roomId: response.data.response.roomId,
+            roomName: response.data.response.roomName,
             toNickName: response.data.response.nickName,
             lastMessageContent: lastMessage.message,
             lastMessageTime: lastMessage.createdDate,
@@ -122,7 +122,7 @@ function Termessage() {
   return (
     <React.Fragment>
       <Box sx={{ p: "0.8rem" }}>
-        <Typography variant={"h5"} sx={{ textAlign: "start", fontWeight: "bold" }}>
+        <Typography variant={"h5"} sx={{ textAlign: "start", fontFamily: "Poppins-Bold" }}>
           Messages
         </Typography>
       </Box>
@@ -133,9 +133,9 @@ function Termessage() {
         }}
       >
         <List sx={{ width: "100%", p: "0" }}>
-          {chatRooms.map((item) =>
+          {chatRooms.map((item, index) =>
             item.roomName === "주참시" ? (
-              <React.Fragment>
+              <React.Fragment key={index}>
                 <ListItem
                   sx={{
                     "&:active": {
@@ -147,15 +147,13 @@ function Termessage() {
                 >
                   <ListItemText
                     primary="시스템"
-                    secondary={lastMessageInfo.lastMessageContent}
+                    secondary={item.lastMessageContent}
                     sx={{ height: "2.5rem", color: "#EE1D52" }}
                   />
                   <ListItemAvatar>
                     <div style={{ display: "flex", marginBottom: "1.2rem", justifyContent: "end" }}>
                       <Typography sx={{ fontSize: ".5rem" }}>
-                        {lastMessageInfo.lastMessageTime
-                          ? formatDateTime(lastMessageInfo.lastMessageTime)
-                          : ""}
+                        {item.lastMessageTime ? formatDateTime(item.lastMessageTime) : ""}
                       </Typography>
                       <ArrowForwardIosIcon sx={{ height: ".8rem" }} />
                     </div>
@@ -175,14 +173,14 @@ function Termessage() {
                   onClick={() => enterRoom(item.roomId, item.roomName)}
                 >
                   <ListItemText
-                    primary={lastMessageInfo.toNickName}
-                    secondary={lastMessageInfo.lastMessageContent}
+                    primary={item.toNickName}
+                    secondary={item.lastMessageContent}
                     sx={{ height: "2.5rem" }}
                   />
                   <ListItemAvatar>
                     <div style={{ display: "flex", marginBottom: "1.2rem" }}>
                       <Typography sx={{ fontSize: ".5rem" }}>
-                        {formatDateTime(lastMessageInfo.lastMessageTime)}
+                        {formatDateTime(item.lastMessageTime)}
                       </Typography>
                       <ArrowForwardIosIcon sx={{ height: ".8rem" }} />
                     </div>

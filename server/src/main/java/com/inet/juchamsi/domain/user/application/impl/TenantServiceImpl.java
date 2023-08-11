@@ -2,10 +2,13 @@ package com.inet.juchamsi.domain.user.application.impl;
 
 import com.inet.juchamsi.domain.chat.application.ChatService;
 import com.inet.juchamsi.domain.chat.dto.request.SystemChatRoomRequest;
+import com.inet.juchamsi.domain.token.dao.TokenRepository;
+import com.inet.juchamsi.domain.token.entity.Token;
 import com.inet.juchamsi.domain.user.application.TenantService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.CreateTenantRequest;
 import com.inet.juchamsi.domain.user.dto.request.LoginRequest;
+import com.inet.juchamsi.domain.user.dto.request.ModifyTenantPasswordRequest;
 import com.inet.juchamsi.domain.user.dto.request.ModifyTenantRequest;
 import com.inet.juchamsi.domain.user.dto.response.TenantLoginResponse;
 import com.inet.juchamsi.domain.user.dto.response.TenantResponse;
@@ -46,6 +49,7 @@ public class TenantServiceImpl implements TenantService {
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
     private final ChatService chatService;
+    private final TokenRepository tokenRepository;
 
     @Override
     public Long createUser(CreateTenantRequest request) {
@@ -159,6 +163,10 @@ public class TenantServiceImpl implements TenantService {
             throw new NotFoundException(User.class, loginId);
         }
 
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginId, password);
+
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
         Approve approve = targetUser.get().getApprove();
         if(approve == WAIT) {
             throw new NotFoundException(User.class, "WAIT");
@@ -170,27 +178,21 @@ public class TenantServiceImpl implements TenantService {
             throw new NotFoundException(User.class, "DECLINE");
         }
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginId, password);
-
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-
         TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
 
-        userRepository.updateRefreshToken(loginId, password);
+        userRepository.updateRefreshToken(loginId, tokenInfo.getRefreshToken());
 
         Optional<User> userOptional = userRepository.findByLoginId(loginId);
         if (userOptional.isEmpty()) {
             throw new NotFoundException(User.class, loginId);
         }
         User user = userOptional.get();
-//        String isKeyPinRegist = null;
-//
-//        // 간편 비밀번호 등록 되어있는지 확인
-//        if (user.getKeepKeyPin() == null) {
-//            isKeyPinRegist = "FALSE";
-//        } else {
-//            isKeyPinRegist = "TRUE";
-//        }
+
+        String FCMToken = "";
+        Optional<Token> findToken = tokenRepository.findByUserLoginId(user.getLoginId());
+        if( findToken.isPresent()) {
+            FCMToken = findToken.get().getFCMToken();
+        }
         
         Villa targetVilla = user.getVilla();
         Villa villa = Villa.builder()
@@ -212,6 +214,7 @@ public class TenantServiceImpl implements TenantService {
                 .villaNumber(user.getVillaNumber())
                 .approved(user.getApprove().name())
                 .villa(villa)
+                .FCMToken(FCMToken)
                 .build();
     }
 
@@ -223,6 +226,29 @@ public class TenantServiceImpl implements TenantService {
         }
 
         userRepository.updateRefreshToken(tenantId, "");
+
+    }
+
+    @Override
+    public void modifyPassword(ModifyTenantPasswordRequest request) {
+        String userId = request.getUserId();
+        String presentPwd = request.getPresentPwd();
+        String modifyPwd = passwordEncoder.encode(request.getModifyPwd());
+        
+        // 아이디와 현재 비밀번호로 해당 사용자가 있는지 확인
+        Optional<User> targetUser = userRepository.existLoginIdAndActiveAndGrade(userId, ACTIVE, USER);
+        if (targetUser.isEmpty()) {
+            throw new NotFoundException(User.class, userId);
+        }
+        
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, presentPwd);
+
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        
+        // 맞다면 바꿀 비밀번호로 변경
+        userRepository.updatePassword(userId, modifyPwd);
+        TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
+        userRepository.updateRefreshToken(userId, tokenInfo.getRefreshToken());
 
     }
 
