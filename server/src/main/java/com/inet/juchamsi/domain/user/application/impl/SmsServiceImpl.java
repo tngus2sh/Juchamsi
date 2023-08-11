@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inet.juchamsi.domain.user.application.SmsService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.dto.request.MessageRequest;
+import com.inet.juchamsi.domain.user.dto.request.PasswordMessageRequest;
+import com.inet.juchamsi.domain.user.dto.request.PasswordSmsRequest;
 import com.inet.juchamsi.domain.user.dto.request.SmsRequest;
 import com.inet.juchamsi.domain.user.dto.response.SmsResponse;
 import com.inet.juchamsi.global.error.NotFoundException;
@@ -118,13 +120,13 @@ public class SmsServiceImpl implements SmsService {
     }
 
     @Override
-    public SmsResponse sendSmsToFindPassword(MessageRequest messageRequest) throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
-        String name = messageRequest.getName();
+    public SmsResponse sendSmsToFindPassword(PasswordMessageRequest messageRequest) throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
+        String userId = messageRequest.getUserId();
         String phoneNumber = messageRequest.getTo();
 
-        userRepository.findByNameAndPhone(name, phoneNumber)
+        userRepository.findByLoginIdAndPhone(userId, phoneNumber)
                 .orElseThrow(() ->
-                        new NotFoundException("회원이 존재하지 않습니다.", name));
+                        new NotFoundException("회원이 존재하지 않습니다.", userId));
 
         String time = Long.toString(System.currentTimeMillis());
 
@@ -134,11 +136,11 @@ public class SmsServiceImpl implements SmsService {
         headers.set("x-ncp-iam-access-key", accessKey);
         headers.set("x-ncp-apigw-signature-v2", getSignature(time)); // signature 서명
 
-        List<MessageRequest> messages = new ArrayList<>();
+        List<PasswordMessageRequest> messages = new ArrayList<>();
         messages.add(messageRequest);
 
         String verificationCode = validationUtil.createTempPassword();
-        SmsRequest request = SmsRequest.builder()
+        PasswordSmsRequest request = PasswordSmsRequest.builder()
                 .type("SMS")
                 .contentType("COMM")
                 .countryCode("82")
@@ -160,7 +162,7 @@ public class SmsServiceImpl implements SmsService {
 
         System.out.println("response = " + response);
 
-        userRepository.updateLoginPassword(name, phoneNumber, passwordEncoder.encode(verificationCode));
+        userRepository.updateLoginPassword(userId, phoneNumber, passwordEncoder.encode(verificationCode));
         // redisUtil.setDataExpire(smsConfirmNum, messageDto.getTo(), 60 * 3L); // 유효시간 3분
         return response;
     }
