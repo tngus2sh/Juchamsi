@@ -30,7 +30,7 @@ function MileageChange() {
     const [bankName, setBankName] = React.useState(10); // 기본 값 설정
     const [password1, setPasswordLocal1] = React.useState('');
     const [simplePasswordEntered, setSimplePasswordEntered] = React.useState(false);
-    const logincheck = useSelector((state) => state.auth.isAutoLoginChecked)
+    const logincheck = useSelector((state) => state.auth.loginchecked)
 
     useEffect(() => {
         if (logincheck !== true) {

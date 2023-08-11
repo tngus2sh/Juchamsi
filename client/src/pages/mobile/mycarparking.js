@@ -24,7 +24,7 @@ import MinorCrashRoundedIcon from "@mui/icons-material/MinorCrashRounded";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
 function MycarParking() {
-  const logincheck = useSelector((state) => state.auth.setloginchecked)
+  const logincheck = useSelector((state) => state.auth.loginchecked)
   const villanumber = useSelector((state) => state.mobileInfo.villaIdNumber);
   const othercarphonenumber = null;
   const dispatch = useDispatch();

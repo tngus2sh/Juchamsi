@@ -38,7 +38,7 @@ function Account() {
   const handleClosePhoneTrueCheck = () => setPhoneModalTrueOpen(false);
   const [newcarResult, setnewResult] = React.useState(false);
   const [newhouseResult, setnewhouseResult] = React.useState(false);
-  const logincheck = useSelector((state) => state.auth.isAutoLoginChecked)
+  const logincheck = useSelector((state) => state.auth.loginchecked)
 
   useEffect(() => {
       if (logincheck !== true) {

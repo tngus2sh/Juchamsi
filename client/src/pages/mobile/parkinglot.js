@@ -27,7 +27,7 @@ function Parkinglot() {
   const userid = useSelector((state) => state.mobileInfo.loginId)
   const name = useSelector((state) => state.mobileInfo.name)
   const villanumber = useSelector((state) => state.mobileInfo.villaIdNumber);
-  const logincheck = useSelector((state) => state.auth.setloginchecked)
+  const logincheck = useSelector((state) => state.auth.loginchecked)
   useEffect(() => {
     console.log(logincheck)
     const fetchData = async () => {
