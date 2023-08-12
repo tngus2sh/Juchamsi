@@ -96,7 +96,7 @@ def scan_bluetooth():
                             mostRecentSonar = lastSonarValues[mostFrequentMac]
                             # print(max(searched))
                             # print(searched)
-                            print(rpiMac, mostRecentSonar)
+                            print(rpiMac, mostRecentSonar, mostFrequentMac)
                             # print searched.index(max(searched))
                             if int(mostRecentSonar) < 30:
                                 print(nowParking[mostFrequentMacIndex])

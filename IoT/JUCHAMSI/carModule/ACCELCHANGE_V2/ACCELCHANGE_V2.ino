@@ -105,12 +105,12 @@ void loop() {
 //  Serial.print(", Z: ");
 //  Serial.print(a.acceleration.z);
 //  Serial.println(" m/s^2");
-  Serial.print("X_diff: ");
-  Serial.println(diffAccelX);
-  Serial.print("Y_diff: ");
-  Serial.println(diffAccelY);
-  Serial.print("Z_diff: ");
-  Serial.println(diffAccelZ);
+//  Serial.print("X_diff: ");
+//  Serial.println(diffAccelX);
+//  Serial.print("Y_diff: ");
+//  Serial.println(diffAccelY);
+//  Serial.print("Z_diff: ");
+//  Serial.println(diffAccelZ);
   Serial.print("tot_diff: ");
   Serial.println(diffAccelX+diffAccelY+diffAccelZ);
   prevAccelX = a.acceleration.x;
