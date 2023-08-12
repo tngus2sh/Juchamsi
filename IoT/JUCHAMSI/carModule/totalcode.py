@@ -24,9 +24,9 @@ def scan_bluetooth():
     state = 0
     cnt = 0
     repeat = 0
-    parking_url="https://453d-121-178-98-21.ngrok-free.app/parking/entrance"
-    exit_url = "https://453d-121-178-98-21.ngrok-free.app/parking/exit"
-    # url="https://e6f5-121-178-98-21.ngrok-free.app/parking/entrance"
+    parking_url="https://753c-121-178-98-21.ngrok-free.app/parking/entrance"
+    exit_url = "https://753c-121-178-98-21.ngrok-free.app/parking/exit"
+    SoundModuleUrl = "https://192.168.100.217/"
     datas={}
     ground_module = ['b0:a7:32:db:c8:46', 'cc:db:a7:69:74:4a','cc:db:a7:69:19:7a', 'b0:a7:32:db:c3:52', '40:91:51:fc:fd:6a']
     searched = [0, 0, 0, 0, 0]
@@ -54,7 +54,7 @@ def scan_bluetooth():
             print('not park')
             return
         if repeat == 300:
-            print('signal_disconnect')
+            print('signal_disconnect', cnt)
             return
         for beacon in returnedList:
             for comp_str in ground_module:
@@ -96,7 +96,7 @@ def scan_bluetooth():
                             mostRecentSonar = lastSonarValues[mostFrequentMac]
                             # print(max(searched))
                             # print(searched)
-                            print(rpiMac, mostRecentSonar)
+                            print(rpiMac, mostRecentSonar, mostFrequentMac)
                             # print searched.index(max(searched))
                             if int(mostRecentSonar) < 30:
                                 print(nowParking[mostFrequentMacIndex])
@@ -108,6 +108,7 @@ def scan_bluetooth():
                                     print('car_in')
                                     json_data = json.dumps(datas)
                                     response = requests.post(parking_url, data=json_data, headers=headers)
+                                    # response = requests.post(soundModuleUrl, data=json_data, headers=headers)
                             else:
                                 if nowParking[mostFrequentMacIndex] == 1:
                                     headers = {'Content-Type': 'application/json'}
@@ -115,7 +116,7 @@ def scan_bluetooth():
                                     nowParking[mostFrequentMacIndex] = 0
                                     print('car_out')
                                     json_data = json.dumps(datas)
-                                    response = requests.post(exit_url, data=datas)
+                                    response = requests.post(exit_url, data=json_data, headers=headers)
                             print searched.index(max(searched)), mostRecentSonar
                             return searched.index(max(searched))
 
