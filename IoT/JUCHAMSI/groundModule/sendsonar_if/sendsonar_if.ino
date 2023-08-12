@@ -162,6 +162,11 @@ void loop() {
       advertisementData.setFlags(0x1A);
       advertisementData.setManufacturerData(myBeacon.getData());
       pAdvertising->setAdvertisementData(advertisementData);
+
+      Serial.print("Advertising Beacon with Major: ");
+      Serial.print(distance);
+      Serial.print(", Minor: ");
+      Serial.println(duration);
   
       // 연결된 디바이스에 초음파 센서의 거리값을 전송합니다.
       if (deviceConnected) {
@@ -174,7 +179,6 @@ void loop() {
       // BLE 스캔 결과를 처리합니다.
       for (int i = 0; i < foundDevices.getCount(); i++) {
           BLEAdvertisedDevice device = foundDevices.getDevice(i);
-          // ... (이전 코드와 동일한 부분)
       }
   
       // 스캔 결과 처리가 끝났으면, 스캔을 멈춥니다.
