@@ -111,7 +111,6 @@ function MycarParking() {
         .then((res) => {
           othercarphonenumber = res.data.response.phoneNumber;
           othercarid = res.data.response.loginId;
-
       })
     }
     return othercarouttime;
@@ -136,7 +135,7 @@ function MycarParking() {
         url:`/tenant/${BoxItem[othercarnum]}`
       })
       .then((res) => {
-        othercarphonenumber = res.data.response('')
+        othercarphonenumber = res.data.response.phoneNumber
       })
     }
     return othercarouttime;
@@ -419,7 +418,7 @@ function MycarParking() {
                   핸드폰 번호
                 </div>
                 <div className="other-phonenumber-text">
-                  010-1234-5678
+                  {othercarphonenumber}
                 </div>
               </div>
             </div>

@@ -136,7 +136,7 @@ function Parkinglot() {
     } else {
       fetchFcmToken();
     }
-  }, []);
+  }, [fcmToken]);
 
   async function storeToken() {
     await http
@@ -194,7 +194,6 @@ function Parkinglot() {
       setViewportWidth(window.innerWidth);
       setViewportHeight(window.innerHeight);
     };
-
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
