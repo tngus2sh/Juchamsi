@@ -182,7 +182,26 @@ function MycarParking() {
 
   // 개인대화방으로 이동하게 추후 변경 필요
   const handleOpenChat = () => {
+    createRoom();
     navigate("/Mobile/Termessage");
+  };
+
+  const createRoom = () => {
+    http
+      .post("/chat/room", { userIdOne: userid, userIdTwo: "user2" })
+      .then((response) => {
+        console.log(response.data.response.roomId);
+        // // redux에 담음
+        // dispatch(setRoomNumber(response.data.response.roomId)); // 룸 넘버
+        // dispatch(setUser1(loginId)); // 로그인 한 유저
+
+        alert(`${response.data.response.roomName} 방 개설에 성공하였습니다.`);
+
+      })
+      .catch((error) => {
+        alert("채팅방 개설에 실패하였습니다.");
+        console.error("Error while creating chat room:", error);
+      });
   };
 
   function convertToDatePickerFormat(dateTimeString) {

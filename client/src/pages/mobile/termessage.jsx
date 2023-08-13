@@ -63,7 +63,8 @@ function Termessage() {
         console.log(response.data);
 
         const messageList = response.data.response.messageList;
-        const lastMessage = messageList[messageList.length - 1];
+
+        const lastMessage = messageList.length !== 0 ? messageList[messageList.length - 1] : 0;
 
         setChatRooms((prevChatRoomInfos) => [
           ...prevChatRoomInfos,
@@ -71,8 +72,8 @@ function Termessage() {
             roomId: response.data.response.roomId,
             roomName: response.data.response.roomName,
             toNickName: response.data.response.nickName,
-            lastMessageContent: lastMessage.message,
-            lastMessageTime: lastMessage.createdDate,
+            lastMessageContent: lastMessage === 0 ? "" : lastMessage.message,
+            lastMessageTime: lastMessage === 0 ? "" : lastMessage.createdDate,
           },
         ]);
       })
@@ -178,9 +179,9 @@ function Termessage() {
                     sx={{ height: "2.5rem" }}
                   />
                   <ListItemAvatar>
-                    <div style={{ display: "flex", marginBottom: "1.2rem" }}>
+                    <div style={{ display: "flex", marginBottom: "1.2rem", justifyContent: "end" }}>
                       <Typography sx={{ fontSize: ".5rem" }}>
-                        {formatDateTime(item.lastMessageTime)}
+                        {item.lastMessageTime ? formatDateTime(item.lastMessageTime) : ""}
                       </Typography>
                       <ArrowForwardIosIcon sx={{ height: ".8rem" }} />
                     </div>
