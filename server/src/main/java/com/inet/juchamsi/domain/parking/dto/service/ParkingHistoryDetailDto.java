@@ -16,9 +16,10 @@ public class ParkingHistoryDetailDto {
     private int frontNumber;
     private int backNumber;
     private Active active;
+    private int totalSeatNum;
 
     @Builder
-    public ParkingHistoryDetailDto(String userId, int seatNumber, LocalDateTime outTime, String carNumber, int frontNumber, int backNumber, Active active) {
+    public ParkingHistoryDetailDto(String userId, int seatNumber, LocalDateTime outTime, String carNumber, int frontNumber, int backNumber, Active active, int totalSeatNum) {
         this.userId = userId;
         this.seatNumber = seatNumber;
         this.outTime = outTime;
@@ -26,5 +27,6 @@ public class ParkingHistoryDetailDto {
         this.frontNumber = frontNumber;
         this.backNumber = backNumber;
         this.active = active;
+        this.totalSeatNum = totalSeatNum;
     }
 }
