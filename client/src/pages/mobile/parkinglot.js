@@ -13,6 +13,7 @@ import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken } from "firebase/messaging";
 import { setFcmToken } from '../../redux/mobileUserinfo';
+import Grid from '@mui/material/Grid';
 
 const config = {  
   apiKey: "AIzaSyAP0IeVXonU6Z5LjfuCHU-V256A0IW13B0",
@@ -208,27 +209,40 @@ function Parkinglot() {
 
 
   // Box 그리드를 생성하는 함수
-  const renderBoxGrid = () => {
-    const boxes = [];
-    if (BoxItem.length !== 0) {
-      for (let i = 0; i < Boxrow; i++) {
-        for (let j = 0; j < BoxColumn; j++) {
-          const index = i * BoxColumn + j;
-          const MycarIcon = i * BoxColumn + j === mycar-1;
-          boxes.push(
-            <button key={`${i}-${j}`} onClick={MycarIcon ? handleOpenMycarPage : null} style={{ border: 'none', backgroundColor: 'transparent', padding: 0 }}>
-              <Box key={`${i}-${j}`} sx={{
-                width: '4rem',
-                height: '5rem',
-                marginRight: '2rem',
-                marginLeft: '3rem',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: MycarIcon ? '#006DD1' : outTimeArray[index+1] !== '' ? '#EA6868' : '#FFFFFF',
-                flexDirection: 'column', // 수직 방향으로 아이콘과 텍스트 정렬
-              }}>
-                {MycarIcon && (
+  // 열에 맞게 한행에 박스 만들기
+  const renderBoxColumn = (rowIndex) => {
+    const columns = [];
+
+    for (let j = 0; j < BoxColumn; j++) {
+      const index = rowIndex * BoxColumn + j;
+      const MycarIcon = index === mycar - 1;
+
+      columns.push(
+        <button
+          key={`${rowIndex}-${j}`}
+          onClick={MycarIcon ? handleOpenMycarPage : null}
+          style={{ border: 'none', backgroundColor: 'transparent', padding: 0 }}
+        >
+          <Box
+            key={`${rowIndex}-${j}`}
+            sx={{
+              width: '8rem',
+              height: viewportHeight*0.16,
+              marginRight: '1rem',
+              marginLeft: '1rem',
+              marginBottom:'2rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: MycarIcon
+                ? '#006DD1'
+                : outTimeArray[index + 1] !== ''
+                ? '#EA6868'
+                : '#FFFFFF',
+              flexDirection: 'column',
+            }}
+          >
+            {MycarIcon && (
                   <>
                     <img src={process.env.PUBLIC_URL + "/img/mobile/mycaricon2.png"} alt={"mycarimg2"} style={{display:'flex',position:'relative',top:'-1rem'}}></img>
                     <img src={process.env.PUBLIC_URL + "/img/mobile/mycar.png"} alt={"carimg"} style={{position:'relative',top:'-1rem'}}></img>
@@ -236,48 +250,91 @@ function Parkinglot() {
                 )}
                 {!MycarIcon && outTimeArray[index+1] && (
                   <>
-                  <p style={{ color: '#B3B3B3', fontSize: '11px', textAlign: 'center', display: 'flex', position:'relative', top:'-1.3rem'}}>
+                  <p style={{ color: '#B3B3B3', fontSize: '16px', textAlign: 'center', display: 'flex', position:'relative', top:-viewportHeight*0.06}}>
                     {outTimeArray[index+1].length > 10 ? `${outTimeArray[index+1].substring(2, 10).replace(/-/g, '.')}` : outTimeArray[index+1]}
                   </p>
                   {carnumArray[index+1] && (
-                    <p style={{ color: '#FFFFFF', fontSize: '16px', textAlign: 'center', display: 'flex'}}>
+                    <p style={{ color: '#FFFFFF', fontSize: '20px', textAlign: 'center', display: 'flex'}}>
                       {carnumArray[index+1]}
                     </p>
                   )}
-                  <p style={{ color: '#000000', fontSize: '15px', textAlign: 'center', display: 'flex', position:'relative', top:'1.5rem', fontWeight:'bolder' }}>
+                  <p style={{ color: '#000000', fontSize: '20px', textAlign: 'center', display: 'flex', position:'relative', top:viewportHeight*0.07, fontWeight:'bolder' }}>
                     {outTimeArray[index+1].length > 10 ? `~${outTimeArray[index+1].substring(11, 16)}` : outTimeArray[index+1]}
                   </p>
                   </>
                 )}
-              </Box>
-            </button>
-          );
-        }
-      }
-    // 아무것도 주차된게 없을때
-    } else {
-      for (let i = 0; i < Boxrow; i++) {
-        for (let j = 0; j < BoxColumn; j++) {
-          boxes.push(
-            <button key={`${i}-${j}`} style={{ border: 'none', backgroundColor: 'transparent', padding: 0 }}>
-              <Box key={`${i}-${j}`} sx={{
-                width: '4rem',
-                height: '5rem',
-                marginRight: '1.3rem',
-                marginLeft: '1.3rem',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: '#FFFFFF',
-                flexDirection: 'column', // 수직 방향으로 아이콘과 텍스트 정렬
-              }}>
-              </Box>
-              </button>)
-          }
-        }
-      }
-    return boxes;
+          </Box>
+        </button>
+      );
+    }
+
+    return columns;
   };
+
+  // 행의 수만큼 박스만들기 수행
+  const renderBoxRow = () => {
+    const rows = [];
+
+    for (let i = 0; i < Boxrow; i++) {
+      const row = (
+        <div key={`row-${i}`} style={{ display: 'flex' }}>
+          {renderBoxColumn(i)}
+        </div>
+      );
+
+      rows.push(row);
+    }
+
+    return rows;
+  };
+
+  // 주차현황 없을때 빈 박스 만들기
+  const nobox = () => {
+    const boxes = [];
+    for (let i = 0; i < Boxrow; i++) {
+      for (let j = 0; j < BoxColumn; j++) {
+        boxes.push(
+          <button key={`${i}-${j}`} style={{ border: 'none', backgroundColor: 'transparent', padding: 0 }}>
+            <Box key={`${i}-${j}`} sx={{
+              width: '4rem',
+              height: '5rem',
+              marginRight: '1rem',
+              marginLeft: '1rem',
+              marginBottom:'2rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: '#FFFFFF',
+              flexDirection: 'column', // 수직 방향으로 아이콘과 텍스트 정렬
+            }}>
+            </Box>
+            </button>)
+      }
+    }
+  }
+
+  // 전체 현황 만들기
+  const renderBoxGrid = () => {
+    if (BoxItem.length !== 0) {
+      return (
+        <div
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            marginTop: '5rem',
+          }}
+        >
+          {renderBoxRow()}
+        </div>
+      );
+    } else {
+      return (
+        nobox()
+      )
+    }
+  };
+
 
   return (
     <React.Fragment>
@@ -293,11 +350,16 @@ function Parkinglot() {
       </div>
       <Box className='ParkinglotBox' sx={{width:viewportWidth, height: viewportHeight * 0.78, backgroundColor:'#F2F2F2', borderRadius: '10px'}}>
       <KeyboardDoubleArrowUpIcon sx={{position:'relative', top:'4rem'}}/>
-      <p style={{position:'relative',top:'4rem', fontWeight:'bolder'}}>출구</p>
-        <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', width:viewportWidth, height: viewportHeight * 0.4, justifyContent:'center', marginTop:'5rem'}}>
+      <p style={{position:'relative',top:'4rem', fontWeight:'bolder'}}>입출구</p>
+        <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', width:viewportWidth, height: viewportHeight * 0.4, justifyContent:'center', marginTop:'8rem'}}>
+          <Grid container justifyContent="center">
           {renderBoxGrid()}
+          </Grid>
         </Box>
-        </Box>
+        <Box sx={{position:'absolute', top:'2rem', width:viewportWidth*0.1, height: viewportHeight * 0.73, backgroundColor:'#B3B3B3', borderRadius:'0rem 1rem 0rem 0rem'}} />
+        <Box sx={{position:'absolute', top:'2rem', left:viewportWidth*0.9, width:viewportWidth*0.1, height: viewportHeight * 0.73, backgroundColor:'#B3B3B3', borderRadius:'1rem 0rem 0rem 0rem'}} />
+        <Box sx={{position:'absolute', top:viewportHeight*0.6, left:viewportWidth*0.1 ,width:viewportWidth*0.8, height: viewportHeight * 0.2, backgroundColor:'#B3B3B3'}} />
+      </Box>
       <InCar open={open} />
       </Container>
       <Footer HomeiconColor="#006DD1"/>

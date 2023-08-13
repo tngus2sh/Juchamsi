@@ -26,12 +26,13 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 function MycarParking() {
   const logincheck = useSelector((state) => state.auth.loginchecked)
   const villanumber = useSelector((state) => state.mobileInfo.villaIdNumber);
-  let othercarphonenumber = null;
   let othercarid = null;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userid = useSelector((state) => state.mobileInfo.loginId);
   const vilanumber = useSelector((state) => state.mobileInfo.villaIdNumber);
+  const [otherCarPhoneNumber, setOtherCarPhoneNumber] = React.useState(null);
+
   useEffect(() => {
     const fetchData = async () => {
         if (logincheck !== true) {
@@ -118,7 +119,7 @@ function MycarParking() {
         url:`/tenant/${otheruser}`
       })
         .then((res) => {
-        othercarphonenumber = res.data.response.phoneNumber
+          setOtherCarPhoneNumber(res.data.response.phoneNumber);
       })
     }
     return othercarouttime;
@@ -151,10 +152,9 @@ function MycarParking() {
         url:`/tenant/${otheruser}`
       })
         .then((res) => {
-        othercarphonenumber = res.data.response.phoneNumber
+          setOtherCarPhoneNumber(res.data.response.phoneNumber);
       })
     }
-    console.log(othercarouttime)
     return othercarouttime;
   };
   // 앞차 출차시간
@@ -352,7 +352,7 @@ function MycarParking() {
 
           {/* 겹주차(앞에 차량)이 있을 경우 */}
           {isfrontothercar && (
-            <div className="double-car-parking-container" style={{height:'25rem'}}>
+            <div className="double-car-parking-container" style={{height:'30rem'}}>
               <div className="double-parking-container" style={{ textAlign: "left" }}>
                 <div className="bold-text" style={{ fontSize: "1.2rem" }}>
                   겹주차 현황
@@ -382,8 +382,10 @@ function MycarParking() {
                   </div>
                 </div>
                 <div className="my-car-timer-container">
+                <React.Fragment>
                   <div className="my-car-date-container">{frontothercarouttime.substring(2, 10).replace(/-/g, '.')}</div>
-                  <div className="my-car-time-container">{frontothercarouttime.substring(11,16)}</div>
+                  <div className="my-car-time-container" style={{textAlign:'center'}}>{frontothercarouttime.substring(11,16)}</div>
+                </React.Fragment>
                 </div>
                 <Button variant="contained" onClick={handleOpenChat} sx={{ position: "relative", top: "1rem", left: "0rem", borderRadius:'0.5rem' }}>
                   대화방 생성하기
@@ -393,8 +395,7 @@ function MycarParking() {
                   핸드폰 번호
                 </div>
                 <div className="other-phonenumber-text">
-                  {/* 핸드폰 번호는 별도로 api요청해서 받아와야함 */}
-                  {/* {othercarphonenumber} */}
+                  {otherCarPhoneNumber}
                 </div>
               </div>
             </div>
@@ -402,7 +403,7 @@ function MycarParking() {
 
           {/* 겹주차(뒤에 차량)이 있을 경우 */}
           {isbackothercar && (
-            <div className="double-car-parking-container" style={{height:'25rem'}}>
+            <div className="double-car-parking-container" style={{height:'30rem'}}>
               <div className="double-parking-container" style={{ textAlign: "left" }}>
                 <div className="bold-text" style={{ fontSize: "1.2rem" }}>
                   겹주차 현황
@@ -410,8 +411,16 @@ function MycarParking() {
   
                 <div className="double-parking-info-container" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "1.5rem" }}>
                   <div className="double-parking-text-container">
-                    현재 뒤에<br />
+                  <p style={{display:'inline'}}>
+                    현재
+                    </p>
+                    <p style={{fontWeight:'bolder', display:'inline', fontSize:'2rem', color:'#006DD1', marginLeft:'0.3rem'}}>
+                    뒤
+                    </p>
+                    에
+                    <p style={{marginTop:'0.3rem'}}>
                     차가 주차되어 있어요!
+                    </p>
                   </div>
                   <div className="doubl-parking-icon-container">
                     <MinorCrashRoundedIcon sx={{ color: "#006DD1", fontSize: "4rem" }} />
@@ -424,8 +433,10 @@ function MycarParking() {
                   </div>
                 </div>
                 <div className="my-car-timer-container">
+                <React.Fragment>
                   <div className="my-car-date-container">{backothercarouttime.substring(2, 10).replace(/-/g, '.')}</div>
-                  <div className="my-car-time-container">{backothercarouttime.substring(11,16)}</div>
+                  <div className="my-car-time-container" style={{textAlign:'center'}}>{backothercarouttime.substring(11,16)}</div>
+                </React.Fragment>
                 </div>
                 <Button variant="contained" onClick={handleOpenChat} sx={{ position: "relative", top: "1rem", left: "0rem", borderRadius:'0.5rem' }}>
                   대화방 생성하기
@@ -435,7 +446,7 @@ function MycarParking() {
                   핸드폰 번호
                 </div>
                 <div className="other-phonenumber-text">
-                  {othercarphonenumber}
+                  {otherCarPhoneNumber}
                 </div>
               </div>
             </div>
