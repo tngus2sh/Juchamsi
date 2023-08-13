@@ -53,6 +53,6 @@
   "prefer_related_applications": true,
   "start_url": "Mobile/Login",
   "display": "standalone",
-  "theme_color": "#031230",
-  "background_color": "#031230"
+  "theme_color": "#f2f2f2",
+  "background_color": "#FFFFFF"
 }

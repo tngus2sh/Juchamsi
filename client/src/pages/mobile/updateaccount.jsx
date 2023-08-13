@@ -136,7 +136,7 @@ function Account() {
   // 자동차번호 입력값이 변경될 때 호출되는 이벤트 핸들러
   const handleCarNumberChange = (e) => {
     // 숫자,한글만 입력가능하도록 규칙 설정
-    const onlyCarnumber = e.target.value.replace(/[^ㄱ-ㅎㅏ-ㅣ가-힣/0-9/ ]/g, "");
+    const onlyCarnumber = e.target.value.replace(/[a-zA-Z]/g, '');
 
     // 최대 9자까지만 입력 가능하도록 제한
     const carnumbermaxLength = 9;
@@ -303,8 +303,8 @@ function Account() {
       <div className="update-account-main-container">
         <div className="update-account-header-container" style={{ color: "white" }}>
           <div className="account-padding-container">
-            <div className="update-account-warning-container" style={{ textAlign: "center", paddingTop: "1.5rem" }}>
-              <span className="bold-text" style={{ fontSize: "1.3rem", marginRight:'11rem' }} onClick={handleopenmypage}>
+            <div className="update-account-warning-container" style={{ textAlign: "center", paddingTop: "1.5rem",display:'flex', justifyContent:'space-between' }}>
+              <span className="bold-text" style={{ fontSize: "1.3rem"}} onClick={handleopenmypage}>
                 <ArrowBackIcon/>
               </span>
               <span className="bold-text" style={{ fontSize: "1.3rem", marginLeft:'-3rem' }}>
