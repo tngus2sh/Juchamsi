@@ -431,7 +431,7 @@ const handlePhoneModalConfirmClick = () => {
       )}
 
       <div className="header">
-        <img className="mobile-logo" src={process.env.PUBLIC_URL + "/img/kiosk/logo.png"} alt={"title"}></img>
+        <img className="mobile-logo" src={process.env.PUBLIC_URL + "/img/mobile/logo.png"} alt={"title"}></img>
       </div>
 
       <div className="signup-container">

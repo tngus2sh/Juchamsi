@@ -166,54 +166,11 @@ function Login() {
     }
   }, [isAutoLoginChecked, username, password]);
 
-  // 홈 화면에 추가 팝업
-  const [showAddToHomeScreen, setShowAddToHomeScreen] = React.useState(false);
-  let deferredPrompt;
-
-  const handleBeforeInstallPrompt = (e) => {
-    // 기본 설치 팝업을 차단하기 위해 기본 이벤트를 막습니다.
-    e.preventDefault();
-
-    // 나중에 사용하기 위해 이벤트를 저장합니다.
-    deferredPrompt = e;
-
-    // "홈 화면에 추가" 버튼을 표시합니다.
-    setShowAddToHomeScreen(true);
-  };
-
-  const handleAddToHomeScreen = () => {
-    if (deferredPrompt) {
-      // 브라우저의 설치 팝업을 표시합니다.
-      deferredPrompt.prompt();
-
-      // 사용자의 응답을 기다립니다.
-      deferredPrompt.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === "accepted") {
-          console.log("User accepted the A2HS prompt");
-        } else {
-          console.log("User dismissed the A2HS prompt");
-        }
-        // deferredPrompt 변수를 초기화합니다.
-        deferredPrompt = null;
-      });
-    }
-  };
-
-  React.useEffect(() => {
-    // beforeinstallprompt 이벤트에 대한 이벤트 리스너를 추가합니다.
-    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-
-    // 컴포넌트가 언마운트될 때 이벤트 리스너를 제거합니다.
-    return () => {
-      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-    };
-  }, []);
-
 
   return (
     <div className="login-main">
       <div className="header">
-        <img className="mobile-logo" src={process.env.PUBLIC_URL + "/img/kiosk/logo.png"} alt={"title"}></img>
+        <img className="mobile-logo" src={process.env.PUBLIC_URL + "/img/mobile/logo.png"} alt={"title"}></img>
       </div>
 
       <div className="login-container">
@@ -270,12 +227,6 @@ function Login() {
           </div>
         </div>
       </div>
-      {/* "홈 화면에 추가" 버튼 */}
-      {showAddToHomeScreen && (
-        <div className="addToHomeScreenButton" onClick={handleAddToHomeScreen}>
-          홈 화면에 추가하시겠습니까?
-        </div>
-      )}
       {showAlert && (
         <Alert severity="error" className='signup-alert' sx={{justifyContent:'center'}}>
           <p>승인대기 상태입니다. 관리자 승인시</p>

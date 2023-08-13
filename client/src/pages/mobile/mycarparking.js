@@ -26,11 +26,13 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 function MycarParking() {
   const logincheck = useSelector((state) => state.auth.loginchecked)
   const villanumber = useSelector((state) => state.mobileInfo.villaIdNumber);
-  const othercarphonenumber = null;
+  let othercarid = null;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userid = useSelector((state) => state.mobileInfo.loginId);
   const vilanumber = useSelector((state) => state.mobileInfo.villaIdNumber);
+  const [otherCarPhoneNumber, setOtherCarPhoneNumber] = React.useState(null);
+
   useEffect(() => {
     const fetchData = async () => {
         if (logincheck !== true) {
@@ -42,7 +44,7 @@ function MycarParking() {
             method:'get',
             url:`/parking/lot/${villanumber}`
           })
-          .then((res) => {
+            .then((res) => {
             let resultbox = []
               for (let i=0; i<res.data.response.length; i++) {
                 if (res.data.response[i].active === 'ACTIVE') {
@@ -51,8 +53,8 @@ function MycarParking() {
                     dispatch(setmycar(res.data.response[i].seatNumber))
                   }
                   }
-                }
-              dispatch(setBoxItem(resultbox))
+              }
+            dispatch(setBoxItem(resultbox))
             })
           .catch((err) => {
             console.log(err)
@@ -97,18 +99,27 @@ function MycarParking() {
     let othercarnum = null;
     let othercarouttime = null;
     if (Mycar > Boxrow) {
-      othercarnum -= Boxrow;
+      othercarnum = Mycar - Boxrow;
       if (outTimeArray[othercarnum] !== '') {
         othercarouttime = outTimeArray[othercarnum];
       }
     }
-    if (othercarnum !== null && othercarnum < 0) {
+
+    let otheruser = null
+    for (let k = 0; k < outTimeArray.length; k++) {
+      if (BoxItem[k] !== undefined) {
+        if (BoxItem[k].seatNumber === othercarnum) {
+          otheruser = BoxItem[k].userId
+        }
+      }
+    }
+    if (otheruser !== null) {
       http({
         method:'',
-        url:`/tenant/${BoxItem[othercarnum]}`
+        url:`/tenant/${otheruser}`
       })
-      .then((res) => {
-        othercarphonenumber = res.data.response('')
+        .then((res) => {
+          setOtherCarPhoneNumber(res.data.response.phoneNumber);
       })
     }
     return othercarouttime;
@@ -119,7 +130,7 @@ function MycarParking() {
     let othercarnum = null;
     let othercarouttime = null;
     if (Mycar <= Boxrow) {
-      othercarnum -= Boxrow;
+      othercarnum = Mycar + Boxrow;
       if (othercarnum <0) {
         othercarnum = 0
       }
@@ -127,13 +138,21 @@ function MycarParking() {
         othercarouttime = outTimeArray[othercarnum];
       }
     }
-    if (othercarnum !== null && othercarnum < 0) {
+    let otheruser = null
+    for (let k = 0; k < outTimeArray.length; k++) {
+      if (BoxItem[k] !== undefined) {
+        if (BoxItem[k].seatNumber === othercarnum) {
+          otheruser = BoxItem[k].userId
+        }
+      }
+    }
+    if (otheruser !== null) {
       http({
         method:'',
-        url:`/tenant/${BoxItem[othercarnum]}`
+        url:`/tenant/${otheruser}`
       })
-      .then((res) => {
-        othercarphonenumber = res.data.response('')
+        .then((res) => {
+          setOtherCarPhoneNumber(res.data.response.phoneNumber);
       })
     }
     return othercarouttime;
@@ -145,10 +164,10 @@ function MycarParking() {
 
 
   // 앞차 존재 여부
-  const isfrontothercar = frontothercarouttime !== null;
+  const isfrontothercar = !(frontothercarouttime === undefined || frontothercarouttime === null);
 
   // 뒤차 존재 여부
-  const isbackothercar = backothercarouttime !== null;
+  const isbackothercar = !(backothercarouttime === undefined || backothercarouttime === null);
 
   // 주차시간 설정 여부
   let ismycarparking = false
@@ -182,7 +201,26 @@ function MycarParking() {
 
   // 개인대화방으로 이동하게 추후 변경 필요
   const handleOpenChat = () => {
+    createRoom();
     navigate("/Mobile/Termessage");
+  };
+
+  const createRoom = () => {
+    http
+      .post("/chat/room", { userIdOne: userid, userIdTwo: othercarid })
+      .then((response) => {
+        console.log(response.data.response.roomId);
+        // // redux에 담음
+        // dispatch(setRoomNumber(response.data.response.roomId)); // 룸 넘버
+        // dispatch(setUser1(loginId)); // 로그인 한 유저
+
+        alert(`${response.data.response.roomName} 방 개설에 성공하였습니다.`);
+
+      })
+      .catch((error) => {
+        alert("채팅방 개설에 실패하였습니다.");
+        console.error("Error while creating chat room:", error);
+      });
   };
 
   function convertToDatePickerFormat(dateTimeString) {
@@ -314,7 +352,7 @@ function MycarParking() {
 
           {/* 겹주차(앞에 차량)이 있을 경우 */}
           {isfrontothercar && (
-            <div className="double-car-parking-container" style={{height:'25rem'}}>
+            <div className="double-car-parking-container" style={{height:'30rem'}}>
               <div className="double-parking-container" style={{ textAlign: "left" }}>
                 <div className="bold-text" style={{ fontSize: "1.2rem" }}>
                   겹주차 현황
@@ -344,8 +382,10 @@ function MycarParking() {
                   </div>
                 </div>
                 <div className="my-car-timer-container">
-                  <div className="my-car-date-container">{defaultday.substring(2, 10).replace(/-/g, '.')}</div>
-                  <div className="my-car-time-container">{defaulttime}</div>
+                <React.Fragment>
+                  <div className="my-car-date-container">{frontothercarouttime.substring(2, 10).replace(/-/g, '.')}</div>
+                  <div className="my-car-time-container" style={{textAlign:'center'}}>{frontothercarouttime.substring(11,16)}</div>
+                </React.Fragment>
                 </div>
                 <Button variant="contained" onClick={handleOpenChat} sx={{ position: "relative", top: "1rem", left: "0rem", borderRadius:'0.5rem' }}>
                   대화방 생성하기
@@ -355,8 +395,7 @@ function MycarParking() {
                   핸드폰 번호
                 </div>
                 <div className="other-phonenumber-text">
-                  {/* 핸드폰 번호는 별도로 api요청해서 받아와야함 */}
-                  {othercarphonenumber}
+                  {otherCarPhoneNumber}
                 </div>
               </div>
             </div>
@@ -364,7 +403,7 @@ function MycarParking() {
 
           {/* 겹주차(뒤에 차량)이 있을 경우 */}
           {isbackothercar && (
-            <div className="double-car-parking-container" style={{height:'25rem'}}>
+            <div className="double-car-parking-container" style={{height:'30rem'}}>
               <div className="double-parking-container" style={{ textAlign: "left" }}>
                 <div className="bold-text" style={{ fontSize: "1.2rem" }}>
                   겹주차 현황
@@ -372,8 +411,16 @@ function MycarParking() {
   
                 <div className="double-parking-info-container" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "1.5rem" }}>
                   <div className="double-parking-text-container">
-                    현재 뒤에<br />
+                  <p style={{display:'inline'}}>
+                    현재
+                    </p>
+                    <p style={{fontWeight:'bolder', display:'inline', fontSize:'2rem', color:'#006DD1', marginLeft:'0.3rem'}}>
+                    뒤
+                    </p>
+                    에
+                    <p style={{marginTop:'0.3rem'}}>
                     차가 주차되어 있어요!
+                    </p>
                   </div>
                   <div className="doubl-parking-icon-container">
                     <MinorCrashRoundedIcon sx={{ color: "#006DD1", fontSize: "4rem" }} />
@@ -386,8 +433,10 @@ function MycarParking() {
                   </div>
                 </div>
                 <div className="my-car-timer-container">
-                  <div className="my-car-date-container">{defaultday.substring(2, 10).replace(/-/g, '.')}</div>
-                  <div className="my-car-time-container">{defaulttime}</div>
+                <React.Fragment>
+                  <div className="my-car-date-container">{backothercarouttime.substring(2, 10).replace(/-/g, '.')}</div>
+                  <div className="my-car-time-container" style={{textAlign:'center'}}>{backothercarouttime.substring(11,16)}</div>
+                </React.Fragment>
                 </div>
                 <Button variant="contained" onClick={handleOpenChat} sx={{ position: "relative", top: "1rem", left: "0rem", borderRadius:'0.5rem' }}>
                   대화방 생성하기
@@ -397,7 +446,7 @@ function MycarParking() {
                   핸드폰 번호
                 </div>
                 <div className="other-phonenumber-text">
-                  010-1234-5678
+                  {otherCarPhoneNumber}
                 </div>
               </div>
             </div>

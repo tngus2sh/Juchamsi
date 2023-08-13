@@ -20,6 +20,7 @@ import com.inet.juchamsi.domain.parking.dto.response.ParkingNowResponse;
 import com.inet.juchamsi.domain.parking.dto.service.*;
 import com.inet.juchamsi.domain.parking.entity.ParkingHistory;
 import com.inet.juchamsi.domain.parking.entity.ParkingLot;
+import com.inet.juchamsi.domain.user.application.AdminService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.global.error.AlreadyExistException;
@@ -229,6 +230,7 @@ public class ParkingServiceImpl implements ParkingService {
                             .carNumber(parkingHistoryDetailDto.getCarNumber())
                             .outTime(outTime)
                             .active(parkingHistoryDetailDto.getActive().name())
+                            .totalSeatNum(parkingHistoryDetailDto.getTotalSeatNum())
                             .build());
         }
         return list;
@@ -393,7 +395,7 @@ public class ParkingServiceImpl implements ParkingService {
             }
         }
     }
-    
+
     // 유저에게 출차시간 알림 주기(15분전, 출차시간이 됐을 때)
     @Scheduled(cron = "0 0/1 * * * ?")
     public void notifyOutTimeToUser() {
