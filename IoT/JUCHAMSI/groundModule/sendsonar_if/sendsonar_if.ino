@@ -79,6 +79,7 @@ void init_service() {
   pAdvertising->start();
 }
 
+
 void init_beacon() {
   BLEAdvertising* pAdvertising;
   pAdvertising = pServer->getAdvertising();

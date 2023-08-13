@@ -24,9 +24,10 @@ def scan_bluetooth():
     state = 0
     cnt = 0
     repeat = 0
-    "http://i9c107.p.ssafy.io:8080"
-    parking_url="http://i9c107.p.ssafy.io:8080/parking/entrance"
-    exit_url = "http://i9c107.p.ssafy.io:8080/parking/exit"
+    # parking_url="http://i9c107.p.ssafy.io:8080/parking/entrance"
+    # exit_url = "http://i9c107.p.ssafy.io:8080/parking/exit"
+    parking_url="https://292f-121-179-2-182.ngrok-free.app/parking/entrance"
+    exit_url="https://292f-121-179-2-182.ngrok-free.app/parking/exit"
     soundModuleUrl = "http://172.20.10.9/"
     datas={}
     ground_module = ['b0:a7:32:db:c8:46', 'cc:db:a7:69:74:4a','cc:db:a7:69:19:7a', 'b0:a7:32:db:c3:52']
@@ -51,16 +52,28 @@ def scan_bluetooth():
         repeat += 1
         returnedList = ble_803.parse_events(sock, 10)
         print "----------"
-        if repeat == 10 and cnt == 0:
+        if repeat == 20:
             print('not park')
+            print(nowParking)
+            if 1 in nowParking:
+                print('carout')
+                index_of_one = nowParking.index(1)
+                nowParking[index_of_one] = 0  # Set the corresponding nowParking value to 0
+                headers = {'Content-Type': 'application/json'}
+                datas = {'macAddress': getMacAddress()}
+                json_data = json.dumps(datas)
+                try:
+                    response = requests.post(exit_url, data=json_data, headers=headers)
+                    print("Successfully sent POST request to exit_url.")
+                except Exception as e:
+                    print("Failed to send request to exit_url. Error: {}".format(e))
             return
-        if repeat == 300:
-            print('signal_disconnect', cnt)
-            return
+
         for beacon in returnedList:
             for comp_str in ground_module:
                 if(beacon[0:17]==comp_str):
                     cnt += 1
+                    repeat = 0
                     # ['mac', 'manuid', 'sonar', 'sonartime', 'tx', 'rssi', 'dis']
                     sendData = beacon.split(',')
                     print(sendData)
@@ -99,15 +112,20 @@ def scan_bluetooth():
                                 if nowParking[mostFrequentMacIndex] == 0:
                                     headers = {'Content-Type': 'application/json'}
                                     datas ={'macAddress': rpiMac, 'groundAddress': ground_module[searched.index(max(searched))]}
-                                    nowParking[mostFrequentMacIndex] = 1
-                                    print(nowParking[mostFrequentMacIndex])
-                                    print('car_in')
                                     json_data = json.dumps(datas)
-                                    response = requests.post(parking_url, data=json_data, headers=headers)
                                     try:
-                                        response = requests.post(soundModuleUrl, data=json_data, headers=headers)
+                                        nowParking[mostFrequentMacIndex] = 1
+                                        print(nowParking[mostFrequentMacIndex])
+                                        print('car_in')
+                                        response = requests.post(parking_url, data=json_data, headers=headers, timeout=1)
+                                        try:
+                                            response = requests.post(soundModuleUrl, data=json_data, headers=headers, timeout=1)
+                                        except Exception as e:
+                                            print("Failed to send request to soundModuleUrl. Error: {}".format(e))
                                     except Exception as e:
-                                        print("Failed to send request to soundModuleUrl. Error: {}".format(e))
+                                        print("Failed BackServer")
+                                        nowParking[mostFrequentMacIndex] = 0
+                                    
                             else:
                                 if nowParking[mostFrequentMacIndex] == 1:
                                     headers = {'Content-Type': 'application/json'}
@@ -143,7 +161,11 @@ if __name__ == '__main__':
             line = safe_readline(ser)
             parts = line.split(": ")
             if len(parts)>=2:
-                change_value = float(parts[1])
+                try:
+                    change_value = float(parts[1])
+                except ValueError:
+                    print("Error: Invalid value for float conversion:", parts[1])
+                    continue  # Skip the rest of the loop iteration
                 print(line)
                 print(change_value)
             # car move
