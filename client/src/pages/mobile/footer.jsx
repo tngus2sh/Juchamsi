@@ -36,15 +36,22 @@ function Footer(props) {
   };
 
   useEffect(() => {
-    fetchMessage();
+    // fetchMessage();
   }, []);
+
   async function fetchMessage() {
     await http
       .get(`/chat/room/${loginId}/3a21cd93-f68c-430b-9cab-ec30e3e678a5`)
       .then((response) => {
         console.log("채팅방 상세조회");
-        console.log(response.data);
-        const length = response.data.response.messageList.length;
+        console.log(response.data.response);
+        const messageList = response.data.response.messageList;
+
+        if (messageList.length === 0) {
+          return;
+        }
+        const length = messageList.length;
+
         if (length > readLength) {
           const temp = length - readLength;
           setDisting(temp);
@@ -109,7 +116,7 @@ function Footer(props) {
           </div>
 
           <div className="message-container" style={{ width: "3.6rem" }}>
-            <Fab
+            {/* <Fab
               sx={{
                 width: "1.2rem",
                 height: "1rem",
@@ -121,7 +128,7 @@ function Footer(props) {
               }}
             >
               <Typography>{disting}</Typography>
-            </Fab>
+            </Fab> */}
             <LocalPostOfficeRoundedIcon
               sx={{
                 fontSize: "2.3rem",
