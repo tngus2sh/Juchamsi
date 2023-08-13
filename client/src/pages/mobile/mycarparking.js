@@ -27,6 +27,7 @@ function MycarParking() {
   const logincheck = useSelector((state) => state.auth.loginchecked)
   const villanumber = useSelector((state) => state.mobileInfo.villaIdNumber);
   const othercarphonenumber = null;
+  const othercarid = null;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userid = useSelector((state) => state.mobileInfo.loginId);
@@ -107,8 +108,10 @@ function MycarParking() {
         method:'',
         url:`/tenant/${BoxItem[othercarnum]}`
       })
-      .then((res) => {
-        othercarphonenumber = res.data.response('')
+        .then((res) => {
+          othercarphonenumber = res.data.response.phoneNumber;
+          othercarid = res.data.response.loginId;
+
       })
     }
     return othercarouttime;
@@ -188,7 +191,7 @@ function MycarParking() {
 
   const createRoom = () => {
     http
-      .post("/chat/room", { userIdOne: userid, userIdTwo: "user2" })
+      .post("/chat/room", { userIdOne: userid, userIdTwo: othercarid })
       .then((response) => {
         console.log(response.data.response.roomId);
         // // redux에 담음

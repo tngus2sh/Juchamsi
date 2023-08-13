@@ -16,7 +16,7 @@ function Footer(props) {
   const navigate = useNavigate();
   const readLength = useSelector((state) => state.mobileInfo.readMessage);
   const loginId = useSelector((state) => state.mobileInfo.loginId);
-  const [disting, setDisting] = useState("");
+  const [disting, setDisting] = useState(0);
 
   const handleOpenParkinglotPage = () => {
     // 주차현황페이지로 이동
@@ -36,32 +36,31 @@ function Footer(props) {
   };
 
   useEffect(() => {
-    // fetchMessage();
-  }, []);
+    fetchMessage();
+  }, [readLength]);
 
   async function fetchMessage() {
-    await http
-      .get(`/chat/room/${loginId}/3a21cd93-f68c-430b-9cab-ec30e3e678a5`)
-      .then((response) => {
-        console.log("채팅방 상세조회");
-        console.log(response.data.response);
-        const messageList = response.data.response.messageList;
+    try {
+      const response = await http.get(`/chat/room/${loginId}/9f887f44-a9d9-40a1-9a4b-c14234b10b89`);
 
-        if (messageList.length === 0) {
-          return;
-        }
-        const length = messageList.length;
+      console.log("채팅방 상세조회");
+      console.log(response.data.response);
+      const messageList = response.data.response.messageList;
+      console.log(readLength);
 
-        if (length > readLength) {
-          const temp = length - readLength;
-          setDisting(temp);
-          console.log(temp);
-        }
-      })
-      .catch((error) => {
-        // 요청 실패 시 에러 처리
-        console.error("Error while submitting:", error);
-      });
+      if (messageList.length === 0) {
+        return;
+      }
+      const length = messageList.length;
+
+      if (length > readLength) {
+        const temp = length - readLength;
+        setDisting(temp);
+      }
+    } catch (error) {
+      // 요청 실패 시 에러 처리
+      console.error("Error while submitting:", error);
+    }
   }
 
   return (
@@ -116,19 +115,23 @@ function Footer(props) {
           </div>
 
           <div className="message-container" style={{ width: "3.6rem" }}>
-            {/* <Fab
-              sx={{
-                width: "1.2rem",
-                height: "1rem",
-                backgroundColor: "blue",
-                color: "white",
-                position: "relative",
-                bottom: "1.8rem",
-                left: "2.8rem",
-              }}
-            >
-              <Typography>{disting}</Typography>
-            </Fab> */}
+            {disting !== 0 ? (
+              <Fab
+                sx={{
+                  width: "1.2rem",
+                  height: ".4rem",
+                  backgroundColor: "blue",
+                  color: "white",
+                  position: "relative",
+                  bottom: "1.8rem",
+                  left: "2.8rem",
+                }}
+              >
+                <Typography sx={{ fontSize: ".8rem" }}>{disting}</Typography>
+              </Fab>
+            ) : (
+              ""
+            )}
             <LocalPostOfficeRoundedIcon
               sx={{
                 fontSize: "2.3rem",
