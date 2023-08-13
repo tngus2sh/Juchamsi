@@ -96,8 +96,9 @@ function MycarParking() {
   const frontothercar = () => {
     let othercarnum = null;
     let othercarouttime = null;
-    if (Mycar > Boxrow) {
+    if (Mycar >= Boxrow) {
       othercarnum -= Boxrow;
+      console.log(othercarnum)
       if (outTimeArray[othercarnum] !== '') {
         othercarouttime = outTimeArray[othercarnum];
       }

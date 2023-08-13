@@ -8,13 +8,13 @@ import InCar from '../../components/mobile/incar';
 import { Container } from '@mui/material';
 import { setWhenEnteringCar } from '../../redux/mobileUserinfo'; 
 import http from "../../axios/http";
-import { setBoxItem, setmycar } from '../../redux/mobileparking'; 
+import { setBoxItem, setmycar, setBoxrow } from '../../redux/mobileparking'; 
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken } from "firebase/messaging";
 import { setFcmToken } from '../../redux/mobileUserinfo';
 
-const config = {
+const config = {  
   apiKey: "AIzaSyAP0IeVXonU6Z5LjfuCHU-V256A0IW13B0",
   authDomain: "juchamsi-test.firebaseapp.com",
   projectId: "juchamsi-test",
@@ -105,6 +105,7 @@ function Parkinglot() {
           url:`/parking/lot/${villanumber}`
         })
         .then((res) => {
+          let totalNum = null;
           let resultbox = []
             for (let i=0; i<res.data.response.length; i++) {
               if (res.data.response[i].active === 'ACTIVE') {
@@ -113,8 +114,12 @@ function Parkinglot() {
                   dispatch(setmycar(res.data.response[i].seatNumber))
                 }
                 }
+              if (i ===0) {
+                totalNum = res.data.response[i].totalSeatNum/2
+              }
               }
             dispatch(setBoxItem(resultbox))
+            dispatch(setBoxrow(totalNum))
           })
         .catch((err) => {
           console.log(err)
@@ -215,7 +220,7 @@ function Parkinglot() {
               <Box key={`${i}-${j}`} sx={{
                 width: '4rem',
                 height: '5rem',
-                marginRight: '1.5rem',
+                marginRight: '1rem',
                 marginLeft: '1.5rem',
                 display: 'flex',
                 alignItems: 'center',
