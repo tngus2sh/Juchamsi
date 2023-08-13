@@ -44,12 +44,12 @@ def scan_bluetooth():
         print "error accessing bluetooth device..."
         sys.exit(1)
 
-    ble_803.hci_le_set_scan_parameters(sock)
-    ble_803.hci_enable_le_scan(sock)
+    advertiseMac.hci_le_set_scan_parameters(sock)
+    advertiseMac.hci_enable_le_scan(sock)
 
     while True:
         repeat += 1
-        returnedList = ble_803.parse_events(sock, 10)
+        returnedList = advertiseMac.parse_events(sock, 10)
         print "----------"
         if repeat == 20:
             print('not park')
