@@ -36,3 +36,18 @@
     transform: rotate(360deg);
   }
 }
+
+@font-face {
+  font-family: "KorailFont";
+  src: url("../public/font/Korail_Round_Gothic_Medium.ttf");
+}
+
+@font-face {
+  font-family: "Nanum";
+  src: url("../public/font/NanumSquareR.ttf");
+}
+
+@font-face {
+  font-family: "Poppins-Bold";
+  src: url("../public/font/Poppins-Bold.ttf");
+}

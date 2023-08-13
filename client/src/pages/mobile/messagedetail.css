@@ -1,0 +1,47 @@
+/* :root {
+  --vh: 100%;
+} */
+
+.message-detail-main-container {
+  display: inline-block;
+  width: 100%;
+  height: calc(var(--vh, 1vh) * 100);
+  /* height: -webkit-fill-available; */
+  /* height: fill-available; */
+  /* height: 50vh; */
+} 
+
+.message-detail-main-flex-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  /* height: calc(var(--vh) * 100); */
+  height: 100%;
+}
+
+/* .custom-chat-container .cs-message-list {
+  height: calc(100vh - 8.2rem);
+}
+.scrollbar-container .cs-message-list__scroll-wrapper .ps .ps--active-y{
+  height: calc(100vh - 8.2rem);
+}
+
+.custom-chat-container .cs-message.cs-message--outgoing.cs-message--single:not(:first-child) {
+  margin-bottom: .2rem;
+}
+
+.cs-message.cs-message--incoming.cs-message--single:not(:first-child){
+  margin-bottom: .2rem;
+} */
+
+.custom-chat-container .cs-message.cs-message--outgoing.cs-message--single .cs-message__content {
+  background-color: #006DD1;
+  color: white;
+  font-family: 'Nanum';
+
+}
+
+.cs-message.cs-message--incoming.cs-message--single .cs-message__content{
+  background-color: #F7F7F7;
+  font-family: 'Nanum';
+}

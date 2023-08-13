@@ -1,0 +1,42 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+}
+
+.me-key-page-container {
+  display: inline-block;
+  width: 30rem;
+  height: 25rem;
+  border: 1px solid #e0e0e0;
+  background-color: #eeeeee;
+  border-radius: 1.5rem;
+  font-family: "KorailFont";
+  font-size: 1.5rem;
+}
+
+.me-key-page-flex-container {
+  display: flex;
+  height: 25rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.me-key-page-box-container {
+  margin-top: 2rem;
+}
+
+.me-key-page-box {
+  display: inline-block;
+  width: 8rem;
+  height: 3rem;
+  border-radius: 0.8rem;
+  background-color: #112d4e;
+  color: white;
+}
+
+.me-key-page-box-text {
+  display: inline-block;
+  line-height: 3rem;
+}

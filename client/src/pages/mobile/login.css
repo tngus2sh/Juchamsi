@@ -1,0 +1,102 @@
+.login-main {
+  text-align: center;
+}
+
+.mobile-logo {
+  width: 8rem;
+  height: 8rem;
+}
+
+.login-container {
+  display: inline-block;
+  margin-top: 2.5rem;
+  width: 16rem;
+}
+
+.login-input {
+  width: 100%;
+  height: 2.7rem;
+  border: 0;
+  border-radius: 1.4rem;
+  padding: 0;
+  outline: none;
+  font-size: 0.9rem;
+  background-color: #F7F7F7;
+  text-indent: 0.9rem;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.login-input:focus {
+  outline: none;
+  border: 1px solid #006DD1;
+}
+
+.pw-container {
+  margin-top: 1.5rem;
+  position: relative;
+}
+
+.pw-show-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.login-option-container {
+  margin-top: 0.3rem;
+}
+
+.login-option-flex-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.auto-login-container {
+  font-size: 0.2rem;
+}
+
+.login-button-container {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.login-box {
+  width: 100%;
+  height: 2.7rem;
+  border-radius: 1.4rem;
+  border: 0px solid white;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.login-box-deactive {
+  border: 1px solid #cfcfcf;
+  background-color: white;
+  color: #555555;
+}
+
+.login-box-active {
+  background-color: #006DD1;
+  color: white;
+}
+
+.signup-container {
+  margin-top: 1.3rem;
+  display: inline-block;
+  width: 16rem;
+  font-size: 0.9rem;
+}
+
+.signup-flex-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-alert {
+  position: absolute;
+  top: 0rem;
+}

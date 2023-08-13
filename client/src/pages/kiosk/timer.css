@@ -1,0 +1,16 @@
+.timer-text-container {
+  display: inline-block;
+  margin: 0 4rem;
+  text-align: center;
+  border-radius: 13rem;
+  width: 25rem;
+  height: 25rem;
+  background-color: #112d4e;
+}
+
+.timer-text {
+  line-height: 25rem;
+  font-size: 4.5rem;
+  font-family: "KorailFont";
+  color: white;
+}

@@ -1,0 +1,39 @@
+.custom-chat-container {
+}
+.custom-chat-container .cs-message-list {
+  height: calc(100vh - 8.2rem);
+}
+.scrollbar-container .cs-message-list__scroll-wrapper .ps .ps--active-y{
+  height: calc(100vh - 8.2rem);
+}
+
+.custom-chat-container .cs-message.cs-message--outgoing.cs-message--single:not(:first-child) {
+  margin-bottom: .2rem;
+}
+
+.cs-message.cs-message--incoming.cs-message--single:not(:first-child){
+  margin-bottom: .2rem;
+}
+
+.custom-chat-container .cs-message.cs-message--outgoing.cs-message--single .cs-message__content {
+  background-color: #006DD1;
+  font-family: 'Nanum';
+
+}
+
+.cs-message.cs-message--incoming.cs-message--single .cs-message__content{
+  background-color: #F7F7F7;
+  font-family: 'Nanum';
+}
+
+.cs-message-separator::before{
+  background-color:gray;
+}
+.cs-message-separator::after{
+  background-color:gray;
+}
+.cs-message-separator{
+  color:gray;
+  font-size: .65rem;
+}
+

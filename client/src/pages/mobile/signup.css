@@ -1,0 +1,112 @@
+.signup-main {
+  text-align: center;
+}
+
+.signup-container {
+  display: inline-block;
+  margin-top: 2.5rem;
+  width: 16rem;
+}
+
+.signup-pw-container {
+  position: relative;
+}
+
+.signup-id-flex-container,
+.signup-phone-number-flex-container {
+  width: 100%;
+  display: flex;
+}
+
+.signup-id-input-container,
+.signup-phone-number-input-container {
+  flex: 1;
+}
+
+.id-input,
+.phone-number-input {
+  width: 100%;
+  height: 2.3rem;
+  border-radius: 0.5rem;
+  border: 1px solid #cfcfcf;
+  text-indent: 0.6rem;
+}
+
+.id-input:focus,
+.phone-number-input:focus {
+  outline: 1px solid #2d4356;
+}
+
+.signup-id-btn-container,
+.signup-phone-number-btn-container {
+  height: 2.5rem;
+  margin-left: 0.4rem;
+  border-radius: 0.5rem;
+  border: 0px solid white;
+}
+
+.signup-id-btn-container button,
+.signup-phone-number-btn-container button {
+  width: 100%;
+}
+
+.id-deactive,
+.phone-number-deactive {
+  background-color: #cfcfcf;
+}
+
+.id-active,
+.phone-number-active {
+  background-color: #2d4356;
+  color: white;
+}
+
+.signup-pw-container,
+.signup-name-container,
+.signup-phone-number-container,
+.signup-car-number-container,
+.signup-villa-id-number-container,
+.signup-villa-number-container,
+.signup-button-container,
+.login-info-container {
+  margin-top: 1.5rem;
+}
+
+.id-info,
+.pw-info,
+.car-number-info,
+.privacy-container {
+  margin-top: 0.3rem;
+  margin-left: 0.4rem;
+  text-align: left;
+  font-size: 0.8rem;
+  color: #6c6c6c;
+}
+
+.login-info-container {
+  display: inline-block;
+  width: 16rem;
+  font-size: 0.9rem;
+}
+
+.login-info-flex-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.signup-alert {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000; /* 적절한 z-index 값 설정 */
+}
+
+.Privacymodalstyle {
+  background-color: #006DD1;
+  text-align: center;
+  height: 2.3rem;
+  position: sticky;
+  top: 0;
+}
