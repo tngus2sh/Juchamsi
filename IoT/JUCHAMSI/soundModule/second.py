@@ -18,13 +18,13 @@ eventStartTimes = {}
 signalCounts = {}
 lastGetRequestTime = {}
 
-@app.route('/')
+@app.route('/', methods=['POST'])
 def hello():
     global lastGetRequestTime
     macAddress = request.args.get('macAddress', None)
     if macAddress and macAddress in lastGetRequestTime:
         del lastGetRequestTime[macAddress]
-    print('hi')
+    print('hi@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
     return 'Hello, World!'
 
 def scan_bluetooth():
@@ -41,13 +41,13 @@ def scan_bluetooth():
     ble_803.hci_enable_le_scan(sock)
 
     while True:
+        time.sleep(1)
         returnedList = ble_803.parse_events(sock, 10)
-        print("----------")
         for beacon in returnedList:
             for comp_str in ground_module:
                 if(beacon[0:17]==comp_str):
                     sendData = beacon.split(',')
-                    print(sendData[0], sendData[2])
+                    # print(sendData[0], sendData[2])
                     mac = sendData[0]
                     if int(sendData[2]) < 30:
                         print(signalCounts)
