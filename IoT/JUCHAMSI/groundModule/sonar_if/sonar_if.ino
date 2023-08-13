@@ -3,13 +3,13 @@
 #include <BLEUtils.h>
 #include <BLE2902.h>
 #include <BLEBeacon.h>
+#include <esp_system.h>
 
 #define DEVICE_NAME            "ESP32"
 #define SERVICE_UUID           "7A0247E7-8E88-409B-A959-AB5092DDB03E"
 #define BEACON_UUID            "2D7A9F0C-E0E8-4CC9-A71B-A21DB2D034A1"
 #define BEACON_UUID_REV        "A134D0B2-1DA2-1BA7-C94C-E8E00C9F7A2D"
 #define CHARACTERISTIC_UUID    "82258BAA-DF72-47E8-99BC-B73D7ECD08A5"
-#include <esp_system.h>
 
 const int trigPin = 13; // TRIG 핀 설정 (초음파 보내는 핀)
 const int echoPin = 12; // ECHO 핀 설정 (초음파 받는 핀)
@@ -99,12 +99,10 @@ void init_beacon() {
   pAdvertising->start();
 }
 
-
-// macAddress to string
 void printMacAddress() {
   esp_bd_addr_t mac;
   esp_read_mac(mac, ESP_MAC_WIFI_STA);
-  
+
   Serial.print("MAC Address: ");
   for (int i = 0; i < 6; i++) {
     Serial.printf("%02X", mac[i]);
@@ -115,8 +113,6 @@ void printMacAddress() {
   Serial.println();
 }
 
-
-//setup
 void setup() {
     Serial.begin(115200);
     pinMode(trigPin, OUTPUT);
@@ -136,8 +132,6 @@ void setup() {
     printMacAddress();
 }
 
-
-//qksqhr
 void loop() {
     long duration, distance;
     delayMicroseconds(2);
@@ -146,20 +140,7 @@ void loop() {
     digitalWrite(trigPin, LOW);
     duration = pulseIn(echoPin, HIGH);
     distance = duration * 17 / 1000;
-    BLEAdvertising* pAdvertising = pServer->getAdvertising();
 
-    //under30 start ad
-    if(distance < 30){
-        pAdvertising->start();
-        Serial.print("Advertising Beacon with Major: ");
-        Serial.print(distance);
-        Serial.print(", Minor: ");
-        Serial.println(duration);
-    }
-    
-    //over30 stop ad
-    else {
-        pAdvertising->stop();
-    }
-    delay(1000);
-}
+    // 초음파 센서의 거리 값이 30 미만인 경우에만 비콘 신호를 broadcasting
+    if (distance < 30) {
+        BLEScanResults foundDevices = BLE
