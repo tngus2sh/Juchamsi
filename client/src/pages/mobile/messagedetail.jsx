@@ -62,9 +62,14 @@ const Messagedetail = () => {
   // }, []);
 
   useEffect(() => {
+    // setScreenSize();
     fetchMessage();
     connect();
   }, [roomId, senderId]);
+
+  useEffect(() => {
+    dispatch(setReadMessage(messageStorage.length));
+  }, [messageStorage]);
 
   async function fetchMessage() {
     await http
@@ -89,7 +94,6 @@ const Messagedetail = () => {
       function (frame) {
         ws.subscribe("/topic/chat/room/" + roomId, function (message) {
           console.log("message 리스트??");
-          // console.log(message);
           const recv = JSON.parse(message.body);
           recvMessage(recv);
         });
@@ -182,7 +186,149 @@ const Messagedetail = () => {
 
   return (
     <React.Fragment>
-      <Box
+      <div className="message-detail-main-container">
+        <div className="message-detail-main-flex-container">
+          <div className="message-detail-header-container">
+            <Box
+              sx={{
+                width: "100%",
+                height: "3.5rem",
+              }}
+            >
+              <Grid
+                container
+                sx={{ justifyContent: "center", height: "3.5rem", alignContent: "center" }}
+              >
+                <ArrowBackIosRoundedIcon
+                  sx={{
+                    position: "fixed",
+                    top: "1.5rem",
+                    left: "1.2rem",
+                    width: "1.5rem",
+                    height: "1.5rem",
+                  }}
+                  onClick={handleBackToListClick}
+                />
+                <Typography sx={{ marginTop: "1rem", fontSize: "1.3rem", fontWeight: "bold" }}>
+                  {targetNickName}
+                </Typography>
+              </Grid>
+            </Box>
+          </div>
+          <div className="message-detail-content-container" style={{ flex: "1 0 auto" }}>
+            <ChatContainer className="custom-chat-container">
+              <MessageList className="cs-message-list">
+                {messageStorage.length === 0 && messages.length === 0 ? (
+                  <MessageSeparator content="대화를 시작해주세요" />
+                ) : (
+                  messageStorage.map((message, index) => (
+                    <React.Fragment key={index}>
+                      <CurrentDate createdDate={message.createdDate} />
+                      <Message
+                        className="cs-message"
+                        model={{
+                          message: message.message,
+                          sender: message.loginId,
+                          direction: message.loginId === senderId ? "outgoing" : "incoming",
+                          position: "single",
+                        }}
+                        style={{ color: "white" }}
+                      >
+                        <Message.Footer
+                          sender={
+                            message.loginId === senderId ? "" : formatDateTime(message.createdDate)
+                          }
+                          sentTime={
+                            message.loginId === senderId ? formatDateTime(message.createdDate) : ""
+                          }
+                        />
+                      </Message>
+                    </React.Fragment>
+                  ))
+                )}
+
+                {messages.map((message, index) =>
+                  message.type === "ENTER" ? null : ( // <MessageSeparator key={index} content={message.message} as="h2" />
+                    <React.Fragment>
+                      <CurrentDate createdDate={new Date()} />
+                      <Message
+                        key={index}
+                        model={{
+                          message: message.message,
+                          sender: message.senderId,
+                          direction: message.senderId === senderId ? "outgoing" : "incoming",
+                          position: "single",
+                        }}
+                      >
+                        <Message.Footer
+                          sender={
+                            message.senderId === senderId
+                              ? ""
+                              : new Date().toLocaleTimeString("ko-KR").replace(/:\d+$/, "")
+                          }
+                          sentTime={
+                            message.senderId === senderId
+                              ? new Date().toLocaleTimeString("ko-KR").replace(/:\d+$/, "")
+                              : ""
+                          }
+                        />
+                      </Message>
+                    </React.Fragment>
+                  )
+                )}
+              </MessageList>
+            </ChatContainer>
+          </div>
+          <div className="message-detail-footer-container">
+            <Grid
+              container
+              sx={{
+                boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.2)",
+                width: "100%",
+                height: "4.9rem",
+                // position: "fixed",
+                // bottom: 0,
+                justifyContent: "center",
+                alignItems: "center",
+                display: "flex",
+                backgroundColor: "white",
+              }}
+            >
+              <Grid item sx={{ flex: 1, p: ".3rem" }}>
+                <input
+                  style={{
+                    width: "95%",
+                    padding: ".31rem",
+                    paddingLeft: ".8rem",
+                    height: "2rem",
+                    borderRadius: "200px",
+                    border: "none",
+                    backgroundColor: "#f0f0f0",
+                    outline: "none",
+                  }}
+                  value={message}
+                  onChange={handleMessageChange}
+                  onKeyDown={handleKeyDown}
+                />
+              </Grid>
+              <Grid item sx={{ p: ".5rem" }}>
+                <Fab color="primary" sx={{ width: "2.8rem", height: "2.8rem" }} aria-label="add">
+                  <SendIcon
+                    onClick={() => {
+                      if (message.trim() !== "") {
+                        sendMessage();
+                        setMessage("");
+                      }
+                    }}
+                  />
+                </Fab>
+              </Grid>
+            </Grid>
+          </div>
+        </div>
+      </div>
+
+      {/* <Box
         sx={{
           width: "100%",
           height: "3.3rem",
@@ -201,9 +347,7 @@ const Messagedetail = () => {
             }}
             onClick={handleBackToListClick}
           />
-          <Typography sx={{ marginTop: "1rem", fontSize: "1.3rem", fontWeight: "bold" }}>
-            {targetNickName}
-          </Typography>
+          <Typography sx={{ marginTop: "1rem", fontSize: "1.3rem", fontWeight: "bold" }}>{targetNickName}</Typography>
         </Grid>
       </Box>
       <div
@@ -232,12 +376,8 @@ const Messagedetail = () => {
                     style={{ color: "white" }}
                   >
                     <Message.Footer
-                      sender={
-                        message.loginId === senderId ? "" : formatDateTime(message.createdDate)
-                      }
-                      sentTime={
-                        message.loginId === senderId ? formatDateTime(message.createdDate) : ""
-                      }
+                      sender={message.loginId === senderId ? "" : formatDateTime(message.createdDate)}
+                      sentTime={message.loginId === senderId ? formatDateTime(message.createdDate) : ""}
                     />
                   </Message>
                 </React.Fragment>
@@ -258,16 +398,8 @@ const Messagedetail = () => {
                     }}
                   >
                     <Message.Footer
-                      sender={
-                        message.senderId === senderId
-                          ? ""
-                          : new Date().toLocaleTimeString("ko-KR").replace(/:\d+$/, "")
-                      }
-                      sentTime={
-                        message.senderId === senderId
-                          ? new Date().toLocaleTimeString("ko-KR").replace(/:\d+$/, "")
-                          : ""
-                      }
+                      sender={message.senderId === senderId ? "" : new Date().toLocaleTimeString("ko-KR").replace(/:\d+$/, "")}
+                      sentTime={message.senderId === senderId ? new Date().toLocaleTimeString("ko-KR").replace(/:\d+$/, "") : ""}
                     />
                   </Message>
                 </React.Fragment>
@@ -314,12 +446,13 @@ const Messagedetail = () => {
                 if (message.trim() !== "") {
                   sendMessage();
                   setMessage("");
+                  console.log(messageLength);
                 }
               }}
             />
           </Fab>
         </Grid>
-      </Grid>
+      </Grid> */}
     </React.Fragment>
   );
 };

@@ -34,7 +34,7 @@ function Passwordchange() {
   const [NewpasswordChecking, setNewPasswordChecking] = useState(false);
   const [NowAndNewpasswordChecking, setNowAndNewpasswordChecking] = useState(false);
   const [passwordMismatch, setPasswordMismatch] = useState(false);
-  const logincheck = useSelector((state) => state.auth.isAutoLoginChecked)
+  const logincheck = useSelector((state) => state.auth.loginchecked)
 
   // 비밀번호 보기 / 숨기기 토글
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -50,6 +50,7 @@ function Passwordchange() {
   };
 
   useEffect(() => {
+    console.log()
     if (logincheck !== true) {
         navigate('/Mobile/Login')
       }
@@ -109,19 +110,17 @@ function Passwordchange() {
 
   // 비밀번호 변경 완료시 결과
   const handleOpenChangePasswordResultPage = () => {
+    console.log(loginId)
+    console.log(password2)
+    console.log(password1)
     if (isChangePasswordClickable) {
-      console.log(carNumber);
       http({
         method: "put",
-        url: "/tenant",
+        url: "/tenant/password",
         data: {
-          carNumber: carNumber,
-          loginId: loginId,
-          loginPassword: password2,
-          name: name,
-          phoneNumber: phoneNumber,
-          villaIdNumber: villaidnumber,
-          villaNumber: villarnumber,
+          modifyPwd: password2,
+          presentPwd: password1,
+          userId: loginId
         },
       })
         .then((res) => {
