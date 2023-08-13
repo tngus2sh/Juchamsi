@@ -10,6 +10,9 @@ import { setWhenEnteringCar } from '../../redux/mobileUserinfo';
 import http from "../../axios/http";
 import { setBoxItem, setmycar } from '../../redux/mobileparking'; 
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
+import { initializeApp } from "firebase/app";
+import { getMessaging, getToken } from "firebase/messaging";
+import { setFcmToken } from '../../redux/mobileUserinfo';
 
 const config = {
   apiKey: "AIzaSyAP0IeVXonU6Z5LjfuCHU-V256A0IW13B0",
@@ -213,8 +216,8 @@ function Parkinglot() {
               <Box key={`${i}-${j}`} sx={{
                 width: '4rem',
                 height: '5rem',
-                marginRight: '1rem',
-                marginLeft: '1rem',
+                marginRight: '1.5rem',
+                marginLeft: '1.5rem',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -247,8 +250,29 @@ function Parkinglot() {
           );
         }
       }
-
-    }
+    // 아무것도 주차된게 없을때
+    } else {
+      for (let i = 0; i < Boxrow; i++) {
+        for (let j = 0; j < BoxColumn; j++) {
+          const index = i * BoxColumn + j;
+          boxes.push(
+            <button key={`${i}-${j}`} style={{ border: 'none', backgroundColor: 'transparent', padding: 0 }}>
+              <Box key={`${i}-${j}`} sx={{
+                width: '4rem',
+                height: '5rem',
+                marginRight: '1.3rem',
+                marginLeft: '1.3rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: '#FFFFFF',
+                flexDirection: 'column', // 수직 방향으로 아이콘과 텍스트 정렬
+              }}>
+              </Box>
+              </button>)
+          }
+        }
+      }
     return boxes;
   };
 
@@ -264,7 +288,7 @@ function Parkinglot() {
         <p style={{fontSize:'1.5rem'}}>오늘의 주차 정보!</p>
       <p style={{height:'1rem', position:'relative', top:'3.5rem', left:'0.5rem', fontWeight:'bolder'}}>현재 주차 현황</p>
       </div>
-      <Box className='ParkinglotBox' sx={{width:viewportWidth, height: viewportHeight * 0.68, backgroundColor:'#F2F2F2', borderRadius: '10px'}}>
+      <Box className='ParkinglotBox' sx={{width:viewportWidth, height: viewportHeight * 0.78, backgroundColor:'#F2F2F2', borderRadius: '10px'}}>
       <KeyboardDoubleArrowUpIcon sx={{position:'relative', top:'4rem'}}/>
       <p style={{position:'relative',top:'4rem', fontWeight:'bolder'}}>출구</p>
         <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', width:viewportWidth, height: viewportHeight * 0.4, justifyContent:'center', marginTop:'5rem'}}>
