@@ -67,6 +67,10 @@ const Messagedetail = () => {
     connect();
   }, [roomId, senderId]);
 
+  useEffect(() => {
+    dispatch(setReadMessage(messageStorage.length));
+  }, [messageStorage]);
+
   async function fetchMessage() {
     await http
       .get(`/chat/room/${senderId}/${roomId}`)
@@ -90,11 +94,14 @@ const Messagedetail = () => {
       function (frame) {
         ws.subscribe("/topic/chat/room/" + roomId, function (message) {
           console.log("message 리스트??");
-          // console.log(message);
           const recv = JSON.parse(message.body);
           recvMessage(recv);
         });
-        ws.send("/app/chat/message", {}, JSON.stringify({ type: "ENTER", roomId: roomId, senderId: senderId }));
+        ws.send(
+          "/app/chat/message",
+          {},
+          JSON.stringify({ type: "ENTER", roomId: roomId, senderId: senderId })
+        );
       },
       function (error) {
         console.log("Connection error:", error);
@@ -188,7 +195,10 @@ const Messagedetail = () => {
                 height: "3.5rem",
               }}
             >
-              <Grid container sx={{ justifyContent: "center", height: "3.5rem", alignContent: "center" }}>
+              <Grid
+                container
+                sx={{ justifyContent: "center", height: "3.5rem", alignContent: "center" }}
+              >
                 <ArrowBackIosRoundedIcon
                   sx={{
                     position: "fixed",
@@ -199,7 +209,9 @@ const Messagedetail = () => {
                   }}
                   onClick={handleBackToListClick}
                 />
-                <Typography sx={{ marginTop: "1rem", fontSize: "1.3rem", fontWeight: "bold" }}>{targetNickName}</Typography>
+                <Typography sx={{ marginTop: "1rem", fontSize: "1.3rem", fontWeight: "bold" }}>
+                  {targetNickName}
+                </Typography>
               </Grid>
             </Box>
           </div>
@@ -223,8 +235,12 @@ const Messagedetail = () => {
                         style={{ color: "white" }}
                       >
                         <Message.Footer
-                          sender={message.loginId === senderId ? "" : formatDateTime(message.createdDate)}
-                          sentTime={message.loginId === senderId ? formatDateTime(message.createdDate) : ""}
+                          sender={
+                            message.loginId === senderId ? "" : formatDateTime(message.createdDate)
+                          }
+                          sentTime={
+                            message.loginId === senderId ? formatDateTime(message.createdDate) : ""
+                          }
                         />
                       </Message>
                     </React.Fragment>
@@ -245,8 +261,16 @@ const Messagedetail = () => {
                         }}
                       >
                         <Message.Footer
-                          sender={message.senderId === senderId ? "" : new Date().toLocaleTimeString("ko-KR").replace(/:\d+$/, "")}
-                          sentTime={message.senderId === senderId ? new Date().toLocaleTimeString("ko-KR").replace(/:\d+$/, "") : ""}
+                          sender={
+                            message.senderId === senderId
+                              ? ""
+                              : new Date().toLocaleTimeString("ko-KR").replace(/:\d+$/, "")
+                          }
+                          sentTime={
+                            message.senderId === senderId
+                              ? new Date().toLocaleTimeString("ko-KR").replace(/:\d+$/, "")
+                              : ""
+                          }
                         />
                       </Message>
                     </React.Fragment>
@@ -422,6 +446,7 @@ const Messagedetail = () => {
                 if (message.trim() !== "") {
                   sendMessage();
                   setMessage("");
+                  console.log(messageLength);
                 }
               }}
             />

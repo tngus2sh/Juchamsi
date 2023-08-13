@@ -24,11 +24,12 @@ def scan_bluetooth():
     state = 0
     cnt = 0
     repeat = 0
-    parking_url="https://453d-121-178-98-21.ngrok-free.app/parking/entrance"
-    exit_url = "https://453d-121-178-98-21.ngrok-free.app/parking/exit"
-    # url="https://e6f5-121-178-98-21.ngrok-free.app/parking/entrance"
+    "http://i9c107.p.ssafy.io:8080"
+    parking_url="http://i9c107.p.ssafy.io:8080/parking/entrance"
+    exit_url = "http://i9c107.p.ssafy.io:8080/parking/exit"s
+    soundModuleUrl = "http://172.20.10.9/"
     datas={}
-    ground_module = ['b0:a7:32:db:c8:46', 'cc:db:a7:69:74:4a','cc:db:a7:69:19:7a', 'b0:a7:32:db:c3:52', '40:91:51:fc:fd:6a']
+    ground_module = ['b0:a7:32:db:c8:46', 'cc:db:a7:69:74:4a','cc:db:a7:69:19:7a', 'b0:a7:32:db:c3:52']
     searched = [0, 0, 0, 0, 0]
     park_state = []
     lastSonarValues = {}
@@ -54,7 +55,7 @@ def scan_bluetooth():
             print('not park')
             return
         if repeat == 300:
-            print('signal_disconnect')
+            print('signal_disconnect', cnt)
             return
         for beacon in returnedList:
             for comp_str in ground_module:
@@ -69,9 +70,6 @@ def scan_bluetooth():
                         sonarCount[nowSonar] = 0
                     sonarCount[nowSonar] += 1
                     lastSonarValues[beacon[0:17]] = sendData[2]
-                    # measure dis
-                    # ratio = float(sendData[5])*1.0/float(sendData[4])
-                    # dis = 10**((27.55-(20*math.log10(2400))+math.fabs(ratio))/20.0)
 
                     # measure Frequency
                     if beacon[0:17] not in searched and beacon[0:17] in ground_module:
@@ -84,8 +82,6 @@ def scan_bluetooth():
                             searched[2] += 1
                         elif(beacon[0:17] == ground_module[3]):
                             searched[3] += 1
-                        elif(beacon[0:17] == ground_module[4]):
-                            searched[4] +=1
 
                         # send Frequency
                         if cnt == 100:
@@ -96,7 +92,7 @@ def scan_bluetooth():
                             mostRecentSonar = lastSonarValues[mostFrequentMac]
                             # print(max(searched))
                             # print(searched)
-                            print(rpiMac, mostRecentSonar)
+                            print(rpiMac, mostRecentSonar, mostFrequentMac)
                             # print searched.index(max(searched))
                             if int(mostRecentSonar) < 30:
                                 print(nowParking[mostFrequentMacIndex])
@@ -108,6 +104,10 @@ def scan_bluetooth():
                                     print('car_in')
                                     json_data = json.dumps(datas)
                                     response = requests.post(parking_url, data=json_data, headers=headers)
+                                    try:
+                                        response = requests.post(soundModuleUrl, data=json_data, headers=headers)
+                                    except Exception as e:
+                                        print("Failed to send request to soundModuleUrl. Error: {}".format(e))
                             else:
                                 if nowParking[mostFrequentMacIndex] == 1:
                                     headers = {'Content-Type': 'application/json'}
@@ -115,19 +115,32 @@ def scan_bluetooth():
                                     nowParking[mostFrequentMacIndex] = 0
                                     print('car_out')
                                     json_data = json.dumps(datas)
-                                    response = requests.post(exit_url, data=datas)
+                                    response = requests.post(exit_url, data=json_data, headers=headers)
                             print searched.index(max(searched)), mostRecentSonar
                             return searched.index(max(searched))
 
- 
+def safe_readline(ser):
+    try:
+        return ser.readline().decode('utf-8').rstrip()
+    except serial.serialutil.SerialException:
+        print("Serial connection error. Trying to reconnect...")
+        time.sleep(1)
+        try:
+            ser.close()
+            ser.open()
+            return ""
+        except:
+            print("Failed to reconnect. Retrying...")
+            time.sleep(1)
+            return ""
 
 if __name__ == '__main__':
     ser = serial.Serial('/dev/ttyUSB0', 115200, timeout=1)
     ser.flush
-    nowParking = [0, 0, 0, 0, 0]
+    nowParking = [0, 0, 0, 0]
     while True:
         if ser.in_waiting>0:
-            line = ser.readline().decode('utf-8').rstrip()
+            line = safe_readline(ser)
             parts = line.split(": ")
             if len(parts)>=2:
                 change_value = float(parts[1])
