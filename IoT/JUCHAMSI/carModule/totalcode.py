@@ -24,9 +24,10 @@ def scan_bluetooth():
     state = 0
     cnt = 0
     repeat = 0
-    parking_url="https://753c-121-178-98-21.ngrok-free.app/parking/entrance"
-    exit_url = "https://753c-121-178-98-21.ngrok-free.app/parking/exit"
-    soundModuleUrl = "http://192.168.1.29/"
+    "http://i9c107.p.ssafy.io:8080"
+    parking_url="http://i9c107.p.ssafy.io:8080/parking/entrance"
+    exit_url = "http://i9c107.p.ssafy.io:8080/parking/exit"s
+    soundModuleUrl = "http://172.20.10.9/"
     datas={}
     ground_module = ['b0:a7:32:db:c8:46', 'cc:db:a7:69:74:4a','cc:db:a7:69:19:7a', 'b0:a7:32:db:c3:52']
     searched = [0, 0, 0, 0, 0]
