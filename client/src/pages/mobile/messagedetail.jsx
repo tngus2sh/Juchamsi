@@ -68,8 +68,9 @@ const Messagedetail = () => {
   }, [roomId, senderId]);
 
   useEffect(() => {
-    dispatch(setReadMessage(messageStorage.length));
-  }, [messageStorage]);
+    dispatch(setReadMessage(messageStorage.length + messages.length));
+    console.log("ㅁㄴ일마 ㅡ라ㅣㅁㄴ우ㅏㅣㄻ니람ㄴ아ㅣㄻㄴ림ㄴㄹ");
+  }, [messages.length]);
 
   async function fetchMessage() {
     await http
@@ -94,6 +95,7 @@ const Messagedetail = () => {
       function (frame) {
         ws.subscribe("/topic/chat/room/" + roomId, function (message) {
           console.log("message 리스트??");
+          // console.log(messageStorage.length);
           const recv = JSON.parse(message.body);
           recvMessage(recv);
         });
