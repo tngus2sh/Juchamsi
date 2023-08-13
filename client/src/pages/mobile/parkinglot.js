@@ -104,7 +104,7 @@ function Parkinglot() {
           method:'get',
           url:`/parking/lot/${villanumber}`
         })
-        .then((res) => {
+          .then((res) => {
           let resultbox = []
             for (let i=0; i<res.data.response.length; i++) {
               if (res.data.response[i].active === 'ACTIVE') {
@@ -215,8 +215,8 @@ function Parkinglot() {
               <Box key={`${i}-${j}`} sx={{
                 width: '4rem',
                 height: '5rem',
-                marginRight: '1.5rem',
-                marginLeft: '1.5rem',
+                marginRight: '2rem',
+                marginLeft: '3rem',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -253,7 +253,6 @@ function Parkinglot() {
     } else {
       for (let i = 0; i < Boxrow; i++) {
         for (let j = 0; j < BoxColumn; j++) {
-          const index = i * BoxColumn + j;
           boxes.push(
             <button key={`${i}-${j}`} style={{ border: 'none', backgroundColor: 'transparent', padding: 0 }}>
               <Box key={`${i}-${j}`} sx={{

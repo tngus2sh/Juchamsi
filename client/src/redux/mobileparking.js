@@ -11,7 +11,7 @@ const MycarstatusSlice = createSlice({
     Outtime: [],
     // 주차 위치
     parkingnow: [],
-    Boxrow:3,
+    Boxrow:2,
     BoxColumn:2,
   },
   reducers: {

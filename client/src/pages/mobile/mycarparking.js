@@ -26,8 +26,8 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 function MycarParking() {
   const logincheck = useSelector((state) => state.auth.loginchecked)
   const villanumber = useSelector((state) => state.mobileInfo.villaIdNumber);
-  const othercarphonenumber = null;
-  const othercarid = null;
+  let othercarphonenumber = null;
+  let othercarid = null;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userid = useSelector((state) => state.mobileInfo.loginId);
@@ -43,7 +43,7 @@ function MycarParking() {
             method:'get',
             url:`/parking/lot/${villanumber}`
           })
-          .then((res) => {
+            .then((res) => {
             let resultbox = []
               for (let i=0; i<res.data.response.length; i++) {
                 if (res.data.response[i].active === 'ACTIVE') {
@@ -52,8 +52,8 @@ function MycarParking() {
                     dispatch(setmycar(res.data.response[i].seatNumber))
                   }
                   }
-                }
-              dispatch(setBoxItem(resultbox))
+              }
+            dispatch(setBoxItem(resultbox))
             })
           .catch((err) => {
             console.log(err)
@@ -98,19 +98,27 @@ function MycarParking() {
     let othercarnum = null;
     let othercarouttime = null;
     if (Mycar > Boxrow) {
-      othercarnum -= Boxrow;
+      othercarnum = Mycar - Boxrow;
       if (outTimeArray[othercarnum] !== '') {
         othercarouttime = outTimeArray[othercarnum];
       }
     }
-    if (othercarnum !== null && othercarnum < 0) {
+
+    let otheruser = null
+    for (let k = 0; k < outTimeArray.length; k++) {
+      if (BoxItem[k] !== undefined) {
+        if (BoxItem[k].seatNumber === othercarnum) {
+          otheruser = BoxItem[k].userId
+        }
+      }
+    }
+    if (otheruser !== null) {
       http({
         method:'',
-        url:`/tenant/${BoxItem[othercarnum]}`
+        url:`/tenant/${otheruser}`
       })
         .then((res) => {
-          othercarphonenumber = res.data.response.phoneNumber;
-          othercarid = res.data.response.loginId;
+        othercarphonenumber = res.data.response.phoneNumber
       })
     }
     return othercarouttime;
@@ -121,7 +129,7 @@ function MycarParking() {
     let othercarnum = null;
     let othercarouttime = null;
     if (Mycar <= Boxrow) {
-      othercarnum -= Boxrow;
+      othercarnum = Mycar + Boxrow;
       if (othercarnum <0) {
         othercarnum = 0
       }
@@ -129,15 +137,24 @@ function MycarParking() {
         othercarouttime = outTimeArray[othercarnum];
       }
     }
-    if (othercarnum !== null && othercarnum < 0) {
+    let otheruser = null
+    for (let k = 0; k < outTimeArray.length; k++) {
+      if (BoxItem[k] !== undefined) {
+        if (BoxItem[k].seatNumber === othercarnum) {
+          otheruser = BoxItem[k].userId
+        }
+      }
+    }
+    if (otheruser !== null) {
       http({
         method:'',
-        url:`/tenant/${BoxItem[othercarnum]}`
+        url:`/tenant/${otheruser}`
       })
-      .then((res) => {
+        .then((res) => {
         othercarphonenumber = res.data.response.phoneNumber
       })
     }
+    console.log(othercarouttime)
     return othercarouttime;
   };
   // 앞차 출차시간
@@ -147,10 +164,10 @@ function MycarParking() {
 
 
   // 앞차 존재 여부
-  const isfrontothercar = frontothercarouttime !== null;
+  const isfrontothercar = !(frontothercarouttime === undefined || frontothercarouttime === null);
 
   // 뒤차 존재 여부
-  const isbackothercar = backothercarouttime !== null;
+  const isbackothercar = !(backothercarouttime === undefined || backothercarouttime === null);
 
   // 주차시간 설정 여부
   let ismycarparking = false
@@ -365,8 +382,8 @@ function MycarParking() {
                   </div>
                 </div>
                 <div className="my-car-timer-container">
-                  <div className="my-car-date-container">{defaultday.substring(2, 10).replace(/-/g, '.')}</div>
-                  <div className="my-car-time-container">{defaulttime}</div>
+                  <div className="my-car-date-container">{frontothercarouttime.substring(2, 10).replace(/-/g, '.')}</div>
+                  <div className="my-car-time-container">{frontothercarouttime.substring(11,16)}</div>
                 </div>
                 <Button variant="contained" onClick={handleOpenChat} sx={{ position: "relative", top: "1rem", left: "0rem", borderRadius:'0.5rem' }}>
                   대화방 생성하기
@@ -377,7 +394,7 @@ function MycarParking() {
                 </div>
                 <div className="other-phonenumber-text">
                   {/* 핸드폰 번호는 별도로 api요청해서 받아와야함 */}
-                  {othercarphonenumber}
+                  {/* {othercarphonenumber} */}
                 </div>
               </div>
             </div>
@@ -407,8 +424,8 @@ function MycarParking() {
                   </div>
                 </div>
                 <div className="my-car-timer-container">
-                  <div className="my-car-date-container">{defaultday.substring(2, 10).replace(/-/g, '.')}</div>
-                  <div className="my-car-time-container">{defaulttime}</div>
+                  <div className="my-car-date-container">{backothercarouttime.substring(2, 10).replace(/-/g, '.')}</div>
+                  <div className="my-car-time-container">{backothercarouttime.substring(11,16)}</div>
                 </div>
                 <Button variant="contained" onClick={handleOpenChat} sx={{ position: "relative", top: "1rem", left: "0rem", borderRadius:'0.5rem' }}>
                   대화방 생성하기
