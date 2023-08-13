@@ -165,7 +165,6 @@ function Footer(props) {
           </div>
         </div>
       </Box>
-      {/* <img className="footerlogo" src={process.env.PUBLIC_URL + "/img/kiosk/logo1.png"} alt={"title"}></img> */}
     </React.Fragment>
   );
 }

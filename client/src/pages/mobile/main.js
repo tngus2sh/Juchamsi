@@ -39,7 +39,7 @@ function Home() {
         <img
           ref={transitionRef}
           className="mainlogo"
-          src={process.env.PUBLIC_URL + '/img/kiosk/logo1.png'}
+          src={process.env.PUBLIC_URL + '/img/mobile/logo.png'}
           alt="title"
         ></img>
       </CSSTransition>
