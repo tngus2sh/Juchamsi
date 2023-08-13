@@ -76,8 +76,8 @@ def scan_bluetooth():
                     # ['mac', 'manuid', 'sonar', 'sonartime', 'tx', 'rssi', 'dis']
                     sendData = beacon.split(',')
                     print(sendData)
-
                     nowSonar = int(sendData[2])
+                    print(nowSonar)
                     if nowSonar not in sonarCount:
                         sonarCount[nowSonar] = 0
                     sonarCount[nowSonar] += 1
