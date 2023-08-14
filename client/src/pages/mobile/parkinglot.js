@@ -15,7 +15,7 @@ import PinDropRoundedIcon from "@mui/icons-material/PinDropRounded";
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken } from "firebase/messaging";
 import { setFcmToken } from "../../redux/mobileUserinfo";
-import Grid from "@mui/material/Grid";
+
 
 const config = {
   apiKey: "AIzaSyAP0IeVXonU6Z5LjfuCHU-V256A0IW13B0",
@@ -213,121 +213,121 @@ function Parkinglot() {
 
   // Box 그리드를 생성하는 함수
   // 열에 맞게 한행에 박스 만들기
-  const renderBoxColumn = (rowIndex) => {
-    const columns = [];
+  // const renderBoxColumn = (rowIndex) => {
+  //   const columns = [];
 
-    for (let j = 0; j < BoxColumn; j++) {
-      const index = rowIndex * BoxColumn + j;
-      console.log(index);
-      const MycarIcon = index === mycar - 1;
+  //   for (let j = 0; j < BoxColumn; j++) {
+  //     const index = rowIndex * BoxColumn + j;
+  //     console.log(index);
+  //     const MycarIcon = index === mycar - 1;
 
-      columns.push(
-        <button key={`${rowIndex}-${j}`} onClick={MycarIcon ? handleOpenMycarPage : null} style={{ border: "none", backgroundColor: "transparent", padding: 0 }}>
-          <Box
-            key={`${rowIndex}-${j}`}
-            sx={{
-              width: "8rem",
-              height: viewportHeight * 0.16,
-              marginRight: "1rem",
-              marginLeft: "1rem",
-              marginBottom: "2rem",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: MycarIcon ? "#006DD1" : outTimeArray[index + 1] !== "" ? "#EA6868" : "#FFFFFF",
-              flexDirection: "column",
-            }}
-          >
-            {MycarIcon && (
-              <>
-                <img src={process.env.PUBLIC_URL + "/img/mobile/mycaricon2.png"} alt={"mycarimg2"} style={{ display: "flex", position: "relative", top: "-1rem" }}></img>
-                <img src={process.env.PUBLIC_URL + "/img/mobile/mycar.png"} alt={"carimg"} style={{ position: "relative", top: "-1rem" }}></img>
-              </>
-            )}
-            {/* {!MycarIcon && outTimeArray[index + 1] && ( // fix: 출차 시간 등록하지 않으면 이거 제대로 안 나옴 */}
-            {!MycarIcon && outTimeArray[index + 1] !== "" && (
-              <>
-                <p style={{ color: "#B3B3B3", fontSize: "16px", textAlign: "center", display: "flex", position: "relative", top: -viewportHeight * 0.06 }}>
-                  {outTimeArray[index + 1].length > 10 ? `${outTimeArray[index + 1].substring(2, 10).replace(/-/g, ".")}` : outTimeArray[index + 1]}
-                </p>
-                {carnumArray[index + 1] && <p style={{ color: "#FFFFFF", fontSize: "20px", textAlign: "center", display: "flex" }}>{carnumArray[index + 1]}</p>}
-                <p style={{ color: "#000000", fontSize: "20px", textAlign: "center", display: "flex", position: "relative", top: viewportHeight * 0.07, fontWeight: "bolder" }}>
-                  {outTimeArray[index + 1].length > 10 ? `~${outTimeArray[index + 1].substring(11, 16)}` : outTimeArray[index + 1]}
-                </p>
-              </>
-            )}
-          </Box>
-        </button>
-      );
-    }
+  //     columns.push(
+  //       <button key={`${rowIndex}-${j}`} onClick={MycarIcon ? handleOpenMycarPage : null} style={{ border: "none", backgroundColor: "transparent", padding: 0 }}>
+  //         <Box
+  //           key={`${rowIndex}-${j}`}
+  //           sx={{
+  //             width: "8rem",
+  //             height: viewportHeight * 0.16,
+  //             marginRight: "1rem",
+  //             marginLeft: "1rem",
+  //             marginBottom: "2rem",
+  //             display: "flex",
+  //             alignItems: "center",
+  //             justifyContent: "center",
+  //             backgroundColor: MycarIcon ? "#006DD1" : outTimeArray[index + 1] !== "" ? "#EA6868" : "#FFFFFF",
+  //             flexDirection: "column",
+  //           }}
+  //         >
+  //           {MycarIcon && (
+  //             <>
+  //               <img src={process.env.PUBLIC_URL + "/img/mobile/mycaricon2.png"} alt={"mycarimg2"} style={{ display: "flex", position: "relative", top: "-1rem" }}></img>
+  //               <img src={process.env.PUBLIC_URL + "/img/mobile/mycar.png"} alt={"carimg"} style={{ position: "relative", top: "-1rem" }}></img>
+  //             </>
+  //           )}
+  //           {/* {!MycarIcon && outTimeArray[index + 1] && ( // fix: 출차 시간 등록하지 않으면 이거 제대로 안 나옴 */}
+  //           {!MycarIcon && outTimeArray[index + 1] !== "" && (
+  //             <>
+  //               <p style={{ color: "#B3B3B3", fontSize: "16px", textAlign: "center", display: "flex", position: "relative", top: -viewportHeight * 0.06 }}>
+  //                 {outTimeArray[index + 1].length > 10 ? `${outTimeArray[index + 1].substring(2, 10).replace(/-/g, ".")}` : outTimeArray[index + 1]}
+  //               </p>
+  //               {carnumArray[index + 1] && <p style={{ color: "#FFFFFF", fontSize: "20px", textAlign: "center", display: "flex" }}>{carnumArray[index + 1]}</p>}
+  //               <p style={{ color: "#000000", fontSize: "20px", textAlign: "center", display: "flex", position: "relative", top: viewportHeight * 0.07, fontWeight: "bolder" }}>
+  //                 {outTimeArray[index + 1].length > 10 ? `~${outTimeArray[index + 1].substring(11, 16)}` : outTimeArray[index + 1]}
+  //               </p>
+  //             </>
+  //           )}
+  //         </Box>
+  //       </button>
+  //     );
+  //   }
 
-    return columns;
-  };
+  //   return columns;
+  // };
 
   // 행의 수만큼 박스만들기 수행
-  const renderBoxRow = () => {
-    const rows = [];
+  // const renderBoxRow = () => {
+  //   const rows = [];
 
-    for (let i = 0; i < Boxrow; i++) {
-      const row = (
-        <div key={`row-${i}`} style={{ display: "flex" }}>
-          {renderBoxColumn(i)}
-        </div>
-      );
+  //   for (let i = 0; i < Boxrow; i++) {
+  //     const row = (
+  //       <div key={`row-${i}`} style={{ display: "flex" }}>
+  //         {renderBoxColumn(i)}
+  //       </div>
+  //     );
 
-      rows.push(row);
-    }
+  //     rows.push(row);
+  //   }
 
-    return rows;
-  };
+  //   return rows;
+  // };
 
   // 주차현황 없을때 빈 박스 만들기
-  const nobox = () => {
-    const boxes = [];
-    for (let i = 0; i < Boxrow; i++) {
-      for (let j = 0; j < BoxColumn; j++) {
-        boxes.push(
-          <button key={`${i}-${j}`} style={{ border: "none", backgroundColor: "transparent", padding: 0 }}>
-            <Box
-              key={`${i}-${j}`}
-              sx={{
-                width: "4rem",
-                height: "5rem",
-                marginRight: "1rem",
-                marginLeft: "1rem",
-                marginBottom: "2rem",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                backgroundColor: "#FFFFFF",
-                flexDirection: "column", // 수직 방향으로 아이콘과 텍스트 정렬
-              }}
-            ></Box>
-          </button>
-        );
-      }
-    }
-  };
+  // const nobox = () => {
+  //   const boxes = [];
+  //   for (let i = 0; i < Boxrow; i++) {
+  //     for (let j = 0; j < BoxColumn; j++) {
+  //       boxes.push(
+  //         <button key={`${i}-${j}`} style={{ border: "none", backgroundColor: "transparent", padding: 0 }}>
+  //           <Box
+  //             key={`${i}-${j}`}
+  //             sx={{
+  //               width: "4rem",
+  //               height: "5rem",
+  //               marginRight: "1rem",
+  //               marginLeft: "1rem",
+  //               marginBottom: "2rem",
+  //               display: "flex",
+  //               alignItems: "center",
+  //               justifyContent: "center",
+  //               backgroundColor: "#FFFFFF",
+  //               flexDirection: "column", // 수직 방향으로 아이콘과 텍스트 정렬
+  //             }}
+  //           ></Box>
+  //         </button>
+  //       );
+  //     }
+  //   }
+  // };
 
   // 전체 현황 만들기
-  const renderBoxGrid = () => {
-    if (BoxItem.length !== 0) {
-      return (
-        <div
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            marginTop: "5rem",
-          }}
-        >
-          {renderBoxRow()}
-        </div>
-      );
-    } else {
-      return nobox();
-    }
-  };
+  // const renderBoxGrid = () => {
+  //   if (BoxItem.length !== 0) {
+  //     return (
+  //       <div
+  //         sx={{
+  //           display: "flex",
+  //           flexDirection: "column",
+  //           alignItems: "center",
+  //           marginTop: "5rem",
+  //         }}
+  //       >
+  //         {renderBoxRow()}
+  //       </div>
+  //     );
+  //   } else {
+  //     return nobox();
+  //   }
+  // };
 
   const drawParkingLotCol = (i) => {
     let cols = [];
@@ -414,7 +414,7 @@ function Parkinglot() {
     console.log(outTimeArray);
     let rows = [];
 
-    if (BoxColumn != 0) {
+    if (BoxColumn !== 0) {
       for (let i = 0; i < 2; i++) {
         const row = (
           <div style={{ width: "100%", height: "35%" }}>
