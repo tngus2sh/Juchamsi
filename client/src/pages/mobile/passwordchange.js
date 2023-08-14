@@ -16,13 +16,8 @@ import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
 function Passwordchange() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const carNumber = useSelector((state) => state.mobileInfo.carNumber);
   const loginId = useSelector((state) => state.mobileInfo.loginId);
-  const name = useSelector((state) => state.mobileInfo.name);
-  const phoneNumber = useSelector((state) => state.mobileInfo.phoneNumber);
   const password = useSelector((state) => state.auth.password);
-  const villarnumber = useSelector((state) => state.mobileInfo.villaNumber);
-  const villaidnumber = useSelector((state) => state.mobileInfo.villaIdNumber);
 
   const [showPassword, setShowPassword] = React.useState(false);
   const [shownewPassword, setShownewPassword] = React.useState(false);
