@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Reset as GlobalReset } from "styled-reset";
-
 import LoginPage from "./pages/web/login";
 import SignUpPage from "./pages/web/signup";
 import WebMainPage from "./pages/web/mainpage";

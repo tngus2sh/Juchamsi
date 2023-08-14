@@ -293,7 +293,7 @@ function Parkinglot() {
           {renderBoxGrid()}
         </Box>
         </Box>
-      <InCar open={open} />
+      <InCar open={false} />
       </Container>
       <Footer HomeiconColor="#006DD1"/>
     </React.Fragment>
