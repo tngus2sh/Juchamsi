@@ -5,12 +5,11 @@ import { useSelector, useDispatch } from "react-redux";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import dayjs from "dayjs";
-import { useNavigate,  } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import "dayjs/locale/ko";
 import Modal from "@mui/material/Modal";
@@ -22,6 +21,8 @@ import { setBoxItem, setmycar } from "../../redux/mobileparking";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import MinorCrashRoundedIcon from "@mui/icons-material/MinorCrashRounded";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import { TimeField } from '@mui/x-date-pickers/TimeField';
+import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 
 function MycarParking() {
   const logincheck = useSelector((state) => state.auth.loginchecked)
@@ -32,6 +33,20 @@ function MycarParking() {
   const userid = useSelector((state) => state.mobileInfo.loginId);
   const vilanumber = useSelector((state) => state.mobileInfo.villaIdNumber);
   const [otherCarPhoneNumber, setOtherCarPhoneNumber] = React.useState(null);
+  const [timeselect,settimeselect] = React.useState(false);
+  const handleopenTimselect =() => {
+    settimeselect(true)
+  }
+  const handleopenTimselectClose = () => {
+    settimeselect(false)
+  } 
+  const currentTime = dayjs();
+
+  const handleTimeok =() => {
+    const selectedTimeParsed = dayjs(selectedTime, "HH:mm:ss");
+    const timeDifferenceInMinutes = selectedTimeParsed.diff(currentTime, "minutes");
+    handleopenTimselectClose()
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -98,29 +113,32 @@ function MycarParking() {
   const frontothercar = () => {
     let othercarnum = null;
     let othercarouttime = null;
-    if (Mycar > Boxrow) {
-      othercarnum = Mycar - Boxrow;
-      if (outTimeArray[othercarnum] !== '') {
-        othercarouttime = outTimeArray[othercarnum];
-      }
-    }
-
-    let otheruser = null
-    for (let k = 0; k < outTimeArray.length; k++) {
-      if (BoxItem[k] !== undefined) {
-        if (BoxItem[k].seatNumber === othercarnum) {
-          otheruser = BoxItem[k].userId
+    if (Mycar !== null) {
+      if (Mycar > Boxrow) {
+        othercarnum = Mycar - Boxrow;
+        if (outTimeArray[othercarnum] !== '') {
+          othercarouttime = outTimeArray[othercarnum];
         }
       }
-    }
-    if (otheruser !== null) {
-      http({
-        method:'',
-        url:`/tenant/${otheruser}`
-      })
-        .then((res) => {
-          setOtherCarPhoneNumber(res.data.response.phoneNumber);
-      })
+      let otheruser = null
+      for (let k = 0; k < outTimeArray.length; k++) {
+        if (BoxItem[k] !== undefined) {
+          if (BoxItem[k].seatNumber === othercarnum) {
+            otheruser = BoxItem[k].userId
+          }
+        }
+      }
+      if (otheruser !== null) {
+        http({
+          method:'',
+          url:`/tenant/${otheruser}`
+        })
+          .then((res) => {
+            setOtherCarPhoneNumber(res.data.response.phoneNumber);
+        })
+      }
+    } else {
+      othercarouttime = null
     }
     return othercarouttime;
   };
@@ -129,31 +147,35 @@ function MycarParking() {
   const backothercar = () => {
     let othercarnum = null;
     let othercarouttime = null;
-    if (Mycar <= Boxrow) {
-      othercarnum = Mycar + Boxrow;
-      if (othercarnum <0) {
-        othercarnum = 0
-      }
-      if (outTimeArray[othercarnum] !== '') {
-        othercarouttime = outTimeArray[othercarnum];
-      }
-    }
-    let otheruser = null
-    for (let k = 0; k < outTimeArray.length; k++) {
-      if (BoxItem[k] !== undefined) {
-        if (BoxItem[k].seatNumber === othercarnum) {
-          otheruser = BoxItem[k].userId
+    if (Mycar !== null) {
+      if (Mycar <= Boxrow) {
+        othercarnum = Mycar + Boxrow;
+        if (othercarnum <0) {
+          othercarnum = 0
+        }
+        if (outTimeArray[othercarnum] !== '') {
+          othercarouttime = outTimeArray[othercarnum];
         }
       }
-    }
-    if (otheruser !== null) {
-      http({
-        method:'',
-        url:`/tenant/${otheruser}`
-      })
-        .then((res) => {
-          setOtherCarPhoneNumber(res.data.response.phoneNumber);
-      })
+      let otheruser = null
+      for (let k = 0; k < outTimeArray.length; k++) {
+        if (BoxItem[k] !== undefined) {
+          if (BoxItem[k].seatNumber === othercarnum) {
+            otheruser = BoxItem[k].userId
+          }
+        }
+      }
+      if (otheruser !== null) {
+        http({
+          method:'',
+          url:`/tenant/${otheruser}`
+        })
+          .then((res) => {
+            setOtherCarPhoneNumber(res.data.response.phoneNumber);
+        })
+      }
+    } else {
+      othercarouttime = null
     }
     return othercarouttime;
   };
@@ -183,6 +205,21 @@ function MycarParking() {
     border: "2px solid #000",
     boxShadow: 24,
     p: 5,
+  };
+
+  const style2 = {
+    position: "fixed",
+    top: "0",
+    left: "0",
+    rigiht: "0",
+    width: "100%",
+    height: "18rem",
+    bgcolor: "white",
+    borderRadius: "0 0 1rem 1rem",
+    boxShadow: 20,
+    textAlign: "center",
+    overflowY: "auto", // 스크롤바 추가
+    outline: "none",
   };
 
   // 시간 변경 클릭시 모달창 실행 종료 설정
@@ -479,7 +516,7 @@ function MycarParking() {
 
         <Container>
           <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
-            <Box sx={style}>
+            <Box sx={style2}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <MobileDatePicker
                   label="출차 예정 일자"
@@ -490,20 +527,72 @@ function MycarParking() {
                     toolbar: { toolbarFormat: "YYYY년 MM월 DD일", hidden: false },
                   }}
                   disablePast={true}
-                  sx={{ "& input": { textAlign: "center" } }}
+                  sx={{ "& input": { textAlign: "center" }, marginTop: "2rem", width:'80%' }}
                   className="outdaystyle1"
                 />
-                <DemoContainer components={["TimePicker"]} sx={{ mt: 4 }}>
-                  <TimePicker label="출차 예정 시간" ampm={false} value={selectedTime} onChange={handleTimeChange} sx={{ "& input": { textAlign: "center" } }} />
+                <DemoContainer components={["TimeField"]} sx={{ mt: 4, alignItems: "center" }}>
+                  <TimeField
+                      label="출차 예정 시간"
+                      value={selectedTime}
+                      onClick={handleopenTimselect}
+                      onChange={handleTimeChange}
+                      format="HH:mm"
+                      sx={{ "& input": { textAlign: "center" }, width: "80%" }}
+                    />
                 </DemoContainer>
                 {/* OK 버튼을 추가하고 handleOk 함수를 호출합니다. */}
-                <Box component="span" className="datetiembtn" onClick={handleOk}>
-                  <p className="datetimebtntext">저장</p>
-                </Box>
+                <button
+                  className="login-box"
+                  onClick={handleOk}
+                  style={{
+                    marginTop: "1.7rem",
+                    backgroundColor: "#006DD1",
+                    color: "white",
+                    marginBottom: "1rem",
+                    width: "10rem",
+                    borderRadius: "1rem",
+                  }}
+                >
+                  저장
+                </button>
               </LocalizationProvider>
             </Box>
           </Modal>
-
+          <Modal
+            open={timeselect}
+            close={handleopenTimselectClose}>
+            <Box sx={style2}>
+            <div className="modal-title-container" style={{ marginTop: "2rem", marginBottom:'0.8rem' }}>
+              <span className="bold-text" style={{ fontSize: "1.3rem" }}>
+                출차 예정 시간
+              </span>
+            </div>
+              <Box sx={{ width: "90%", ml:'1rem'}}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <MultiSectionDigitalClock
+                    value={selectedTime}
+                    onChange={handleTimeChange}
+                    ampm={false}
+                    sx={{width:'7rem', mb:'2%', height:'8rem'}}
+                  />
+                </LocalizationProvider>
+              </Box>
+            <button
+              className="login-box"
+              onClick={handleTimeok}
+              style={{
+                marginTop: "1.7rem",
+                backgroundColor: "#006DD1",
+                color: "white",
+                marginBottom: "1rem",
+                width: "10rem",
+                borderRadius: "1rem",
+              }}
+            >
+              확인
+            </button>
+            </Box>
+          </Modal>
         </Container>
         <Footer MycariconColor="#006DD1" />
       </div>
