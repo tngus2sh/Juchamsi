@@ -458,11 +458,6 @@ function Parkinglot() {
               입출구
             </span>
           </div>
-          {/* <div className="parkinglot-content-box-container" style={{ height: "65%", padding: "0 1.5rem" }}>
-            <div className="parkinglot-box-container" style={{ height: "100%" }}>
-              {drawParkingLotRow()}
-            </div>
-          </div> */}
           <div className="parkinglot-content-box-container" style={{ height: "58%", margin: "1.5rem 2.5rem", backgroundColor: "white", borderRadius: "0.5rem" }}>
             <div className="parkinglot-box-container" style={{ display: "flex", flexDirection: "column", height: "100%", justifyContent: "space-around", alignItems: "space-between" }}>
               {drawParkingLotRow()}
@@ -475,13 +470,9 @@ function Parkinglot() {
               {renderBoxGrid()}
             </Grid>
           </Box> */}
-          {/* <Box sx={{ position: "absolute", top: "2rem", width: viewportWidth * 0.1, height: viewportHeight * 0.73, backgroundColor: "#B3B3B3", borderRadius: "0rem 1rem 0rem 0rem" }} /> */}
-          {/* <Box sx={{ position: "absolute", top: "2rem", left: viewportWidth * 0.9, width: viewportWidth * 0.1, height: viewportHeight * 0.73, backgroundColor: "#B3B3B3", borderRadius: "1rem 0rem 0rem 0rem" }} /> */}
-          {/* <Box sx={{ position: "absolute", top: viewportHeight * 0.6, left: viewportWidth * 0.1, width: viewportWidth * 0.8, height: viewportHeight * 0.2, backgroundColor: "#B3B3B3" }} /> */}
         </Box>
 
         <InCar open={open} />
-
       </Container>
       <Footer HomeiconColor="#006DD1" />
     </React.Fragment>
