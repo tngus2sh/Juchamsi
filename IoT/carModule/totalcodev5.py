@@ -11,47 +11,6 @@ import serial
 import time
 import smbus
 
-PWR_MGMT_1 = 0x6B
-ACCEL_XOUT_H = 0x3B
-ACCEL_YOUT_H = 0x3D
-ACCEL_ZOUT_H = 0x3F
-GYRO_XOUT_H = 0x43
-GYRO_YOUT_H = 0x45
-GYRO_ZOUT_H = 0x47
-previous_magnitude = 0
-
-def get_acceleration_magnitude_change():
-    global previous_magnitude
-    accel_x, accel_y, accel_z, _, _, _ = read_mpu6050()
-    current_magnitude = math.sqrt(accel_x**2 + accel_y**2 + accel_z**2)
-    magnitude_change = abs(current_magnitude - previous_magnitude)
-    previous_magnitude = current_magnitude
-    return magnitude_change
-
-
-def read_i2c_word(bus, address, reg):
-    high = bus.read_byte_data(address, reg)
-    low = bus.read_byte_data(address, reg + 1)
-    val = (high << 8) + low
-    return val
-
-def read_mpu6050():
-    bus = smbus.SMBus(1)  # for Raspberry Pi 3, use 1 for older versions use 0
-    address = 0x68  # MPU6050 address
-
-    # Wake up the MPU6050
-    bus.write_byte_data(address, PWR_MGMT_1, 0)
-
-    accel_x = read_i2c_word(bus, address, ACCEL_XOUT_H)
-    accel_y = read_i2c_word(bus, address, ACCEL_YOUT_H)
-    accel_z = read_i2c_word(bus, address, ACCEL_ZOUT_H)
-
-    gyro_x = read_i2c_word(bus, address, GYRO_XOUT_H)
-    gyro_y = read_i2c_word(bus, address, GYRO_YOUT_H)
-    gyro_z = read_i2c_word(bus, address, GYRO_ZOUT_H)
-
-    return accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z
-
 def  getMacAddress():
     mac = uuid.UUID(int=uuid.getnode()).hex[-12:]
     return ':'.join(mac[i:i+2] for i in range(0,12,2))
@@ -93,7 +52,7 @@ def scan_bluetooth():
         repeat += 1
         returnedList = advertiseMac.parse_events(sock, 10)
         print "----------"
-        if repeat == 20:
+        if repeat == 30:
             print('not park')
             print(nowParking)
             if 1 in nowParking:
@@ -138,7 +97,7 @@ def scan_bluetooth():
                             searched[3] += 1
 
                         # send Frequency
-                        if cnt == 100:
+                        if cnt == 80:
                             rpiMac = getMacAddress()
                             mostFreqSonar = max(sonarCount, key = sonarCount.get)
                             mostFrequentMacIndex = searched.index(max(searched))
@@ -200,20 +159,5 @@ def get_acceleration_magnitude():
 if __name__ == '__main__':
     nowParking = [0, 0, 0, 0]
     while True:
-        # magnitude = get_acceleration_magnitude()
-        magnitude_change = get_acceleration_magnitude_change()
-        print("Acceleration Magnitude Change:", magnitude_change)
-        # print("Acceleration Magnitude:", magnitude)
-        time.sleep(0.2)
-        # car move
-        if magnitude_change < 40:
-            print "plus 10"
-            time.sleep(5)
-            test = scan_bluetooth()
-            print(test)
-            # need to send move signal
-        # car stop
-        else:
-            # need to search bluetooth
-            print "stop"
-            pass
+        time.sleep(1)
+        test = scan_bluetooth()
