@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DemoContainer, DemoItem  } from "@mui/x-date-pickers/internals/demo";
+import { DemoContainer  } from "@mui/x-date-pickers/internals/demo";
 import dayjs from "dayjs";
-import { Container } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setWhenEnteringCar } from "../../redux/mobileUserinfo";
 import { setOuttime } from "../../redux/mobileparking";
@@ -72,8 +69,6 @@ const InCar = (props) => {
   } 
 
   const handleTimeok =() => {
-      const selectedTimeParsed = dayjs(selectedTime, "HH:mm:ss");
-      const timeDifferenceInMinutes = selectedTimeParsed.diff(currentTime, "minutes");
       handleopenTimselectClose()
   }
 

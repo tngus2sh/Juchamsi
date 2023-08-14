@@ -41,11 +41,8 @@ function MycarParking() {
   const handleopenTimselectClose = () => {
     settimeselect(false)
   } 
-  const currentTime = dayjs();
 
   const handleTimeok =() => {
-    const selectedTimeParsed = dayjs(selectedTime, "HH:mm:ss");
-    const timeDifferenceInMinutes = selectedTimeParsed.diff(currentTime, "minutes");
     handleopenTimselectClose()
   }
 
@@ -194,19 +191,6 @@ function MycarParking() {
 
   // 주차시간 설정 여부
   let ismycarparking = false
-
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: "70%",
-    height: "30%",
-    bgcolor: "background.paper",
-    border: "2px solid #000",
-    boxShadow: 24,
-    p: 5,
-  };
 
   const style2 = {
     position: "fixed",
