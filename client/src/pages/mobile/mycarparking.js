@@ -21,6 +21,7 @@ import { setBoxItem, setmycar } from "../../redux/mobileparking";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import MinorCrashRoundedIcon from "@mui/icons-material/MinorCrashRounded";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import { setReadMessage, setChatingRoomId, setTotalMessage } from "../../redux/mobileUserinfo"
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 
@@ -250,8 +251,10 @@ function MycarParking() {
         // // redux에 담음
         // dispatch(setRoomNumber(response.data.response.roomId)); // 룸 넘버
         // dispatch(setUser1(loginId)); // 로그인 한 유저
-
         alert(`${response.data.response.roomName} 방 개설에 성공하였습니다.`);
+        dispatch(setReadMessage(""));
+        dispatch(setTotalMessage(""));
+        dispatch(setChatingRoomId(response.data.response.roomId));
 
       })
       .catch((error) => {

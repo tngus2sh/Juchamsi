@@ -38,6 +38,8 @@ const Messagedetail = () => {
   const roomId = params.id;
   const [targetNickName, setTargetNickName] = useState("");
   const senderId = useSelector((state) => state.mobileInfo.loginId);
+  const readLength = useSelector((state) => state.mobileInfo.readMessage);
+  const totalLength = useSelector((state) => state.mobileInfo.totalMessage);
   // const [room, setRoom] = useState({});
   const [messageStorage, setMessageStorage] = useState([]);
   const [message, setMessage] = useState("");
@@ -63,12 +65,20 @@ const Messagedetail = () => {
 
   useEffect(() => {
     // setScreenSize();
+    // fetchMessage();
     fetchMessage();
     connect();
   }, [roomId, senderId]);
 
   useEffect(() => {
-    dispatch(setReadMessage(messageStorage.length + messages.length));
+    const total = messageStorage.length + messages.length;
+    console.log("totalMessage");
+    console.log(total);
+    console.log("readMessage");
+    console.log(readLength);
+    if (total >= readLength - 1) {
+      dispatch(setReadMessage(total));
+    }
     console.log("ㅁㄴ일마 ㅡ라ㅣㅁㄴ우ㅏㅣㄻ니람ㄴ아ㅣㄻㄴ림ㄴㄹ");
   }, [messages.length]);
 
@@ -87,6 +97,18 @@ const Messagedetail = () => {
       });
   }
 
+  const fetchData = () => {
+    console.log("이랴랴랴랴: " + totalLength);
+    console.log("totalMessage");
+    console.log(totalLength);
+    console.log("readMessage");
+    console.log(readLength);
+    if (totalLength >= readLength - 1) {
+      dispatch(setReadMessage(totalLength));
+      console.log("수행했다");
+    }
+  };
+
   const connect = () => {
     const ws = Stomp.over(new SockJS("/ws/chat"));
     wsRef.current = ws; // Save the WebSocket object in the ref
@@ -95,15 +117,17 @@ const Messagedetail = () => {
       function (frame) {
         ws.subscribe("/topic/chat/room/" + roomId, function (message) {
           console.log("message 리스트??");
+          fetchData();
           // console.log(messageStorage.length);
           const recv = JSON.parse(message.body);
           recvMessage(recv);
         });
-        ws.send(
-          "/app/chat/message",
-          {},
-          JSON.stringify({ type: "ENTER", roomId: roomId, senderId: senderId })
-        );
+        fetchData();
+        // ws.send(
+        //   "/app/chat/message",
+        //   {},
+        //   JSON.stringify({ type: "ENTER", roomId: roomId, senderId: senderId })
+        // );
       },
       function (error) {
         console.log("Connection error:", error);

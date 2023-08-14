@@ -428,7 +428,9 @@ function Parkinglot() {
           {/* <Box sx={{ position: "absolute", top: "2rem", left: viewportWidth * 0.9, width: viewportWidth * 0.1, height: viewportHeight * 0.73, backgroundColor: "#B3B3B3", borderRadius: "1rem 0rem 0rem 0rem" }} /> */}
           {/* <Box sx={{ position: "absolute", top: viewportHeight * 0.6, left: viewportWidth * 0.1, width: viewportWidth * 0.8, height: viewportHeight * 0.2, backgroundColor: "#B3B3B3" }} /> */}
         </Box>
+
         <InCar open={open} />
+
       </Container>
       <Footer HomeiconColor="#006DD1" />
     </React.Fragment>
