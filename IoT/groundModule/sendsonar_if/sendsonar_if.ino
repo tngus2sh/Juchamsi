@@ -49,11 +49,9 @@ class MyCallbacks: public BLECharacteristicCallbacks {
         }
         Serial.println();
         Serial.println("*********");
-
       }
     }
 };
-
 
 void init_service() {
   BLEAdvertising* pAdvertising;
@@ -81,6 +79,7 @@ void init_service() {
   pAdvertising->start();
 }
 
+
 void init_beacon() {
   BLEAdvertising* pAdvertising;
   pAdvertising = pServer->getAdvertising();
@@ -101,10 +100,12 @@ void init_beacon() {
   pAdvertising->start();
 }
 
+
+// macAddress to string
 void printMacAddress() {
   esp_bd_addr_t mac;
   esp_read_mac(mac, ESP_MAC_WIFI_STA);
-
+  
   Serial.print("MAC Address: ");
   for (int i = 0; i < 6; i++) {
     Serial.printf("%02X", mac[i]);
@@ -115,6 +116,8 @@ void printMacAddress() {
   Serial.println();
 }
 
+
+//setup
 void setup() {
     Serial.begin(115200);
     pinMode(trigPin, OUTPUT);
@@ -134,6 +137,8 @@ void setup() {
     printMacAddress();
 }
 
+
+//qksqhr
 void loop() {
     long duration, distance;
     delayMicroseconds(2);
@@ -142,43 +147,20 @@ void loop() {
     digitalWrite(trigPin, LOW);
     duration = pulseIn(echoPin, HIGH);
     distance = duration * 17 / 1000;
+    BLEAdvertising* pAdvertising = pServer->getAdvertising();
 
-    if(distance<30){
-
-      // BLE Beacon 정보와 서비스를 광고하며, 연결된 디바이스에 초음파 센서의 정보도 보냅니다.
-      BLEScanResults foundDevices = BLEDevice::getScan()->start(5, false);
-      BLEAdvertising* pAdvertising;
-      pAdvertising = pServer->getAdvertising();
-      pAdvertising->stop();
-      BLEBeacon myBeacon;
-  
-      // Minor 값에 duration 값을 설정하여 advertise
-      myBeacon.setMinor(duration);
-  
-      // Major 값에 distance 값을 설정하여 advertise
-      myBeacon.setMajor(distance);
-  
-      BLEAdvertisementData advertisementData;
-      advertisementData.setFlags(0x1A);
-      advertisementData.setManufacturerData(myBeacon.getData());
-      pAdvertising->setAdvertisementData(advertisementData);
-  
-      // 연결된 디바이스에 초음파 센서의 거리값을 전송합니다.
-      if (deviceConnected) {
-          pCharacteristic->notify();
-      }
-  
-      // advertising을 다시 시작합니다.
-      pAdvertising->start();
-  
-      // BLE 스캔 결과를 처리합니다.
-      for (int i = 0; i < foundDevices.getCount(); i++) {
-          BLEAdvertisedDevice device = foundDevices.getDevice(i);
-          // ... (이전 코드와 동일한 부분)
-      }
-  
-      // 스캔 결과 처리가 끝났으면, 스캔을 멈춥니다.
-      BLEDevice::getScan()->stop();
+    //under30 start ad
+    if(distance < 30){
+        pAdvertising->start();
+        Serial.print("Advertising Beacon with Major: ");
+        Serial.print(distance);
+        Serial.print(", Minor: ");
+        Serial.println(duration);
+    }
+    
+    //over30 stop ad
+    else {
+        pAdvertising->stop();
     }
     delay(1000);
 }
