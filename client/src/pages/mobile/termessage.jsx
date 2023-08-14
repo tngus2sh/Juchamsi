@@ -52,7 +52,7 @@ function Termessage() {
       .get(`/chat/rooms/${loginId}`)
       .then((response) => {
         console.log("대화방 리스트");
-
+        console.log(response.data.response);
         for (const item of response.data.response) {
           fetchMessage(item.roomId);
         }

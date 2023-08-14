@@ -49,25 +49,25 @@ function Footer(props) {
 
       console.log("채팅방 상세조회");
       console.log(response.data.response);
-      const messageList = response.data.response.messageList;
+      const messageList = response.data.response && response.data.response.messageList;
+
       console.log("readLength");
       console.log(readLength);
 
-      if (messageList.length === 0) {
-        return;
-      }
-      const length = messageList.length;
-      console.log("totalLength");
-      console.log(length);
-      dispatch(setTotalMessage(length));
-      if (readLength > length) {
-        readLength = length;
-      }
-      if (length > readLength) {
-        const temp = length - readLength;
-        setDisting(temp);
-        console.log(temp);
-        props.getDisting(temp);
+      if (messageList) {
+        const length = messageList.length;
+        console.log("totalLength");
+        console.log(length);
+        dispatch(setTotalMessage(length));
+        if (readLength > length) {
+          readLength = length;
+        }
+        if (length > readLength) {
+          const temp = length - readLength;
+          setDisting(temp);
+          console.log(temp);
+          props.getDisting(temp);
+        }
       }
     } catch (error) {
       // 요청 실패 시 에러 처리

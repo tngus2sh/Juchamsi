@@ -16,6 +16,8 @@ import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Modal from "@mui/material/Modal";
+import http from "../../axios/http";
+import { useDispatch, useSelector } from "react-redux";
 
 const style = {
   position: "absolute",
@@ -54,6 +56,20 @@ const ParkingLotInfo = () => {
   const [open, setOpen] = React.useState(false);
   const handleModalOpen = () => setOpen(true);
   const handleModalClose = () => setOpen(false);
+  const identification = useSelector((state) => state.webInfo.identification);
+
+  useEffect(() => {
+    http({
+      method: "get",
+      url: `/parking/lot/${identification}`,
+    })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
 
   return (
     <React.Fragment>

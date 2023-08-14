@@ -43,7 +43,7 @@ function Parkinglot() {
   const name = useSelector((state) => state.mobileInfo.name);
   const villanumber = useSelector((state) => state.mobileInfo.villaIdNumber);
   const logincheck = useSelector((state) => state.auth.loginchecked);
-  const fcmToken = useSelector((state) => state.mobileInfo.fcmToken);
+  const storedFcmToken = useSelector((state) => state.mobileInfo.fcmToken);
 
   const requestNotificationPermission = async () => {
     console.log("푸시 허가 받는 중 ...");
@@ -52,7 +52,7 @@ function Parkinglot() {
 
     if (permission === "granted") {
       console.log("푸시 알림이 허용되었습니다.");
-      fetchFcmToken();
+      await fetchFcmToken();
     } else {
       console.log("푸시 알림이 허용되지 않았습니다");
     }
@@ -67,9 +67,20 @@ function Parkinglot() {
 
       if (token.length > 0) {
         console.log("푸시 토큰 : ", token);
-        if (fcmToken !== token) {
+        if (storedFcmToken !== token) {
           dispatch(setFcmToken(token));
-          storeToken();
+          await http
+          .post(`/token`, {
+            loginId: userid,
+            FCMToken: token,
+          })
+          .then((response) => {
+            console.log(response.data);
+          })
+          .catch((error) => {
+            // 요청 실패 시 에러 처리
+            console.error("Error while submitting:", error);
+          });
         }
       } else {
         console.log("푸시 토큰 실패 !");
@@ -78,6 +89,16 @@ function Parkinglot() {
       console.error("Error while fetching FCM token:", error);
     }
   };
+
+    // 로그인한 유저
+    useEffect(() => {
+      if (storedFcmToken === "" || storedFcmToken === undefined) {
+        requestNotificationPermission();
+      } else {
+        fetchFcmToken();
+      }
+    }, []);
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -137,29 +158,7 @@ function Parkinglot() {
     fetchData();
   }, [logincheck, navigate, userid, villanumber, dispatch, handleOpen]); // 빈 배열을 넣어서 페이지 로드 시에만 useEffect 내부 코드가 실행되도록 설정
 
-  // 로그인한 유저
-  useEffect(() => {
-    if (fcmToken === "") {
-      requestNotificationPermission();
-    } else {
-      fetchFcmToken();
-    }
-  }, [fcmToken]);
 
-  async function storeToken() {
-    await http
-      .post(`/token`, {
-        loginId: userid,
-        FCMToken: fcmToken,
-      })
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((error) => {
-        // 요청 실패 시 에러 처리
-        console.error("Error while submitting:", error);
-      });
-  }
 
   // Redux 상태에서 정보 가져오기
   const BoxItem = useSelector((state) => state.mycar.BoxItem);
@@ -216,7 +215,7 @@ function Parkinglot() {
 
     for (let j = 0; j < BoxColumn; j++) {
       const index = rowIndex * BoxColumn + j;
-      console.log(index);
+      //console.log(index);
       const MycarIcon = index === mycar - 1;
 
       columns.push(
