@@ -22,10 +22,12 @@ import com.inet.juchamsi.global.notification.dto.request.FCMNotificationRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 import static com.inet.juchamsi.domain.chat.entity.Status.ALIVE;
+import static com.inet.juchamsi.domain.chat.entity.Status.DISABLED;
 import static com.inet.juchamsi.domain.chat.entity.Type.GENERAL;
 import static com.inet.juchamsi.domain.chat.entity.Type.SYSTEM;
 import static com.inet.juchamsi.global.common.Active.ACTIVE;
@@ -34,6 +36,7 @@ import static com.inet.juchamsi.global.common.ChatMessage.*;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class ChatServiceImpl implements ChatService {
     
     private final ChatRoomRepository chatRoomRepository;
@@ -187,7 +190,7 @@ public class ChatServiceImpl implements ChatService {
         }
 
         // chatRoomId에 해당하는 채팅방 비활성화로 바꾸기
-        chatRoomRepository.updateStatus(chatRoomIdOptional.get(), ALIVE);
+        chatRoomRepository.updateStatus(chatRoomIdOptional.get(), DISABLED);
     }
 
     /* 시스템 채팅방 */
