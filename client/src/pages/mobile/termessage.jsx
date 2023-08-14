@@ -23,6 +23,8 @@ import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import Fab from "@mui/material/Fab";
 import Box from "@mui/material/Box";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { setChatingRoomId, setReadMessage } from "../../redux/mobileUserinfo";
+import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 
 function Termessage() {
   const navigate = useNavigate();
@@ -31,7 +33,12 @@ function Termessage() {
   // const targetId; 겹주차 발생 차주에게 보내기!!
 
   const [chatRooms, setChatRooms] = useState([]);
+  const [disting, setDisting] = useState(0);
 
+  const getDisting = (d) => {
+    setDisting(d);
+    console.log(d);
+  };
   // const [lastMessageContent, setLastMessageContent] = useState([]);
   // const [lastMessageTime, setLastMessageTime] = useState([]);
   // const [toNickName, setToNickName] = useState([]);
@@ -83,24 +90,25 @@ function Termessage() {
       });
   }
 
-  const createRoom = () => {
-    http
-      .post("/chat/room", { userIdOne: loginId, userIdTwo: "user2" })
-      .then((response) => {
-        console.log(response.data.response.roomId);
-        // // redux에 담음
-        // dispatch(setRoomNumber(response.data.response.roomId)); // 룸 넘버
-        // dispatch(setUser1(loginId)); // 로그인 한 유저
+  // const createRoom = () => {
+  //   http
+  //     .post("/chat/room", { userIdOne: loginId, userIdTwo: "user2" })
+  //     .then((response) => {
+  //       console.log(response.data.response.roomId);
+  //       // // redux에 담음
+  //       // dispatch(setRoomNumber(response.data.response.roomId)); // 룸 넘버
+  //       // dispatch(setUser1(loginId)); // 로그인 한 유저
 
-        alert(`${response.data.response.roomName} 방 개설에 성공하였습니다.`);
-
-        findAllRoom();
-      })
-      .catch((error) => {
-        alert("채팅방 개설에 실패하였습니다.");
-        console.error("Error while creating chat room:", error);
-      });
-  };
+  //       alert(`${response.data.response.roomName} 방 개설에 성공하였습니다.`);
+  //       dispatch(setReadMessage(""));
+  //       dispatch(setChatingRoomId(response.data.response.roomId));
+  //       findAllRoom();
+  //     })
+  //     .catch((error) => {
+  //       alert("채팅방 개설에 실패하였습니다.");
+  //       console.error("Error while creating chat room:", error);
+  //     });
+  // };
 
   const formatDateTime = (dateTimeString) => {
     const dateTime = new Date(dateTimeString);
@@ -123,7 +131,7 @@ function Termessage() {
   return (
     <React.Fragment>
       <Box sx={{ p: "0.8rem" }}>
-        <Typography variant={"h5"} sx={{ textAlign: "start", fontFamily: "Poppins-Bold" }}>
+        <Typography sx={{ textAlign: "start", fontFamily: "Poppins-Bold", fontSize: "2.1rem" }}>
           Messages
         </Typography>
       </Box>
@@ -149,14 +157,14 @@ function Termessage() {
                   <ListItemText
                     primary="시스템"
                     secondary={item.lastMessageContent}
-                    sx={{ height: "2.5rem", color: "#EE1D52" }}
+                    sx={{ height: "4rem", color: "#EE1D52" }}
                   />
                   <ListItemAvatar>
                     <div style={{ display: "flex", marginBottom: "1.2rem", justifyContent: "end" }}>
-                      <Typography sx={{ fontSize: ".5rem" }}>
+                      <Typography sx={{ fontSize: ".8rem" }}>
                         {item.lastMessageTime ? formatDateTime(item.lastMessageTime) : ""}
                       </Typography>
-                      <ArrowForwardIosIcon sx={{ height: ".8rem" }} />
+                      <ArrowForwardIosIcon sx={{ height: "1rem" }} />
                     </div>
                   </ListItemAvatar>
                 </ListItem>
@@ -176,14 +184,39 @@ function Termessage() {
                   <ListItemText
                     primary={item.toNickName}
                     secondary={item.lastMessageContent}
-                    sx={{ height: "2.5rem" }}
+                    sx={{ height: "4rem", color: disting > 0 ? "" : "rgb(150, 150, 150)" }}
                   />
+                  {disting > 0 ? (
+                    <FiberManualRecordIcon
+                      sx={{
+                        width: ".5rem",
+                        height: ".5rem",
+                        color: "blue",
+                        position: "fixed",
+                        left: "8rem",
+                        top: "4rem",
+                      }}
+                    />
+                  ) : (
+                    ""
+                  )}
+
                   <ListItemAvatar>
                     <div style={{ display: "flex", marginBottom: "1.2rem", justifyContent: "end" }}>
-                      <Typography sx={{ fontSize: ".5rem" }}>
+                      <Typography
+                        sx={{
+                          fontSize: ".8rem",
+                          color: disting > 0 ? "black" : "rgb(150, 150, 150)",
+                        }}
+                      >
                         {item.lastMessageTime ? formatDateTime(item.lastMessageTime) : ""}
                       </Typography>
-                      <ArrowForwardIosIcon sx={{ height: ".8rem" }} />
+                      <ArrowForwardIosIcon
+                        sx={{
+                          height: "1rem",
+                          color: disting > 0 ? "" : "rgb(150, 150, 150)",
+                        }}
+                      />
                     </div>
                   </ListItemAvatar>
                 </ListItem>
@@ -206,10 +239,10 @@ function Termessage() {
           //   </Conversation>
           // </ConversationList> */}
 
-      <Button className="btn btn-primary" type="button" onClick={createRoom}>
+      {/* <Button className="btn btn-primary" type="button" onClick={createRoom}>
         채팅방 개설
-      </Button>
-      <Footer TermessageiconColor="#006DD1" />
+      </Button> */}
+      <Footer TermessageiconColor="#006DD1" getDisting={getDisting} />
     </React.Fragment>
   );
 }
