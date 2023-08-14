@@ -9,6 +9,38 @@ import numpy as np
 import json
 import serial
 import time
+import smbus
+
+PWR_MGMT_1 = 0x6B
+ACCEL_XOUT_H = 0x3B
+ACCEL_YOUT_H = 0x3D
+ACCEL_ZOUT_H = 0x3F
+GYRO_XOUT_H = 0x43
+GYRO_YOUT_H = 0x45
+GYRO_ZOUT_H = 0x47
+
+def read_i2c_word(bus, address, reg):
+    high = bus.read_byte_data(address, reg)
+    low = bus.read_byte_data(address, reg + 1)
+    val = (high << 8) + low
+    return val
+
+def read_mpu6050():
+    bus = smbus.SMBus(1)  # for Raspberry Pi 3, use 1 for older versions use 0
+    address = 0x68  # MPU6050 address
+
+    # Wake up the MPU6050
+    bus.write_byte_data(address, PWR_MGMT_1, 0)
+
+    accel_x = read_i2c_word(bus, address, ACCEL_XOUT_H)
+    accel_y = read_i2c_word(bus, address, ACCEL_YOUT_H)
+    accel_z = read_i2c_word(bus, address, ACCEL_ZOUT_H)
+
+    gyro_x = read_i2c_word(bus, address, GYRO_XOUT_H)
+    gyro_y = read_i2c_word(bus, address, GYRO_YOUT_H)
+    gyro_z = read_i2c_word(bus, address, GYRO_ZOUT_H)
+
+    return accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z
 
 def  getMacAddress():
     mac = uuid.UUID(int=uuid.getnode()).hex[-12:]
@@ -150,33 +182,26 @@ def safe_readline(ser):
             print("Failed to reconnect. Retrying...")
             time.sleep(1)
             return ""
+def get_acceleration_magnitude():
+    accel_x, accel_y, accel_z, _, _, _ = read_mpu6050()
+    magnitude = math.sqrt(accel_x**2 + accel_y**2 + accel_z**2)
+    return magnitude
 
 if __name__ == '__main__':
-    ser = serial.Serial('/dev/ttyUSB0', 115200, timeout=1)
-    ser.flush
     nowParking = [0, 0, 0, 0]
     while True:
-        if ser.in_waiting>0:
-            line = safe_readline(ser)
-            parts = line.split(": ")
-            if len(parts)>=2:
-                try:
-                    change_value = float(parts[1])
-                except ValueError:
-                    print("Error: Invalid value for float conversion:", parts[1])
-                    continue  # Skip the rest of the loop iteration
-                print(line)
-                print(change_value)
-            # car move
-            if change_value > 10:
-                print "plus 10"
-                time.sleep(5)
-                test = scan_bluetooth()
-                print(test)
-                # need to send move signal
-            # car stop
-            else:
-                # need to search bluetooth
-                print "stop"
-                pass
-	# time.sleep(0.2)
+        magnitude = get_acceleration_magnitude()
+        print("Acceleration Magnitude:", magnitude)
+        time.sleep(0.2)
+        # car move
+        if magnitude > 60000:
+            print "plus 10"
+            time.sleep(5)
+            test = scan_bluetooth()
+            print(test)
+            # need to send move signal
+        # car stop
+        else:
+            # need to search bluetooth
+            print "stop"
+            pass
