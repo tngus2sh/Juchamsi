@@ -255,7 +255,6 @@ public class TenantServiceImpl implements TenantService {
     @Override
     public void modifyUser(ModifyTenantRequest request) {
         Optional<User> oUser = userRepository.findByLoginIdAndActive(request.getLoginId(), Active.ACTIVE);
-        System.out.println("oUser = " + oUser);
         if (oUser.isEmpty()) {
             throw new NotFoundException(User.class, request.getLoginId());
         }
@@ -271,7 +270,7 @@ public class TenantServiceImpl implements TenantService {
         }
 
         Optional<Long> existedVillaNumber = userRepository.existVillaNumber(request.getVillaNumber());
-        if(existedVillaNumber.isPresent()) {
+        if(existedVillaNumber.isPresent() && !existedVillaNumber.get().equals(oUser.get().getId())) {
             throw new AlreadyExistException(User.class, request.getVillaNumber());
         }
 
