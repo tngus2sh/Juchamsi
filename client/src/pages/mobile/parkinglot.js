@@ -181,12 +181,14 @@ function Parkinglot() {
 
   const Outtime = () => {
     let timelist = [];
-    for (let j = 0; j <= allbox; j++) {
+    // for (let j = 0; j <= allbox; j++) {
+    for (let j = 0; j <= 2 * BoxColumn; j++) {
       timelist.push("");
     }
     for (let k = 0; k < BoxItem.length; k++) {
       timelist[BoxItem[k].seatNumber] = BoxItem[k].outTime;
     }
+    console.log(timelist);
     return timelist;
   };
 
@@ -245,9 +247,13 @@ function Parkinglot() {
             {/* {!MycarIcon && outTimeArray[index + 1] && ( // fix: 출차 시간 등록하지 않으면 이거 제대로 안 나옴 */}
             {!MycarIcon && outTimeArray[index + 1] !== "" && (
               <>
-                <p style={{ color: "#B3B3B3", fontSize: "16px", textAlign: "center", display: "flex", position: "relative", top: -viewportHeight * 0.06 }}>{outTimeArray[index + 1].length > 10 ? `${outTimeArray[index + 1].substring(2, 10).replace(/-/g, ".")}` : outTimeArray[index + 1]}</p>
+                <p style={{ color: "#B3B3B3", fontSize: "16px", textAlign: "center", display: "flex", position: "relative", top: -viewportHeight * 0.06 }}>
+                  {outTimeArray[index + 1].length > 10 ? `${outTimeArray[index + 1].substring(2, 10).replace(/-/g, ".")}` : outTimeArray[index + 1]}
+                </p>
                 {carnumArray[index + 1] && <p style={{ color: "#FFFFFF", fontSize: "20px", textAlign: "center", display: "flex" }}>{carnumArray[index + 1]}</p>}
-                <p style={{ color: "#000000", fontSize: "20px", textAlign: "center", display: "flex", position: "relative", top: viewportHeight * 0.07, fontWeight: "bolder" }}>{outTimeArray[index + 1].length > 10 ? `~${outTimeArray[index + 1].substring(11, 16)}` : outTimeArray[index + 1]}</p>
+                <p style={{ color: "#000000", fontSize: "20px", textAlign: "center", display: "flex", position: "relative", top: viewportHeight * 0.07, fontWeight: "bolder" }}>
+                  {outTimeArray[index + 1].length > 10 ? `~${outTimeArray[index + 1].substring(11, 16)}` : outTimeArray[index + 1]}
+                </p>
               </>
             )}
           </Box>
@@ -331,22 +337,30 @@ function Parkinglot() {
       const MycarIcon = index === mycar - 1;
 
       cols.push(
-        <button key={`${i}-${j}`} onClick={MycarIcon ? handleOpenMycarPage : null} style={{ border: "none", backgroundColor: "transparent", padding: 0 }}>
+        <button
+          key={`${i}-${j}`}
+          className="parkinglot-button-container"
+          onClick={MycarIcon ? handleOpenMycarPage : null}
+          style={{ backgroundColor: MycarIcon ? "#006DD1" : outTimeArray[index + 1] !== "" ? "#EA6868" : "#FFFFFF" }}
+        >
           <Box
             key={`${i}-${j}`}
             sx={{
-              width: "6rem",
-              height: "8rem",
-              margin: "1rem",
+              display: "flex",
+              width: "100%",
+              height: "100%",
               textAlign: "center",
-              backgroundColor: MycarIcon ? "#006DD1" : outTimeArray[index + 1] !== "" ? "#EA6868" : "#FFFFFF",
+              justifyContent: "center",
+              alignItems: "center",
+              // backgroundColor: MycarIcon ? "#006DD1" : outTimeArray[index + 1] !== "" ? "#EA6868" : "#FFFFFF",
+              color: "black",
             }}
           >
             {MycarIcon && (
               <>
-                <div>
+                <div style={{ position: "absolute", top: "-1.7rem" }}>
                   {/* <img src={process.env.PUBLIC_URL + "/img/mobile/mycaricon2.png"} alt={"mycarimg2"} style={{ position: "relative", top: "-1.2rem" }}></img> */}
-                  <PinDropRoundedIcon sx={{ position: "relative", top: "-1.7rem", fontSize: "3rem" }} />
+                  <PinDropRoundedIcon sx={{ fontSize: "3rem" }} />
                 </div>
                 <div>
                   {/* <img src={process.env.PUBLIC_URL + "/img/mobile/mycar.png"} alt={"carimg"}></img> */}
@@ -355,19 +369,38 @@ function Parkinglot() {
               </>
             )}
             {/* {!MycarIcon && outTimeArray[index + 1] && ( // 주차 시간 등록하지 않으면 제대로 안 나옴 */}
-
-            {/* refactor: 여기 날짜랑 시간 디자인 약간 손봐야 함 */}
             {!MycarIcon && outTimeArray[index + 1] !== "" && (
               <>
-                {outTimeArray[index + 1] != null && <p style={{ color: "#B3B3B3", fontSize: "16px", textAlign: "center" }}>{outTimeArray[index + 1].length > 10 ? `${outTimeArray[index + 1].substring(2, 10).replace(/-/g, ".")}` : outTimeArray[index + 1]}</p>}
-                {carnumArray[index + 1] && (
-                  <div style={{ display: "flex", width: "100%", height: "100%", textAlign: "center", alignItems: "center" }}>
-                    <div style={{ width: "100%", color: "#FFFFFF", fontSize: "1.3rem", textAlign: "center" }}>{carnumArray[index + 1]}</div>
+                <div style={{ width: "100%", height: "100%" }}>
+                  <div style={{ position: "absolute", width: "100%", color: "#B3B3B3", top: "-1.3rem", fontSize: "1rem" }}>
+                    {outTimeArray[index + 1] != null && <p>{outTimeArray[index + 1].length > 10 ? `${outTimeArray[index + 1].substring(2, 10).replace(/-/g, ".")}` : outTimeArray[index + 1]}</p>}
                   </div>
+                  <div style={{ width: "100%", height: "100%" }}>
+                    {carnumArray[index + 1] && (
+                      <div style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>{printCarNumber(index + 1)}</div>
+                    )}
+                  </div>
+                  <div style={{ position: "absolute", width: "100%", top: "100%" }}>
+                    {outTimeArray[index + 1] != null && (
+                      <p style={{ fontSize: "1rem", fontWeight: "bolder" }}>{outTimeArray[index + 1].length > 10 ? `~${outTimeArray[index + 1].substring(11, 16)}` : outTimeArray[index + 1]}</p>
+                    )}
+                  </div>
+                </div>
+              </>
+            )}
+            {!MycarIcon && outTimeArray[index + 1] === "" && (
+              <>
+                {/* {carnumArray[index + 1] && (
+                  <div style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>{printCarNumber(index + 1)}</div>
                 )}
                 {outTimeArray[index + 1] != null && (
-                  <p style={{ color: "#000000", fontSize: "20px", textAlign: "center", display: "flex", position: "relative", top: viewportHeight * 0.07, fontWeight: "bolder" }}>{outTimeArray[index + 1].length > 10 ? `~${outTimeArray[index + 1].substring(11, 16)}` : outTimeArray[index + 1]}</p>
-                )}
+                  <p style={{ fontSize: "1.2rem", textAlign: "center", fontWeight: "bolder" }}>
+                    {outTimeArray[index + 1].length > 10 ? `~${outTimeArray[index + 1].substring(11, 16)}` : outTimeArray[index + 1]}
+                  </p>
+                )} */}
+                <div style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
+                  <span style={{ fontSize: "2rem" }}>{index + 1}</span>
+                </div>
               </>
             )}
           </Box>
@@ -380,18 +413,29 @@ function Parkinglot() {
   const drawParkingLotRow = () => {
     console.log(outTimeArray);
     let rows = [];
+
     if (BoxColumn != 0) {
       for (let i = 0; i < 2; i++) {
         const row = (
-          <div>
-            <div style={{ display: "flex", justifyContent: "center" }}>{drawParkingLotCol(i)}</div>
+          <div style={{ width: "100%", height: "35%" }}>
+            <div className="parkinglot-box-row-container" style={{ display: "flex", width: "100%", height: "100%", justifyContent: "center" }}>
+              {drawParkingLotCol(i)}
+            </div>
           </div>
         );
-
         rows.push(row);
       }
     }
     return rows;
+  };
+
+  const printCarNumber = (index) => {
+    const arr = [];
+    const carArray = carnumArray[index].split(" ");
+    for (let i = 0; i < carArray.length; i++) {
+      arr.push(<div style={{ width: "100%", color: "#FFFFFF", fontSize: "1.1rem", textAlign: "center" }}>{carArray[i]}</div>);
+    }
+    return arr;
   };
 
   return (
@@ -414,8 +458,15 @@ function Parkinglot() {
               입출구
             </span>
           </div>
-          <div className="parkinglot-content-box-container" style={{ marginTop: "1.3rem", padding: "0 1.5rem" }}>
-            <div className="parkinglot-box-container">{drawParkingLotRow()}</div>
+          {/* <div className="parkinglot-content-box-container" style={{ height: "65%", padding: "0 1.5rem" }}>
+            <div className="parkinglot-box-container" style={{ height: "100%" }}>
+              {drawParkingLotRow()}
+            </div>
+          </div> */}
+          <div className="parkinglot-content-box-container" style={{ height: "58%", margin: "1.5rem 2.5rem", backgroundColor: "white", borderRadius: "0.5rem" }}>
+            <div className="parkinglot-box-container" style={{ display: "flex", flexDirection: "column", height: "100%", justifyContent: "space-around", alignItems: "space-between" }}>
+              {drawParkingLotRow()}
+            </div>
           </div>
           {/* <p style={{ position: "relative", top: "4rem", fontWeight: "bolder" }}>입출구</p> */}
 
