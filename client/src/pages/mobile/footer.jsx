@@ -8,14 +8,17 @@ import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import DirectionsCarFilledRoundedIcon from "@mui/icons-material/DirectionsCarFilledRounded";
 import LocalPostOfficeRoundedIcon from "@mui/icons-material/LocalPostOfficeRounded";
 import ManageAccountsRoundedIcon from "@mui/icons-material/ManageAccountsRounded";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import http from "./../../axios/http";
 import Fab from "@mui/material/Fab";
+import { setTotalMessage } from "../../redux/mobileUserinfo";
 
 function Footer(props) {
   const navigate = useNavigate();
-  const readLength = useSelector((state) => state.mobileInfo.readMessage);
+  const dispatch = useDispatch();
+  let readLength = useSelector((state) => state.mobileInfo.readMessage);
   const loginId = useSelector((state) => state.mobileInfo.loginId);
+  const roomId = useSelector((state) => state.mobileInfo.chatingRoomId);
   const [disting, setDisting] = useState(0);
 
   const handleOpenParkinglotPage = () => {
@@ -37,25 +40,34 @@ function Footer(props) {
 
   useEffect(() => {
     fetchMessage();
-  }, [readLength]);
+  }, []);
 
   async function fetchMessage() {
     try {
-      const response = await http.get(`/chat/room/${loginId}/9f887f44-a9d9-40a1-9a4b-c14234b10b89`);
+      const response = await http.get(`/chat/room/${loginId}/3a21cd93-f68c-430b-9cab-ec30e3e678a5`);
+      // const response = await http.get(`/chat/room/${loginId}/${roomId}`);
 
       console.log("채팅방 상세조회");
       console.log(response.data.response);
       const messageList = response.data.response.messageList;
+      console.log("readLength");
       console.log(readLength);
 
       if (messageList.length === 0) {
         return;
       }
       const length = messageList.length;
-
+      console.log("totalLength");
+      console.log(length);
+      dispatch(setTotalMessage(length));
+      if (readLength > length) {
+        readLength = length;
+      }
       if (length > readLength) {
         const temp = length - readLength;
         setDisting(temp);
+        console.log(temp);
+        props.getDisting(temp);
       }
     } catch (error) {
       // 요청 실패 시 에러 처리
@@ -115,20 +127,21 @@ function Footer(props) {
           </div>
 
           <div className="message-container" style={{ width: "3.6rem" }}>
-            {disting !== 0 ? (
-              <Fab
+            {disting > 0 ? (
+              <Box
                 sx={{
-                  width: "1.2rem",
-                  height: ".4rem",
+                  width: "1.3rem",
+                  height: "1.3rem",
                   backgroundColor: "blue",
                   color: "white",
-                  position: "relative",
-                  bottom: "1.8rem",
-                  left: "2.8rem",
+                  position: "fixed",
+                  bottom: "3.1rem",
+                  right: "5.8rem",
+                  borderRadius: "3rem",
                 }}
               >
                 <Typography sx={{ fontSize: ".8rem" }}>{disting}</Typography>
-              </Fab>
+              </Box>
             ) : (
               ""
             )}

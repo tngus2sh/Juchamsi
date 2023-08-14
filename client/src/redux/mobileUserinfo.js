@@ -15,7 +15,9 @@ const initialState = {
   whenEnteringCar: false,
   mileagelist: [],
   fcmToken: "",
-  readMessage:""
+  chatingRoomId: "",
+  readMessage: "",
+  totalMessage:"",
 };
 
 const mobileUserinfo = createSlice({
@@ -62,16 +64,30 @@ const mobileUserinfo = createSlice({
     setWhenEnteringCar: (state, action) => {
       state.whenEnteringCar = action.payload;
     },
-    setLogout: () => initialState,
+    setLogout: (state) => {
+      state = {
+        ...initialState,
+        readMessage: initialState.readMessage,
+        totalMessage: initialState.totalMessage,
+        chatingRoomId: initialState.chatingRoomId
+      };
+  },
     setMileageList : (state, action) => {
       state.mileagelist = action.payload
     },
     setFcmToken : (state, action) => {
       state.fcmToken = action.payload
     },
+    setChatingRoomId: (state, action) => {
+      state.chatingRoomId = action.payload
+    },
     setReadMessage: (state, action) => {
       state.readMessage = action.payload
-    }
+    },
+    setTotalMessage: (state, action) => {
+      state.totalMessage = action.payload
+    },
+    
 
   },
     
@@ -80,5 +96,5 @@ const mobileUserinfo = createSlice({
 
 export const { setCarNumber, setid, setloginId, setname, setphoneNumber, setaccessToken, 
                setrefreshToken, setVillaNumber, setvillaIdNumber, setTotalMileage, setImageUrl, 
-               setUserMacAdress, setWhenEnteringCar, setLogout, setMileageList, setFcmToken, setReadMessage} = mobileUserinfo.actions;
+               setUserMacAdress, setWhenEnteringCar, setLogout, setMileageList, setFcmToken, setReadMessage, setChatingRoomId, setTotalMessage} = mobileUserinfo.actions;
 export default mobileUserinfo.reducer;
