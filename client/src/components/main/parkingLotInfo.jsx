@@ -18,6 +18,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Modal from "@mui/material/Modal";
 import http from "../../axios/http";
 import { useDispatch, useSelector } from "react-redux";
+import KeyboardDoubleArrowUpRoundedIcon from "@mui/icons-material/KeyboardDoubleArrowUpRounded";
 
 const style = {
   position: "absolute",
@@ -46,15 +47,28 @@ const ParkingList = (props) => {
 };
 
 const ParkingLotInfo = () => {
-  const cars = [
-    { carNumber: 1, macAdress: "B0:A7:32:DB:C8:46", parkingState: false },
-    { carNumber: 2, macAdress: "CC:DB:A7:69:74:4a", parkingState: false },
-    { carNumber: 3, macAdress: "CC:DB:A7:69:19:7a", parkingState: false },
-    { carNumber: 4, macAdress: "B0:A7:32:DB:C3:52", parkingState: false },
-  ];
-
+  const parking = [{ carNumber: 1 }, { carNumber: 2 }, { carNumber: 3 }, { carNumber: 4 }];
+  const [cars, setCars] = React.useState([]);
   const [open, setOpen] = React.useState(false);
-  const handleModalOpen = () => setOpen(true);
+  const [carNumberInfo, setCarNumberInfo] = React.useState("");
+  const [userNameInfo, setUserNameInfo] = React.useState("");
+  const [villaNumberInfo, setVillaNumberInfo] = React.useState("");
+  const [phoneNumberInfo, setPhoneNumberInfo] = React.useState("");
+  const [timeInfo, setTimeInfo] = React.useState("");
+
+  const handleModalOpen = (userId) => async () => {
+    try {
+      const response = await http.get(`/tenant/${userId}`);
+      setCarNumberInfo(response.data.response.carNumber);
+      setUserNameInfo(response.data.response.name);
+      setVillaNumberInfo(response.data.response.villaNumber);
+      setPhoneNumberInfo(response.data.response.phoneNumber);
+      setOpen(true);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const handleModalClose = () => setOpen(false);
   const identification = useSelector((state) => state.webInfo.identification);
 
@@ -64,12 +78,13 @@ const ParkingLotInfo = () => {
       url: `/parking/lot/${identification}`,
     })
       .then((response) => {
-        console.log(response);
+        console.log(response.data);
+        setCars(response.data.response);
       })
       .catch((err) => {
         console.log(err);
       });
-  });
+  }, []);
 
   return (
     <React.Fragment>
@@ -81,62 +96,75 @@ const ParkingLotInfo = () => {
             alignItems: "center",
             justifyContent: "center",
             width: "1300px",
+            flexFlow: "column",
           }}
         >
+          <KeyboardDoubleArrowUpRoundedIcon />
+          <Typography sx={{ fontSize: "1.4rem" }}>입출구</Typography>
           <Box
             sx={{
               height: "30rem",
               width: "380px",
-              borderTop: "40px solid #2D4356",
+              borderBottom: "40px solid #2D4356",
               borderLeft: "40px solid #2D4356",
               borderRight: "40px solid #2D4356",
               pl: "1.6rem",
               pr: "1.6rem",
+              mt: "1rem",
             }}
           >
-            <Grid container spacing={3} sx={{ mt: ".1rem" }}>
-              {cars.map((car) => (
-                <Grid item key={car.carNumber} xs={6} sm={6} md={6}>
-                  <Card
-                    sx={{
-                      height: "13.5rem",
-                      width: "11rem",
-                      display: "flex",
-                      flexDirection: "column",
-                      backgroundColor: "rgb(204, 204,204, 0.3)",
-                    }}
-                  >
-                    <CardContent sx={{ flexGrow: 2 }}>
-                      {car.carNumber === 2 ? (
-                        <Box onClick={handleModalOpen}>
-                          <img
-                            src={`${process.env.PUBLIC_URL}/images/car.png`}
-                            style={{
-                              width: "7.9rem",
-                              height: "10rem",
-                              transform: "rotate(-30deg)",
-                            }}
-                            alt="Logo"
-                          />
-                          <Typography sx={{ mt: ".8rem" }}>26보 3736</Typography>
-                        </Box>
-                      ) : (
-                        <Box>
-                          <img
-                            src={`${process.env.PUBLIC_URL}/images/parking.png`}
-                            style={{
-                              width: "6rem",
-                              height: "5rem",
-                              opacity: "0.13",
-                            }}
-                            alt="Logo"
-                          />
-                        </Box>
-                      )}
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
+            <Grid container spacing={3} sx={{ mb: ".1rem" }}>
+              {parking.map((park) => {
+                const matchingCars = cars.filter(
+                  (car) => car.seatNumber === park.carNumber && car.active === "ACTIVE"
+                );
+                console.log(matchingCars);
+                return (
+                  <Grid item key={park.carNumber} xs={6} sm={6} md={6}>
+                    <Card
+                      sx={{
+                        height: "13.5rem",
+                        width: "11rem",
+                        display: "flex",
+                        flexDirection: "column",
+                        backgroundColor: "rgb(204, 204, 204, 0.3)",
+                      }}
+                    >
+                      <CardContent sx={{ flexGrow: 2 }}>
+                        {matchingCars.length > 0 ? (
+                          <Box onClick={handleModalOpen(matchingCars[0].userId)}>
+                            <img
+                              src={`${process.env.PUBLIC_URL}/images/car.png`}
+                              style={{
+                                width: "7.9rem",
+                                height: "10rem",
+                                transform: "rotate(150deg)",
+                              }}
+                              alt="Logo"
+                            />
+                            <Typography sx={{ mt: ".8rem" }}>
+                              {matchingCars[0].carNumber}
+                            </Typography>
+                          </Box>
+                        ) : (
+                          <Box>
+                            <img
+                              src={`${process.env.PUBLIC_URL}/images/parking.png`}
+                              style={{
+                                width: "6rem",
+                                height: "5rem",
+                                opacity: "0.13",
+                              }}
+                              alt="Logo"
+                            />
+                          </Box>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                );
+              })}
+              ;
             </Grid>
           </Box>
         </Container>
@@ -146,10 +174,10 @@ const ParkingLotInfo = () => {
             <Typography variant="h4" component="h2" sx={{ mb: "3.1rem" }}>
               주차된 차량 정보
             </Typography>
-            <ParkingList title="차량번호" content="26보 3736" />
-            <ParkingList title="이름" content="홍길동" />
-            <ParkingList title="호수" content="101호" />
-            <ParkingList title="전화번호" content="010-3333-3333" />
+            <ParkingList title="차량번호" content={carNumberInfo} />
+            <ParkingList title="이름" content={userNameInfo} />
+            <ParkingList title="호수" content={villaNumberInfo} />
+            <ParkingList title="전화번호" content={phoneNumberInfo} />
             <ParkingList title="입차일시" content="2023-07-19 19:30:10" />
           </Box>
         </Modal>

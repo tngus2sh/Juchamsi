@@ -128,12 +128,6 @@ const headCells = [
     disablePadding: false,
     label: "핸드폰번호",
   },
-  {
-    id: "parking_state",
-    numeric: false,
-    disablePadding: false,
-    label: "주차상태",
-  },
 ];
 
 function EnhancedTableHead(props) {
@@ -478,7 +472,6 @@ const Resident = () => {
                       <TableCell align="center">{row.villaNumber}</TableCell>
                       <TableCell align="center">{row.carNumber}</TableCell>
                       <TableCell align="center">{row.phoneNumber}</TableCell>
-                      <TableCell align="center">주차</TableCell>
                     </TableRow>
                   );
                 })}
