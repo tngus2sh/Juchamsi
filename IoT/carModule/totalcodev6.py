@@ -24,8 +24,10 @@ def scan_bluetooth():
     state = 0
     cnt = 0
     repeat = 0
-    parking_url="http://i9c107.p.ssafy.io/api/parking/entrance"
-    exit_url = "http://i9c107.p.ssafy.io/api/parking/exit"
+    # parking_url="http://i9c107.p.ssafy.io/api/parking/entrance"
+    # exit_url = "http://i9c107.p.ssafy.io/api/parking/exit"
+    parking_url="https://7075-121-179-2-182.ngrok-free.app/parking/entrance"
+    exit_url = "https://7075-121-179-2-182.ngrok-free.app/parking/exit"
     soundModuleUrl = "http://172.20.10.9/"
     datas={}
     ground_module = ['b0:a7:32:db:c8:46', 'cc:db:a7:69:74:4a','cc:db:a7:69:19:7a', 'b0:a7:32:db:c3:52']
@@ -123,15 +125,6 @@ def scan_bluetooth():
                                     except Exception as e:
                                         print("Failed BackServer")
                                         nowParking[mostFrequentMacIndex] = 0
-                                     
-                            else:
-                                if nowParking[mostFrequentMacIndex] == 1:
-                                    headers = {'Content-Type': 'application/json'}
-                                    datas = {'macAddress': rpiMac}
-                                    nowParking[mostFrequentMacIndex] = 0
-                                    print('car_out')
-                                    json_data = json.dumps(datas)
-                                    response = requests.post(exit_url, data=json_data, headers=headers)
                             print searched.index(max(searched)), mostRecentSonar
                             return searched.index(max(searched))
 
