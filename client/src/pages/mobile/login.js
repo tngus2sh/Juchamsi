@@ -9,7 +9,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
 import { useSelector, useDispatch } from 'react-redux';
-import { setAutoLoginChecked, setUsername, setPassword, setloginchecked } from '../../redux/mobileauthlogin';
+import { setAutoLoginChecked, setUsername, setPassword } from '../../redux/mobileauthlogin';
 import { setCarNumber, setid, setloginId, setname, setphoneNumber, setaccessToken, setrefreshToken, setVillaNumber, setvillaIdNumber, setTotalMileage, setUserMacAdress, setWhenEnteringCar, setFcmToken, setReadMessage} from '../../redux/mobileUserinfo'
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
@@ -23,6 +23,12 @@ function Login() {
   const [password, setPasswordLocal] = React.useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const loginId = useSelector((state) => state.mobileInfo.loginId);
+
+  React.useEffect(() => { 
+    console.log("저장되어있는 아이디");
+    console.log(loginId);
+  }, []);
 
   // Redux의 상태를 가져와서 사용
   const isAutoLoginChecked = useSelector((state) => state.auth.isAutoLoginChecked);
@@ -84,7 +90,6 @@ function Login() {
             dispatch(setPassword(password))
             dispatch(setUserMacAdress("ed:dd:dd:dd"));
             dispatch(setWhenEnteringCar(false));
-            dispatch(setloginchecked(true))
             dispatch(setFcmToken(res.data.response.FCMToken));
             navigate('/Mobile/Parkinglot')
           } else if (res.data.error.message === '승인 대기 중입니다.') {
@@ -131,7 +136,6 @@ function Login() {
   const handleAutoLoginCheckboxChange = (event) => {
     const { checked } = event.target;
     dispatch(setAutoLoginChecked(checked));
-    dispatch(setloginchecked(checked));
 
     if (!checked) {
       // "자동로그인" 체크를 해제했을 때 로그인 정보를 제거

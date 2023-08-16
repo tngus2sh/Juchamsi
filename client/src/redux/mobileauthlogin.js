@@ -6,7 +6,6 @@ const authSlice = createSlice({
     isAutoLoginChecked: false,
     username: '',
     password: '',
-    loginchecked:false,
   },
   reducers: {
     setAutoLoginChecked: (state, action) => {
@@ -18,12 +17,9 @@ const authSlice = createSlice({
     setPassword: (state, action) => {
       state.password = action.payload;
     },
-    setloginchecked: (state, action) => {
-      state.loginchecked = action.payload;
-    },
 
   },
 });
 
-export const { setAutoLoginChecked, setUsername, setPassword, setloginchecked } = authSlice.actions;
+export const { setAutoLoginChecked, setUsername, setPassword } = authSlice.actions;
 export default authSlice.reducer;

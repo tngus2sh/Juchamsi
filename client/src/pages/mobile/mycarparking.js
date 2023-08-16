@@ -26,7 +26,6 @@ import { TimeField } from '@mui/x-date-pickers/TimeField';
 import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 
 function MycarParking() {
-  const logincheck = useSelector((state) => state.auth.loginchecked)
   const villanumber = useSelector((state) => state.mobileInfo.villaIdNumber);
   let othercarid = null;
   const dispatch = useDispatch();
@@ -47,10 +46,12 @@ function MycarParking() {
   }
 
   useEffect(() => {
+
+    if (userid === "") {
+      navigate("/Mobile/Login");
+    }
+    
     const fetchData = async () => {
-        if (logincheck !== true) {
-          navigate('/Mobile/Login')
-        }
         try {
           // 주차현황 가지고오기
           http({
@@ -79,7 +80,7 @@ function MycarParking() {
 
     // fetchData 함수를 호출하여 데이터를 받아옴
     fetchData();
-  }, [dispatch,logincheck,navigate,userid,villanumber]); // 빈 배열을 넣어서 페이지 로드 시에만 useEffect 내부 코드가 실행되도록 설정
+  }, [dispatch,navigate,userid,villanumber]); // 빈 배열을 넣어서 페이지 로드 시에만 useEffect 내부 코드가 실행되도록 설정
 
 
 

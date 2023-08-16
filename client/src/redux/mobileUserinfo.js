@@ -1,9 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
+import produce from 'immer';
 
 const initialState = {
-  carNumber: '',
+  carNumber: "",
   id: null,
-  loginId:'',
+  loginId:"",
   name: "",
   phoneNumber: "",
   accessToken:"",
@@ -64,14 +65,26 @@ const mobileUserinfo = createSlice({
     setWhenEnteringCar: (state, action) => {
       state.whenEnteringCar = action.payload;
     },
-    setLogout: (state) => {
-      state = {
+  
+    setUserLogout: (state) => {
+      return {
         ...initialState,
-        readMessage: initialState.readMessage,
-        totalMessage: initialState.totalMessage,
-        chatingRoomId: initialState.chatingRoomId
+        carNumber: "",
+        id: null,
+        loginId: "",
+        name: "",
+        phoneNumber: "",
+        accessToken: "",
+        refreshToken: "",
+        villaNumber: "",
+        villaIdNumber: "",
+        totalMileage: "",
+        userMacAdress: "",
+        whenEnteringCar: false,
+        mileagelist: [],
+        fcmToken: "",
       };
-  },
+    },
     setMileageList : (state, action) => {
       state.mileagelist = action.payload
     },
@@ -96,5 +109,5 @@ const mobileUserinfo = createSlice({
 
 export const { setCarNumber, setid, setloginId, setname, setphoneNumber, setaccessToken, 
                setrefreshToken, setVillaNumber, setvillaIdNumber, setTotalMileage, setImageUrl, 
-               setUserMacAdress, setWhenEnteringCar, setLogout, setMileageList, setFcmToken, setReadMessage, setChatingRoomId, setTotalMessage} = mobileUserinfo.actions;
+               setUserMacAdress, setWhenEnteringCar, setUserLogout, setMileageList, setFcmToken, setReadMessage, setChatingRoomId, setTotalMessage} = mobileUserinfo.actions;
 export default mobileUserinfo.reducer;

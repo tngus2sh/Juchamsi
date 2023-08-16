@@ -41,7 +41,6 @@ function Parkinglot() {
   const userid = useSelector((state) => state.mobileInfo.loginId);
   const name = useSelector((state) => state.mobileInfo.name);
   const villanumber = useSelector((state) => state.mobileInfo.villaIdNumber);
-  const logincheck = useSelector((state) => state.auth.loginchecked);
   const storedFcmToken = useSelector((state) => state.mobileInfo.fcmToken);
 
   const requestNotificationPermission = async () => {
@@ -90,6 +89,9 @@ function Parkinglot() {
 
   // 로그인한 유저
   useEffect(() => {
+    if (userid === "") {
+      navigate("/Mobile/Login");
+    }
     if (storedFcmToken === "" || storedFcmToken === undefined) {
       requestNotificationPermission();
     } else {
@@ -99,9 +101,6 @@ function Parkinglot() {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (logincheck !== true) {
-        navigate("/Mobile/Login");
-      }
       try {
         // 내 주차현황 입력여부 확인
         http({
@@ -153,7 +152,7 @@ function Parkinglot() {
 
     // fetchData 함수를 호출하여 데이터를 받아옴
     fetchData();
-  }, [logincheck, navigate, userid, villanumber, dispatch, handleOpen]); // 빈 배열을 넣어서 페이지 로드 시에만 useEffect 내부 코드가 실행되도록 설정
+  }, [navigate, userid, villanumber, dispatch, handleOpen]); // 빈 배열을 넣어서 페이지 로드 시에만 useEffect 내부 코드가 실행되도록 설정
 
   // Redux 상태에서 정보 가져오기
   const BoxItem = useSelector((state) => state.mycar.BoxItem);

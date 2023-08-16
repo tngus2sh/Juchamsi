@@ -44,6 +44,9 @@ function Termessage() {
   // const [toNickName, setToNickName] = useState([]);
 
   useEffect(() => {
+    if (loginId === "") {
+      navigate("/Mobile/Login");
+    }
     findAllRoom();
   }, []);
 
