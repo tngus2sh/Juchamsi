@@ -14,6 +14,6 @@ public interface TokenRepository extends JpaRepository<Token, Long> {
     Optional<Token> findByUserLoginId(@Param("loginId") String loginId);
 
     @Modifying(clearAutomatically = true)
-    @Query("update Token t set t.FCMToken=:FCMToken where t.user.loginId=:loginId")
-    Optional<Void> updateToken(@Param("loginId") String loginId, @Param("FCMToken") String FCMToken);
+    @Query("update Token t set t.fcmToken=:fcmToken where t.user.loginId=:loginId")
+    Optional<Void> updateToken(@Param("loginId") String loginId, @Param("fcmToken") String fcmToken);
 }

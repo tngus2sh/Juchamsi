@@ -30,13 +30,13 @@ public class TokenServiceImpl implements TokenService {
 
         Optional<Token> findToken = tokenRepository.findByUserLoginId(request.getLoginId());
         if(findToken.isPresent()) {
-            tokenRepository.updateToken(request.getLoginId(), request.getFCMToken());
+            tokenRepository.updateToken(request.getLoginId(), request.getFcmToken());
             return findToken.get().getId();
         }
         else {
             Token token = Token.builder()
                     .user(findUser.get())
-                    .FCMToken(request.getFCMToken())
+                    .fcmToken(request.getFcmToken())
                     .build();
 
             Token saveToken = tokenRepository.save(token);

@@ -16,7 +16,6 @@ import { initializeApp } from "firebase/app";
 import { getMessaging, getToken } from "firebase/messaging";
 import { setFcmToken } from "../../redux/mobileUserinfo";
 
-
 const config = {
   apiKey: "AIzaSyAP0IeVXonU6Z5LjfuCHU-V256A0IW13B0",
   authDomain: "juchamsi-test.firebaseapp.com",
@@ -66,21 +65,20 @@ function Parkinglot() {
       const token = await getToken(messaging, { vapidKey: "BOo8VGAO9hTSpToCkrOuA3H_UL5HNke7zP5O19dBHsgtiG2_uk-g4njPKE5D024SAqppKGVuFSERWIbQUXeiJjg" });
 
       if (token.length > 0) {
-        console.log("푸시 토큰 : ", token);
         if (storedFcmToken !== token) {
           dispatch(setFcmToken(token));
           await http
-          .post(`/token`, {
-            loginId: userid,
-            FCMToken: token,
-          })
-          .then((response) => {
-            console.log(response.data);
-          })
-          .catch((error) => {
-            // 요청 실패 시 에러 처리
-            console.error("Error while submitting:", error);
-          });
+            .post(`/token`, {
+              loginId: userid,
+              fcmToken: token,
+            })
+            .then((response) => {
+              console.log(response.data);
+            })
+            .catch((error) => {
+              // 요청 실패 시 에러 처리
+              console.error("Error while submitting:", error);
+            });
         }
       } else {
         console.log("푸시 토큰 실패 !");
@@ -90,15 +88,14 @@ function Parkinglot() {
     }
   };
 
-    // 로그인한 유저
-    useEffect(() => {
-      if (storedFcmToken === "" || storedFcmToken === undefined) {
-        requestNotificationPermission();
-      } else {
-        fetchFcmToken();
-      }
-    }, []);
-  
+  // 로그인한 유저
+  useEffect(() => {
+    if (storedFcmToken === "" || storedFcmToken === undefined) {
+      requestNotificationPermission();
+    } else {
+      fetchFcmToken();
+    }
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -158,8 +155,6 @@ function Parkinglot() {
     fetchData();
   }, [logincheck, navigate, userid, villanumber, dispatch, handleOpen]); // 빈 배열을 넣어서 페이지 로드 시에만 useEffect 내부 코드가 실행되도록 설정
 
-
-
   // Redux 상태에서 정보 가져오기
   const BoxItem = useSelector((state) => state.mycar.BoxItem);
   const mycar = useSelector((state) => state.mycar.mycar);
@@ -187,7 +182,6 @@ function Parkinglot() {
     for (let k = 0; k < BoxItem.length; k++) {
       timelist[BoxItem[k].seatNumber] = BoxItem[k].outTime;
     }
-    console.log(timelist);
     return timelist;
   };
 
@@ -219,7 +213,6 @@ function Parkinglot() {
   //     const index = rowIndex * BoxColumn + j;
   //     console.log(index);
   //     const MycarIcon = index === mycar - 1;
-
 
   //     columns.push(
   //       <button key={`${rowIndex}-${j}`} onClick={MycarIcon ? handleOpenMycarPage : null} style={{ border: "none", backgroundColor: "transparent", padding: 0 }}>
@@ -411,7 +404,6 @@ function Parkinglot() {
   };
 
   const drawParkingLotRow = () => {
-    console.log(outTimeArray);
     let rows = [];
 
     if (BoxColumn !== 0) {
