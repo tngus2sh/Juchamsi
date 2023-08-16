@@ -55,7 +55,7 @@ public class TokenApiTest {
         String FCMToken = "enVZRhGY3rfN8BhsUd0OR5:APA91bETGqKvYFwp01S2aSZTBm4ignS9aAaQmvfXFItzi2NiK4uVeO4qKcuh4LChlIVTd4ClxoSUK5O3vTdvWpUhIltqift0K6Y9bC9op29PWzuhf0bGnRHOoDBCF2rO5ufN0lkQiR-2";
         String object = objectMapper.writeValueAsString(SaveTokenRequest.builder()
                 .loginId(targetUser.getLoginId())
-                .FCMToken(FCMToken)
+                .fcmToken(FCMToken)
                 .build());
 
         // when

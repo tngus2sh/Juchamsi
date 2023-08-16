@@ -27,14 +27,15 @@ public class FirebaseCloudMessageService {
         Optional<Token> targetToken = tokenRepository.findByUserLoginId(request.getLoginId());
 
         if(targetToken.isPresent()) {
-            if(targetToken.get().getFCMToken() != null) {
+            if(targetToken.get().getFcmToken() != null) {
                 Notification notification = Notification.builder()
                         .setTitle(request.getTitle())
                         .setBody(request.getBody())
+                        .setImage("images/logo.png")
                         .build();
 
                 Message message = Message.builder()
-                        .setToken(targetToken.get().getFCMToken())
+                        .setToken(targetToken.get().getFcmToken())
                         .setNotification(notification)
                         .build();
 

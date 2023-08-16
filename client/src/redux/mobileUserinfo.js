@@ -1,9 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
+import produce from 'immer';
 
 const initialState = {
-  carNumber: '',
+  carNumber: "",
   id: null,
-  loginId:'',
+  loginId:"",
   name: "",
   phoneNumber: "",
   accessToken:"",
@@ -15,7 +16,9 @@ const initialState = {
   whenEnteringCar: false,
   mileagelist: [],
   fcmToken: "",
-  readMessage:""
+  chatingRoomId: "",
+  readMessage: "",
+  totalMessage:"",
 };
 
 const mobileUserinfo = createSlice({
@@ -62,16 +65,42 @@ const mobileUserinfo = createSlice({
     setWhenEnteringCar: (state, action) => {
       state.whenEnteringCar = action.payload;
     },
-    setLogout: () => initialState,
+  
+    setUserLogout: (state) => {
+      return {
+        ...initialState,
+        carNumber: "",
+        id: null,
+        loginId: "",
+        name: "",
+        phoneNumber: "",
+        accessToken: "",
+        refreshToken: "",
+        villaNumber: "",
+        villaIdNumber: "",
+        totalMileage: "",
+        userMacAdress: "",
+        whenEnteringCar: false,
+        mileagelist: [],
+        fcmToken: "",
+      };
+    },
     setMileageList : (state, action) => {
       state.mileagelist = action.payload
     },
     setFcmToken : (state, action) => {
       state.fcmToken = action.payload
     },
+    setChatingRoomId: (state, action) => {
+      state.chatingRoomId = action.payload
+    },
     setReadMessage: (state, action) => {
       state.readMessage = action.payload
-    }
+    },
+    setTotalMessage: (state, action) => {
+      state.totalMessage = action.payload
+    },
+    
 
   },
     
@@ -80,5 +109,5 @@ const mobileUserinfo = createSlice({
 
 export const { setCarNumber, setid, setloginId, setname, setphoneNumber, setaccessToken, 
                setrefreshToken, setVillaNumber, setvillaIdNumber, setTotalMileage, setImageUrl, 
-               setUserMacAdress, setWhenEnteringCar, setLogout, setMileageList, setFcmToken, setReadMessage} = mobileUserinfo.actions;
+               setUserMacAdress, setWhenEnteringCar, setUserLogout, setMileageList, setFcmToken, setReadMessage, setChatingRoomId, setTotalMessage} = mobileUserinfo.actions;
 export default mobileUserinfo.reducer;

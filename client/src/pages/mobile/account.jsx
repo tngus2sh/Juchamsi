@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import http from "../../axios/http";
-import { setMileageList, setLogout } from "../../redux/mobileUserinfo";
+import { setMileageList, setUserLogout } from "../../redux/mobileUserinfo";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import LocalParkingRoundedIcon from "@mui/icons-material/LocalParkingRounded";
 import dayjs from "dayjs";
@@ -25,13 +25,12 @@ function Account() {
 
   const carNumber = useSelector((state) => state.mobileInfo.carNumber);
   const [showAlert, setShowAlert] = React.useState(false);
-  const logincheck = useSelector((state) => state.auth.loginchecked)
 
   useEffect(() => {
-      if (logincheck !== true) {
-          navigate('/Mobile/Login')
-        }
-      }, [logincheck, navigate])
+    if (loginId === "") {
+      navigate("/Mobile/Login");
+    }
+  }, []);
 
   useEffect(() => {
     http({
@@ -48,7 +47,7 @@ function Account() {
       .catch((err) => {
         console.log(err);
       });
-  }, [dispatch,loginId]);
+  }, [dispatch, loginId]);
 
   const handleSignoutOpen = () => {
     http({
@@ -69,7 +68,7 @@ function Account() {
       url: `/tenant/logout/${loginId}`,
     })
       .then(() => {
-        dispatch(setLogout());
+        dispatch(setUserLogout());
         navigate("/Mobile/Login");
       })
       .catch((err) => {
@@ -135,21 +134,33 @@ function Account() {
     overflowY: "auto", // 스크롤바 추가
     outline: "none",
   };
-  
 
   return (
     <React.Fragment>
-      {showAlert && <Alert severity="error" className='signup-alert' sx={{justifyContent:'center'}}>3000 마일리지 이상이어야 교환신청이 가능합니다.</Alert>}
+      {showAlert && (
+        <Alert severity="error" className="signup-alert" sx={{ justifyContent: "center" }}>
+          3000 마일리지 이상이어야 교환신청이 가능합니다.
+        </Alert>
+      )}
       <div className="account-main-container">
         <div className="account-header-container" style={{ color: "white" }}>
           <div className="account-padding-container">
-            <div className="account-header-info-container" style={{ paddingTop: "1.5rem", textAlign: "left" }}>
+            <div
+              className="account-header-info-container"
+              style={{ paddingTop: "1.5rem", textAlign: "left" }}
+            >
               <span className="bold-text" style={{ fontSize: "1.3rem" }}>
                 마이 페이지
               </span>
             </div>
-            <div className="account-header-content-container" style={{ marginTop: "2.5rem", textAlign: "left" }}>
-              <div className="account-header-content-flex-container" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div
+              className="account-header-content-container"
+              style={{ marginTop: "2.5rem", textAlign: "left" }}
+            >
+              <div
+                className="account-header-content-flex-container"
+                style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
+              >
                 <div className="account-header-info-container">
                   <div className="account-header-name-container">
                     <span>
@@ -159,7 +170,10 @@ function Account() {
                       &nbsp;님, 환영합니다!
                     </span>
                   </div>
-                  <div className="account-header-car-number-container" style={{ marginTop: "1.2rem" }}>
+                  <div
+                    className="account-header-car-number-container"
+                    style={{ marginTop: "1.2rem" }}
+                  >
                     <span className="bold-text" style={{ fontSize: "1.3rem" }}>
                       {carNumber}
                     </span>
@@ -186,7 +200,9 @@ function Account() {
             </div>
 
             <div className="account-mileage-total-container" style={{ marginTop: "2rem" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div
+                style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
+              >
                 <div className="account-mileage-total-info-container">
                   <span className="bold-text" style={{ fontSize: "1.1rem" }}>
                     총 마일리지
@@ -201,8 +217,14 @@ function Account() {
               </div>
             </div>
 
-            <div onClick={handleOpenMileage} className="account-mileage-history-container" style={{ marginTop: "1.9rem" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div
+              onClick={handleOpenMileage}
+              className="account-mileage-history-container"
+              style={{ marginTop: "1.9rem" }}
+            >
+              <div
+                style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
+              >
                 <div className="account-mileage-history-info-container">
                   <span className="bold-text" style={{ fontSize: "1.1rem" }}>
                     마일리지 내역
@@ -214,8 +236,14 @@ function Account() {
               </div>
             </div>
 
-            <div onClick={handleOpenMileageChange} className="account-mileage-exchange-container" style={{ marginTop: "1.5rem" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div
+              onClick={handleOpenMileageChange}
+              className="account-mileage-exchange-container"
+              style={{ marginTop: "1.5rem" }}
+            >
+              <div
+                style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
+              >
                 <div className="account-mileage-history-info-container">
                   <span className="bold-text" style={{ fontSize: "1.1rem" }}>
                     마일리지 교환
@@ -237,8 +265,14 @@ function Account() {
               </span>
             </div>
 
-            <div onClick={handleOpenupdateAccount} className="account-privacy-update-container" style={{ marginTop: "1.5rem" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div
+              onClick={handleOpenupdateAccount}
+              className="account-privacy-update-container"
+              style={{ marginTop: "1.5rem" }}
+            >
+              <div
+                style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
+              >
                 <div className="account-mileage-history-info-container">
                   <span className="bold-text" style={{ fontSize: "1.1rem" }}>
                     개인정보 수정
@@ -250,8 +284,14 @@ function Account() {
               </div>
             </div>
 
-            <div onClick={handleSignoutOpen} className="account-delete-user-container" style={{ marginTop: "1.5rem" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div
+              onClick={handleSignoutOpen}
+              className="account-delete-user-container"
+              style={{ marginTop: "1.5rem" }}
+            >
+              <div
+                style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
+              >
                 <div className="account-mileage-history-info-container">
                   <span className="bold-text" style={{ fontSize: "1.1rem" }}>
                     회원 탈퇴
@@ -263,8 +303,14 @@ function Account() {
               </div>
             </div>
 
-            <div onClick={handleLoginoutOpen} className="account-logout-container" style={{ marginTop: "1.5rem" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div
+              onClick={handleLoginoutOpen}
+              className="account-logout-container"
+              style={{ marginTop: "1.5rem" }}
+            >
+              <div
+                style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
+              >
                 <div className="account-mileage-history-info-container">
                   <span className="bold-text" style={{ fontSize: "1.1rem" }}>
                     로그아웃
@@ -280,51 +326,88 @@ function Account() {
 
         <div className="empty-container" style={{ display: "inline-block", height: "7rem" }}></div>
       </div>
-      <Modal open={MileageOpen} onClose={handleCloseMileage} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+      <Modal
+        open={MileageOpen}
+        onClose={handleCloseMileage}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
         <Box sx={style1}>
-          <div className="modal-flex-container" style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%" }}>
+          <div
+            className="modal-flex-container"
+            style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%" }}
+          >
             <div className="modal-title-container" style={{ marginTop: "2rem" }}>
               <span className="bold-text" style={{ fontSize: "1.3rem" }}>
-              마일리지 내역
+                마일리지 내역
               </span>
             </div>
             <div className="modal-content-container" style={{ flex: "1" }}>
-              <div className="modal-content-flex-container" style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
-                <div className="modal-content-input-container" style={{ width: "70%",  }}>
-                  <div style={{display:'flex', position:'absolute', top:'5rem', width:'80%'}}>
-                    <div style={{display:'flex', justifyContent: "space-between", width:'90%'}}>
-                    <p className={`modaltext2 ${selectedTag === "전체" ? "selected" : ""}`} onClick={() => handleTagClick("전체")}>
-                      전체
-                    </p>
-                    <p className={`modaltext2 ${selectedTag === "적립" ? "selected" : ""}`} onClick={() => handleTagClick("적립")}>
-                      적립
-                    </p>
-                    <p className={`modaltext2 ${selectedTag === "사용" ? "selected" : ""}`} onClick={() => handleTagClick("사용")}>
-                      사용
-                    </p>
+              <div
+                className="modal-content-flex-container"
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  width: "100%",
+                  height: "100%",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <div className="modal-content-input-container" style={{ width: "70%" }}>
+                  <div style={{ display: "flex", position: "absolute", top: "5rem", width: "80%" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", width: "90%" }}>
+                      <p
+                        className={`modaltext2 ${selectedTag === "전체" ? "selected" : ""}`}
+                        onClick={() => handleTagClick("전체")}
+                      >
+                        전체
+                      </p>
+                      <p
+                        className={`modaltext2 ${selectedTag === "적립" ? "selected" : ""}`}
+                        onClick={() => handleTagClick("적립")}
+                      >
+                        적립
+                      </p>
+                      <p
+                        className={`modaltext2 ${selectedTag === "사용" ? "selected" : ""}`}
+                        onClick={() => handleTagClick("사용")}
+                      >
+                        사용
+                      </p>
                     </div>
                   </div>
-                {/* 보여질 내용을 상태에 따라 렌더링 */}
-                <div style={{marginTop:'5rem'}}/>
-                {content.map((item) => (
-                  <div className="pointtext" key={item.id} style={{marginTop:'2rem'}}>
-                    <Stack direction="row" sx={{ display: "flex", justifyContent: "space-between" }}>
-                      <p className="pointtext1">{item.description}</p>
-                      <p className="pointtext1">{item.point}</p>
-                    </Stack>
-                    <br />
-                    <Box sx={{ display: "flex", flexDirection: "row-reverse" }}>
-                      <p className="pointtext1">{dayjs(item.createDate).format("YY.MM.DD HH:mm")}</p>
-                    </Box>
-                    <hr />
-                  </div>
-                ))}
+                  {/* 보여질 내용을 상태에 따라 렌더링 */}
+                  <div style={{ marginTop: "5rem" }} />
+                  {content.map((item) => (
+                    <div className="pointtext" key={item.id} style={{ marginTop: "2rem" }}>
+                      <Stack
+                        direction="row"
+                        sx={{ display: "flex", justifyContent: "space-between" }}
+                      >
+                        <p className="pointtext1">{item.description}</p>
+                        <p className="pointtext1">{item.point}</p>
+                      </Stack>
+                      <br />
+                      <Box sx={{ display: "flex", flexDirection: "row-reverse" }}>
+                        <p className="pointtext1">
+                          {dayjs(item.createDate).format("YY.MM.DD HH:mm")}
+                        </p>
+                      </Box>
+                      <hr />
+                    </div>
+                  ))}
                   <button
-                      className="login-box"
-                      onClick={handleCloseMileage}
-                      style={{ marginTop: "1.7rem", backgroundColor: "#006DD1", color: "white", marginBottom: "1rem" }}
-                    >
-                      확인
+                    className="login-box"
+                    onClick={handleCloseMileage}
+                    style={{
+                      marginTop: "1.7rem",
+                      backgroundColor: "#006DD1",
+                      color: "white",
+                      marginBottom: "1rem",
+                    }}
+                  >
+                    확인
                   </button>
                 </div>
               </div>

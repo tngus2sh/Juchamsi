@@ -22,6 +22,7 @@ import com.inet.juchamsi.domain.parking.entity.ParkingHistory;
 import com.inet.juchamsi.domain.parking.entity.ParkingLot;
 import com.inet.juchamsi.domain.user.application.AdminService;
 import com.inet.juchamsi.domain.user.dao.UserRepository;
+import com.inet.juchamsi.domain.user.dto.request.CreateAdminRequest;
 import com.inet.juchamsi.domain.user.entity.User;
 import com.inet.juchamsi.global.error.AlreadyExistException;
 import com.inet.juchamsi.global.error.NotFoundException;
@@ -30,6 +31,7 @@ import com.inet.juchamsi.global.notification.dto.request.FCMNotificationRequest;
 import com.inet.juchamsi.global.redis.RedisUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -228,6 +230,7 @@ public class ParkingServiceImpl implements ParkingService {
                             .userId(parkingHistoryDetailDto.getUserId())
                             .seatNumber(parkingHistoryDetailDto.getSeatNumber())
                             .carNumber(parkingHistoryDetailDto.getCarNumber())
+                            .intTime(parkingHistoryDetailDto.getInTime().toString())
                             .outTime(outTime)
                             .active(parkingHistoryDetailDto.getActive().name())
                             .totalSeatNum(parkingHistoryDetailDto.getTotalSeatNum())
@@ -389,7 +392,7 @@ public class ParkingServiceImpl implements ParkingService {
                 // 뒤 차주의 시스템 메세지 db에 내용 저장
                 chatService.createSystemChat(SystemMessageDto.builder()
                         .senderId(SYSTEM_ID)
-                        .message(ENTRANCE_FRONT_EXIT_TIME_MESSAGE + "\n" + "[" + outTime + "]")
+                        .message(ENTRANCE_FRONT_EXIT_TIME_MESSAGE + "\n" + "[" + outTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + "]")
                         .roomId(roomIdOptional.get())
                         .build());
             }
@@ -399,19 +402,6 @@ public class ParkingServiceImpl implements ParkingService {
     // 유저에게 출차시간 알림 주기(15분전, 출차시간이 됐을 때)
     @Scheduled(cron = "0 0/1 * * * ?")
     public void notifyOutTimeToUser() {
-
-//        // ======================test==============================
-//        chatService.createSystemRoom(SystemChatRoomRequest.builder().userId("testuser2").build());
-//        String outTimeStr = "2023-08-10 12:02";
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-//        LocalDateTime outTime = LocalDateTime.parse(outTimeStr, formatter);
-//        notificationService.createNotification(CreateNotificationRequest.builder()
-//                .loginId("testuser2")
-//                .notiTime(outTime)
-//                .message(EXIT_TIME_REMINDER)
-//                .build());
-//        // ======================test==============================
-
         
         LocalDateTime localDateTime = LocalDateTime.now();
         String notiTime = localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
