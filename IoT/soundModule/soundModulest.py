@@ -16,6 +16,7 @@ PLAYE = 27
 PLAYL = 22
 
 GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
 GPIO.setup(REC, GPIO.OUT)
 GPIO.setup(PLAYE, GPIO.OUT)
 GPIO.setup(PLAYL, GPIO.OUT)
@@ -29,11 +30,11 @@ GPIO.output(PLAYL, GPIO.HIGH)
 def play_message():
     print("Playing message...")
     GPIO.output(PLAYE, GPIO.LOW)
-    time.sleep(0.1)  # 버튼 누르기
+    time.sleep(0.1)
     GPIO.output(PLAYE, GPIO.HIGH)
 
 
-IMEOUT_INTERVAL = 10  # Signal timeout in seconds. Adjust as needed.
+TIMEOUT_INTERVAL = 10  # Signal timeout in seconds. Adjust as needed.
 
 lastSignalTime = {}
 
@@ -70,7 +71,7 @@ def scan_bluetooth():
     ble_803.hci_enable_le_scan(sock)
 
     while True:
-        time.sleep(1)
+        time.sleep(0.1)
         returnedList = ble_803.parse_events(sock, 10)
         for beacon in returnedList:
             for comp_str in ground_module:
