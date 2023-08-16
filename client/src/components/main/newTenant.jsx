@@ -99,7 +99,7 @@ const NewTenant = () => {
         <TableBody>
           {rows.map((row) => (
             <StyledTableRow key={row.loginId}>
-              <StyledTableCell component="th" scope="row">
+              <StyledTableCell component="th" scope="row" align="center">
                 {row.loginId}
               </StyledTableCell>
               <StyledTableCell align="center">{row.name}</StyledTableCell>
