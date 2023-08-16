@@ -23,16 +23,16 @@ public class Token extends TimeBaseEntity {
     private User user;
 
     @Column(name = "fcm_token")
-    private String FCMToken;
+    private String fcmToken;
 
 
     public Token() {}
 
     @Builder
-    public Token(Long id, User user, String FCMToken) {
+    public Token(Long id, User user, String fcmToken) {
         this.id = id;
         this.user = user;
-        this.FCMToken = FCMToken;
+        this.fcmToken = fcmToken;
     }
 
 }

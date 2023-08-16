@@ -7,14 +7,15 @@ import lombok.Data;
 public class SaveTokenRequest {
 
     private String loginId;
-    private String FCMToken;
+
+    private String fcmToken;
 
 
     public SaveTokenRequest() {}
 
     @Builder
-    public SaveTokenRequest(String loginId, String FCMToken) {
+    public SaveTokenRequest(String loginId, String fcmToken) {
         this.loginId = loginId;
-        this.FCMToken = FCMToken;
+        this.fcmToken = fcmToken;
     }
 }

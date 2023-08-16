@@ -11,10 +11,18 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpServletRequest;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Set;
 
 import static com.inet.juchamsi.global.api.ApiResult.ERROR;
 import static com.inet.juchamsi.global.api.ApiResult.OK;
@@ -32,7 +40,7 @@ public class TokenApiController {
     @PostMapping("")
     public ApiResult<Void> saveToken(@ApiParam(value = "login-id, fcm-token") @RequestBody SaveTokenRequest request) {
         log.debug("SaveTokenrequest={}", request);
-
+        System.out.println("토큰!!!!!!" + request.getLoginId() + ", " + request.getFcmToken());
         try {
             Long tokenId = tokenService.saveToken(request);
         }
