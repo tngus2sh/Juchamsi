@@ -230,6 +230,7 @@ public class ParkingServiceImpl implements ParkingService {
                             .userId(parkingHistoryDetailDto.getUserId())
                             .seatNumber(parkingHistoryDetailDto.getSeatNumber())
                             .carNumber(parkingHistoryDetailDto.getCarNumber())
+                            .intTime(parkingHistoryDetailDto.getInTime().toString())
                             .outTime(outTime)
                             .active(parkingHistoryDetailDto.getActive().name())
                             .totalSeatNum(parkingHistoryDetailDto.getTotalSeatNum())

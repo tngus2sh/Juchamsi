@@ -31,6 +31,7 @@ public class FirebaseCloudMessageService {
                 Notification notification = Notification.builder()
                         .setTitle(request.getTitle())
                         .setBody(request.getBody())
+                        .setImage("images/logo.png")
                         .build();
 
                 Message message = Message.builder()
