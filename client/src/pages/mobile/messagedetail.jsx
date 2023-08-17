@@ -70,18 +70,6 @@ const Messagedetail = () => {
     connect();
   }, [roomId, senderId]);
 
-  useEffect(() => {
-    const total = messageStorage.length + messages.length;
-    console.log("totalMessage");
-    console.log(total);
-    console.log("readMessage");
-    console.log(readLength);
-    if (total >= readLength - 1) {
-      dispatch(setReadMessage(total));
-    }
-    console.log("ㅁㄴ일마 ㅡ라ㅣㅁㄴ우ㅏㅣㄻ니람ㄴ아ㅣㄻㄴ림ㄴㄹ");
-  }, [messages.length]);
-
   async function fetchMessage() {
     await http
       .get(`/chat/room/${senderId}/${roomId}`)
@@ -97,34 +85,17 @@ const Messagedetail = () => {
       });
   }
 
-  const fetchData = () => {
-    console.log("이랴랴랴랴: " + totalLength);
-    console.log("totalMessage");
-    console.log(totalLength);
-    console.log("readMessage");
-    console.log(readLength);
-    if (totalLength >= readLength - 1) {
-      dispatch(setReadMessage(totalLength));
-      console.log("수행했다");
-    }
-  };
-
   const connect = () => {
-    console.log("여긴가?");
     const ws = Stomp.over(new SockJS("/ws/chat"));
     console.log(ws);
     wsRef.current = ws; // Save the WebSocket object in the ref
     ws.connect(
       {},
       function (frame) {
-        ws.subscribe("/topic/api/chat/room/" + roomId, function (message) {
-          console.log("message 리스트??");
-          fetchData();
-          // console.log(messageStorage.length);
+        ws.subscribe("/topic/chat/room/" + roomId, function (message) {
           const recv = JSON.parse(message.body);
           recvMessage(recv);
         });
-        fetchData();
         // ws.send(
         //   "/app/chat/message",
         //   {},
