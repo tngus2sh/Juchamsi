@@ -522,7 +522,7 @@ const handlePhoneModalConfirmClick = () => {
             onChange={handlePrivacyAgreeChange}
             sx={{ '& .MuiSvgIcon-root': { fontSize: '1.1rem' } }}
           />
-          <Button onClick={PrivacyBtnClick} style={{ fontSize: '0.9rem', paddingLeft: '0' }}>
+          <Button onClick={PrivacyBtnClick} style={{ fontSize: '.85rem', paddingLeft: '0', fontFamily:"Nanum" }}>
             개인정보 이용약관
           </Button>
         </div>

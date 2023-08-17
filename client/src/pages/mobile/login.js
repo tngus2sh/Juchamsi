@@ -23,12 +23,6 @@ function Login() {
   const [password, setPasswordLocal] = React.useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const loginId = useSelector((state) => state.mobileInfo.loginId);
-
-  React.useEffect(() => { 
-    console.log("저장되어있는 아이디");
-    console.log(loginId);
-  }, []);
 
   // Redux의 상태를 가져와서 사용
   const isAutoLoginChecked = useSelector((state) => state.auth.isAutoLoginChecked);
@@ -198,13 +192,13 @@ function Login() {
                 <FormControlLabel
                   control={<Checkbox checked={isAutoLoginChecked} onChange={handleAutoLoginCheckboxChange} sx={{ "& .MuiSvgIcon-root": { fontSize: "1.2rem" } }} />}
                   // label="로그인 정보 저장"
-                  label={<span style={{ fontSize: "0.9rem" }}>자동 로그인</span>}
+                  label={<span style={{ fontSize: "0.9rem", fontFamily:"Nanum" }}>자동 로그인</span>}
                 />
               </FormGroup>
             </div>
 
             <div className="find-pw-container">
-              <Button onClick={handleOpenPW} sx={{ paddingRight: "0" }} style={{ fontSize: "0.9rem" }}>
+              <Button onClick={handleOpenPW} sx={{ paddingRight: "0" }} style={{ fontSize: "0.9rem", fontFamily:"Nanum"  }}>
                 비밀번호 찾기
               </Button>
             </div>
@@ -224,7 +218,7 @@ function Login() {
             </div>
 
             <div className="signup-btn">
-              <Button onClick={handleOpenSignup} style={{ fontSize: "0.87rem" }}>
+              <Button onClick={handleOpenSignup} style={{ fontSize: "0.87rem", fontFamily:"Nanum"  }}>
                 회원가입
               </Button>
             </div>

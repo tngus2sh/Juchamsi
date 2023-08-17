@@ -29,7 +29,6 @@ function Passwordchange() {
   const [NewpasswordChecking, setNewPasswordChecking] = useState(false);
   const [NowAndNewpasswordChecking, setNowAndNewpasswordChecking] = useState(false);
   const [passwordMismatch, setPasswordMismatch] = useState(false);
-  const logincheck = useSelector((state) => state.auth.loginchecked)
 
   // 비밀번호 보기 / 숨기기 토글
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -46,7 +45,7 @@ function Passwordchange() {
 
   useEffect(() => {
     console.log()
-    if (logincheck !== true) {
+    if (loginId === "") {
         navigate('/Mobile/Login')
       }
     })
