@@ -20,7 +20,7 @@ import static com.inet.juchamsi.global.api.ApiResult.OK;
 @Slf4j
 @RequiredArgsConstructor
 @Api(tags = {"사용자 계정"})
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserApiController {
 
     private final UserService userService;

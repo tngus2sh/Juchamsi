@@ -44,29 +44,35 @@ function Footer(props) {
 
   async function fetchMessage() {
     try {
-      const response = await http.get(`/chat/room/${loginId}/3a21cd93-f68c-430b-9cab-ec30e3e678a5`);
-      // const response = await http.get(`/chat/room/${loginId}/${roomId}`);
+      if (roomId === "" || roomId === undefined) {
+        return;
+      }
+      const res = await http.get(`/chat/rooms/${loginId}`);
+      if (res.data.response.length > 1) {
+        // const response = await http.get(`/chat/room/${loginId}/3a21cd93-f68c-430b-9cab-ec30e3e678a5`);
+        const response = await http.get(`/chat/room/${loginId}/${roomId}`);
 
-      console.log("채팅방 상세조회");
-      console.log(response.data.response);
-      const messageList = response.data.response && response.data.response.messageList;
+        console.log("채팅방 상세조회");
+        console.log(response.data.response);
+        const messageList = response.data.response && response.data.response.messageList;
 
-      console.log("readLength");
-      console.log(readLength);
+        console.log("readLength");
+        console.log(readLength);
 
-      if (messageList) {
-        const length = messageList.length;
-        console.log("totalLength");
-        console.log(length);
-        dispatch(setTotalMessage(length));
-        if (readLength > length) {
-          readLength = length;
-        }
-        if (length > readLength) {
-          const temp = length - readLength;
-          setDisting(temp);
-          console.log(temp);
-          props.getDisting(temp);
+        if (messageList) {
+          const length = messageList.length;
+          console.log("totalLength");
+          console.log(length);
+          dispatch(setTotalMessage(length));
+          if (readLength > length) {
+            readLength = length;
+          }
+          if (length > readLength) {
+            const temp = length - readLength;
+            setDisting(temp);
+            console.log(temp);
+            props.getDisting(temp);
+          }
         }
       }
     } catch (error) {

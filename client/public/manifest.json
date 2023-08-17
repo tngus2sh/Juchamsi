@@ -1,6 +1,7 @@
 {
   "short_name": "주참시",
   "name": "주차장 참견 시스템",
+  "description": "빌라 주차장 문제를 해결하기 위해 사용하는 어플입니다.",
   "icons": [
     {
       "src": "./icons/apple-touch-icon-57x57.png",
@@ -41,18 +42,41 @@
     {
       "src": "./icons/apple-touch-icon-152x152.png",
       "sizes": "152x152",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose":"maskable"
     },
     {
-      "src": "./icons/favicon-512x512.png",
+      "src": "./icons/mstile-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ],
   "prefer_related_applications": true,
   "start_url": "Mobile/Login",
   "display": "standalone",
   "theme_color": "#f2f2f2",
-  "background_color": "#FFFFFF"
+  "background_color": "#FFFFFF",
+  "id":"/Mobile/Login",
+  "orientation": "portrait",
+  "categories": ["lifestyle", "social", "utilities"],
+  "launch_handler": {
+    "client_mode":"auto"
+},
+"screenshots" : [
+  {
+    "src": "main.PNG",
+    "sizes": "1280x720",
+    "type": "image/jpg",
+    "platform": "wide"
+  }
+],
+"display_override": [
+  "window-controls-overlay",
+  "standalone",
+  "browser"
+],
+"edge_side_panel": {
+  "preferred_width": 400
+}
 }

@@ -28,7 +28,7 @@ import static com.inet.juchamsi.global.api.ApiResult.ERROR;
 import static com.inet.juchamsi.global.api.ApiResult.OK;
 
 @RestController
-@RequestMapping("/token")
+@RequestMapping("/api/token")
 @Slf4j
 @RequiredArgsConstructor
 @Api(tags = {"토큰"})

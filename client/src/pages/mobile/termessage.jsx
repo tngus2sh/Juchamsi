@@ -30,7 +30,6 @@ function Termessage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const loginId = useSelector((state) => state.mobileInfo.loginId);
-  // const targetId; 겹주차 발생 차주에게 보내기!!
 
   const [chatRooms, setChatRooms] = useState([]);
   const [disting, setDisting] = useState(0);
@@ -187,7 +186,7 @@ function Termessage() {
                   <ListItemText
                     primary={item.toNickName}
                     secondary={item.lastMessageContent}
-                    sx={{ height: "4rem", color: disting > 0 ? "" : "rgb(150, 150, 150)" }}
+                    sx={{ height: "4rem" }}
                   />
                   {disting > 0 ? (
                     <FiberManualRecordIcon
@@ -209,7 +208,7 @@ function Termessage() {
                       <Typography
                         sx={{
                           fontSize: ".8rem",
-                          color: disting > 0 ? "black" : "rgb(150, 150, 150)",
+                          // color: disting > 0 ? "black" : "rgb(150, 150, 150)",
                         }}
                       >
                         {item.lastMessageTime ? formatDateTime(item.lastMessageTime) : ""}
@@ -217,7 +216,7 @@ function Termessage() {
                       <ArrowForwardIosIcon
                         sx={{
                           height: "1rem",
-                          color: disting > 0 ? "" : "rgb(150, 150, 150)",
+                          // color: disting > 0 ? "" : "rgb(150, 150, 150)",
                         }}
                       />
                     </div>

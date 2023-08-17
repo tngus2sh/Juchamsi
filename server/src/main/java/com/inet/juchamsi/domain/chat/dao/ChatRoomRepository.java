@@ -28,8 +28,8 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
     @Query("select new com.inet.juchamsi.domain.chat.dto.service.ChatRoomUserDto(u.carNumber, cr.roomId, cr.roomName) from ChatPeople cp left join cp.user u left join cp.chatRoom cr where cr.roomId=:roomId and cr.status=:status")
     List<ChatRoomUserDto> findChatRoomByIdAndLoginIdAndStatus(@Param("roomId") String roomId, @Param("status") Status status);
 
-    @Query("select cr.id from ChatPeople cp left join cp.user u left join cp.chatRoom cr where u.loginId=:loginId and u.active=:active and cr.status=:status")
-    Optional<Long> findIdByloginIdAndActive(@Param("loginId") String loginId, @Param("active") Active active, @Param("status") Status status);
+    @Query("select cr.id from ChatPeople cp left join cp.user u left join cp.chatRoom cr where u.loginId=:loginId and u.active=:active and cr.status=:status and cr.type=:type")
+    Optional<Long> findIdByloginIdAndActive(@Param("loginId") String loginId, @Param("active") Active active, @Param("status") Status status, @Param("type") Type type);
 
     // 사용자의 loginId와 채팅방 유형으로 roomId 반환
     @Query("select cr.roomId from ChatPeople cp left join cp.user u left  join cp.chatRoom cr where u.loginId=:loginId and cr.type=:type and cr.status=:status")
@@ -40,6 +40,6 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
     List<User> findChatPeopleByRoomIdAndStatus(@Param("roomId") String roomId, @Param("status") Status status);
 
     @Modifying(clearAutomatically = true)
-    @Query("update ChatRoom cr set cr.status=:status where cr.id=:id")
-    Optional<Void> updateStatus(@Param("id") Long id, @Param("status") Status status);
+    @Query("update ChatRoom cr set cr.status=:status where cr.id=:id and cr.type=:type")
+    Optional<Void> updateStatus(@Param("id") Long id, @Param("status") Status status, @Param("type") Type type);
 }

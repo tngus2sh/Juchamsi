@@ -4,8 +4,9 @@ module.exports = function (app) {
   app.use(
     "/api/v1",
     createProxyMiddleware({
-      target: "http://i9c107.p.ssafy.io:8080",
+      target: "https://i9c107.p.ssafy.io/api",
       changeOrigin: true,
+      
     })
   );
 
@@ -13,7 +14,7 @@ module.exports = function (app) {
   app.use(
     "/ws/chat", // 웹 소켓 경로
     createProxyMiddleware({
-      target: "http://i9c107.p.ssafy.io:8080",
+      target: "https://i9c107.p.ssafy.io/api",
       ws: true, // 웹 소켓 프록시를 위한 옵션
       changeOrigin: true,
     })

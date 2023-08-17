@@ -29,7 +29,7 @@ import static com.inet.juchamsi.global.api.ApiResult.OK;
 @Slf4j
 @RequiredArgsConstructor
 @Api(tags = {"주차장"})
-@RequestMapping("/parking")
+@RequestMapping("/api/parking")
 public class ParkingApiController {
     private final ParkingLotService parkingLotService;
     private final ParkingService parkingService;

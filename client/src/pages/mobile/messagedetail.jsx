@@ -110,12 +110,14 @@ const Messagedetail = () => {
   };
 
   const connect = () => {
+    console.log("여긴가?");
     const ws = Stomp.over(new SockJS("/ws/chat"));
+    console.log(ws);
     wsRef.current = ws; // Save the WebSocket object in the ref
     ws.connect(
       {},
       function (frame) {
-        ws.subscribe("/topic/chat/room/" + roomId, function (message) {
+        ws.subscribe("/topic/api/chat/room/" + roomId, function (message) {
           console.log("message 리스트??");
           fetchData();
           // console.log(messageStorage.length);
@@ -244,7 +246,7 @@ const Messagedetail = () => {
           <div className="message-detail-content-container" style={{ flex: "1 0 auto" }}>
             <ChatContainer className="custom-chat-container">
               <MessageList className="cs-message-list">
-                {messageStorage.length === 0 && messages.length < 2 ? (
+                {messageStorage.length === 0 && messages.length < 1 ? (
                   <MessageSeparator content="대화를 시작해주세요" />
                 ) : (
                   messageStorage.map((message, index) => (

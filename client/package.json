@@ -76,7 +76,7 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://i9c107.p.ssafy.io:8080",
+  "proxy": "https://i9c107.p.ssafy.io",
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
   }

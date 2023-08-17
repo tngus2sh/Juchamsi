@@ -1,5 +1,10 @@
 .App {
   text-align: center;
+  font-family: "Nanum", sans-serif;
+}
+
+button{
+  font-family:"Nanum"; 
 }
 
 .App-logo {
@@ -50,4 +55,8 @@
 @font-face {
   font-family: "Poppins-Bold";
   src: url("../public/font/Poppins-Bold.ttf");
+}
+
+body {
+  
 }
