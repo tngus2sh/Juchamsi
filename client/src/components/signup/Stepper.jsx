@@ -56,9 +56,9 @@ export default function HorizontalLinearStepper() {
       } else if (phoneNumber.trim() === "") {
         setModalMessage("휴대폰번호를 입력하세요");
         setOpen(true);
-        // } else if (!certification) {
-        //   setModalMessage("휴대폰번호 인증해주세요");
-        //   setOpen(true);
+      } else if (!certification) {
+        setModalMessage("휴대폰번호 인증해주세요");
+        setOpen(true);
       } else {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
       }

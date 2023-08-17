@@ -110,7 +110,9 @@ const Messagedetail = () => {
   };
 
   const connect = () => {
+    console.log("여긴가?");
     const ws = Stomp.over(new SockJS("/ws/chat"));
+    console.log(ws);
     wsRef.current = ws; // Save the WebSocket object in the ref
     ws.connect(
       {},

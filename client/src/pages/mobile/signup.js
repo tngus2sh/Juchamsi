@@ -220,7 +220,7 @@ const handlePhoneModalConfirmClick = () => {
         isIdChecked === true &&
         passwordMismatch === false &&
         passwordChecking === false &&
-        // phonenumbecheck === true &&
+        phonenumbecheck === true &&
         isPrivacyAgreed === true
       ) {
         http({
