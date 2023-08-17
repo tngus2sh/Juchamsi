@@ -184,7 +184,7 @@ public class ChatServiceImpl implements ChatService {
         }
         String userId = userOptional.get().getLoginId();
         // userId로 해당하는 채팅방 삭제
-        Optional<Long> chatRoomIdOptional = chatRoomRepository.findIdByloginIdAndActive(userId, ACTIVE, ALIVE);
+        Optional<Long> chatRoomIdOptional = chatRoomRepository.findIdByloginIdAndActive(userId, ACTIVE, ALIVE, GENERAL);
         if (chatRoomIdOptional.isEmpty()) {
             throw new NotFoundException(ChatRoom.class, userId);
         }
