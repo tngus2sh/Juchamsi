@@ -184,13 +184,13 @@ public class ChatServiceImpl implements ChatService {
         }
         String userId = userOptional.get().getLoginId();
         // userId로 해당하는 채팅방 삭제
-        Optional<Long> chatRoomIdOptional = chatRoomRepository.findIdByloginIdAndActive(userId, ACTIVE, ALIVE);
+        Optional<Long> chatRoomIdOptional = chatRoomRepository.findIdByloginIdAndActive(userId, ACTIVE, ALIVE, GENERAL);
         if (chatRoomIdOptional.isEmpty()) {
             throw new NotFoundException(ChatRoom.class, userId);
         }
 
         // chatRoomId에 해당하는 채팅방 비활성화로 바꾸기
-        chatRoomRepository.updateStatus(chatRoomIdOptional.get(), DISABLED, GENERAL);
+        chatRoomRepository.deleteById(chatRoomIdOptional.get());
     }
 
     /* 시스템 채팅방 */
