@@ -190,7 +190,7 @@ public class ChatServiceImpl implements ChatService {
         }
 
         // chatRoomId에 해당하는 채팅방 비활성화로 바꾸기
-        chatRoomRepository.updateStatus(chatRoomIdOptional.get(), DISABLED, GENERAL);
+        chatRoomRepository.deleteById(chatRoomIdOptional.get());
     }
 
     /* 시스템 채팅방 */

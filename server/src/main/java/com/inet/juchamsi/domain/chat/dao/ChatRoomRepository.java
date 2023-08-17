@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,4 +43,5 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
     @Modifying(clearAutomatically = true)
     @Query("update ChatRoom cr set cr.status=:status where cr.id=:id and cr.type=:type")
     Optional<Void> updateStatus(@Param("id") Long id, @Param("status") Status status, @Param("type") Type type);
+
 }
