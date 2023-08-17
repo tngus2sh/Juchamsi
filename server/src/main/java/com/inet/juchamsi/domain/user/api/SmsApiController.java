@@ -26,7 +26,7 @@ import static com.inet.juchamsi.global.api.ApiResult.ERROR;
 import static com.inet.juchamsi.global.api.ApiResult.OK;
 
 @RestController
-@RequestMapping("/sms")
+@RequestMapping("/api/sms")
 @Slf4j
 @RequiredArgsConstructor
 @Api(tags = {"인증번호 보내기"})

@@ -19,7 +19,7 @@ import static com.inet.juchamsi.global.api.ApiResult.OK;
 @Slf4j
 @RequiredArgsConstructor
 @Api(tags = {"빌라"})
-@RequestMapping("/villa")
+@RequestMapping("/api/villa")
 public class VillaApiController {
 
     private final VillaService villaService;

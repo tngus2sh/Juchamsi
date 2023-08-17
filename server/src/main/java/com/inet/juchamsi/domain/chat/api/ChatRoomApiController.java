@@ -23,7 +23,7 @@ import static com.inet.juchamsi.global.api.ApiResult.OK;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/chat")
+@RequestMapping(value = "/api/chat")
 @Log4j2
 @Api(tags = "채팅방")
 public class ChatRoomApiController {
