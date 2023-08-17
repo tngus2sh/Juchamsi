@@ -30,6 +30,7 @@ import com.inet.juchamsi.global.notification.application.FirebaseCloudMessageSer
 import com.inet.juchamsi.global.notification.dto.request.FCMNotificationRequest;
 import com.inet.juchamsi.global.redis.RedisUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -48,6 +49,7 @@ import static com.inet.juchamsi.global.common.ChatMessage.*;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class ParkingServiceImpl implements ParkingService {
 
     private final ParkingLotRepository parkingLotRepository;
@@ -221,6 +223,7 @@ public class ParkingServiceImpl implements ParkingService {
     @Override
     public List<ParkingHistoryResponse> showParkingLot(String villaIdNumber) {
         List<ParkingHistoryDetailDto> parkingHistoryDetailDtoList =  parkingHistoryRepository.findAllParkingLotByVillaIdAndLotId(villaIdNumber);
+        log.info("parkingHistoryDetailDtoList={}", parkingHistoryDetailDtoList);
         List<ParkingHistoryResponse> list = new ArrayList<>();
 
         for (ParkingHistoryDetailDto parkingHistoryDetailDto : parkingHistoryDetailDtoList) {
@@ -230,12 +233,13 @@ public class ParkingServiceImpl implements ParkingService {
                             .userId(parkingHistoryDetailDto.getUserId())
                             .seatNumber(parkingHistoryDetailDto.getSeatNumber())
                             .carNumber(parkingHistoryDetailDto.getCarNumber())
-                            .intTime(parkingHistoryDetailDto.getInTime().toString())
+                            .inTime(parkingHistoryDetailDto.getInTime().toString())
                             .outTime(outTime)
                             .active(parkingHistoryDetailDto.getActive().name())
                             .totalSeatNum(parkingHistoryDetailDto.getTotalSeatNum())
                             .build());
         }
+        log.info("list={}", list);
         return list;
     }
 
