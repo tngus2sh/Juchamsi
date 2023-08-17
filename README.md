@@ -162,37 +162,37 @@
 
 ### 메인화면
 
-![rn_image_picker_lib_temp_5227b60a-0829-4479-86a3-b1a48a02d108_1](/uploads/71dc91b0cadbcdde286ee4d08dd338b2/rn_image_picker_lib_temp_5227b60a-0829-4479-86a3-b1a48a02d108_1.jpg){: width="50%" height="50%"}
+![rn_image_picker_lib_temp_5227b60a-0829-4479-86a3-b1a48a02d108_1](/uploads/71dc91b0cadbcdde286ee4d08dd338b2/rn_image_picker_lib_temp_5227b60a-0829-4479-86a3-b1a48a02d108_1.jpg){: width="30%" height="30%"}
 
 ### 출차 시간 등록
 
-![rn_image_picker_lib_temp_d4201a90-e18b-4640-818f-4521c1d54af7](/uploads/85c6265ebd548afa454a1fd1106a6c77/rn_image_picker_lib_temp_d4201a90-e18b-4640-818f-4521c1d54af7.jpg){: width="50%" height="50%"}
+![rn_image_picker_lib_temp_d4201a90-e18b-4640-818f-4521c1d54af7](/uploads/85c6265ebd548afa454a1fd1106a6c77/rn_image_picker_lib_temp_d4201a90-e18b-4640-818f-4521c1d54af7.jpg){: width="30%" height="30%"}
 
 ### 내 주차 현황
 
-![rn_image_picker_lib_temp_cb06641e-d24b-4b76-815a-3bd1bd1d8cd3](/uploads/25fec92faf3cea51631f71aba10de941/rn_image_picker_lib_temp_cb06641e-d24b-4b76-815a-3bd1bd1d8cd3.jpg){: width="50%" height="50%"}
+![rn_image_picker_lib_temp_cb06641e-d24b-4b76-815a-3bd1bd1d8cd3](/uploads/25fec92faf3cea51631f71aba10de941/rn_image_picker_lib_temp_cb06641e-d24b-4b76-815a-3bd1bd1d8cd3.jpg){: width="30%" height="30%"}
 
-![rn_image_picker_lib_temp_f17eb306-605e-48fd-9184-c340e2166bdc](/uploads/3d8a3bd00d9d5b07d351f22840f7f360/rn_image_picker_lib_temp_f17eb306-605e-48fd-9184-c340e2166bdc.jpg){: width="50%" height="50%"}
+![rn_image_picker_lib_temp_f17eb306-605e-48fd-9184-c340e2166bdc](/uploads/3d8a3bd00d9d5b07d351f22840f7f360/rn_image_picker_lib_temp_f17eb306-605e-48fd-9184-c340e2166bdc.jpg){: width="30%" height="30%"}
 
 ### 마이페이지
 
-![rn_image_picker_lib_temp_c9454532-271e-4537-b087-f6d62dbd1742](/uploads/f34a9109097557b36dbc5db0d9129cc0/rn_image_picker_lib_temp_c9454532-271e-4537-b087-f6d62dbd1742.jpg){: width="50%" height="50%"}
+![rn_image_picker_lib_temp_c9454532-271e-4537-b087-f6d62dbd1742](/uploads/f34a9109097557b36dbc5db0d9129cc0/rn_image_picker_lib_temp_c9454532-271e-4537-b087-f6d62dbd1742.jpg){: width="30%" height="30%"}
 
 ### 채팅방
 
 - **시스템 채팅방**
     
-    ![rn_image_picker_lib_temp_de2f8fbb-80bb-46ac-aedb-e44feddde73c](/uploads/019e709b4290fd4189e8bbec4540948c/rn_image_picker_lib_temp_de2f8fbb-80bb-46ac-aedb-e44feddde73c.jpg){: width="50%" height="50%"}
+    ![rn_image_picker_lib_temp_de2f8fbb-80bb-46ac-aedb-e44feddde73c](/uploads/019e709b4290fd4189e8bbec4540948c/rn_image_picker_lib_temp_de2f8fbb-80bb-46ac-aedb-e44feddde73c.jpg){: width="30%" height="30%"}
     
 
 - **사용자간 채팅방**
     
-    ![rn_image_picker_lib_temp_1bb24893-c2ee-4f7b-ab94-731a6d92f679](/uploads/f768a0d423585ffdb84d7a519e068dbd/rn_image_picker_lib_temp_1bb24893-c2ee-4f7b-ab94-731a6d92f679.jpg){: width="50%" height="50%"}
+    ![rn_image_picker_lib_temp_1bb24893-c2ee-4f7b-ab94-731a6d92f679](/uploads/f768a0d423585ffdb84d7a519e068dbd/rn_image_picker_lib_temp_1bb24893-c2ee-4f7b-ab94-731a6d92f679.jpg){: width="30%" height="30%"}
     
 
 ### 알람
 
-![rn_image_picker_lib_temp_cfd92672-9ec4-44d3-9a18-0d271b1720f6](/uploads/e813cffd3051fea01f4d80f9d49a2eca/rn_image_picker_lib_temp_cfd92672-9ec4-44d3-9a18-0d271b1720f6.jpg){: width="50%" height="50%"}
+![rn_image_picker_lib_temp_cfd92672-9ec4-44d3-9a18-0d271b1720f6](/uploads/e813cffd3051fea01f4d80f9d49a2eca/rn_image_picker_lib_temp_cfd92672-9ec4-44d3-9a18-0d271b1720f6.jpg){: width="30%" height="30%"}
 
 ## 🖥️ 화면 설계서
 
