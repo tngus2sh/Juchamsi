@@ -104,7 +104,7 @@
 
 ---
 
-![sysarci.drawio__3_](/uploads/653f51867161adb654be07ce32e0de0c/sysarci.drawio__3_.png)
+![sysarci.drawio__3_](/uploads/653f51867161adb654be07ce32e0de0c/sysarci.drawio__3_.png){: width="30%" height="30%"}
 
 ## ⚒️ 개발 및 협업 환경
 
