@@ -408,7 +408,7 @@ public class ParkingServiceImpl implements ParkingService {
     public void notifyOutTimeToUser() {
         
         LocalDateTime localDateTime = LocalDateTime.now();
-        String notiTime = localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        String notiTime = localDateTime.minusHours(9).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 
         Map<String, String> entries = redisUtils.getRedisHash(notiTime);
 
