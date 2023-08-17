@@ -46,7 +46,12 @@ function Parkinglot() {
   const requestNotificationPermission = async () => {
     console.log("푸시 허가 받는 중 ...");
 
-    const permission = await Notification.requestPermission();
+    const isSupported = "Notification" in window && "serviceWorker" in navigator && "PushManager" in window;
+    console.log(isSupported);
+    var permission = null;
+    if (isSupported) {
+      permission = await Notification.requestPermission();
+    }
 
     if (permission === "granted") {
       console.log("푸시 알림이 허용되었습니다.");
@@ -59,6 +64,10 @@ function Parkinglot() {
   const fetchFcmToken = async () => {
     const app = initializeApp(config);
     const messaging = getMessaging(app);
+    // var messaging = null;
+    // if (typeof window !== "undefined" && typeof window.navigator !== "undefined") {
+    //   messaging = getMessaging(app);
+    // }
 
     try {
       const token = await getToken(messaging, { vapidKey: "BOo8VGAO9hTSpToCkrOuA3H_UL5HNke7zP5O19dBHsgtiG2_uk-g4njPKE5D024SAqppKGVuFSERWIbQUXeiJjg" });
