@@ -46,33 +46,24 @@ def scan_bluetooth():
     advertiseMac.hci_le_set_scan_parameters(sock)
     advertiseMac.hci_enable_le_scan(sock)
 
+
+    target_mac = None
+    if 1 in nowParking:
+        target_mac = ground_module[nowParking.index(1)]
+
     while True:
         repeat += 1
         returnedList = advertiseMac.parse_events(sock, 10)
         print "----------"
-        if repeat == 30:
-            print('not park')
-            print(nowParking)
-            if 1 in nowParking:
-                print('carout')
-                index_of_one = nowParking.index(1)
-                nowParking[index_of_one] = 0  # Set the corresponding nowParking value to 0
-                headers = {'Content-Type': 'application/json'}
-                datas = {'macAddress': getMacAddress()}
-                json_data = json.dumps(datas)
-                try:
-                    response = requests.post(exit_url, data=json_data, headers=headers)
-                    print("Successfully sent POST request to exit_url.")
-                except Exception as e:
-                    print("Failed to send request to exit_url. Error: {}".format(e))
-            return
+
+        if target_mac:
+            returnedList = [beacon for beacon in returnedList if beacon[0:17] == target_mac]
 
         for beacon in returnedList:
             for comp_str in ground_module:
                 if(beacon[0:17]==comp_str):
                     cnt += 1
                     repeat = 0
-                    # ['mac', 'manuid', 'sonar', 'sonartime', 'tx', 'rssi', 'dis']
                     sendData = beacon.split(',')
                     print(sendData)
 
@@ -84,7 +75,6 @@ def scan_bluetooth():
 
                     # measure Frequency
                     if beacon[0:17] not in searched and beacon[0:17] in ground_module:
-                        # save moudle name and distance
                         if(beacon[0:17] == ground_module[0]):
                             searched[0] += 1
                         elif(beacon[0:17] == ground_module[1]):
@@ -101,10 +91,7 @@ def scan_bluetooth():
                             mostFrequentMacIndex = searched.index(max(searched))
                             mostFrequentMac = ground_module[mostFrequentMacIndex]
                             mostRecentSonar = lastSonarValues[mostFrequentMac]
-                            # print(max(searched))
-                            # print(searched)
                             print(rpiMac, mostRecentSonar, mostFrequentMac)
-                            # print searched.index(max(searched))
                             if int(mostRecentSonar) < 30:
                                 print(nowParking[mostFrequentMacIndex])
                                 if nowParking[mostFrequentMacIndex] == 0:
@@ -126,6 +113,20 @@ def scan_bluetooth():
                             print searched.index(max(searched)), mostRecentSonar
                             return searched.index(max(searched))
 
+        if repeat == 30 and target_mac:
+            print('carout')
+            index_of_target = ground_module.index(target_mac)
+            nowParking[index_of_target] = 0
+            headers = {'Content-Type': 'application/json'}
+            datas = {'macAddress': getMacAddress()}
+            json_data = json.dumps(datas)
+            try:
+                response = requests.post(exit_url, data=json_data, headers=headers)
+                print("Successfully sent POST request to exit_url.")
+            except Exception as e:
+                print("Failed to send request to exit_url. Error: {}".format(e))
+            return
+
 def safe_readline(ser):
     try:
         return ser.readline().decode('utf-8').rstrip()
@@ -140,6 +141,7 @@ def safe_readline(ser):
             print("Failed to reconnect. Retrying...")
             time.sleep(1)
             return ""
+
 def get_acceleration_magnitude():
     accel_x, accel_y, accel_z, _, _, _ = read_mpu6050()
     magnitude = math.sqrt(accel_x**2 + accel_y**2 + accel_z**2)
