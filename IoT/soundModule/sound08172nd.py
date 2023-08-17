@@ -35,8 +35,9 @@ class ScanDelegate(DefaultDelegate):
                 signal_count[dev.addr] += 1
                 no_signal_count[dev.addr] = 0
 
-                if signal_count[dev.addr] >= 60:
+                if signal_count[dev.addr] >= 30:
                     play_isd1820_sound()
+                    signal_count[dev.addr] = 0
                     if post_received[dev.addr]:
                         post_received[dev.addr] = False
                 else:
@@ -61,7 +62,7 @@ def report():
 
 
 def run_flask_app():
-    app.run(host='0.0.0.0', port=101, debug=False)
+    app.run(host='0.0.0.0', port=80, debug=False)
 
 def run_bluetooth_scan():
     while True:
