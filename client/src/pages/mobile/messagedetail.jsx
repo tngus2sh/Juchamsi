@@ -117,7 +117,7 @@ const Messagedetail = () => {
     ws.connect(
       {},
       function (frame) {
-        ws.subscribe("/topic/chat/room/" + roomId, function (message) {
+        ws.subscribe("/topic/api/chat/room/" + roomId, function (message) {
           console.log("message 리스트??");
           fetchData();
           // console.log(messageStorage.length);
