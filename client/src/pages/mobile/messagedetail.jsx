@@ -246,7 +246,7 @@ const Messagedetail = () => {
           <div className="message-detail-content-container" style={{ flex: "1 0 auto" }}>
             <ChatContainer className="custom-chat-container">
               <MessageList className="cs-message-list">
-                {messageStorage.length === 0 && messages.length < 2 ? (
+                {messageStorage.length === 0 && messages.length < 1 ? (
                   <MessageSeparator content="대화를 시작해주세요" />
                 ) : (
                   messageStorage.map((message, index) => (
