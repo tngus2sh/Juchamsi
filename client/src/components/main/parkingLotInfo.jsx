@@ -63,6 +63,7 @@ const ParkingLotInfo = () => {
       setUserNameInfo(response.data.response.name);
       setVillaNumberInfo(response.data.response.villaNumber);
       setPhoneNumberInfo(response.data.response.phoneNumber);
+      setTimeInfo(response.data.response.inTime);
       setOpen(true);
     } catch (err) {
       console.log(err);
@@ -178,7 +179,7 @@ const ParkingLotInfo = () => {
             <ParkingList title="이름" content={userNameInfo} />
             <ParkingList title="호수" content={villaNumberInfo} />
             <ParkingList title="전화번호" content={phoneNumberInfo} />
-            <ParkingList title="입차일시" content="2023-07-19 19:30:10" />
+            <ParkingList title="입차일시" content={timeInfo} />
           </Box>
         </Modal>
       </Grid>

@@ -34,7 +34,8 @@ function MycarParking() {
   const vilanumber = useSelector((state) => state.mobileInfo.villaIdNumber);
   const [otherCarPhoneNumber, setOtherCarPhoneNumber] = React.useState(null);
   const [timeselect,settimeselect] = React.useState(false);
-  const handleopenTimselect =() => {
+  const [isChatroom, setIschatroom] = React.useState(true);
+  const handleopenTimselect = () => {
     settimeselect(true)
   }
   const handleopenTimselectClose = () => {
@@ -46,11 +47,21 @@ function MycarParking() {
   }
 
   useEffect(() => {
-
     if (userid === "") {
       navigate("/Mobile/Login");
     }
-    
+    http({
+      method:'get',
+      url:`/chat/rooms/${userid}`
+    })
+      .then((res) => {
+        console.log(res.data.response.length);
+        if (res.data.response.length > 1) { 
+          setIschatroom(false);
+        }
+    })
+   
+
     const fetchData = async () => {
         try {
           // 주차현황 가지고오기
@@ -128,11 +139,13 @@ function MycarParking() {
         }
       }
       if (otheruser !== null) {
+        othercarid = otheruser;
         http({
-          method:'',
+          method:'get',
           url:`/tenant/${otheruser}`
         })
           .then((res) => {
+            console.log(othercarid)
             setOtherCarPhoneNumber(res.data.response.phoneNumber);
         })
       }
@@ -165,8 +178,9 @@ function MycarParking() {
         }
       }
       if (otheruser !== null) {
+        othercarid = otheruser;
         http({
-          method:'',
+          method:'get',
           url:`/tenant/${otheruser}`
         })
           .then((res) => {
@@ -249,7 +263,7 @@ function MycarParking() {
   };
 
   function convertToDatePickerFormat(dateTimeString) {
-    if (dateTimeString !== undefined) {
+    if (dateTimeString !== undefined || dateTimeString !== null) {
       // '2023-08-08T12:56 형태의 문자열에서 '23.08.01' 부분을 추출하여 'YYYY-MM-DD' 형태로 변환
       const [datePart] = dateTimeString.split("T");
       const formattedDate = datePart;
@@ -260,7 +274,7 @@ function MycarParking() {
   }
 
   function convertToTimePickerValue(dateTimeString) {
-    if (dateTimeString !== undefined) {
+    if (dateTimeString !== undefined || dateTimeString !== null) {
       // '23.08.01 06:00' 형태의 문자열에서 '23.08.01' 부분을 추출하여 'YYYY-MM-DD' 형태로 변환
       const [datePart, timePart] = dateTimeString.split("T");
       const formattedDate = datePart;
@@ -412,10 +426,12 @@ function MycarParking() {
                   <div className="my-car-time-container" style={{textAlign:'center'}}>{frontothercarouttime.substring(11,16)}</div>
                 </React.Fragment>
                 </div>
-                <Button variant="contained" onClick={handleOpenChat} sx={{ position: "relative", top: "1rem", left: "0rem", borderRadius:'0.5rem' }}>
+                {isChatroom && (
+                <Button variant="contained" onClick={handleOpenChat} sx={{ position: "relative", top: "1rem", left: "0rem", borderRadius: '0.5rem' }}>
                   대화방 생성하기
                   <KeyboardArrowRightIcon/>
                 </Button>
+                )}
                 <div className="other-phonenumber-main" style={{fontWeight:'bolder', fontSize:'1.2rem'}}>
                   핸드폰 번호
                 </div>
@@ -463,10 +479,12 @@ function MycarParking() {
                   <div className="my-car-time-container" style={{textAlign:'center'}}>{backothercarouttime.substring(11,16)}</div>
                 </React.Fragment>
                 </div>
-                <Button variant="contained" onClick={handleOpenChat} sx={{ position: "relative", top: "1rem", left: "0rem", borderRadius:'0.5rem' }}>
+                {isChatroom && (
+                <Button variant="contained" onClick={handleOpenChat} sx={{ position: "relative", top: "1rem", left: "0rem", borderRadius: '0.5rem' }}>
                   대화방 생성하기
                   <KeyboardArrowRightIcon/>
                 </Button>
+                )}
                 <div className="other-phonenumber-main" style={{fontWeight:'bolder', fontSize:'1.2rem'}}>
                   핸드폰 번호
                 </div>
