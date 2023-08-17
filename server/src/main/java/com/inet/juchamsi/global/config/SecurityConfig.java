@@ -38,6 +38,7 @@ public class SecurityConfig {
                 .and()
                     .authorizeRequests() // 요청 url에 따라 접근 권한 설정
                     .antMatchers("/api/**").permitAll()// /아래 모든 리소스의 접근을 인증절차 없이 허용한다
+                    .antMatchers("/ws/**").permitAll()
                     .antMatchers("/api/user").hasRole("USER")// 모든 url은 인증 후 user레벨의 권한을 가진 사용자만 접근을 허용
                     .antMatchers("/api/owner").hasRole("OWNER")
                     .antMatchers("/api/admin").hasRole("ADMIN")
