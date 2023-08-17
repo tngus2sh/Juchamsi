@@ -237,8 +237,8 @@ function MycarParking() {
   const handleClose = () => setOpen(false);
 
   // 개인대화방으로 이동하게 추후 변경 필요
-  const handleOpenChat = () => {
-    createRoom();
+  const handleOpenChat = async () => {
+    await createRoom();
     navigate("/Mobile/Termessage");
   };
 
@@ -263,7 +263,8 @@ function MycarParking() {
   };
 
   function convertToDatePickerFormat(dateTimeString) {
-    if (dateTimeString !== undefined || dateTimeString !== null) {
+    console.log(dateTimeString)
+    if (dateTimeString !== undefined) {
       // '2023-08-08T12:56 형태의 문자열에서 '23.08.01' 부분을 추출하여 'YYYY-MM-DD' 형태로 변환
       const [datePart] = dateTimeString.split("T");
       const formattedDate = datePart;
@@ -274,7 +275,7 @@ function MycarParking() {
   }
 
   function convertToTimePickerValue(dateTimeString) {
-    if (dateTimeString !== undefined || dateTimeString !== null) {
+    if (dateTimeString !== undefined) {
       // '23.08.01 06:00' 형태의 문자열에서 '23.08.01' 부분을 추출하여 'YYYY-MM-DD' 형태로 변환
       const [datePart, timePart] = dateTimeString.split("T");
       const formattedDate = datePart;
