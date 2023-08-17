@@ -9,6 +9,7 @@ import numpy as np
 import json
 import serial
 import time
+import smbus
 
 def  getMacAddress():
     mac = uuid.UUID(int=uuid.getnode()).hex[-12:]
@@ -23,11 +24,9 @@ def scan_bluetooth():
     state = 0
     cnt = 0
     repeat = 0
-    # parking_url="http://i9c107.p.ssafy.io:8080/parking/entrance"
-    # exit_url = "http://i9c107.p.ssafy.io:8080/parking/exit"
-    parking_url="https://419c-121-178-98-21.ngrok-free.app/parking/entrance"
-    exit_url="https://419c-121-178-98-21.ngrok-free.app/parking/exit"
-    soundModuleUrl = "http://172.20.10.9/"
+    parking_url="https://i9c107.p.ssafy.io/api/parking/entrance"
+    exit_url = "https://i9c107.p.ssafy.io/api/parking/exit"
+    soundModuleUrl = "http://172.20.10.9:80/"
     datas={}
     ground_module = ['b0:a7:32:db:c8:46', 'cc:db:a7:69:74:4a','cc:db:a7:69:19:7a', 'b0:a7:32:db:c3:52']
     searched = [0, 0, 0, 0]
@@ -51,7 +50,7 @@ def scan_bluetooth():
         repeat += 1
         returnedList = advertiseMac.parse_events(sock, 10)
         print "----------"
-        if repeat == 20:
+        if repeat == 30:
             print('not park')
             print(nowParking)
             if 1 in nowParking:
@@ -96,7 +95,7 @@ def scan_bluetooth():
                             searched[3] += 1
 
                         # send Frequency
-                        if cnt == 100:
+                        if cnt == 80:
                             rpiMac = getMacAddress()
                             mostFreqSonar = max(sonarCount, key = sonarCount.get)
                             mostFrequentMacIndex = searched.index(max(searched))
@@ -124,15 +123,6 @@ def scan_bluetooth():
                                     except Exception as e:
                                         print("Failed BackServer")
                                         nowParking[mostFrequentMacIndex] = 0
-                                    
-                            else:
-                                if nowParking[mostFrequentMacIndex] == 1:
-                                    headers = {'Content-Type': 'application/json'}
-                                    datas = {'macAddress': rpiMac}
-                                    nowParking[mostFrequentMacIndex] = 0
-                                    print('car_out')
-                                    json_data = json.dumps(datas)
-                                    response = requests.post(exit_url, data=json_data, headers=headers)
                             print searched.index(max(searched)), mostRecentSonar
                             return searched.index(max(searched))
 
@@ -150,33 +140,13 @@ def safe_readline(ser):
             print("Failed to reconnect. Retrying...")
             time.sleep(1)
             return ""
+def get_acceleration_magnitude():
+    accel_x, accel_y, accel_z, _, _, _ = read_mpu6050()
+    magnitude = math.sqrt(accel_x**2 + accel_y**2 + accel_z**2)
+    return magnitude
 
 if __name__ == '__main__':
-    ser = serial.Serial('/dev/ttyUSB0', 115200, timeout=1)
-    ser.flush
     nowParking = [0, 0, 0, 0]
     while True:
-        if ser.in_waiting>0:
-            line = safe_readline(ser)
-            parts = line.split(": ")
-            if len(parts)>=2:
-                try:
-                    change_value = float(parts[1])
-                except ValueError:
-                    print("Error: Invalid value for float conversion:", parts[1])
-                    continue  # Skip the rest of the loop iteration
-                print(line)
-                print(change_value)
-            # car move
-            if change_value > 10:
-                print "plus 10"
-                time.sleep(5)
-                test = scan_bluetooth()
-                print(test)
-                # need to send move signal
-            # car stop
-            else:
-                # need to search bluetooth
-                print "stop"
-                pass
-	# time.sleep(0.2)
+        time.sleep(1)
+        test = scan_bluetooth()
