@@ -70,6 +70,7 @@ const ParkingLotHistory = () => {
             <StyledTableCell align="center">아이디</StyledTableCell>
             <StyledTableCell align="center">주차자리</StyledTableCell>
             <StyledTableCell align="center">차번호</StyledTableCell>
+            <StyledTableCell align="center">입차시간</StyledTableCell>
             <StyledTableCell align="center">예상출차시간</StyledTableCell>
           </TableRow>
         </TableHead>
@@ -81,6 +82,7 @@ const ParkingLotHistory = () => {
               </StyledTableCell>
               <StyledTableCell align="center">{row.seatNumber}</StyledTableCell>
               <StyledTableCell align="center">{row.carNumber}</StyledTableCell>
+              <StyledTableCell align="center">{row.inTime}</StyledTableCell>
               <StyledTableCell align="center">{row.outTime}</StyledTableCell>
             </StyledTableRow>
           ))}
