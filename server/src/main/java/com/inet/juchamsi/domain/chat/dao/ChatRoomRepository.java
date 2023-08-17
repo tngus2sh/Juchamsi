@@ -40,6 +40,6 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
     List<User> findChatPeopleByRoomIdAndStatus(@Param("roomId") String roomId, @Param("status") Status status);
 
     @Modifying(clearAutomatically = true)
-    @Query("update ChatRoom cr set cr.status=:status where cr.id=:id")
-    Optional<Void> updateStatus(@Param("id") Long id, @Param("status") Status status);
+    @Query("update ChatRoom cr set cr.status=:status where cr.id=:id and cr.type=:type")
+    Optional<Void> updateStatus(@Param("id") Long id, @Param("status") Status status, @Param("type") Type type);
 }
