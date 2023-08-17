@@ -30,7 +30,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 .select()
                 .apis(RequestHandlerSelectors
                         .basePackage("com.inet.juchamsi"))
-                .paths(PathSelectors.ant("/**"))
+                .paths(PathSelectors.ant("/api/**"))
                 .build();
     }
 }

@@ -22,7 +22,7 @@ import static com.inet.juchamsi.global.api.ApiResult.ERROR;
 import static com.inet.juchamsi.global.api.ApiResult.OK;
 
 @RestController
-@RequestMapping("/mileage")
+@RequestMapping("/api/mileage")
 @Slf4j
 @RequiredArgsConstructor
 @Api(tags = {"마일리지"})

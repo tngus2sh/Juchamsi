@@ -31,7 +31,7 @@ import static com.inet.juchamsi.global.api.ApiResult.OK;
 @Slf4j
 @RequiredArgsConstructor
 @Api(tags = {"세입자 계정"})
-@RequestMapping("/tenant")
+@RequestMapping("/api/tenant")
 public class TenantApiController {
 
     private final TenantService tenantService;

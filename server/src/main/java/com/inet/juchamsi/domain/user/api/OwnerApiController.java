@@ -25,7 +25,7 @@ import static com.inet.juchamsi.global.api.ApiResult.ERROR;
 import static com.inet.juchamsi.global.api.ApiResult.OK;
 
 @RestController
-@RequestMapping("/owner")
+@RequestMapping("/api/owner")
 @Slf4j
 @RequiredArgsConstructor
 @Api(tags = {"집주인 계정"})
