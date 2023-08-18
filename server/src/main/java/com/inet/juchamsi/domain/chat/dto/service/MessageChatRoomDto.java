@@ -21,6 +21,6 @@ public class MessageChatRoomDto {
         this.loginId = loginId;
         this.carNumber = carNumber;
         this.message = message;
-        this.createdDate = createdDate;
+        this.createdDate = createdDate.plusHours(9);
     }
 }
