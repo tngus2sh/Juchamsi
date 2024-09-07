@@ -88,7 +88,7 @@
 
 ---
 
-![sysarci.drawio__3_](/uploads/653f51867161adb654be07ce32e0de0c/sysarci.drawio__3_.png){: width="50%" height="50%"}
+<img src="./readme_asset/Juchamsi.drawio.png" alt="Architecture" width="800">
 
 ## ⚒️ 개발 및 협업 환경
 
