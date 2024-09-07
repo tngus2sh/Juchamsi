@@ -88,7 +88,7 @@
 
 ---
 
-<img src="./reame_asset/Juchamsi.drawio.png" alt="Architecture" width="800">
+<img src="./readme_asset/Juchamsi.drawio.png" alt="Architecture" width="800">
 
 ## ⚒️ 개발 및 협업 환경
 
